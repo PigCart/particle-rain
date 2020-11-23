@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "particlerain",
+  "version": "1.0",
+  "name": "Particle Rain",
+  "description": "Makes rain look nicer.",
+  "authors": [
+    "PigCart"
+  ],
+  "contact": {
+    "sources": "",
+    "issues": "",
+    "homepage": ""
+  },
+  "license": "MIT",
+  "icon": "assets/particlerain/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "pigcart.particlerain.ParticleRainClient"
+    ],
+    "main": [
+      "pigcart.particlerain.ParticleRain"
+    ],
+    "modmenu": [
+      "pigcart.particlerain.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "particlerain.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.10.0+build.208",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  }
+}
