@@ -14,11 +14,11 @@ public class RainDropParticle extends SpriteBillboardParticle {
         super(clientWorld, d, e, f, g, h, i);
         this.setSprite(provider);
 
-        this.gravityStrength = 0.5F;
+        this.gravityStrength = 0.7F;
         this.maxAge = 200;
 
         this.velocityX = 0.0F;
-        this.velocityY = -0.5F;
+        this.velocityY = -0.7F;
         this.velocityZ = 0.0F;
 
         this.scale = 0.15F;
