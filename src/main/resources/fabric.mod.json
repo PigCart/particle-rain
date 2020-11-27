@@ -3,7 +3,7 @@
   "id": "particlerain",
   "version": "1.0",
   "name": "Particle Rain",
-  "description": "Makes rain look nicer.",
+  "description": "Replaces rain with a particle effect",
   "authors": [
     "PigCart"
   ],
@@ -30,7 +30,6 @@
     "particlerain.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.10.0+build.208",
     "fabric": "*",
     "minecraft": "1.16.x"
   }
