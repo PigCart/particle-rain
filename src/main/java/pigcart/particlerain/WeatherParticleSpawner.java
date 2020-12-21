@@ -19,9 +19,6 @@ public class WeatherParticleSpawner {
         double z = radius * Math.cos(phi);
         return new BlockPos(x,y,z);
     }
-    float r = 0.1F;
-    float g = 0.5f;
-    float b = 0.9F;
     public void update(World world, Entity entity) {
 
         if (world.isRaining() || world.isThundering()) {
