@@ -17,20 +17,24 @@ public class DesertDustParticle extends SpriteBillboardParticle {
         this.gravityStrength = 0.1F;
         this.maxAge = 100;
 
-        this.velocityX = -0.4F;
+        this.velocityX = -0.3F;
         this.velocityY = -0.1F;
         this.velocityZ = 0.0F;
+
+        this.colorRed = (float) g;
+        this.colorGreen = (float) h;
+        this.colorBlue = (float) i;
 
         this.scale = 0.15F;
     }
 
     public void tick() {
         super.tick();
-        if (this.age > this.maxAge || this.velocityX == 0.0F || this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
+        this.velocityX = -0.3;
+        if (this.age > this.maxAge || this.prevPosX == this.x || this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
             this.markDead();
         }
         if (this.onGround) {
-            this.velocityX = -0.3;
             this.velocityY = 0.1F;
         }
     }

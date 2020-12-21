@@ -1,26 +1,18 @@
 {
   "schemaVersion": 1,
   "id": "particlerain",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "name": "Particle Rain",
   "description": "Replaces rain with a particle effect",
   "authors": [
     "PigCart"
   ],
-  "contact": {
-    "sources": "",
-    "issues": "",
-    "homepage": ""
-  },
   "license": "MIT",
   "icon": "assets/particlerain/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
       "pigcart.particlerain.ParticleRainClient"
-    ],
-    "main": [
-      "pigcart.particlerain.ParticleRain"
     ],
     "modmenu": [
       "pigcart.particlerain.ModMenuIntegration"

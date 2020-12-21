@@ -10,8 +10,8 @@ import net.minecraft.util.math.BlockPos;
 
 public class RainDropParticle extends SpriteBillboardParticle {
 
-    protected RainDropParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i, SpriteProvider provider) {
-        super(clientWorld, d, e, f, g, h, i);
+    protected RainDropParticle(ClientWorld clientWorld, double d, double e, double f, SpriteProvider provider) {
+        super(clientWorld, d, e, f);
         this.setSprite(provider);
 
         this.gravityStrength = 0.7F;
@@ -44,7 +44,7 @@ public class RainDropParticle extends SpriteBillboardParticle {
 
         @Override
         public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new RainDropParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.provider);
+            return new RainDropParticle(world, x, y, z, this.provider);
         }
     }
 }

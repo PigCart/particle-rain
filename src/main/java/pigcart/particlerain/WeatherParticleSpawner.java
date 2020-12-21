@@ -1,7 +1,6 @@
 package pigcart.particlerain;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -20,7 +19,9 @@ public class WeatherParticleSpawner {
         double z = radius * Math.cos(phi);
         return new BlockPos(x,y,z);
     }
-
+    float r = 0.1F;
+    float g = 0.5f;
+    float b = 0.9F;
     public void update(World world, Entity entity) {
 
         if (world.isRaining() || world.isThundering()) {
@@ -28,8 +29,8 @@ public class WeatherParticleSpawner {
             BlockPos playerPos = entity.getBlockPos();
             Random rand = world.getRandom();
 
-            for (int pass = 0; pass < ParticleRain.config.particleDensity; pass++) {
-                BlockPos pos = randomSpherePoint(ParticleRain.config.particleRadius).add(playerPos);
+            for (int pass = 0; pass < ParticleRainClient.config.particleDensity; pass++) {
+                BlockPos pos = randomSpherePoint(ParticleRainClient.config.particleRadius).add(playerPos);
                 Biome biome = world.getBiome(pos);
 
                 if (world.hasRain(pos)) {
@@ -38,21 +39,28 @@ public class WeatherParticleSpawner {
                             pos.getY() + rand.nextFloat(),
                             pos.getZ() + rand.nextFloat(),
                             0, 0, 0);
-
-                } else if (world.isSkyVisible(pos) && biome.getTemperature(pos) < 0.15F) {
-                    world.addParticle(ParticleRainClient.SNOW_FLAKE,
-                            pos.getX() + rand.nextFloat(),
-                            pos.getY() + rand.nextFloat(),
-                            pos.getZ() + rand.nextFloat(),
-                            0, 0, 0);
-                } else if (world.isSkyVisible(pos) && world.getBiome(pos).getCategory() == Biome.Category.DESERT) {
-                    world.addParticle(ParticleRainClient.DESERT_DUST,
-                            pos.getX() + rand.nextFloat(),
-                            pos.getY() + rand.nextFloat(),
-                            pos.getZ() + rand.nextFloat(),
-                            0, 0, 0);
+                } else if (world.isSkyVisible(pos)) {
+                    if (biome.getTemperature(pos) < 0.15F) {
+                        world.addParticle(ParticleRainClient.SNOW_FLAKE,
+                                pos.getX() + rand.nextFloat(),
+                                pos.getY() + rand.nextFloat(),
+                                pos.getZ() + rand.nextFloat(),
+                                0, 0, 0);
+                    } else if (world.getBiome(pos).getCategory() == Biome.Category.DESERT) {
+                        world.addParticle(ParticleRainClient.DESERT_DUST,
+                                pos.getX() + rand.nextFloat(),
+                                pos.getY() + rand.nextFloat(),
+                                pos.getZ() + rand.nextFloat(),
+                                0.9, 0.8, 0.6);
+                    } else if (world.getBiome(pos).getCategory() == Biome.Category.MESA) {
+                        world.addParticle(ParticleRainClient.DESERT_DUST,
+                                pos.getX() + rand.nextFloat(),
+                                pos.getY() + rand.nextFloat(),
+                                pos.getZ() + rand.nextFloat(),
+                                0.8, 0.4, 0);
+                    }
                 }
-           }
+            }
         }
     }
 }
