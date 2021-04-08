@@ -14,7 +14,7 @@ public class SnowFlakeParticle extends SpriteBillboardParticle {
         super(clientWorld, d, e, f, g, h, i);
         this.setSprite(provider);
 
-        this.gravityStrength = 0.2F;
+        this.gravityStrength = 0.15F;
         this.maxAge = 200;
 
         this.velocityX = 0.0F;

@@ -14,7 +14,7 @@ public class DesertDustParticle extends SpriteBillboardParticle {
         super(clientWorld, d, e, f, g, h, i);
         this.setSprite(provider);
 
-        this.gravityStrength = 0.1F;
+        this.gravityStrength = 0.2F;
         this.maxAge = 100;
 
         this.velocityX = -0.3F;
@@ -30,7 +30,7 @@ public class DesertDustParticle extends SpriteBillboardParticle {
 
     public void tick() {
         super.tick();
-        this.velocityX = -0.3;
+        this.velocityX = -0.4;
         if (this.age > this.maxAge || this.prevPosX == this.x || this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
             this.markDead();
         }

@@ -1,12 +1,17 @@
 {
   "schemaVersion": 1,
   "id": "particlerain",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "name": "Particle Rain",
   "description": "Replaces rain with a particle effect",
   "authors": [
     "PigCart"
   ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/particle-rain",
+    "sources": "https://github.com/PigCart/particle-rain",
+    "issues": "https://github.com/PigCart/particle-rain/issues"
+  },
   "license": "MIT",
   "icon": "assets/particlerain/icon.png",
   "environment": "client",

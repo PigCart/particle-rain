@@ -12,8 +12,8 @@ group = project.maven_group
 
 repositories {
     maven { url "https://maven.fabricmc.net/" }
-    maven { url "https://dl.bintray.com/shedaniel/autoconfig1u/" }
-    maven { url "https://maven.fabricmc.net/io/github/prospector/modmenu/" }
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/" }
 }
 
 dependencies {
@@ -22,15 +22,11 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modImplementation ("io.github.prospector:modmenu:${project.modmenu_version}")
-
-    include "me.shedaniel.cloth:config-2:${project.clothconfig_version}"
-    include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
-    modApi("me.shedaniel.cloth:config-2:${project.clothconfig_version}") {exclude(group: "net.fabricmc.fabric-api")}
-    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}") {exclude(group: "net.fabricmc.fabric-api")}
+    modImplementation ("com.terraformersmc:modmenu:${project.modmenu_version}")
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}") {exclude(group: "net.fabricmc.fabric-api")}
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricapi_version}"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
