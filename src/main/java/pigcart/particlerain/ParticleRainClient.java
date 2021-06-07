@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import pigcart.particlerain.particle.DesertDustParticle;
 import pigcart.particlerain.particle.RainDropParticle;
@@ -49,5 +50,10 @@ public class ParticleRainClient implements ClientModInitializer {
         if (!client.isPaused() && client.world != null && client.getCameraEntity() != null) {
             particleSpawner.update(client.world, client.getCameraEntity());
         }
+    }
+
+    public static double getDistance(BlockPos p1, double x2, double y2, double z2) {
+        double x1 = p1.getX(); double y1 = p1.getY(); double z1 = p1.getZ();
+        return Math.sqrt(Math.pow((x1-x2), 2d) + Math.pow((y1 - y2), 2d) + Math.pow((z1 - z2), 2d));
     }
 }

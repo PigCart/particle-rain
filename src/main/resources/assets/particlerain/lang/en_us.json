@@ -1,5 +1,13 @@
 {
   "text.autoconfig.particlerain.title": "Particle Rain",
   "text.autoconfig.particlerain.option.particleDensity": "Particle Density",
-  "text.autoconfig.particlerain.option.particleRadius": "Particle Radius"
+  "text.autoconfig.particlerain.option.particleStormDensity": "Particle Storm Density",
+  "text.autoconfig.particlerain.option.particleRadius": "Particle Radius",
+  "text.autoconfig.particlerain.option.rainDropGravity": "Rain Drop Gravity",
+  "text.autoconfig.particlerain.option.snowFlakeGravity": "Snow Flake Gravity",
+  "text.autoconfig.particlerain.option.desertDustGravity": "Desert Dust Gravity",
+  "text.autoconfig.particlerain.option.renderVanillaWeather": "Render Vanilla Weather",
+  "text.autoconfig.particlerain.option.doRainParticles": "Do Rain Particles",
+  "text.autoconfig.particlerain.option.doSnowParticles": "Do Snow Particles",
+  "text.autoconfig.particlerain.option.doSandParticles": "Do Sand Particles"
 }

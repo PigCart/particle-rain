@@ -23,11 +23,14 @@ public class WeatherParticleSpawner {
 
     public void update(World world, Entity entity) {
 
-        if (world.isRaining() || world.isThundering()) {
+        if (world.isRaining()) {
+
+            int density = ParticleRainClient.config.particleDensity;
+            if (world.isThundering()) { density = ParticleRainClient.config.particleStormDensity; }
 
             Random rand = world.getRandom();
 
-            for (int pass = 0; pass < ParticleRainClient.config.particleDensity; pass++) {
+            for (int pass = 0; pass < density; pass++) {
                 BlockPos pos = randomSpherePoint(ParticleRainClient.config.particleRadius, entity.getBlockPos()); //pick a random block around the player
                 Biome biome = world.getBiome(pos);
                 BlockPos topPos = new BlockPos(pos.getX(), world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos).getY(), pos.getZ());
@@ -35,30 +38,36 @@ public class WeatherParticleSpawner {
                 if (topPos.getY() < pos.getY()) {
                     if (biome.getPrecipitation() != Biome.Precipitation.NONE) {
                         if (biome.getTemperature(topPos) >= 0.15F) {
-                            world.addParticle(ParticleRainClient.RAIN_DROP,
-                                    pos.getX() + rand.nextFloat(),
-                                    pos.getY() + rand.nextFloat(),
-                                    pos.getZ() + rand.nextFloat(),
-                                    0, 0, 0);
+                            if (ParticleRainClient.config.doRainParticles) {
+                                world.addParticle(ParticleRainClient.RAIN_DROP,
+                                        pos.getX() + rand.nextFloat(),
+                                        pos.getY() + rand.nextFloat(),
+                                        pos.getZ() + rand.nextFloat(),
+                                        0, 0, 0);
+                            }
                         } else {
-                            world.addParticle(ParticleRainClient.SNOW_FLAKE,
+                            if (ParticleRainClient.config.doSnowParticles) {
+                                world.addParticle(ParticleRainClient.SNOW_FLAKE,
+                                        pos.getX() + rand.nextFloat(),
+                                        pos.getY() + rand.nextFloat(),
+                                        pos.getZ() + rand.nextFloat(),
+                                        0, 0, 0);
+                            }
+                        }
+                    } else if (ParticleRainClient.config.doSandParticles) {
+                        if (world.getBiome(pos).getCategory() == Biome.Category.DESERT) {
+                            world.addParticle(ParticleRainClient.DESERT_DUST,
                                     pos.getX() + rand.nextFloat(),
                                     pos.getY() + rand.nextFloat(),
                                     pos.getZ() + rand.nextFloat(),
-                                    0, 0, 0);
+                                    0.9, 0.8, 0.6);
+                        } else if (world.getBiome(pos).getCategory() == Biome.Category.MESA) {
+                            world.addParticle(ParticleRainClient.DESERT_DUST,
+                                    pos.getX() + rand.nextFloat(),
+                                    pos.getY() + rand.nextFloat(),
+                                    pos.getZ() + rand.nextFloat(),
+                                    0.8, 0.4, 0);
                         }
-                    } else if (world.getBiome(pos).getCategory() == Biome.Category.DESERT) {
-                        world.addParticle(ParticleRainClient.DESERT_DUST,
-                                pos.getX() + rand.nextFloat(),
-                                pos.getY() + rand.nextFloat(),
-                                pos.getZ() + rand.nextFloat(),
-                                0.9, 0.8, 0.6);
-                    } else if (world.getBiome(pos).getCategory() == Biome.Category.MESA) {
-                        world.addParticle(ParticleRainClient.DESERT_DUST,
-                                pos.getX() + rand.nextFloat(),
-                                pos.getY() + rand.nextFloat(),
-                                pos.getZ() + rand.nextFloat(),
-                                0.8, 0.4, 0);
                     }
                 }
             }

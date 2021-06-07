@@ -2,11 +2,13 @@ package pigcart.particlerain.particle;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
+import pigcart.particlerain.ParticleRainClient;
 
 public class SnowFlakeParticle extends SpriteBillboardParticle {
 
@@ -14,11 +16,13 @@ public class SnowFlakeParticle extends SpriteBillboardParticle {
         super(clientWorld, d, e, f, g, h, i);
         this.setSprite(provider);
 
-        this.gravityStrength = 0.15F;
+        float gravity = ParticleRainClient.config.snowFlakeGravity;
+
+        this.gravityStrength = gravity;
         this.maxAge = 200;
 
         this.velocityX = 0.0F;
-        this.velocityY = -0.2F;
+        this.velocityY = -gravity;
         this.velocityZ = 0.0F;
 
         this.scale = 0.15F;
@@ -26,7 +30,7 @@ public class SnowFlakeParticle extends SpriteBillboardParticle {
 
     public void tick() {
         super.tick();
-        if (this.age > this.maxAge - 1/0.06F || this.onGround || this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
+        if (ParticleRainClient.getDistance(MinecraftClient.getInstance().getCameraEntity().getBlockPos(), this.x, this.y, this.z) > ParticleRainClient.config.particleRadius+2 || this.onGround || this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
             this.markDead();
         }
     }
