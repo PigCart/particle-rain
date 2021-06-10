@@ -41,13 +41,7 @@ public class RainDropParticle extends SpriteBillboardParticle {
     public void tick() {
         super.tick();
         BlockPos blockPos = new BlockPos(this.x, this.y-0.1, this.z);
-        if (this.onGround || this.world.getFluidState(blockPos).isIn(FluidTags.WATER) || this.world.getFluidState(blockPos).isIn(FluidTags.LAVA)) {
-            BlockState blockState = world.getBlockState(blockPos);
-            FluidState fluidState = world.getFluidState(blockPos);
-            ParticleEffect particleEffect = !fluidState.isIn(FluidTags.LAVA) && !blockState.isOf(Blocks.MAGMA_BLOCK) && !CampfireBlock.isLitCampfire(blockState) ? ParticleTypes.RAIN : ParticleTypes.SMOKE;
-            world.addParticle(particleEffect, this.x, this.y, this.z, 0.0D, 0.0D, 0.0D);
-            this.markDead();
-        } else if ( ParticleRainClient.getDistance(MinecraftClient.getInstance().getCameraEntity().getBlockPos(), this.x, this.y, this.z) > ParticleRainClient.config.particleRadius+2) {
+        if ( ParticleRainClient.getDistance(MinecraftClient.getInstance().getCameraEntity().getBlockPos(), this.x, this.y, this.z) > ParticleRainClient.config.particleRadius+2 || this.onGround || this.world.getFluidState(blockPos).isIn(FluidTags.WATER) || this.world.getFluidState(blockPos).isIn(FluidTags.LAVA)) {
             this.markDead();
         }
     }
