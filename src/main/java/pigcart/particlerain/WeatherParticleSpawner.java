@@ -2,9 +2,11 @@ package pigcart.particlerain;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Random;
 
@@ -36,7 +38,7 @@ public class WeatherParticleSpawner {
                 BlockPos topPos = new BlockPos(pos.getX(), world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos).getY(), pos.getZ());
 
                 if (topPos.getY() < pos.getY()) {
-                    if (biome.getPrecipitation() != Biome.Precipitation.NONE) {
+                    if (biome.getPrecipitation() != Biome.Precipitation.NONE && world.getDimension() != world.getRegistryManager().get(Registry.DIMENSION_TYPE_KEY).get(DimensionType.THE_END_ID)) {
                         if (biome.getTemperature(topPos) >= 0.15F) {
                             if (ParticleRainClient.config.doRainParticles) {
                                 world.addParticle(ParticleRainClient.RAIN_DROP,
