@@ -23,12 +23,13 @@ public class WeatherParticleSpawner {
         return new BlockPos(x, y, z).add(playerPos);
     }
 
+    int density = 0;
     public void update(World world, Entity entity) {
 
         if (world.isRaining()) {
 
-            int density = ParticleRainClient.config.particleDensity;
-            if (world.isThundering()) { density = ParticleRainClient.config.particleStormDensity; }
+            if (world.isThundering()) {density = ParticleRainClient.config.particleStormDensity;}
+            else {density = ParticleRainClient.config.particleDensity;}
 
             Random rand = world.getRandom();
 
