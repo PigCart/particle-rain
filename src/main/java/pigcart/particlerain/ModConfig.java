@@ -2,6 +2,7 @@ package pigcart.particlerain;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @Config(name = "particlerain")
 public class ModConfig implements ConfigData {
@@ -15,4 +16,28 @@ public class ModConfig implements ConfigData {
     public boolean doRainParticles = true;
     public boolean doSnowParticles = true;
     public boolean doSandParticles = true;
+    @ConfigEntry.Category(value = "particleColor")
+    public float rainRed = 0;
+    @ConfigEntry.Category(value = "particleColor")
+    public float rainGreen = 0;
+    @ConfigEntry.Category(value = "particleColor")
+    public float rainBlue = 1;
+    @ConfigEntry.Category(value = "particleColor")
+    public float snowRed = 1;
+    @ConfigEntry.Category(value = "particleColor")
+    public float snowGreen = 1;
+    @ConfigEntry.Category(value = "particleColor")
+    public float snowBlue = 1;
+    @ConfigEntry.Category(value = "particleColor")
+    public float desertDustRed = 0.9F;
+    @ConfigEntry.Category(value = "particleColor")
+    public float desertDustGreen = 0.8F;
+    @ConfigEntry.Category(value = "particleColor")
+    public float desertDustBlue = 0.6F;
+    @ConfigEntry.Category(value = "particleColor")
+    public float mesaDustRed = 0.8F;
+    @ConfigEntry.Category(value = "particleColor")
+    public float mesaDustGreen = 0.4F;
+    @ConfigEntry.Category(value = "particleColor")
+    public float mesaDustBlue = 0;
 }

@@ -39,14 +39,14 @@ public class WeatherParticleSpawner {
                 BlockPos topPos = new BlockPos(pos.getX(), world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos).getY(), pos.getZ());
 
                 if (topPos.getY() < pos.getY()) {
-                    if (biome.getPrecipitation() != Biome.Precipitation.NONE && world.getDimension() != world.getRegistryManager().get(Registry.DIMENSION_TYPE_KEY).get(DimensionType.THE_END_ID)) {
+                    if (biome.getPrecipitation() != Biome.Precipitation.NONE && world.getDimension() != world.getRegistryManager().get(Registry.DIMENSION_TYPE_KEY).get(DimensionType.THE_END_ID)) { //crashes in 1.16
                         if (biome.getTemperature(topPos) >= 0.15F) {
                             if (ParticleRainClient.config.doRainParticles) {
                                 world.addParticle(ParticleRainClient.RAIN_DROP,
                                         pos.getX() + rand.nextFloat(),
                                         pos.getY() + rand.nextFloat(),
                                         pos.getZ() + rand.nextFloat(),
-                                        0, 0, 0);
+                                        ParticleRainClient.config.rainRed,ParticleRainClient.config.rainGreen,ParticleRainClient.config.rainBlue);
                             }
                         } else {
                             if (ParticleRainClient.config.doSnowParticles) {
@@ -54,22 +54,22 @@ public class WeatherParticleSpawner {
                                         pos.getX() + rand.nextFloat(),
                                         pos.getY() + rand.nextFloat(),
                                         pos.getZ() + rand.nextFloat(),
-                                        0, 0, 0);
+                                        ParticleRainClient.config.snowRed,ParticleRainClient.config.snowGreen,ParticleRainClient.config.snowBlue);
                             }
                         }
                     } else if (ParticleRainClient.config.doSandParticles) {
-                        if (world.getBiome(pos).getCategory() == Biome.Category.DESERT) {
+                        if (biome.getCategory() == Biome.Category.DESERT) {
                             world.addParticle(ParticleRainClient.DESERT_DUST,
                                     pos.getX() + rand.nextFloat(),
                                     pos.getY() + rand.nextFloat(),
                                     pos.getZ() + rand.nextFloat(),
-                                    0.9, 0.8, 0.6);
-                        } else if (world.getBiome(pos).getCategory() == Biome.Category.MESA) {
+                                    ParticleRainClient.config.desertDustRed,ParticleRainClient.config.desertDustGreen,ParticleRainClient.config.desertDustBlue);
+                        } else if (biome.getCategory() == Biome.Category.MESA) {
                             world.addParticle(ParticleRainClient.DESERT_DUST,
                                     pos.getX() + rand.nextFloat(),
                                     pos.getY() + rand.nextFloat(),
                                     pos.getZ() + rand.nextFloat(),
-                                    0.8, 0.4, 0);
+                                    ParticleRainClient.config.mesaDustRed,ParticleRainClient.config.mesaDustGreen,ParticleRainClient.config.mesaDustBlue);
                         }
                     }
                 }

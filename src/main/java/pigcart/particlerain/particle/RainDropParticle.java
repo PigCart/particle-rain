@@ -20,10 +20,8 @@ import java.util.Objects;
 
 public class RainDropParticle extends SpriteBillboardParticle {
 
-    MinecraftClient client;
-
-    protected RainDropParticle(ClientWorld clientWorld, double d, double e, double f, SpriteProvider provider) {
-        super(clientWorld, d, e, f);
+    protected RainDropParticle(ClientWorld clientWorld, double d, double e, double f, double red, double green, double blue, SpriteProvider provider) {
+        super(clientWorld, d, e, f, red, green, blue);
         this.setSprite(provider);
 
         float gravity = ParticleRainClient.config.rainDropGravity;
@@ -34,6 +32,10 @@ public class RainDropParticle extends SpriteBillboardParticle {
         this.velocityX = 0.0F;
         this.velocityY = -gravity;
         this.velocityZ = 0.0F;
+
+        this.colorRed = (float)red;
+        this.colorGreen = (float)green;
+        this.colorBlue = (float)blue;
 
         this.scale = 0.15F;
     }
@@ -58,8 +60,8 @@ public class RainDropParticle extends SpriteBillboardParticle {
         }
 
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new RainDropParticle(world, x, y, z, this.provider);
+        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double red, double green, double blue) {
+            return new RainDropParticle(world, x, y, z, red, green, blue, this.provider);
         }
     }
 }

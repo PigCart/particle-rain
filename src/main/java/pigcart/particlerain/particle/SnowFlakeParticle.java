@@ -12,8 +12,8 @@ import pigcart.particlerain.ParticleRainClient;
 
 public class SnowFlakeParticle extends SpriteBillboardParticle {
 
-    protected SnowFlakeParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i, SpriteProvider provider) {
-        super(clientWorld, d, e, f, g, h, i);
+    protected SnowFlakeParticle(ClientWorld clientWorld, double d, double e, double f, double red, double green, double blue, SpriteProvider provider) {
+        super(clientWorld, d, e, f, red, green, blue);
         this.setSprite(provider);
 
         float gravity = ParticleRainClient.config.snowFlakeGravity;
@@ -24,6 +24,10 @@ public class SnowFlakeParticle extends SpriteBillboardParticle {
         this.velocityX = 0.0F;
         this.velocityY = -gravity;
         this.velocityZ = 0.0F;
+
+        this.colorRed = (float)red;
+        this.colorGreen = (float)green;
+        this.colorBlue = (float)blue;
 
         this.scale = 0.15F;
     }
@@ -49,8 +53,8 @@ public class SnowFlakeParticle extends SpriteBillboardParticle {
         }
 
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new SnowFlakeParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.provider);
+        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double red, double green, double blue) {
+            return new SnowFlakeParticle(world, x, y, z, red, green, blue, this.provider);
         }
     }
 }

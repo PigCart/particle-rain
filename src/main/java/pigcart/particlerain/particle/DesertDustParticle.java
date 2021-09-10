@@ -12,8 +12,8 @@ import pigcart.particlerain.ParticleRainClient;
 
 public class DesertDustParticle extends SpriteBillboardParticle {
 
-    protected DesertDustParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i, SpriteProvider provider) {
-        super(clientWorld, d, e, f, g, h, i);
+    protected DesertDustParticle(ClientWorld clientWorld, double d, double e, double f, double red, double green, double blue, SpriteProvider provider) {
+        super(clientWorld, d, e, f, red, green, blue);
         this.setSprite(provider);
 
         float gravity = ParticleRainClient.config.desertDustGravity;
@@ -25,9 +25,9 @@ public class DesertDustParticle extends SpriteBillboardParticle {
         this.velocityY = -gravity;
         this.velocityZ = 0.0F;
 
-        this.colorRed = (float) g;
-        this.colorGreen = (float) h;
-        this.colorBlue = (float) i;
+        this.colorRed = (float)red;
+        this.colorGreen = (float)green;
+        this.colorBlue = (float)blue;
 
         this.scale = 0.15F;
     }
@@ -55,8 +55,8 @@ public class DesertDustParticle extends SpriteBillboardParticle {
         }
 
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new DesertDustParticle(world, x, y, z, velocityX, velocityY, velocityZ, this.provider);
+        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double red, double green, double blue) {
+            return new DesertDustParticle(world, x, y, z, red, green, blue, this.provider);
         }
     }
 }
