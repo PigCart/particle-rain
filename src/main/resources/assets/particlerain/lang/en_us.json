@@ -1,5 +1,6 @@
 {
   "text.autoconfig.particlerain.title": "Particle Rain",
+  "text.autoconfig.particlerain.category.default": "General",
   "text.autoconfig.particlerain.option.particleDensity": "Particle Density",
   "text.autoconfig.particlerain.option.particleStormDensity": "Particle Storm Density",
   "text.autoconfig.particlerain.option.particleRadius": "Particle Radius",
@@ -9,5 +10,18 @@
   "text.autoconfig.particlerain.option.renderVanillaWeather": "Render Vanilla Weather",
   "text.autoconfig.particlerain.option.doRainParticles": "Do Rain Particles",
   "text.autoconfig.particlerain.option.doSnowParticles": "Do Snow Particles",
-  "text.autoconfig.particlerain.option.doSandParticles": "Do Sand Particles"
+  "text.autoconfig.particlerain.option.doSandParticles": "Do Sand Particles",
+  "text.autoconfig.particlerain.category.particleColor": "Particle Colors",
+  "text.autoconfig.particlerain.option.rainRed":   "Rain Red",
+  "text.autoconfig.particlerain.option.rainGreen": "Rain Green",
+  "text.autoconfig.particlerain.option.rainBlue":  "Rain Blue",
+  "text.autoconfig.particlerain.option.snowRed":   "Snow Red",
+  "text.autoconfig.particlerain.option.snowGreen": "Snow Green",
+  "text.autoconfig.particlerain.option.snowBlue":  "Snow Blue",
+  "text.autoconfig.particlerain.option.desertDustRed":   "Desert Dust Red",
+  "text.autoconfig.particlerain.option.desertDustGreen": "Desert Dust Green",
+  "text.autoconfig.particlerain.option.desertDustBlue":  "Desert Dust Blue",
+  "text.autoconfig.particlerain.option.mesaDustRed":   "Mesa Dust Red",
+  "text.autoconfig.particlerain.option.mesaDustGreen": "Mesa Dust Green",
+  "text.autoconfig.particlerain.option.mesaDustBlue":  "Mesa Dust Blue"
 }
