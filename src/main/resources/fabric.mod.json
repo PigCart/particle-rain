@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "particlerain",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "name": "Particle Rain",
   "description": "Replaces rain with a particle effect. Fork from Particle Rain by PigCart",
   "authors": [
