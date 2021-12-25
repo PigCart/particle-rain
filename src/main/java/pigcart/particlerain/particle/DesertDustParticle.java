@@ -1,62 +1,49 @@
 package pigcart.particlerain.particle;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.tag.FluidTags;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.FluidTags;
 import pigcart.particlerain.ParticleRainClient;
 
-public class DesertDustParticle extends SpriteBillboardParticle {
+public class DesertDustParticle extends WeatherParticle {
 
-    protected DesertDustParticle(ClientWorld clientWorld, double d, double e, double f, double red, double green, double blue, SpriteProvider provider) {
-        super(clientWorld, d, e, f, red, green, blue);
-        this.setSprite(provider);
-
-        float gravity = ParticleRainClient.config.desertDustGravity;
-
-        this.gravityStrength = gravity;
-        this.maxAge = 100;
-
-        this.velocityX = -0.3F;
-        this.velocityY = -gravity;
-        this.velocityZ = 0.0F;
-
-        this.colorRed = (float)red;
-        this.colorGreen = (float)green;
-        this.colorBlue = (float)blue;
-
-        this.scale = 0.15F;
-    }
-
-    public void tick() {
-        super.tick();
-        this.velocityX = -0.4;
-        if (ParticleRainClient.getDistance(MinecraftClient.getInstance().getCameraEntity().getBlockPos(), this.x, this.y, this.z) > ParticleRainClient.config.particleRadius+2 || this.prevPosX == this.x || this.world.getFluidState(new BlockPos(this.x, this.y, this.z)).isIn(FluidTags.WATER)) {
-            this.markDead();
-        }
-        if (this.onGround) {
-            this.velocityY = 0.1F;
-        }
+    private DesertDustParticle(ClientLevel clientWorld, double x, double y, double z, float red, float green, float blue, SpriteSet provider) {
+        super(clientWorld, x, y, z, red, green, blue, ParticleRainClient.config.desertDustGravity, provider);
+        this.lifetime = 100;
+        this.xd = -0.4F;
     }
 
     @Override
-    public ParticleTextureSheet getType() { return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE; }
+    public void tick() {
+        super.tick();
 
-    @Environment(EnvType.CLIENT)
-    public static class DefaultFactory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider provider;
+        this.xd = -0.4;
+        if (this.shouldRemove() || this.xo == this.x || this.level.getFluidState(this.pos).is(FluidTags.WATER))
+            this.remove();
+        if (this.onGround)
+            this.yd = 0.1F;
+    }
 
-        public DefaultFactory(SpriteProvider provider) {
+    @Override
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    }
+
+    public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
+
+        private final SpriteSet provider;
+
+        public DefaultFactory(SpriteSet provider) {
             this.provider = provider;
         }
 
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double red, double green, double blue) {
-            return new DesertDustParticle(world, x, y, z, red, green, blue, this.provider);
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double red, double green, double blue) {
+            return new DesertDustParticle(level, x, y, z, (float) red, (float) green, (float) blue, this.provider);
         }
     }
 }
