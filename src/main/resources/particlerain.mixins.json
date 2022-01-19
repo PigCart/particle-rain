@@ -4,7 +4,7 @@
   "package": "pigcart.particlerain.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "WorldRendererMixin"
+    "LevelRendererMixin"
   ],
   "client": [
   ],

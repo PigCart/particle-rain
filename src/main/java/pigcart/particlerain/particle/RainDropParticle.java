@@ -1,67 +1,97 @@
 package pigcart.particlerain.particle;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.tag.FluidTags;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import pigcart.particlerain.ParticleRainClient;
 
-import java.util.Objects;
+public class RainDropParticle extends WeatherParticle {
 
-public class RainDropParticle extends SpriteBillboardParticle {
+    private final BlockPos.MutableBlockPos fluidPos;
 
-    protected RainDropParticle(ClientWorld clientWorld, double d, double e, double f, double red, double green, double blue, SpriteProvider provider) {
-        super(clientWorld, d, e, f, red, green, blue);
-        this.setSprite(provider);
+    protected RainDropParticle(ClientLevel clientWorld, double x, double y, double z, float red, float green, float blue, SpriteSet provider) {
+        super(clientWorld, x, y, z, red, green, blue, ParticleRainClient.config.rainDropGravity, provider);
 
-        float gravity = ParticleRainClient.config.rainDropGravity;
-
-        this.gravityStrength = gravity;
-        this.maxAge = 200;
-
-        this.velocityX = 0.0F;
-        this.velocityY = -gravity;
-        this.velocityZ = 0.0F;
-
-        this.colorRed = (float)red;
-        this.colorGreen = (float)green;
-        this.colorBlue = (float)blue;
-
-        this.scale = 0.15F;
+        this.lifetime = 200;
+        this.quadSize = 0.5F;
+        this.fluidPos = new BlockPos.MutableBlockPos();
     }
 
+    @Override
     public void tick() {
         super.tick();
-        BlockPos blockPos = new BlockPos(this.x, this.y-0.1, this.z);
-        if ( ParticleRainClient.getDistance(MinecraftClient.getInstance().getCameraEntity().getBlockPos(), this.x, this.y, this.z) > ParticleRainClient.config.particleRadius+2 || this.onGround || this.world.getFluidState(blockPos).isIn(FluidTags.WATER) || this.world.getFluidState(blockPos).isIn(FluidTags.LAVA)) {
-            this.markDead();
+        this.fluidPos.set(this.x, this.y - 0.1, this.z);
+
+        if (this.shouldRemove() || this.onGround || !this.level.getFluidState(this.fluidPos).isEmpty()) {
+            this.remove();
+            if (this.onGround)
+                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);
         }
     }
 
     @Override
-    public ParticleTextureSheet getType() { return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT; }
+    public void render(VertexConsumer builder, Camera camera, float f) {
+        Vec3 vec3 = camera.getPosition();
+        float x = (float) (Mth.lerp(f, this.xo, this.x) - vec3.x());
+        float y = (float) (Mth.lerp(f, this.yo, this.y) - vec3.y());
+        float z = (float) (Mth.lerp(f, this.zo, this.z) - vec3.z());
+        Quaternion quaternion = new Quaternion(camera.rotation());
+        quaternion.mul(Vector3f.XN.rotationDegrees(camera.getXRot()));
+        quaternion.mul(Vector3f.YP.rotationDegrees(camera.getYRot()));
+        quaternion.mul(Vector3f.YP.rotation((float) Math.atan2(x, z)));
+
+        Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
+        float k = this.getQuadSize(f);
+
+        for (int l = 0; l < 4; ++l) {
+            Vector3f vector3f = vector3fs[l];
+            vector3f.transform(quaternion);
+            vector3f.mul(k);
+            vector3f.add(x, y, z);
+        }
+
+        float l = this.getU0();
+        float vector3f = this.getU1();
+        float m = this.getV0();
+        float n = this.getV1();
+        int o = this.getLightColor(f);
+        builder.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).uv(vector3f, n).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
+        builder.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).uv(vector3f, m).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
+        builder.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).uv(l, m).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
+        builder.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(l, n).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
+    }
+
+    @Override
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    }
 
     @Environment(EnvType.CLIENT)
-    public static class DefaultFactory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider provider;
+    public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
-        public DefaultFactory(SpriteProvider provider) {
+        private final SpriteSet provider;
+
+        public DefaultFactory(SpriteSet provider) {
             this.provider = provider;
         }
 
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double red, double green, double blue) {
-            return new RainDropParticle(world, x, y, z, red, green, blue, this.provider);
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double red, double green, double blue) {
+            return new RainDropParticle(level, x, y, z, (float) red, (float) green, (float) blue, this.provider);
         }
     }
 }
