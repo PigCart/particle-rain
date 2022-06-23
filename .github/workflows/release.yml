@@ -1,0 +1,33 @@
+name: release-artifacts
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2.1.0
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build artifacts
+        run: ./gradlew clean build
+
+      - name: Upload assets to Modrinth and CurseForge
+        uses: Kir-Antipov/mc-publish@v3.0
+        with:
+          name: ""
+          modrinth-id: nrikgvxm
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: 421897
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}

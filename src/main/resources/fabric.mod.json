@@ -3,14 +3,14 @@
   "id": "particlerain",
   "version": "2.0.0",
   "name": "Particle Rain",
-  "description": "Replaces rain with a particle effect. Fork from Particle Rain by PigCart",
+  "description": "Replaces rain with a particle effect.",
   "authors": [
-    "Ocelot5836"
+    "PigCart"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/particle-rain",
-    "sources": "https://github.com/Ocelot5836/particle-rain",
-    "issues": "https://github.com/Ocelot5836/particle-rain/issues"
+    "sources": "https://github.com/PigCart/particle-rain",
+    "issues": "https://github.com/PigCart/particle-rain/issues"
   },
   "license": "MIT",
   "icon": "assets/particlerain/icon.png",

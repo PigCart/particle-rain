@@ -49,6 +49,7 @@ public class ParticleRainClient implements ClientModInitializer {
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
+
     }
 
     private void onTick(Minecraft client) {
