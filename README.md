@@ -15,6 +15,12 @@ Particle Rain replaces the default rain with some particle effects. In addition 
 
 
 
+## Links
+
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/particle-rain)
+- [Modrinth](https://modrinth.com/mod/particle-rain)
+
+
 ## Screenshots
 
 ![Particle Weather](https://cdn.discordapp.com/attachments/523251999899385875/776425830380863488/weatherparticles.gif)
