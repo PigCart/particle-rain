@@ -1,8 +1,10 @@
 package pigcart.particlerain.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.AxisAngle4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
@@ -18,6 +20,8 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import pigcart.particlerain.ParticleRainClient;
+
+import java.util.Vector;
 
 public class RainDropParticle extends WeatherParticle {
 
@@ -49,17 +53,17 @@ public class RainDropParticle extends WeatherParticle {
         float x = (float) (Mth.lerp(f, this.xo, this.x) - vec3.x());
         float y = (float) (Mth.lerp(f, this.yo, this.y) - vec3.y());
         float z = (float) (Mth.lerp(f, this.zo, this.z) - vec3.z());
-        Quaternion quaternion = new Quaternion(camera.rotation());
-        quaternion.mul(Vector3f.XN.rotationDegrees(camera.getXRot()));
-        quaternion.mul(Vector3f.YP.rotationDegrees(camera.getYRot()));
-        quaternion.mul(Vector3f.YP.rotation((float) Math.atan2(x, z)));
+        Quaternionf quaternion = new Quaternionf(camera.rotation());
+        quaternion.mul(Axis.XN.rotationDegrees(camera.getXRot()));
+        quaternion.mul(Axis.YP.rotationDegrees(camera.getYRot()));
+        quaternion.mul(Axis.YP.rotation((float) Math.atan2(x, z)));
 
         Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
         float k = this.getQuadSize(f);
 
         for (int l = 0; l < 4; ++l) {
             Vector3f vector3f = vector3fs[l];
-            vector3f.transform(quaternion);
+            vector3f.rotate(quaternion);
             vector3f.mul(k);
             vector3f.add(x, y, z);
         }
