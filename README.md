@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=transparent&fontAlign=30&fontColor=ffffff&height=300&section=header&text=Particle%20Rain&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=transparent&fontAlign=30&fontColor=ffffff&height=200&section=header&text=Particle%20Rain&fontSize=70)
 
 Particle Rain replaces the default rain with some particle effects. In addition to snow and rain, deserts have sandstorms and mesas have red sandstorms.
 
