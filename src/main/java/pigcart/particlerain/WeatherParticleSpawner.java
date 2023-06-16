@@ -22,7 +22,7 @@ public final class WeatherParticleSpawner {
     }
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
-        if (biome.value().getPrecipitation() != Biome.Precipitation.NONE) {
+        if (biome.value().hasPrecipitation()) {
             if (biome.value().getBaseTemperature() >= 0.15F) {
                 if (ParticleRainClient.config.doRainParticles)
                     level.addParticle(ParticleRainClient.RAIN_DROP, x, y, z, 1, 1, 1);
@@ -64,7 +64,7 @@ public final class WeatherParticleSpawner {
 
     @Nullable
     public static SoundEvent getBiomeSound(Holder<Biome> biome, boolean above) {
-        if (biome.value().getPrecipitation() != Biome.Precipitation.NONE) {
+        if (biome.value().hasPrecipitation()) {
             if (biome.value().getBaseTemperature() >= 0.15F) {
                 return above ? SoundEvents.WEATHER_RAIN_ABOVE : SoundEvents.WEATHER_RAIN;
             } else {

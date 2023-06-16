@@ -39,7 +39,7 @@ public class LevelRendererMixin {
         if (f > 0.0F) {
             Random random = new Random((long) this.ticks * 312987231L);
             LevelReader level = this.minecraft.level;
-            BlockPos blockPos = new BlockPos(camera.getPosition());
+            BlockPos blockPos = BlockPos.containing(camera.getPosition());
             BlockPos blockPos2 = null;
 
             for (int j = 0; j < 100.0F * f * f; ++j) {
