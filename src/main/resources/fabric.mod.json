@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "particlerain",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "name": "Particle Rain",
   "description": "Replaces rain with a particle effect.",
   "authors": [

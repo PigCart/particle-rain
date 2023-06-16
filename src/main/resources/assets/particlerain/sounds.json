@@ -1,34 +1,42 @@
 {
   "weather.snow": {
     "sounds": [
-      {
-        "name": "particlerain:weather/snow",
-        "stream": true
-      }
+      "particlerain:weather/snow-01",
+	  "particlerain:weather/snow-02",
+	  "particlerain:weather/snow-03",
+	  "particlerain:weather/snow-04",
+	  "particlerain:weather/snow-05",
+	  "particlerain:weather/snow-06"
     ]
   },
   "weather.snow.above": {
     "sounds": [
-      {
-        "name": "particlerain:weather/snow_above",
-        "stream": true
-      }
+      "particlerain:weather/snow-01",
+	  "particlerain:weather/snow-02",
+	  "particlerain:weather/snow-03",
+	  "particlerain:weather/snow-04",
+	  "particlerain:weather/snow-05",
+	  "particlerain:weather/snow-06"
     ]
   },
   "weather.sandstorm": {
     "sounds": [
-      {
-        "name": "particlerain:weather/sandstorm",
-        "stream": true
-      }
+      "particlerain:weather/sandstorm-01",
+	  "particlerain:weather/sandstorm-02",
+	  "particlerain:weather/sandstorm-03",
+	  "particlerain:weather/sandstorm-04",
+	  "particlerain:weather/sandstorm-05",
+	  "particlerain:weather/sandstorm-06"
     ]
   },
   "weather.sandstorm.above": {
     "sounds": [
-      {
-        "name": "particlerain:weather/sandstorm_above",
-        "stream": true
-      }
+      "particlerain:weather/sandstormabove-01",
+	  "particlerain:weather/sandstormabove-02",
+	  "particlerain:weather/sandstormabove-03",
+	  "particlerain:weather/sandstormabove-04",
+	  "particlerain:weather/sandstormabove-05",
+	  "particlerain:weather/sandstormabove-06"
     ]
   }
 }
