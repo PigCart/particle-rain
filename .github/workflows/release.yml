@@ -31,3 +31,4 @@ jobs:
           curseforge-id: 421897
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          files: build/libs/!(*-sources)*.jar
