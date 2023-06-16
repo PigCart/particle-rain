@@ -1,33 +1,33 @@
-name: release-artifacts
+name: release
 
 on:
   release:
-    types:
-      - published
+    types: [published]
 
 jobs:
-  build:
+  upload_asset:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2.1.0
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - uses: burrunan/gradle-cache-action@v1
         with:
-          distribution: zulu
+          gradle-distribution-sha-256-sum-warning: false
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          cache: gradle
           java-version: 17
-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Build artifacts
-        run: ./gradlew clean build
-
-      - name: Upload assets to Modrinth and CurseForge
-        uses: Kir-Antipov/mc-publish@v3.0
+      - run: chmod +x gradlew
+      - name: Build
+        run: ./gradlew build --no-daemon
+      - uses: Kir-Antipov/mc-publish@v3.3
         with:
-          name: ""
           modrinth-id: nrikgvxm
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-id: 421897
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

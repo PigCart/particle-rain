@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "particlerain",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "name": "Particle Rain",
   "description": "Replaces rain with a particle effect.",
   "authors": [
@@ -28,7 +28,8 @@
   ],
   "depends": {
     "fabricloader": ">=0.12.8",
-    "fabric": "*",
-    "cloth-config2": "*"
+    "fabric-api": "*",
+    "cloth-config2": "*",
+    "minecraft": ">=1.19.3"
   }
 }
