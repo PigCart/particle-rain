@@ -6,6 +6,8 @@
   "text.autoconfig.particlerain.option.particleRadius": "Particle Radius",
   "text.autoconfig.particlerain.option.rainDropGravity": "Rain Drop Gravity",
   "text.autoconfig.particlerain.option.snowFlakeGravity": "Snow Flake Gravity",
+  "text.autoconfig.particlerain.option.snowRotationAmount": "Snow Rotation Amount",
+  "text.autoconfig.particlerain.option.snowWindDampening": "Snow Wind Dampening",
   "text.autoconfig.particlerain.option.desertDustGravity": "Desert Dust Gravity",
   "text.autoconfig.particlerain.option.renderVanillaWeather": "Render Vanilla Weather",
   "text.autoconfig.particlerain.option.doRainParticles": "Do Rain Particles",

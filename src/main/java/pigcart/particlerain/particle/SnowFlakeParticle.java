@@ -9,6 +9,7 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import pigcart.particlerain.ParticleRainClient;
 
 public class SnowFlakeParticle extends WeatherParticle {
@@ -17,10 +18,16 @@ public class SnowFlakeParticle extends WeatherParticle {
         super(level, x, y, z, red, green, blue, ParticleRainClient.config.snowFlakeGravity, provider);
         this.lifetime = ParticleRainClient.config.particleRadius * 10;
         this.setSize(0.1F, 0.1F);
+
+        RandomSource rand = RandomSource.create();
+        this.xd = rand.nextFloat()/ParticleRainClient.config.snowWindDampening;
+        this.zd = rand.nextFloat()/ParticleRainClient.config.snowWindDampening;
     }
 
     public void tick() {
         super.tick();
+        this.oRoll = this.roll;
+        this.roll = this.oRoll + ParticleRainClient.config.snowRotationAmount;
         if (this.shouldRemove() || this.onGround || this.level.getFluidState(this.pos).is(FluidTags.WATER)) {
             this.remove();
         }
