@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.WeatherParticleSpawner;
 
 import java.util.Random;
@@ -35,41 +36,45 @@ public class LevelRendererMixin {
 
     @Inject(method = "tickRain", at = @At("HEAD"), cancellable = true)
     public void tickRain(Camera camera, CallbackInfo ci) {
-        float f = this.minecraft.level.getRainLevel(1.0F);
-        if (f > 0.0F) {
-            Random random = new Random((long) this.ticks * 312987231L);
-            LevelReader level = this.minecraft.level;
-            BlockPos blockPos = BlockPos.containing(camera.getPosition());
-            BlockPos blockPos2 = null;
+        if (!ParticleRainClient.config.renderVanillaWeather) {
+            float f = this.minecraft.level.getRainLevel(1.0F);
+            if (f > 0.0F) {
+                Random random = new Random((long) this.ticks * 312987231L);
+                LevelReader level = this.minecraft.level;
+                BlockPos blockPos = BlockPos.containing(camera.getPosition());
+                BlockPos blockPos2 = null;
 
-            for (int j = 0; j < 100.0F * f * f; ++j) {
-                int k = random.nextInt(21) - 10;
-                int l = random.nextInt(21) - 10;
-                BlockPos blockPos3 = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos.offset(k, 0, l));
-                if (blockPos3.getY() > level.getMinBuildHeight() && blockPos3.getY() <= blockPos.getY() + 10 && blockPos3.getY() >= blockPos.getY() - 10) {
-                    blockPos2 = blockPos3.below();
+                for (int j = 0; j < 100.0F * f * f; ++j) {
+                    int k = random.nextInt(21) - 10;
+                    int l = random.nextInt(21) - 10;
+                    BlockPos blockPos3 = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos.offset(k, 0, l));
+                    if (blockPos3.getY() > level.getMinBuildHeight() && blockPos3.getY() <= blockPos.getY() + 10 && blockPos3.getY() >= blockPos.getY() - 10) {
+                        blockPos2 = blockPos3.below();
+                    }
+                }
+
+                if (blockPos2 != null && random.nextInt(3) < this.rainSoundTime++) {
+                    this.rainSoundTime = 0;
+                    if (blockPos2.getY() > blockPos.getY() + 1 && level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).getY() > Mth.floor((float) blockPos.getY())) {
+                        SoundEvent sound = WeatherParticleSpawner.getBiomeSound(level.getBiome(blockPos2), true);
+                        if (sound != null)
+                            this.minecraft.level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.1F, 0.5F, false);
+                    } else {
+                        SoundEvent sound = WeatherParticleSpawner.getBiomeSound(level.getBiome(blockPos2), false);
+                        if (sound != null)
+                            this.minecraft.level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.2F, 1.0F, false);
+                    }
                 }
             }
 
-            if (blockPos2 != null && random.nextInt(3) < this.rainSoundTime++) {
-                this.rainSoundTime = 0;
-                if (blockPos2.getY() > blockPos.getY() + 1 && level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).getY() > Mth.floor((float) blockPos.getY())) {
-                    SoundEvent sound = WeatherParticleSpawner.getBiomeSound(level.getBiome(blockPos2), true);
-                    if (sound != null)
-                        this.minecraft.level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.1F, 0.5F, false);
-                } else {
-                    SoundEvent sound = WeatherParticleSpawner.getBiomeSound(level.getBiome(blockPos2), false);
-                    if (sound != null)
-                        this.minecraft.level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.2F, 1.0F, false);
-                }
-            }
+            ci.cancel();
         }
-
-        ci.cancel();
     }
 
     @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
     public void renderWeather(LightTexture lightTexture, float partialTicks, double x, double y, double z, CallbackInfo ci) {
-        ci.cancel();
+        if (!ParticleRainClient.config.renderVanillaWeather) {
+            ci.cancel();
+        }
     }
 }
