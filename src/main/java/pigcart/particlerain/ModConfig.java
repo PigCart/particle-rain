@@ -19,4 +19,23 @@ public class ModConfig implements ConfigData {
     public boolean doSnowParticles = true;
     public boolean doSandParticles = true;
     public boolean renderVanillaWeather = false;
+
+
+    @ConfigEntry.Gui.CollapsibleObject
+    ParticleColors color = new ParticleColors();
+
+    static class ParticleColors {
+        public float rainRed = 0.5F;
+        public float rainGreen = 0.5F;
+        public float rainBlue = 1.0F;
+        public float snowRed = 1.0F;
+        public float snowGreen = 1.0F;
+        public float snowBlue = 1.0F;
+        public float desertRed = 0.9F;
+        public float desertGreen = 0.8F;
+        public float desertBlue = 0.6F;
+        public float mesaRed = 0.8F;
+        public float mesaGreen = 0.4F;
+        public float mesaBlue = 0.0F;
+    }
 }

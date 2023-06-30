@@ -25,16 +25,16 @@ public final class WeatherParticleSpawner {
         if (biome.value().hasPrecipitation()) {
             if (biome.value().getBaseTemperature() >= 0.15F) {
                 if (ParticleRainClient.config.doRainParticles)
-                    level.addParticle(ParticleRainClient.RAIN_DROP, x, y, z, 1, 1, 1);
+                    level.addParticle(ParticleRainClient.RAIN_DROP, x, y, z, ParticleRainClient.config.color.rainRed, ParticleRainClient.config.color.rainGreen, ParticleRainClient.config.color.rainBlue);
             } else {
                 if (ParticleRainClient.config.doSnowParticles && level.getRandom().nextFloat() < 0.2F)
-                    level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, 1, 1, 1);
+                    level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, ParticleRainClient.config.color.snowRed, ParticleRainClient.config.color.snowGreen, ParticleRainClient.config.color.snowBlue);
             }
         } else if (ParticleRainClient.config.doSandParticles && level.getRandom().nextFloat() < 0.5F) {
             if (biome.is(Biomes.DESERT)) {
-                level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0.9F, 0.8F, 0.6F);
+                level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, ParticleRainClient.config.color.desertRed, ParticleRainClient.config.color.desertGreen, ParticleRainClient.config.color.desertBlue);
             } else if (biome.is(BiomeTags.IS_BADLANDS)) {
-                level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0.8F, 0.4F, 0);
+                level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, ParticleRainClient.config.color.mesaRed, ParticleRainClient.config.color.mesaGreen, ParticleRainClient.config.color.mesaBlue);
             }
         }
     }
