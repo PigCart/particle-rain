@@ -27,8 +27,12 @@ public class RainDropParticle extends WeatherParticle {
 
     private final BlockPos.MutableBlockPos fluidPos;
 
-    protected RainDropParticle(ClientLevel clientWorld, double x, double y, double z, float red, float green, float blue, SpriteSet provider) {
-        super(clientWorld, x, y, z, red, green, blue, ParticleRainClient.config.rainDropGravity, provider);
+    protected RainDropParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
+        super(clientWorld, x, y, z, ParticleRainClient.config.rainDropGravity, provider);
+
+        this.rCol = ParticleRainClient.config.color.rainRed;
+        this.gCol = ParticleRainClient.config.color.rainGreen;
+        this.bCol = ParticleRainClient.config.color.rainBlue;
 
         this.lifetime = 200;
         this.quadSize = 0.5F;
@@ -94,8 +98,8 @@ public class RainDropParticle extends WeatherParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double red, double green, double blue) {
-            return new RainDropParticle(level, x, y, z, (float) red, (float) green, (float) blue, this.provider);
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+            return new RainDropParticle(level, x, y, z, this.provider);
         }
     }
 }

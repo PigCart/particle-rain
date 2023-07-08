@@ -5,16 +5,28 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.FluidTags;
 import pigcart.particlerain.ParticleRainClient;
 
 public class DesertDustParticle extends WeatherParticle {
 
-    private DesertDustParticle(ClientLevel clientWorld, double x, double y, double z, float red, float green, float blue, SpriteSet provider) {
-        super(clientWorld, x, y, z, red, green, blue, ParticleRainClient.config.desertDustGravity, provider);
+    private DesertDustParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
+        super(clientWorld, x, y, z, ParticleRainClient.config.desertDustGravity, provider);
         this.lifetime = 100;
         this.xd = -0.4F;
+
+        if (clientWorld.getBiome(new BlockPos((int) this.x, (int) this.y, (int) this.z)).is(BiomeTags.IS_BADLANDS)) {
+            this.rCol = ParticleRainClient.config.color.mesaRed;
+            this.gCol = ParticleRainClient.config.color.mesaGreen;
+            this.bCol = ParticleRainClient.config.color.mesaBlue;
+        } else {
+            this.rCol = ParticleRainClient.config.color.desertRed;
+            this.gCol = ParticleRainClient.config.color.desertGreen;
+            this.bCol = ParticleRainClient.config.color.desertBlue;
+        }
     }
 
     @Override
@@ -42,8 +54,8 @@ public class DesertDustParticle extends WeatherParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double red, double green, double blue) {
-            return new DesertDustParticle(level, x, y, z, (float) red, (float) green, (float) blue, this.provider);
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+            return new DesertDustParticle(level, x, y, z, this.provider);
         }
     }
 }

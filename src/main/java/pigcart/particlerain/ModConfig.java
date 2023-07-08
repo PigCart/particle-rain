@@ -22,9 +22,9 @@ public class ModConfig implements ConfigData {
 
 
     @ConfigEntry.Gui.CollapsibleObject
-    ParticleColors color = new ParticleColors();
+    public ParticleColors color = new ParticleColors();
 
-    static class ParticleColors {
+    public static class ParticleColors {
         public float rainRed = 0.5F;
         public float rainGreen = 0.5F;
         public float rainBlue = 1.0F;

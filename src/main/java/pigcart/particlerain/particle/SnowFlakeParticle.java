@@ -14,10 +14,14 @@ import pigcart.particlerain.ParticleRainClient;
 
 public class SnowFlakeParticle extends WeatherParticle {
 
-    private SnowFlakeParticle(ClientLevel level, double x, double y, double z, float red, float green, float blue, SpriteSet provider) {
-        super(level, x, y, z, red, green, blue, ParticleRainClient.config.snowFlakeGravity, provider);
+    private SnowFlakeParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
+        super(level, x, y, z, ParticleRainClient.config.snowFlakeGravity, provider);
         this.lifetime = ParticleRainClient.config.particleRadius * 10;
         this.setSize(0.1F, 0.1F);
+
+        this.rCol = ParticleRainClient.config.color.snowRed;
+        this.gCol = ParticleRainClient.config.color.snowGreen;
+        this.bCol = ParticleRainClient.config.color.snowBlue;
 
         RandomSource rand = RandomSource.create();
         this.xd = rand.nextFloat()/ParticleRainClient.config.snowWindDampening;
@@ -48,8 +52,8 @@ public class SnowFlakeParticle extends WeatherParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double red, double green, double blue) {
-            return new SnowFlakeParticle(level, x, y, z, (float) red, (float) green, (float) blue, this.provider);
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+            return new SnowFlakeParticle(level, x, y, z, this.provider);
         }
     }
 }

@@ -12,8 +12,8 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected final BlockPos.MutableBlockPos pos;
 
-    protected WeatherParticle(ClientLevel level, double x, double y, double z, float red, float green, float blue, float gravity, SpriteSet provider) {
-        super(level, x, y, z, red, green, blue);
+    protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, SpriteSet provider) {
+        super(level, x, y, z);
         this.setSprite(provider.get(level.getRandom()));
 
         this.gravity = gravity;
@@ -21,10 +21,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         this.xd = 0.0F;
         this.yd = -gravity;
         this.zd = 0.0F;
-
-        this.rCol = red;
-        this.gCol = green;
-        this.bCol = blue;
 
         this.quadSize = 0.1F;
 
@@ -40,6 +36,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     protected boolean shouldRemove() {
         Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
         return cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > (ParticleRainClient.config.particleRadius + 2) * (ParticleRainClient.config.particleRadius + 2);
-        // particleRadius + 2 prevents particles from flickering in and out at the edge of the radius
+        // particleRadius + 2 reduces particles flickering in and out at the edge of the radius
     }
 }
