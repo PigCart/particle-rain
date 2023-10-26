@@ -20,6 +20,13 @@ public final class WeatherParticleSpawner {
 
     private WeatherParticleSpawner() {
     }
+    private static String printBiome(Holder<Biome> holder) {
+        return holder.unwrap().map((resourceKey) -> {
+            return resourceKey.location().toString();
+        }, (biome) -> {
+            return "[unregistered " + biome + "]";
+        });
+    }
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         if (biome.value().hasPrecipitation()) {
@@ -31,7 +38,7 @@ public final class WeatherParticleSpawner {
                     level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, 0, 0, 0);
             }
         } else if (ParticleRainClient.config.doSandParticles && level.getRandom().nextFloat() < 0.5F) {
-            if (biome.is(Biomes.DESERT)) {
+            if (printBiome(biome).contains("desert") && biome.value().getBaseTemperature() >= 1.0F) {
                 level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0, 0, 0);
             } else if (biome.is(BiomeTags.IS_BADLANDS)) {
                 level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0, 0, 0);
