@@ -8,7 +8,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 public class ModConfig implements ConfigData {
 
     public int particleDensity = 200;
-    public int particleStormDensity = 800;
+    public int particleStormDensity = 500;
     public int particleRadius = 25;
     public float rainDropGravity = 1.0F;
     public float snowFlakeGravity = 0.1F;
