@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         java: [
-          17,    # Current Java LTS & minimum supported by Minecraft
+          21,
         ]
         os: [ubuntu-22.04]
     runs-on: ${{ matrix.os }}
@@ -21,12 +21,10 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'microsoft'
       - name: make gradle wrapper executable
-        if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
       - name: capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts

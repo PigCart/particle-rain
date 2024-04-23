@@ -20,7 +20,7 @@ jobs:
         with:
           distribution: temurin
           cache: gradle
-          java-version: 17
+          java-version: 21
       - run: chmod +x gradlew
       - name: Build
         run: ./gradlew build --no-daemon
