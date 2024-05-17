@@ -5,7 +5,13 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import org.joml.Vector2d;
 import pigcart.particlerain.ParticleRainClient;
 
 public abstract class WeatherParticle extends TextureSheetParticle {
@@ -30,12 +36,28 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         super.tick();
-        this.pos.set(this.x, this.y, this.z);
+        this.pos.set(this.x, this.y - 0.2, this.z);
+        this.removeIfOOB();
     }
 
-    protected boolean shouldRemove() {
+    void removeIfOOB() {
         Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
-        return cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > (ParticleRainClient.config.particleRadius + 2) * (ParticleRainClient.config.particleRadius + 2);
-        // particleRadius + 2 reduces particles flickering in and out at the edge of the radius
+        if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > (ParticleRainClient.config.particleRadius + 2) * (ParticleRainClient.config.particleRadius + 2)) {
+            this.remove();
+        }
+
+    }
+    protected boolean removeIfObstructed() {
+        if (x == xo || y == yo || z == zo || !this.level.getFluidState(this.pos).isEmpty()) {
+            this.remove();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    protected boolean isHotBlock() {
+        FluidState fluidState = this.level.getFluidState(this.pos);
+        BlockState blockState = this.level.getBlockState(this.pos);
+        return fluidState.is(FluidTags.LAVA) || blockState.is(Blocks.MAGMA_BLOCK) || CampfireBlock.isLitCampfire(blockState);
     }
 }

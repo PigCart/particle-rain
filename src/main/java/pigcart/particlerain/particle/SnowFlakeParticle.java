@@ -2,11 +2,13 @@ package pigcart.particlerain.particle;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
@@ -32,8 +34,10 @@ public class SnowFlakeParticle extends WeatherParticle {
         super.tick();
         this.oRoll = this.roll;
         this.roll = this.oRoll + ParticleRainClient.config.snowRotationAmount;
-        if (this.shouldRemove() || this.onGround || this.level.getFluidState(this.pos).is(FluidTags.WATER)) {
-            this.remove();
+        if (this.removeIfObstructed()) {
+            if (this.isHotBlock()) {
+                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
+            }
         }
     }
 

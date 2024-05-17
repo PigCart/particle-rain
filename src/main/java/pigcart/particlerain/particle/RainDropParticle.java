@@ -2,7 +2,6 @@ package pigcart.particlerain.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import org.joml.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
@@ -13,18 +12,21 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.AxisAngle4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
 
-import java.lang.Math;
-import java.util.Vector;
-
 public class RainDropParticle extends WeatherParticle {
-
-    private final BlockPos.MutableBlockPos fluidPos;
 
     protected RainDropParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, ParticleRainClient.config.rainDropGravity, provider);
@@ -33,9 +35,11 @@ public class RainDropParticle extends WeatherParticle {
         this.gCol = ParticleRainClient.config.color.rainGreen;
         this.bCol = ParticleRainClient.config.color.rainBlue;
 
+        this.xd = gravity / 3;
+        this.zd = gravity / 3;
+
         this.lifetime = 200;
         this.quadSize = 0.5F;
-        this.fluidPos = new BlockPos.MutableBlockPos();
     }
 
     @Override
@@ -43,12 +47,13 @@ public class RainDropParticle extends WeatherParticle {
         super.tick();
         this.xd = gravity / 3;
         this.zd = gravity / 3;
-        this.fluidPos.set(this.x, this.y - 0.1, this.z);
 
-        if (this.shouldRemove() || this.onGround || !this.level.getFluidState(this.fluidPos).isEmpty()) {
-            this.remove();
-            if (this.onGround)
+        if (this.removeIfObstructed()) {
+            if (this.isHotBlock()) {
+                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
+            } else {
                 Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);
+            }
         }
     }
 
@@ -60,7 +65,7 @@ public class RainDropParticle extends WeatherParticle {
         float z = (float) (Mth.lerp(tickPercentage, this.zo, this.z) - vec3.z());
         // ideally rain angle is velocity based but the math for that is too complicated for little ol me :3
         Quaternionf quaternion = new Quaternionf(new AxisAngle4f(0.3f, -1, 0, 1));
-        quaternion.mul(new Quaternionf(camera.rotation()));
+        quaternion.mul(camera.rotation());
         quaternion.mul(Axis.XN.rotationDegrees(camera.getXRot()));
         quaternion.mul(Axis.YP.rotationDegrees(camera.getYRot()));
         quaternion.mul(Axis.YP.rotation((float) Math.atan2(x, z)));

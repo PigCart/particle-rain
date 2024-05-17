@@ -1,11 +1,13 @@
 package pigcart.particlerain.particle;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.FluidTags;
@@ -16,7 +18,8 @@ public class DesertDustParticle extends WeatherParticle {
     private DesertDustParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, ParticleRainClient.config.desertDustGravity, provider);
         this.lifetime = 100;
-        this.xd = -0.4F;
+        this.xd = 0.2F;
+        this.zd = 0.2F;
 
         if (clientWorld.getBiome(new BlockPos((int) this.x, (int) this.y, (int) this.z)).is(BiomeTags.IS_BADLANDS)) {
             this.rCol = ParticleRainClient.config.color.mesaRed;
@@ -33,11 +36,16 @@ public class DesertDustParticle extends WeatherParticle {
     public void tick() {
         super.tick();
 
-        this.xd = -0.4;
-        if (this.shouldRemove() || this.xo == this.x || this.level.getFluidState(this.pos).is(FluidTags.WATER))
-            this.remove();
-        if (this.onGround)
+        this.xd = 0.2;
+        this.zd = 0.2;
+        if (this.onGround) {
             this.yd = 0.1F;
+        }
+        if (this.removeIfObstructed()) {
+            if (this.isHotBlock()) {
+                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
+            }
+        }
     }
 
     @Override
