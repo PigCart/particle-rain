@@ -20,9 +20,9 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
 
-public class RainDropParticle extends WeatherParticle {
+public class RainSheetParticle extends WeatherParticle {
 
-    protected RainDropParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
+    protected RainSheetParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, ParticleRainClient.config.rainDropGravity, provider);
 
         this.rCol = ParticleRainClient.config.color.rainRed;
@@ -32,15 +32,13 @@ public class RainDropParticle extends WeatherParticle {
         this.xd = gravity / 3;
         this.zd = gravity / 3;
 
-        this.lifetime = ParticleRainClient.config.particleRadius * 5;
-        this.quadSize = 0.5F;
+        this.lifetime = 200;
+        this.quadSize = 2F;
     }
 
     @Override
     public void tick() {
         super.tick();
-        this.xd = gravity / 3;
-        this.zd = gravity / 3;
 
         if (this.removeIfObstructed() || this.onGround) {
             if (this.isHotBlock()) {
@@ -48,6 +46,11 @@ public class RainDropParticle extends WeatherParticle {
             } else {
                 Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);
             }
+        } else if (Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < ParticleRainClient.config.particleRadius / 2) {
+            //remove();
+        } else {
+            this.xd = gravity / 3;
+            this.zd = gravity / 3;
         }
     }
 
@@ -71,7 +74,7 @@ public class RainDropParticle extends WeatherParticle {
             Vector3f vector3f = vector3fs[l];
             vector3f.rotate(quaternion);
             vector3f.mul(k);
-            vector3f.add(x, y, z);
+            vector3f.add(x -1, y + 1.5F, z - 1);
         }
 
         float l = this.getU0();
@@ -105,7 +108,7 @@ public class RainDropParticle extends WeatherParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new RainDropParticle(level, x, y, z, this.provider);
+            return new RainSheetParticle(level, x, y, z, this.provider);
         }
     }
 }

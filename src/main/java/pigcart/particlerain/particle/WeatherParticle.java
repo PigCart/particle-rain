@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import org.joml.Vector2d;
 import pigcart.particlerain.ParticleRainClient;
 
 public abstract class WeatherParticle extends TextureSheetParticle {

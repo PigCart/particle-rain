@@ -1,5 +1,6 @@
 package pigcart.particlerain;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -31,13 +32,18 @@ public final class WeatherParticleSpawner {
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         if (biome.value().hasPrecipitation()) {
             if (biome.value().getBaseTemperature() >= 0.15F) {
-                if (ParticleRainClient.config.doRainParticles)
-                    level.addParticle(ParticleRainClient.RAIN_DROP, x, y, z, 0, 0, 0);
+                if (ParticleRainClient.config.doRainParticles) {
+                    if (y < Minecraft.getInstance().cameraEntity.yo + ( 4 * (ParticleRainClient.config.particleRadius / 5)) && level.random.nextBoolean()) {
+                        level.addParticle(ParticleRainClient.RAIN_SHEET, x, y, z, 0, 0, 0);
+                    } else {
+                        level.addParticle(ParticleRainClient.RAIN_DROP, x, y, z, 0, 0, 0);
+                    }
+                }
             } else {
-                if (ParticleRainClient.config.doSnowParticles && level.getRandom().nextFloat() < 0.2F)
+                if (ParticleRainClient.config.doSnowParticles && level.random.nextFloat() < 0.3)
                     level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, 0, 0, 0);
             }
-        } else if (ParticleRainClient.config.doSandParticles && level.getRandom().nextFloat() < 0.5F) {
+        } else if (ParticleRainClient.config.doSandParticles) {
             if (printBiome(biome).contains("desert") && biome.value().getBaseTemperature() >= 1.0F) {
                 level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0, 0, 0);
             } else if (biome.is(BiomeTags.IS_BADLANDS)) {

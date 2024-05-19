@@ -10,7 +10,6 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import pigcart.particlerain.ParticleRainClient;
 
@@ -18,7 +17,7 @@ public class SnowFlakeParticle extends WeatherParticle {
 
     private SnowFlakeParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.snowFlakeGravity, provider);
-        this.lifetime = ParticleRainClient.config.particleRadius * 10;
+        this.lifetime = ParticleRainClient.config.particleRadius * 5;
         this.setSize(0.1F, 0.1F);
 
         this.rCol = ParticleRainClient.config.color.snowRed;

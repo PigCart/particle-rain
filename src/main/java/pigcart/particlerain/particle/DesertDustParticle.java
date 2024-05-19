@@ -10,14 +10,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.tags.FluidTags;
 import pigcart.particlerain.ParticleRainClient;
 
 public class DesertDustParticle extends WeatherParticle {
 
     private DesertDustParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, ParticleRainClient.config.desertDustGravity, provider);
-        this.lifetime = 100;
+        this.lifetime = ParticleRainClient.config.particleRadius * 5;
         this.xd = 0.2F;
         this.zd = 0.2F;
 
