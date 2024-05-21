@@ -10,7 +10,6 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.RandomSource;
 import pigcart.particlerain.ParticleRainClient;
 
 public class SnowFlakeParticle extends WeatherParticle {
@@ -24,13 +23,13 @@ public class SnowFlakeParticle extends WeatherParticle {
         this.gCol = ParticleRainClient.config.color.snowGreen;
         this.bCol = ParticleRainClient.config.color.snowBlue;
 
-        RandomSource rand = RandomSource.create();
-        this.xd = rand.nextFloat()/ParticleRainClient.config.snowWindDampening;
-        this.zd = rand.nextFloat()/ParticleRainClient.config.snowWindDampening;
+        this.xd = level.getRandom().nextFloat()/ParticleRainClient.config.snowWindDampening;
+        this.zd = level.getRandom().nextFloat()/ParticleRainClient.config.snowWindDampening;
     }
 
     public void tick() {
         super.tick();
+
         this.oRoll = this.roll;
         this.roll = this.oRoll + ParticleRainClient.config.snowRotationAmount;
         if (this.removeIfObstructed()) {

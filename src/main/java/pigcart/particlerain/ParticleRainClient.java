@@ -12,10 +12,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import pigcart.particlerain.particle.DesertDustParticle;
-import pigcart.particlerain.particle.RainSheetParticle;
-import pigcart.particlerain.particle.RainDropParticle;
-import pigcart.particlerain.particle.SnowFlakeParticle;
+import pigcart.particlerain.particle.*;
 
 public class ParticleRainClient implements ClientModInitializer {
 
@@ -25,6 +22,7 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType RAIN_SHEET;
     public static SimpleParticleType SNOW_FLAKE;
     public static SimpleParticleType DESERT_DUST;
+    public static SimpleParticleType FOG;
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;
@@ -39,6 +37,7 @@ public class ParticleRainClient implements ClientModInitializer {
         RAIN_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "rain_sheet"), FabricParticleTypes.simple(true));
         SNOW_FLAKE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "snow_flake"), FabricParticleTypes.simple(true));
         DESERT_DUST = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "desert_dust"), FabricParticleTypes.simple(true));
+        FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "fog"), FabricParticleTypes.simple(true));
 
         WEATHER_SNOW = registerSound("weather.snow");
         WEATHER_SNOW_ABOVE = registerSound("weather.snow.above");
@@ -49,6 +48,7 @@ public class ParticleRainClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(RAIN_SHEET, RainSheetParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(SNOW_FLAKE, SnowFlakeParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(DESERT_DUST, DesertDustParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(FOG, FogParticle.DefaultFactory::new);
 
         AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();

@@ -31,6 +31,9 @@ public final class WeatherParticleSpawner {
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         if (biome.value().hasPrecipitation()) {
+            if (level.random.nextFloat() < 0.2) {
+                level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
+            }
             if (biome.value().getBaseTemperature() >= 0.15F) {
                 if (ParticleRainClient.config.doRainParticles) {
                     if (y < Minecraft.getInstance().cameraEntity.yo + ( 4 * (ParticleRainClient.config.particleRadius / 5)) && level.random.nextBoolean()) {
@@ -40,14 +43,17 @@ public final class WeatherParticleSpawner {
                     }
                 }
             } else {
-                if (ParticleRainClient.config.doSnowParticles && level.random.nextFloat() < 0.3)
+                if (ParticleRainClient.config.doSnowParticles && level.random.nextFloat() < 0.3) {
                     level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, 0, 0, 0);
+                }
             }
         } else if (ParticleRainClient.config.doSandParticles) {
             if (printBiome(biome).contains("desert") && biome.value().getBaseTemperature() >= 1.0F) {
                 level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0, 0, 0);
+                level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
             } else if (biome.is(BiomeTags.IS_BADLANDS)) {
                 level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0, 0, 0);
+                level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
             }
         }
     }

@@ -16,12 +16,16 @@ import pigcart.particlerain.ParticleRainClient;
 public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected final BlockPos.MutableBlockPos pos;
+    int fadeTime = 10;
+    boolean shouldFade = false;
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, SpriteSet provider) {
         super(level, x, y, z);
         this.setSprite(provider.get(level.getRandom()));
 
         this.gravity = gravity;
+
+        this.alpha = 0.0F;
 
         this.xd = 0.0F;
         this.yd = -gravity;
@@ -35,14 +39,24 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         super.tick();
+        if (age < 10) {
+            alpha = (age * 1.0f) / 10;
+        }
         this.pos.set(this.x, this.y - 0.2, this.z);
         this.removeIfOOB();
+        if (shouldFade) {
+            if (--fadeTime == 0) {
+                remove();
+            } else {
+                this.alpha = (fadeTime * 1.0F) / 10;
+            }
+        }
     }
 
     void removeIfOOB() {
         Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
         if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > (ParticleRainClient.config.particleRadius + 2) * (ParticleRainClient.config.particleRadius + 2)) {
-            this.remove();
+            shouldFade = true;
         }
 
     }
