@@ -18,13 +18,14 @@ import pigcart.particlerain.ParticleRainClient;
 public class FogParticle extends WeatherParticle {
 
     private FogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, ParticleRainClient.config.rainDropGravity / 2, provider);
+        super(level, x, y, z, 1F / 2, provider);
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
         this.quadSize = 8F;
+        this.alpha = 0;
 
-        this.rCol = ParticleRainClient.config.color.snowRed;
-        this.gCol = ParticleRainClient.config.color.snowGreen;
-        this.bCol = ParticleRainClient.config.color.snowBlue;
+        this.rCol = 0.8F;
+        this.gCol = 0.9F;
+        this.bCol = 1.0F;
 
         this.roll = level.random.nextFloat() * Mth.PI;
         this.oRoll = this.roll;
@@ -38,9 +39,8 @@ public class FogParticle extends WeatherParticle {
         BlockState fallingTowards = level.getBlockState(this.pos.offset(3, -8, 3));
         BlockPos blockPos = this.pos.offset(3, -8, 3);
         if (level.getHeight(Heightmap.Types.MOTION_BLOCKING, blockPos.getX(), blockPos.getZ()) >= blockPos.getY() || !fallingTowards.getFluidState().isEmpty()) {
-            if (!shouldFade) {
-                shouldFade = true;
-                fadeTime = (int) (alpha * 10);
+            if (!shouldFadeOut) {
+                shouldFadeOut = true;
             }
         }
         if (onGround) {
@@ -53,7 +53,7 @@ public class FogParticle extends WeatherParticle {
         double cameraAlpha = Mth.clamp(distance / 20, 0, 1);
         if (distance < 20) {
             if (cameraAlpha < 0.1) remove();
-            else if (alpha > cameraAlpha) alpha = (float) cameraAlpha;
+            //else if (alpha > cameraAlpha) alpha = (float) cameraAlpha;
         }
     }
 

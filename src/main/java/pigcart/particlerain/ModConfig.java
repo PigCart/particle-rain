@@ -12,7 +12,7 @@ public class ModConfig implements ConfigData {
     public int particleRadius = 30;
     public float rainDropGravity = 1.0F;
     public float snowFlakeGravity = 0.1F;
-    public float snowRotationAmount = 0.1F;
+    public float snowRotationAmount = 0.04F;
     public float snowWindDampening = 1.5F;
     public float desertDustGravity = 0.2F;
     public boolean doRainParticles = true;

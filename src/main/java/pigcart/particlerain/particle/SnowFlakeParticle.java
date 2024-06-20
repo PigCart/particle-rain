@@ -10,13 +10,15 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 import pigcart.particlerain.ParticleRainClient;
 
 public class SnowFlakeParticle extends WeatherParticle {
 
-    private SnowFlakeParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
+    float amountToRotateBy;
+
+    protected SnowFlakeParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.snowFlakeGravity, provider);
-        this.lifetime = ParticleRainClient.config.particleRadius * 5;
         this.setSize(0.1F, 0.1F);
 
         this.rCol = ParticleRainClient.config.color.snowRed;
@@ -25,13 +27,22 @@ public class SnowFlakeParticle extends WeatherParticle {
 
         this.xd = level.getRandom().nextFloat()/ParticleRainClient.config.snowWindDampening;
         this.zd = level.getRandom().nextFloat()/ParticleRainClient.config.snowWindDampening;
+
+        if (level.getRandom().nextBoolean()) {
+            this.amountToRotateBy = ParticleRainClient.config.snowRotationAmount;
+        } else {
+            this.amountToRotateBy = -ParticleRainClient.config.snowRotationAmount;
+        }
     }
 
     public void tick() {
         super.tick();
 
+        xd = Mth.clamp(xd, 0.05, 100);
+        zd = Mth.clamp(zd, 0.05, 100);
+
         this.oRoll = this.roll;
-        this.roll = this.oRoll + ParticleRainClient.config.snowRotationAmount;
+        this.roll = this.oRoll + this.amountToRotateBy;
         if (this.removeIfObstructed()) {
             if (this.isHotBlock()) {
                 Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);

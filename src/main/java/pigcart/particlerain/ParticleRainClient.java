@@ -21,6 +21,7 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType RAIN_DROP;
     public static SimpleParticleType RAIN_SHEET;
     public static SimpleParticleType SNOW_FLAKE;
+    public static SimpleParticleType SNOW_SHEET;
     public static SimpleParticleType DESERT_DUST;
     public static SimpleParticleType FOG;
 
@@ -36,6 +37,7 @@ public class ParticleRainClient implements ClientModInitializer {
         RAIN_DROP = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "rain_drop"), FabricParticleTypes.simple(true));
         RAIN_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "rain_sheet"), FabricParticleTypes.simple(true));
         SNOW_FLAKE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "snow_flake"), FabricParticleTypes.simple(true));
+        SNOW_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "snow_sheet"), FabricParticleTypes.simple(true));
         DESERT_DUST = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "desert_dust"), FabricParticleTypes.simple(true));
         FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "fog"), FabricParticleTypes.simple(true));
 
@@ -47,6 +49,7 @@ public class ParticleRainClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(RAIN_DROP, RainDropParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(RAIN_SHEET, RainSheetParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(SNOW_FLAKE, SnowFlakeParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(SNOW_SHEET, SnowSheetParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(DESERT_DUST, DesertDustParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(FOG, FogParticle.DefaultFactory::new);
 

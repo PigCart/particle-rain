@@ -6,6 +6,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
@@ -16,13 +17,13 @@ import pigcart.particlerain.ParticleRainClient;
 public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected final BlockPos.MutableBlockPos pos;
-    int fadeTime = 10;
-    boolean shouldFade = false;
+    int fadeOutTime = 10;
+    boolean shouldFadeOut = false;
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, SpriteSet provider) {
         super(level, x, y, z);
         this.setSprite(provider.get(level.getRandom()));
-
+        this.lifetime = ParticleRainClient.config.particleRadius * 10;
         this.gravity = gravity;
 
         this.alpha = 0.0F;
@@ -39,24 +40,25 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         super.tick();
-        if (age < 10) {
-            alpha = (age * 1.0f) / 10;
-        }
         this.pos.set(this.x, this.y - 0.2, this.z);
         this.removeIfOOB();
-        if (shouldFade) {
-            if (--fadeTime == 0) {
+        if (shouldFadeOut) {
+            if (this.alpha < 0.01) {
                 remove();
             } else {
-                this.alpha = (fadeTime * 1.0F) / 10;
+                this.alpha = this.alpha - 0.1F;
+            }
+        } else {
+            if (age < 10) {
+                this.alpha = (age * 1.0f) / 10;
             }
         }
     }
 
     void removeIfOOB() {
         Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
-        if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > (ParticleRainClient.config.particleRadius + 2) * (ParticleRainClient.config.particleRadius + 2)) {
-            shouldFade = true;
+        if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > Mth.square(ParticleRainClient.config.particleRadius)) {
+            shouldFadeOut = true;
         }
 
     }

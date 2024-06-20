@@ -16,7 +16,6 @@ public class DesertDustParticle extends WeatherParticle {
 
     private DesertDustParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, ParticleRainClient.config.desertDustGravity, provider);
-        this.lifetime = ParticleRainClient.config.particleRadius * 5;
         this.xd = 0.2F;
         this.zd = 0.2F;
 
@@ -45,11 +44,14 @@ public class DesertDustParticle extends WeatherParticle {
                 Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
             }
         }
+        if (age < 10) {
+            this.alpha = (age * 1.0f) / 10;
+        }
     }
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
