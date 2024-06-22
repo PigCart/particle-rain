@@ -20,6 +20,7 @@ public class ModConfig implements ConfigData {
     public boolean doSandParticles = true;
     public boolean renderVanillaWeather = false;
     public boolean doExperimentalFog = false;
+    public boolean alwaysRaining = false;
 
 
     @ConfigEntry.Gui.CollapsibleObject

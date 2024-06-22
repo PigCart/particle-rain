@@ -64,8 +64,20 @@ public final class WeatherParticleSpawner {
     }
 
     public static void update(ClientLevel level, Entity entity, float partialTicks) {
-        if (level.isRaining()) {
-            int density = (int) ((level.isThundering() ? ParticleRainClient.config.particleStormDensity : ParticleRainClient.config.particleDensity) * level.getRainLevel(partialTicks));
+        if (level.isRaining() || ParticleRainClient.config.alwaysRaining) {
+            int density;
+            if (level.isThundering())
+                if (ParticleRainClient.config.alwaysRaining) {
+                    density = ParticleRainClient.config.particleStormDensity;
+                } else {
+                    density = (int) (ParticleRainClient.config.particleStormDensity * level.getRainLevel(partialTicks));
+                }
+            else if (ParticleRainClient.config.alwaysRaining) {
+                density = ParticleRainClient.config.particleDensity;
+            } else {
+                density = (int) (ParticleRainClient.config.particleDensity * level.getRainLevel(partialTicks));
+            }
+
 
             RandomSource rand = RandomSource.create();
 

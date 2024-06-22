@@ -38,7 +38,6 @@ public class RainDropParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        this.roll = this.roll + 0.1F;
         this.xd = gravity / 3;
         this.zd = gravity / 3;
 

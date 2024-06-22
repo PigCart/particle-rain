@@ -13,15 +13,6 @@ public class RainSheetParticle extends RainDropParticle {
 
     protected RainSheetParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, provider);
-
-        this.rCol = ParticleRainClient.config.color.rainRed;
-        this.gCol = ParticleRainClient.config.color.rainGreen;
-        this.bCol = ParticleRainClient.config.color.rainBlue;
-
-        this.xd = gravity / 3;
-        this.zd = gravity / 3;
-
-        this.lifetime = 200;
         this.quadSize = 2F;
     }
 
