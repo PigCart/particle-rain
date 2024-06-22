@@ -17,7 +17,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
 
 public class RainDropParticle extends WeatherParticle {
@@ -39,6 +38,7 @@ public class RainDropParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
+        this.roll = this.roll + 0.1F;
         this.xd = gravity / 3;
         this.zd = gravity / 3;
 
@@ -52,41 +52,16 @@ public class RainDropParticle extends WeatherParticle {
     }
 
     @Override
-    public void render(VertexConsumer builder, Camera camera, float tickPercentage) {
-        Vec3 vec3 = camera.getPosition();
-        float x = (float) (Mth.lerp(tickPercentage, this.xo, this.x) - vec3.x());
-        float y = (float) (Mth.lerp(tickPercentage, this.yo, this.y) - vec3.y());
-        float z = (float) (Mth.lerp(tickPercentage, this.zo, this.z) - vec3.z());
-        // ideally rain angle is velocity based but the math for that is too complicated for little ol me :3
+    public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercentage) {
+        Vec3 camPos = camera.getPosition();
+        float x = (float) (Mth.lerp(tickPercentage, this.xo, this.x) - camPos.x());
+        float y = (float) (Mth.lerp(tickPercentage, this.yo, this.y) - camPos.y());
+        float z = (float) (Mth.lerp(tickPercentage, this.zo, this.z) - camPos.z());
+
+        // technically not correct when rain angle is used, but the backfacing isnt too noticeable at shallow angles!
         Quaternionf quaternion = new Quaternionf(new AxisAngle4f(0.3f, -1, 0, 1));
-        quaternion.mul(camera.rotation());
-        quaternion.mul(Axis.XN.rotationDegrees(camera.getXRot()));
-        quaternion.mul(Axis.YP.rotationDegrees(camera.getYRot()));
-        quaternion.mul(Axis.YP.rotation((float) Math.atan2(x, z)));
-
-        Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-        float k = this.getQuadSize(tickPercentage);
-
-        for (int l = 0; l < 4; ++l) {
-            Vector3f vector3f = vector3fs[l];
-            vector3f.rotate(quaternion);
-            vector3f.mul(k);
-            vector3f.add(x, y, z);
-        }
-
-        float l = this.getU0();
-        float vector3f = this.getU1();
-        float m = this.getV0();
-        float n = this.getV1();
-        int o = this.getLightColor(tickPercentage);
-        // bottom right
-        builder.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).uv(vector3f, n).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
-        // top right
-        builder.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).uv(vector3f, m).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
-        // top left
-        builder.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).uv(l, m).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
-        // bottom left
-        builder.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(l, n).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(o).endVertex();
+        quaternion.mul(Axis.YP.rotation((float) Math.atan2(x, z) + Mth.PI));
+        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, tickPercentage);
     }
 
     @Override

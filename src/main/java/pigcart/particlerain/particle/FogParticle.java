@@ -18,13 +18,12 @@ import pigcart.particlerain.ParticleRainClient;
 public class FogParticle extends WeatherParticle {
 
     private FogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, 1F / 2, provider);
+        super(level, x, y, z, 0.8F / 2, provider);
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
         this.quadSize = 8F;
-        this.alpha = 0;
 
         this.rCol = 0.8F;
-        this.gCol = 0.9F;
+        this.gCol = 0.8F;
         this.bCol = 1.0F;
 
         this.roll = level.random.nextFloat() * Mth.PI;
@@ -50,10 +49,12 @@ public class FogParticle extends WeatherParticle {
             this.zd = gravity / 3;
         }
         double distance = Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) - 8;
-        double cameraAlpha = Mth.clamp(distance / 20, 0, 1);
-        if (distance < 20) {
-            if (cameraAlpha < 0.1) remove();
-            //else if (alpha > cameraAlpha) alpha = (float) cameraAlpha;
+        double cameraAlpha = Mth.clamp(distance / 10, 0, 1);
+        if (distance < 10) {
+            if (cameraAlpha < 0.8) shouldFadeOut = true;
+            /* introduces flickering :c
+            if (alpha > cameraAlpha) alpha = (float) cameraAlpha;
+            */
         }
     }
 

@@ -13,6 +13,7 @@
   "text.autoconfig.particlerain.option.doRainParticles": "Do Rain Particles",
   "text.autoconfig.particlerain.option.doSnowParticles": "Do Snow Particles",
   "text.autoconfig.particlerain.option.doSandParticles": "Do Sand Particles",
+  "text.autoconfig.particlerain.option.doExperimentalFog": "Experimental Fog",
   "text.autoconfig.particlerain.category.particleColor": "Particle Colors",
   "text.autoconfig.particlerain.option.color":   "Particle Colors",
   "text.autoconfig.particlerain.option.color.rainRed":   "Rain Red",

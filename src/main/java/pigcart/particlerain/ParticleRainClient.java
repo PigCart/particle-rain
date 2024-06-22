@@ -34,12 +34,12 @@ public class ParticleRainClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        RAIN_DROP = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "rain_drop"), FabricParticleTypes.simple(true));
-        RAIN_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "rain_sheet"), FabricParticleTypes.simple(true));
-        SNOW_FLAKE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "snow_flake"), FabricParticleTypes.simple(true));
-        SNOW_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "snow_sheet"), FabricParticleTypes.simple(true));
-        DESERT_DUST = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "desert_dust"), FabricParticleTypes.simple(true));
-        FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "fog"), FabricParticleTypes.simple(true));
+        RAIN_DROP = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "rain_drop"), FabricParticleTypes.simple(true));
+        RAIN_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "rain_sheet"), FabricParticleTypes.simple(true));
+        SNOW_FLAKE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "snow_flake"), FabricParticleTypes.simple(true));
+        SNOW_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "snow_sheet"), FabricParticleTypes.simple(true));
+        DESERT_DUST = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "desert_dust"), FabricParticleTypes.simple(true));
+        FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "fog"), FabricParticleTypes.simple(true));
 
         WEATHER_SNOW = registerSound("weather.snow");
         WEATHER_SNOW_ABOVE = registerSound("weather.snow.above");
@@ -62,11 +62,11 @@ public class ParticleRainClient implements ClientModInitializer {
 
     private void onTick(Minecraft client) {
         if (!client.isPaused() && client.level != null && client.getCameraEntity() != null)
-            WeatherParticleSpawner.update(client.level, client.getCameraEntity(), client.getFrameTime());
+            WeatherParticleSpawner.update(client.level, client.getCameraEntity(), client.getFrameTimeNs());
     }
 
     private static SoundEvent registerSound(String name) {
-        ResourceLocation id = new ResourceLocation(MOD_ID, name);
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
         return Registry.register( BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 }

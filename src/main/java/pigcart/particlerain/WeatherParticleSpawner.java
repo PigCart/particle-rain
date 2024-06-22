@@ -31,9 +31,11 @@ public final class WeatherParticleSpawner {
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         if (biome.value().hasPrecipitation()) {
-            /*if (level.random.nextFloat() < 0.2) {
-                level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
-            }*/
+            if (ParticleRainClient.config.doExperimentalFog) {
+                if (level.random.nextFloat() < 0.2) {
+                    level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
+                }
+            }
             if (biome.value().getBaseTemperature() >= 0.15F) {
                 if (ParticleRainClient.config.doRainParticles) {
                     if (y < Minecraft.getInstance().cameraEntity.yo + ( 4 * (ParticleRainClient.config.particleRadius / 5)) && level.random.nextBoolean()) {
@@ -43,11 +45,13 @@ public final class WeatherParticleSpawner {
                     }
                 }
             } else {
-                if (ParticleRainClient.config.doSnowParticles && level.random.nextFloat() < 0.5) {
+                if (ParticleRainClient.config.doSnowParticles) {
                     if (level.isThundering()) {
                         level.addParticle(ParticleRainClient.SNOW_SHEET, x, y, z, 0, 0, 0);
                     }
-                    level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, 0, 0, 0);
+                    else if (level.random.nextFloat() < 0.8) {
+                        level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, 0, 0, 0);
+                    }
                 }
             }
         } else if (ParticleRainClient.config.doSandParticles) {

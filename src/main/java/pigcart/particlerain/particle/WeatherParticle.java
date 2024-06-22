@@ -17,7 +17,6 @@ import pigcart.particlerain.ParticleRainClient;
 public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected final BlockPos.MutableBlockPos pos;
-    int fadeOutTime = 10;
     boolean shouldFadeOut = false;
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, SpriteSet provider) {
