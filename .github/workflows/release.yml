@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/actions/wrapper-validation@v3
       - uses: burrunan/gradle-cache-action@v1
         with:
           gradle-distribution-sha-256-sum-warning: false
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           cache: gradle
@@ -32,3 +32,7 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           files: build/libs/!(*-sources)*.jar
+          dependencies: |
+            fabric(required){modrinth:P7dR8mSH}{curseforge:306612}#(ignore:github)
+            modmenu(recommended){modrinth:mOgUt4GM}{curseforge:308702}#(ignore:github)
+            clothconfig(required){modrinth:9s6osm5g}{curseforge:348521}#(ignore:github)
