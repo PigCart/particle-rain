@@ -30,12 +30,12 @@ public final class WeatherParticleSpawner {
     }
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
-        if (biome.value().hasPrecipitation()) {
-            if (ParticleRainClient.config.doExperimentalFog) {
-                if (level.random.nextFloat() < 0.2) {
-                    level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
-                }
+        if (ParticleRainClient.config.doExperimentalFog) {
+            if (level.random.nextFloat() < 0.3) {
+                level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
             }
+        }
+        if (biome.value().hasPrecipitation()) {
             if (biome.value().getBaseTemperature() >= 0.15F) {
                 if (ParticleRainClient.config.doRainParticles) {
                     if (y < Minecraft.getInstance().cameraEntity.yo + ( 4 * (ParticleRainClient.config.particleRadius / 5)) && level.random.nextBoolean()) {
@@ -46,7 +46,7 @@ public final class WeatherParticleSpawner {
                 }
             } else {
                 if (ParticleRainClient.config.doSnowParticles) {
-                    if (level.isThundering()) {
+                    if (level.isThundering() && level.random.nextFloat() < 0.3) {
                         level.addParticle(ParticleRainClient.SNOW_SHEET, x, y, z, 0, 0, 0);
                     }
                     else if (level.random.nextFloat() < 0.8) {
@@ -55,10 +55,13 @@ public final class WeatherParticleSpawner {
                 }
             }
         } else if (ParticleRainClient.config.doSandParticles) {
-            if (printBiome(biome).contains("desert") && biome.value().getBaseTemperature() >= 1.0F) {
-                level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0, 0, 0);
-            } else if (biome.is(BiomeTags.IS_BADLANDS)) {
-                level.addParticle(ParticleRainClient.DESERT_DUST, x, y, z, 0, 0, 0);
+            // printBiome offers some basic out of the box support for modded desert biomes (at least ones with descriptive names)
+            if (printBiome(biome).contains("desert") && biome.value().getBaseTemperature() >= 1.0F || biome.is(BiomeTags.IS_BADLANDS)) {
+                if (level.random.nextBoolean()) {
+                    level.addParticle(ParticleRainClient.DUST_SHEET, x, y, z, 0, 0, 0);
+                } else {
+                    level.addParticle(ParticleRainClient.DUST_MOTE, x, y, z, 0, 0, 0);
+                }
             }
         }
     }

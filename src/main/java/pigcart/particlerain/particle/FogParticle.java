@@ -10,21 +10,34 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import pigcart.particlerain.ParticleRainClient;
 
 public class FogParticle extends WeatherParticle {
 
     private FogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, 0.8F / 2, provider);
+        super(level, x, y, z, 0.2F, provider);
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
         this.quadSize = 8F;
 
-        this.rCol = 0.8F;
-        this.gCol = 0.8F;
-        this.bCol = 1.0F;
+        if (level.getBiome(new BlockPos((int) this.x, (int) this.y, (int) this.z)).value().hasPrecipitation()) {
+            this.rCol = 0.8F;
+            this.gCol = 0.8F;
+            this.bCol = 1.0F;
+        }
+        else if (level.getBiome(new BlockPos((int) this.x, (int) this.y, (int) this.z)).is(BiomeTags.IS_BADLANDS)) {
+            this.rCol = ParticleRainClient.config.color.mesaRed;
+            this.gCol = ParticleRainClient.config.color.mesaGreen;
+            this.bCol = ParticleRainClient.config.color.mesaBlue;
+        } else {
+            this.rCol = ParticleRainClient.config.color.desertRed;
+            this.gCol = ParticleRainClient.config.color.desertGreen;
+            this.bCol = ParticleRainClient.config.color.desertBlue;
+        }
 
         this.roll = level.random.nextFloat() * Mth.PI;
         this.oRoll = this.roll;

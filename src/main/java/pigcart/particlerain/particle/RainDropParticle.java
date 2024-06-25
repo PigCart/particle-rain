@@ -41,12 +41,15 @@ public class RainDropParticle extends WeatherParticle {
         this.xd = gravity / 3;
         this.zd = gravity / 3;
 
-        if (this.removeIfObstructed() || this.onGround) {
+        if (this.onGround || this.removeIfObstructed()) {
             if (this.isHotBlock()) {
                 Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
             } else {
                 Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);
             }
+            this.remove();
+        } else if (!this.level.getFluidState(this.pos).isEmpty()) {
+            this.remove();
         }
     }
 

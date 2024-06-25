@@ -43,10 +43,11 @@ public class SnowFlakeParticle extends WeatherParticle {
 
         this.oRoll = this.roll;
         this.roll = this.oRoll + this.amountToRotateBy;
-        if (this.removeIfObstructed()) {
+        if (this.onGround || this.removeIfObstructed()) {
             if (this.isHotBlock()) {
                 Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
             }
+            this.remove();
         }
     }
 

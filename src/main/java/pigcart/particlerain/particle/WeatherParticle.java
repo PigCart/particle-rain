@@ -62,7 +62,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     }
     protected boolean removeIfObstructed() {
-        if (x == xo || y == yo || z == zo || !this.level.getFluidState(this.pos).isEmpty()) {
+        if (x == xo || z == zo) {
             this.remove();
             return true;
         } else {
