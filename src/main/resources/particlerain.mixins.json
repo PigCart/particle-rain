@@ -4,7 +4,8 @@
   "package": "pigcart.particlerain.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "LevelRendererMixin"
+    "LevelRendererMixin",
+    "RegistrySyncManagerMixin"
   ],
   "client": [
   ],

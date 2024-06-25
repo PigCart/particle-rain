@@ -41,10 +41,10 @@ public class ParticleRainClient implements ClientModInitializer {
         DESERT_DUST = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "desert_dust"), FabricParticleTypes.simple(true));
         FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "fog"), FabricParticleTypes.simple(true));
 
-        WEATHER_SNOW = registerSound("weather.snow");
-        WEATHER_SNOW_ABOVE = registerSound("weather.snow.above");
-        WEATHER_SANDSTORM = registerSound("weather.sandstorm");
-        WEATHER_SANDSTORM_ABOVE = registerSound("weather.sandstorm.above");
+        WEATHER_SNOW = createSoundEvent("weather.snow");
+        WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
+        WEATHER_SANDSTORM = createSoundEvent("weather.sandstorm");
+        WEATHER_SANDSTORM_ABOVE = createSoundEvent("weather.sandstorm.above");
 
         ParticleFactoryRegistry.getInstance().register(RAIN_DROP, RainDropParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(RAIN_SHEET, RainSheetParticle.DefaultFactory::new);
@@ -65,8 +65,8 @@ public class ParticleRainClient implements ClientModInitializer {
             WeatherParticleSpawner.update(client.level, client.getCameraEntity(), client.getFrameTimeNs());
     }
 
-    private static SoundEvent registerSound(String name) {
+    private static SoundEvent createSoundEvent(String name) {
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
-        return Registry.register( BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
+        return SoundEvent.createVariableRangeEvent(id);
     }
 }
