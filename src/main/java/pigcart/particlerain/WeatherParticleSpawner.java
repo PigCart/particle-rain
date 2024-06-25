@@ -57,10 +57,15 @@ public final class WeatherParticleSpawner {
         } else if (ParticleRainClient.config.doSandParticles) {
             // printBiome offers some basic out of the box support for modded desert biomes (at least ones with descriptive names)
             if (printBiome(biome).contains("desert") && biome.value().getBaseTemperature() >= 1.0F || biome.is(BiomeTags.IS_BADLANDS)) {
-                if (level.random.nextBoolean()) {
-                    level.addParticle(ParticleRainClient.DUST_SHEET, x, y, z, 0, 0, 0);
-                } else {
-                    level.addParticle(ParticleRainClient.DUST_MOTE, x, y, z, 0, 0, 0);
+                if (level.random.nextFloat() < 0.8F) {
+                    if (level.random.nextBoolean()) {
+                        level.addParticle(ParticleRainClient.DUST_SHEET, x, y, z, 0, 0, 0);
+                    } else {
+                        level.addParticle(ParticleRainClient.DUST_MOTE, x, y, z, 0, 0, 0);
+                    }
+                    if (level.random.nextFloat() < 0.01F) {
+                        level.addParticle(ParticleRainClient.DEAD_BUSH, x, y, z, 0, 0, 0);
+                    }
                 }
             }
         }

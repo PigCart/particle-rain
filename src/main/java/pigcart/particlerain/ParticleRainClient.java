@@ -7,12 +7,16 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import pigcart.particlerain.particle.*;
+
+import java.util.Map;
 
 public class ParticleRainClient implements ClientModInitializer {
 
@@ -25,11 +29,14 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType DUST_MOTE;
     public static SimpleParticleType DUST_SHEET;
     public static SimpleParticleType FOG;
+    public static SimpleParticleType DEAD_BUSH;
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
+
+    public static Map<ResourceLocation, Map<Direction, TextureAtlasSprite>> textureMap;
 
     public static ModConfig config;
 
@@ -41,6 +48,7 @@ public class ParticleRainClient implements ClientModInitializer {
         SNOW_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "snow_sheet"), FabricParticleTypes.simple(true));
         DUST_MOTE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dust_mote"), FabricParticleTypes.simple(true));
         DUST_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dust_sheet"), FabricParticleTypes.simple(true));
+        DEAD_BUSH = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dead_bush"), FabricParticleTypes.simple(true));
         FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "fog"), FabricParticleTypes.simple(true));
 
         WEATHER_SNOW = createSoundEvent("weather.snow");
@@ -54,6 +62,7 @@ public class ParticleRainClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(SNOW_SHEET, SnowSheetParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(DUST_MOTE, DustMoteParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(DUST_SHEET, DustSheetParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(DEAD_BUSH, DeadBushParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(FOG, FogParticle.DefaultFactory::new);
 
         AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
