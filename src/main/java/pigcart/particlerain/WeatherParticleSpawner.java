@@ -11,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
@@ -35,8 +36,9 @@ public final class WeatherParticleSpawner {
                 level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
             }
         }
+        Precipitation precipitation = biome.value().getPrecipitationAt(pos);
         if (biome.value().hasPrecipitation()) {
-            if (biome.value().getBaseTemperature() >= 0.15F) {
+            if (precipitation == Precipitation.RAIN) {
                 if (ParticleRainClient.config.doRainParticles) {
                     if (y < Minecraft.getInstance().cameraEntity.yo + ( 4 * (ParticleRainClient.config.particleRadius / 5)) && level.random.nextBoolean()) {
                         level.addParticle(ParticleRainClient.RAIN_SHEET, x, y, z, 0, 0, 0);
@@ -44,7 +46,7 @@ public final class WeatherParticleSpawner {
                         level.addParticle(ParticleRainClient.RAIN_DROP, x, y, z, 0, 0, 0);
                     }
                 }
-            } else {
+            } else if (precipitation == Precipitation.SNOW) {
                 if (ParticleRainClient.config.doSnowParticles) {
                     if (level.isThundering() && level.random.nextFloat() < 0.3) {
                         level.addParticle(ParticleRainClient.SNOW_SHEET, x, y, z, 0, 0, 0);
@@ -107,11 +109,12 @@ public final class WeatherParticleSpawner {
     }
 
     @Nullable
-    public static SoundEvent getBiomeSound(Holder<Biome> biome, boolean above) {
+    public static SoundEvent getBiomeSound(BlockPos blockPos, boolean above) {
+        Holder<Biome> biome = Minecraft.getInstance().level.getBiome(blockPos);
         if (biome.value().hasPrecipitation()) {
-            if (biome.value().getBaseTemperature() >= 0.15F) {
+            if (biome.value().getPrecipitationAt(blockPos) == Precipitation.RAIN) {
                 return above ? SoundEvents.WEATHER_RAIN_ABOVE : SoundEvents.WEATHER_RAIN;
-            } else {
+            } else if (biome.value().getPrecipitationAt(blockPos) == Precipitation.SNOW) {
                 return above ? ParticleRainClient.WEATHER_SNOW_ABOVE : ParticleRainClient.WEATHER_SNOW;
             }
         } else if (biome.is(Biomes.DESERT) || biome.is(BiomeTags.IS_BADLANDS)) {
