@@ -65,9 +65,12 @@ public final class WeatherParticleSpawner {
                     } else {
                         level.addParticle(ParticleRainClient.DUST_MOTE, x, y, z, 0, 0, 0);
                     }
-                    if (level.random.nextFloat() < 0.01F) {
-                        level.addParticle(ParticleRainClient.DEAD_BUSH, x, y, z, 0, 0, 0);
-                    }
+                }
+            }
+        } if (ParticleRainClient.config.doShrubParticles) {
+            if (printBiome(biome).contains("desert") && biome.value().getBaseTemperature() >= 1.0F || biome.is(BiomeTags.IS_BADLANDS)) {
+                if (level.random.nextFloat() < 0.005F) {
+                    level.addParticle(ParticleRainClient.DEAD_BUSH, x, y, z, 0, 0, 0);
                 }
             }
         }

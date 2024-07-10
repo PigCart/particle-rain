@@ -18,6 +18,7 @@ public class ModConfig implements ConfigData {
     public boolean doRainParticles = true;
     public boolean doSnowParticles = true;
     public boolean doSandParticles = true;
+    public boolean doShrubParticles = true;
     public boolean renderVanillaWeather = false;
     public boolean doExperimentalFog = false;
     public boolean alwaysRaining = false;
