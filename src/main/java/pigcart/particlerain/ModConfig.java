@@ -6,9 +6,10 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @Config(name = "particlerain")
 public class ModConfig implements ConfigData {
-
+    //TODO: Option for particle size why not
     public int particleDensity = 100;
     public int particleStormDensity = 200;
+    public int maxParticleAmount = 3000;
     public int particleRadius = 30;
     public float rainDropGravity = 1.0F;
     public float snowFlakeGravity = 0.1F;

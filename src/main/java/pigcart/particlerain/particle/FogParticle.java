@@ -70,6 +70,8 @@ public class FogParticle extends WeatherParticle {
             */
         }
     }
+    //TODO: Try adaptive particle size based on distance from camera to keep the particle visually consistent
+    //may reduce/remove the need to fade out near the camera and might help the dither effect work better?
 
     @Override
     public ParticleRenderType getRenderType() {

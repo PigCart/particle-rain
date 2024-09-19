@@ -40,6 +40,7 @@ public class RainDropParticle extends WeatherParticle {
         super.tick();
         this.xd = gravity / 3;
         this.zd = gravity / 3;
+        //TODO: variable wind/angle
 
         if (this.onGround || this.removeIfObstructed()) {
             if (this.isHotBlock()) {

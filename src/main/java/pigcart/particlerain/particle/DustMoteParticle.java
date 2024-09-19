@@ -9,23 +9,23 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.material.MapColor;
 import pigcart.particlerain.ParticleRainClient;
+
+import java.awt.Color;
 
 public class DustMoteParticle extends WeatherParticle {
     protected DustMoteParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.desertDustGravity, provider);
-        this.xd = 0.2F;
-        this.zd = 0.2F;
-        if (level.getBiome(new BlockPos((int) this.x, (int) this.y, (int) this.z)).is(BiomeTags.IS_BADLANDS)) {
-            this.rCol = ParticleRainClient.config.color.mesaRed;
-            this.gCol = ParticleRainClient.config.color.mesaGreen;
-            this.bCol = ParticleRainClient.config.color.mesaBlue;
-        } else {
-            this.rCol = ParticleRainClient.config.color.desertRed;
-            this.gCol = ParticleRainClient.config.color.desertGreen;
-            this.bCol = ParticleRainClient.config.color.desertBlue;
-        }
+        this.xd = 0.3F;
+        this.zd = 0.3F;
+
+        final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateRGBColor(MapColor.Brightness.NORMAL));
+        // Red and blue seem to be swapped
+        this.bCol = (float)color.getRed() / 255;
+        this.rCol = (float)color.getBlue() / 255;
+        this.gCol = (float)color.getGreen() / 255;
     }
 
     @Override

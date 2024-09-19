@@ -10,12 +10,14 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
+import pigcart.particlerain.ParticleRainClient;
 
 public class DustSheetParticle extends DustMoteParticle {
 
     protected DustSheetParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, provider);
         this.quadSize = 1.5F;
+        this.gravity = ParticleRainClient.config.desertDustGravity - 0.1F;
     }
     @Override
     public void tick() {
