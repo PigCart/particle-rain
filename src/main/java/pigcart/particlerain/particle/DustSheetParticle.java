@@ -16,7 +16,7 @@ public class DustSheetParticle extends DustMoteParticle {
 
     protected DustSheetParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, provider);
-        this.quadSize = 1.5F;
+        this.quadSize = ParticleRainClient.config.size.dustSheetSize;
         this.gravity = ParticleRainClient.config.desertDustGravity - 0.1F;
     }
     @Override

@@ -18,6 +18,7 @@ import java.awt.Color;
 public class DustMoteParticle extends WeatherParticle {
     protected DustMoteParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.desertDustGravity, provider);
+        this.quadSize = ParticleRainClient.config.size.dustMoteSize;
         this.xd = 0.3F;
         this.zd = 0.3F;
 

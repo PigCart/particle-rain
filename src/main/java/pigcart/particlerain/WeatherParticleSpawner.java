@@ -33,7 +33,6 @@ public final class WeatherParticleSpawner {
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         //TODO: per biome overrides to whitelist/blacklist effects for specific biomes
-        //TODO: cancel spawning if particle count is above a set limit
         //TODO: change spawning mechanics
         // spawn particles in a weighted volume instead of on the shell of a sphere
         // OR: unique spawn mechanics for each effect (sand could rise from sand blocks in plumes, like dust-devils?)
@@ -42,7 +41,7 @@ public final class WeatherParticleSpawner {
             //TODO: can i mixin a new countParticles method?
             return;
         }
-        if (ParticleRainClient.config.doExperimentalFog) {
+        if (ParticleRainClient.config.doExperimentalFog && level.random.nextFloat() < 0.1F) {
             if (level.random.nextFloat() < 0.3) {
                 level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
             }

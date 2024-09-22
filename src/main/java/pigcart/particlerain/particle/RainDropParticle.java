@@ -27,12 +27,13 @@ public class RainDropParticle extends WeatherParticle {
         this.rCol = ParticleRainClient.config.color.rainRed;
         this.gCol = ParticleRainClient.config.color.rainGreen;
         this.bCol = ParticleRainClient.config.color.rainBlue;
+        //TODO: Match biome water tint
 
         this.xd = gravity / 3;
         this.zd = gravity / 3;
 
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
-        this.quadSize = 0.5F;
+        this.quadSize = ParticleRainClient.config.size.rainDropSize;
     }
 
     @Override

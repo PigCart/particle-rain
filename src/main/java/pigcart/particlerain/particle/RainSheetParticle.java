@@ -13,7 +13,7 @@ public class RainSheetParticle extends RainDropParticle {
 
     protected RainSheetParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, provider);
-        this.quadSize = 2F;
+        this.quadSize = ParticleRainClient.config.size.rainSheetSize;
     }
 
     @Environment(EnvType.CLIENT)
