@@ -1,6 +1,7 @@
 package pigcart.particlerain.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
@@ -17,6 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
@@ -59,14 +61,28 @@ public class FogParticle extends WeatherParticle {
             this.xd = gravity / 3;
             this.zd = gravity / 3;
         }
+        this.lifetime++;
     }
 
     @Override
     public void render(VertexConsumer vertexConsumer, Camera camera, float f) {
         //TODO: have fog face the camera position instead of copying its rotation
-        Quaternionf quaternionf = new Quaternionf();
-        quaternionf.rotateTo((float) this.x, (float) this.y, (float) this.z, (float) camera.getPosition().x, (float) camera.getPosition().y, (float) camera.getPosition().z);
-        this.renderRotatedQuad(vertexConsumer, camera, quaternionf, f);
+        Vec3 camPos = camera.getPosition();
+        float x = (float) (Mth.lerp(f, this.xo, this.x) - camPos.x());
+        float y = (float) (Mth.lerp(f, this.yo, this.y) - camPos.y());
+        float z = (float) (Mth.lerp(f, this.zo, this.z) - camPos.z());
+
+        //Quaternionf quaternion = Axis.YP.rotation((float) Math.atan2(x, z) + Mth.PI);
+        Quaternionf quaternion = new Quaternionf();
+        final int radius = ParticleRainClient.config.particleRadius;
+        float yrot = Mth.HALF_PI * (y / radius);
+        quaternion.rotateX(Mth.HALF_PI * (z / radius) + Mth.HALF_PI);
+        quaternion.rotateY(-Mth.HALF_PI * (x / radius));
+        // almost working, not quite there.
+        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
+        if (camera.getEntity().getRandom().nextFloat() < 0.001F) {
+            //System.out.println(yrot);
+        }
     }
 
     @Override
