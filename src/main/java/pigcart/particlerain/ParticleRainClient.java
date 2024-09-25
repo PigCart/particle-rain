@@ -42,14 +42,14 @@ public class ParticleRainClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        RAIN_DROP = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "rain_drop"), FabricParticleTypes.simple(true));
-        RAIN_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "rain_sheet"), FabricParticleTypes.simple(true));
-        SNOW_FLAKE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "snow_flake"), FabricParticleTypes.simple(true));
-        SNOW_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "snow_sheet"), FabricParticleTypes.simple(true));
-        DUST_MOTE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dust_mote"), FabricParticleTypes.simple(true));
-        DUST_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dust_sheet"), FabricParticleTypes.simple(true));
-        DEAD_BUSH = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dead_bush"), FabricParticleTypes.simple(true));
-        FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "fog"), FabricParticleTypes.simple(true));
+        RAIN_DROP = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "rain_drop"), FabricParticleTypes.simple(true));
+        RAIN_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "rain_sheet"), FabricParticleTypes.simple(true));
+        SNOW_FLAKE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "snow_flake"), FabricParticleTypes.simple(true));
+        SNOW_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "snow_sheet"), FabricParticleTypes.simple(true));
+        DUST_MOTE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "dust_mote"), FabricParticleTypes.simple(true));
+        DUST_SHEET = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "dust_sheet"), FabricParticleTypes.simple(true));
+        DEAD_BUSH = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "dead_bush"), FabricParticleTypes.simple(true));
+        FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, new ResourceLocation(MOD_ID, "fog"), FabricParticleTypes.simple(true));
 
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
@@ -78,7 +78,7 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     private static SoundEvent createSoundEvent(String name) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+        ResourceLocation id = new ResourceLocation(MOD_ID, name);
         return SoundEvent.createVariableRangeEvent(id);
     }
 }
