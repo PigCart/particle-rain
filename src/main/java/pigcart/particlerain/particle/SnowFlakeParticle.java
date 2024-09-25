@@ -19,7 +19,7 @@ public class SnowFlakeParticle extends WeatherParticle {
 
     protected SnowFlakeParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.snowFlakeGravity, provider);
-        this.setSize(0.1F, 0.1F);
+        this.quadSize = ParticleRainClient.config.size.snowFlakeSize;
 
         this.rCol = ParticleRainClient.config.color.snowRed;
         this.gCol = ParticleRainClient.config.color.snowGreen;

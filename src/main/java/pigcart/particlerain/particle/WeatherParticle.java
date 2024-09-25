@@ -31,8 +31,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         this.yd = -gravity;
         this.zd = 0.0F;
 
-        this.quadSize = 0.1F;
-
         this.pos = new BlockPos.MutableBlockPos();
     }
 
