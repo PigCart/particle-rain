@@ -56,22 +56,19 @@ public class RainDropParticle extends WeatherParticle {
 
     @Override
     public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercentage) {
-        // Can't figure out how to make this work
-        /*
-        Vec3 camPos = camera.getPosition();
-        float x = (float) (Mth.lerp(tickPercentage, this.xo, this.x) - camPos.x());
-        float y = (float) (Mth.lerp(tickPercentage, this.yo, this.y) - camPos.y());
-        float z = (float) (Mth.lerp(tickPercentage, this.zo, this.z) - camPos.z());
-
-        // technically not correct when rain angle is used, but the backfacing isnt too noticeable at shallow angles!
-        Quaternionf quaternion = new Quaternionf(new AxisAngle4f(0.3f, -1, 0, 1));
-        quaternion.mul(Axis.YP.rotation((float) Math.atan2(x, z) + Mth.PI));
-        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, tickPercentage);*/
 
         Vec3 camPos = camera.getPosition();
         float x = (float)(Mth.lerp((double)tickPercentage, this.xo, this.x) - camPos.x());
         float y = (float)(Mth.lerp((double)tickPercentage, this.yo, this.y) - camPos.y());
         float z = (float)(Mth.lerp((double)tickPercentage, this.zo, this.z) - camPos.z());
+
+        // Can't figure out how to make this work
+
+        /*
+        // technically not correct when rain angle is used, but the backfacing isnt too noticeable at shallow angles!
+        Quaternionf quaternion = new Quaternionf(new AxisAngle4f(0.3f, -1, 0, 1));
+        quaternion.mul(Axis.YP.rotation((float) Math.atan2(x, z) + Mth.PI));
+        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, tickPercentage);*/
 
         // Using old implementation
         Quaternionf quaternion = new Quaternionf(new AxisAngle4f(0.3f, -1, 0, 1));
