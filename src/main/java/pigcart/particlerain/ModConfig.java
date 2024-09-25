@@ -6,7 +6,6 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @Config(name = "particlerain")
 public class ModConfig implements ConfigData {
-    //TODO: Option for particle size why not
     public int particleDensity = 100;
     public int particleStormDensity = 200;
     public int maxParticleAmount = 3000;
@@ -35,9 +34,6 @@ public class ModConfig implements ConfigData {
         public float snowRed = 1.0F;
         public float snowGreen = 1.0F;
         public float snowBlue = 1.0F;
-        public float desertRed = 0.9F;
-        public float desertGreen = 0.8F;
-        public float desertBlue = 0.6F;
     }
 
     @ConfigEntry.Gui.CollapsibleObject
@@ -46,10 +42,10 @@ public class ModConfig implements ConfigData {
     public static class ParticleSizes {
         public float rainDropSize = 0.5F;
         public float rainSheetSize = 2F;
-        public float snowFlakeSize = 1F;
+        public float snowFlakeSize = 0.1F;
         public float snowSheetSize = 2F;
         public float dustMoteSize = 0.1F;
         public float dustSheetSize = 1.5F;
-        public float FogSize = 8F;
+        public float fogSize = 0.5F;
     }
 }

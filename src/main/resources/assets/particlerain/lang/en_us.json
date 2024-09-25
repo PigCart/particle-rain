@@ -3,6 +3,7 @@
   "text.autoconfig.particlerain.category.default": "General",
   "text.autoconfig.particlerain.option.particleDensity": "Particle Density",
   "text.autoconfig.particlerain.option.particleStormDensity": "Particle Storm Density",
+  "text.autoconfig.particlerain.option.maxParticleAmount": "Maximum Particle Amount",
   "text.autoconfig.particlerain.option.particleRadius": "Particle Radius",
   "text.autoconfig.particlerain.option.rainDropGravity": "Rain Drop Gravity",
   "text.autoconfig.particlerain.option.snowFlakeGravity": "Snow Flake Gravity",
@@ -29,5 +30,13 @@
   "text.autoconfig.particlerain.option.color.desertBlue":  "Desert Dust Blue",
   "text.autoconfig.particlerain.option.color.mesaRed":   "Mesa Dust Red",
   "text.autoconfig.particlerain.option.color.mesaGreen": "Mesa Dust Green",
-  "text.autoconfig.particlerain.option.color.mesaBlue":  "Mesa Dust Blue"
+  "text.autoconfig.particlerain.option.color.mesaBlue":  "Mesa Dust Blue",
+  "text.autoconfig.particlerain.option.size": "Particle Sizes",
+  "text.autoconfig.particlerain.option.size.rainDropSize": "Rain Drop Size",
+  "text.autoconfig.particlerain.option.size.rainSheetSize": "Sheet Rain Size",
+  "text.autoconfig.particlerain.option.size.snowFlakeSize": "Snow Flake Size",
+  "text.autoconfig.particlerain.option.size.snowSheetSize": "Sheet Snow Size",
+  "text.autoconfig.particlerain.option.size.dustMoteSize": "Dust Mote Size",
+  "text.autoconfig.particlerain.option.size.dustSheetSize": "Sheet Dust Size",
+  "text.autoconfig.particlerain.option.size.fogSize": "Fog Size"
 }
