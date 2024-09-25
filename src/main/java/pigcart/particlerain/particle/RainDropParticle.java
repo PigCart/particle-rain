@@ -73,9 +73,12 @@ public class RainDropParticle extends WeatherParticle {
         float y = (float)(Mth.lerp((double)tickPercentage, this.yo, this.y) - camPos.y());
         float z = (float)(Mth.lerp((double)tickPercentage, this.zo, this.z) - camPos.z());
 
-        Quaternionf quaternion = new Quaternionf(camera.rotation());
-        //Quaternionf quaternion = new Quaternionf(new AxisAngle4f(0.3f, -1, 0, 1));
-        //quaternion.mul(Axis.YP.rotation((float) Math.atan2(x, z) + Mth.PI));
+        // Using old implementation
+        Quaternionf quaternion = new Quaternionf(new AxisAngle4f(0.3f, -1, 0, 1));
+        quaternion.mul(camera.rotation());
+        quaternion.mul(Axis.XN.rotationDegrees(camera.getXRot()));
+        quaternion.mul(Axis.YP.rotationDegrees(camera.getYRot()));
+        quaternion.mul(Axis.YP.rotation((float) Math.atan2(x, z)));
 
         float quadSize = this.getQuadSize(tickPercentage);
         float u0 = this.getU0();
