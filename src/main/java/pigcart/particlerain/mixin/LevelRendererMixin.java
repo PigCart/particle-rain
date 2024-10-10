@@ -40,7 +40,8 @@ public class LevelRendererMixin {
     // also maybe a toggle for vanilla splashes
     @Inject(method = "tickRain", at = @At("HEAD"), cancellable = true)
     public void tickRain(Camera camera, CallbackInfo ci) {
-        if (!ParticleRainClient.config.renderVanillaWeather) {
+        //TODO: play sound where particles are actually falling. presence footsteps but for rain drops might not be an awful idea?
+        if (!ParticleRainClient.config.tickVanillaWeather) {
             float f = this.minecraft.level.getRainLevel(1.0F);
             if (f > 0.0F) {
                 Random random = new Random((long) this.ticks * 312987231L);
@@ -70,8 +71,6 @@ public class LevelRendererMixin {
                     }
                 }
             }
-            //TODO: I don't think this actually needs to be a mixin? could save a few calls by moving this to the spawn method
-
             ci.cancel();
         }
     }

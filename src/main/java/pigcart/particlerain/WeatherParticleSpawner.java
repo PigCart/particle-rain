@@ -7,13 +7,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,54 +21,35 @@ public final class WeatherParticleSpawner {
 
     private WeatherParticleSpawner() {
     }
-    private static String printBiome(Holder<Biome> holder) {
-        return holder.unwrap().map((resourceKey) -> {
-            return resourceKey.location().toString();
-        }, (biome) -> {
-            return "[unregistered " + biome + "]";
-        });
-    }
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         //TODO: per biome overrides to whitelist/blacklist effects for specific biomes
-        //TODO: change spawning mechanics
+        //TODO: change spawning mechanics. the sphere is too obvious on biome borders
         // spawn particles in a weighted volume instead of on the shell of a sphere
         // OR: unique spawn mechanics for each effect (sand could rise from sand blocks in plumes, like dust-devils?)
-        //TODO: improve LODs? should sheet weather have its own spawn radius?
-        if (Integer.parseInt(Minecraft.getInstance().particleEngine.countParticles()) > ParticleRainClient.config.maxParticleAmount) {
-            //TODO: can i mixin a new countParticles method?
+        if (ParticleRainClient.particleCount > ParticleRainClient.config.maxParticleAmount) {
             return;
         }
-        if (ParticleRainClient.config.doExperimentalFog && level.random.nextFloat() < 0.1F) {
-            if (level.random.nextFloat() < 0.3) {
-                level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
-            }
+        if (ParticleRainClient.config.doFogParticles && level.random.nextFloat() < ParticleRainClient.config.fog.density / 100F) {
+            level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
         }
         Precipitation precipitation = biome.value().getPrecipitationAt(pos);
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
-            if (precipitation == Precipitation.RAIN) {
-                if (ParticleRainClient.config.doRainParticles) {
-                    if (y < Minecraft.getInstance().cameraEntity.yo + ( 4 * (ParticleRainClient.config.particleRadius / 5)) && level.random.nextBoolean()) {
-                        level.addParticle(ParticleRainClient.RAIN_SHEET, x, y, z, 0, 0, 0);
-                    } else {
-                        level.addParticle(ParticleRainClient.RAIN_DROP, x, y, z, 0, 0, 0);
-                        //TODO: increase single drop density to match visual density of rain sheets
-                    }
-                }
-            } else if (precipitation == Precipitation.SNOW) {
-                if (ParticleRainClient.config.doSnowParticles) {
-                    if (level.isThundering() && level.random.nextFloat() < 0.3) {
-                        level.addParticle(ParticleRainClient.SNOW_SHEET, x, y, z, 0, 0, 0);
-                    }
-                    else if (level.random.nextFloat() < 0.8) {
-                        level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, 0, 0, 0);
-                    }
-                }
+        if (precipitation == Precipitation.RAIN && ParticleRainClient.config.doRainParticles && level.random.nextFloat() < ParticleRainClient.config.rain.density / 100F) {
+            if (y < Minecraft.getInstance().cameraEntity.yo + ( (ParticleRainClient.config.rain.lod / 100F) * ParticleRainClient.config.particleRadius) && level.random.nextFloat() < 0.1F) {
+                level.addParticle(ParticleRainClient.RAIN_SHEET, x, y, z, 0, 0, 0);
             }
-        if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains("sand") && biome.value().getBaseTemperature() >= 1.0F) {
+        } else if (precipitation == Precipitation.SNOW && ParticleRainClient.config.doSnowParticles) {
+            if (level.isThundering() && level.random.nextFloat() < ParticleRainClient.config.snow.density / 100F) {
+                level.addParticle(ParticleRainClient.SNOW_SHEET, x, y, z, 0, 0, 0);
+            }
+            else if (level.random.nextFloat() < 0.8) {
+                level.addParticle(ParticleRainClient.SNOW_FLAKE, x, y, z, 0, 0, 0);
+            }
+        } else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains("sand") && biome.value().getBaseTemperature() > 0.25) {
             // this may be a weird way to accomplish this but offers decent out of the box support for modded biomes
             if (ParticleRainClient.config.doSandParticles) {
-                if (level.random.nextFloat() < 0.9F) {
+                if (level.random.nextFloat() < ParticleRainClient.config.sand.density / 100F) {
                     if (level.random.nextBoolean()) {
                         level.addParticle(ParticleRainClient.DUST_SHEET, x, y, z, 0, 0, 0);
                     } else {
@@ -79,11 +58,11 @@ public final class WeatherParticleSpawner {
                 }
             }
             if (ParticleRainClient.config.doShrubParticles) {
-                if (level.random.nextFloat() < 0.004F) {
+                if (level.random.nextFloat() < ParticleRainClient.config.shrub.density / 1000F) {
                     level.addParticle(ParticleRainClient.DEAD_BUSH, x, y, z, 0, 0, 0);
                 }
             }
-        }
+    }
     }
 
     public static void update(ClientLevel level, Entity entity, float partialTicks) {

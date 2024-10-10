@@ -18,20 +18,16 @@ public class SnowFlakeParticle extends WeatherParticle {
     float amountToRotateBy;
 
     protected SnowFlakeParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, ParticleRainClient.config.snowFlakeGravity, provider);
-        this.quadSize = ParticleRainClient.config.size.snowFlakeSize;
+        super(level, x, y, z, ParticleRainClient.config.snow.gravity, provider);
+        this.quadSize = ParticleRainClient.config.snow.flakeSize;
 
-        this.rCol = ParticleRainClient.config.color.snowRed;
-        this.gCol = ParticleRainClient.config.color.snowGreen;
-        this.bCol = ParticleRainClient.config.color.snowBlue;
-
-        this.xd = level.getRandom().nextFloat()/ParticleRainClient.config.snowWindDampening;
-        this.zd = level.getRandom().nextFloat()/ParticleRainClient.config.snowWindDampening;
+        this.xd = level.getRandom().nextFloat() * ParticleRainClient.config.snow.windStrength;
+        this.zd = level.getRandom().nextFloat() * ParticleRainClient.config.snow.windStrength;
 
         if (level.getRandom().nextBoolean()) {
-            this.amountToRotateBy = ParticleRainClient.config.snowRotationAmount;
+            this.amountToRotateBy = ParticleRainClient.config.snow.rotationAmount;
         } else {
-            this.amountToRotateBy = -ParticleRainClient.config.snowRotationAmount;
+            this.amountToRotateBy = -ParticleRainClient.config.snow.rotationAmount;
         }
     }
 

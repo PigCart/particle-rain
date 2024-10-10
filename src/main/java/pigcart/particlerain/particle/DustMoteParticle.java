@@ -17,10 +17,10 @@ import java.awt.Color;
 
 public class DustMoteParticle extends WeatherParticle {
     protected DustMoteParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, ParticleRainClient.config.desertDustGravity, provider);
-        this.quadSize = ParticleRainClient.config.size.dustMoteSize;
-        this.xd = 0.3F;
-        this.zd = 0.3F;
+        super(level, x, y, z, ParticleRainClient.config.sand.gravity, provider);
+        this.quadSize = ParticleRainClient.config.sand.moteSize;
+        this.xd = ParticleRainClient.config.sand.windStrength;
+        this.zd = ParticleRainClient.config.sand.windStrength;
 
         final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateRGBColor(MapColor.Brightness.NORMAL));
         // Red and blue seem to be swapped

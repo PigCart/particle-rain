@@ -12,7 +12,7 @@ import pigcart.particlerain.ParticleRainClient;
 public class SnowSheetParticle extends SnowFlakeParticle{
     protected SnowSheetParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, provider);
-        this.quadSize = ParticleRainClient.config.size.snowSheetSize;
+        this.quadSize = ParticleRainClient.config.snow.sheetSize;
     }
 
     @Environment(EnvType.CLIENT)

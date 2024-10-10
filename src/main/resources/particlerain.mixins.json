@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "LevelRendererMixin",
-    "RegistrySyncManagerMixin"
+    "RegistrySyncManagerMixin",
+    "StitcherMixin",
+    "TextureAtlasSpriteMixin"
   ],
   "client": [
   ],
