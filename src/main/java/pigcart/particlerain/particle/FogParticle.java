@@ -27,6 +27,7 @@ public class FogParticle extends WeatherParticle {
 
     private FogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.fog.gravity, provider);
+        this.setSprite(provider.get(level.getRandom()));
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
         final double distance = Minecraft.getInstance().cameraEntity.position().distanceTo(new Vec3(x, y, z));
         this.quadSize = (float) (ParticleRainClient.config.fog.size / distance);

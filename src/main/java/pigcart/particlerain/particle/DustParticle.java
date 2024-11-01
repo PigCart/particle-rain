@@ -12,11 +12,11 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import pigcart.particlerain.ParticleRainClient;
 
-public class DustSheetParticle extends DustMoteParticle {
+public class DustParticle extends DustMoteParticle {
 
-    protected DustSheetParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
+    protected DustParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, provider);
-        this.quadSize = ParticleRainClient.config.sand.sheetSize;
+        this.quadSize = ParticleRainClient.config.sand.size;
         this.gravity = ParticleRainClient.config.sand.gravity - 0.1F;
     }
     @Override
@@ -47,7 +47,7 @@ public class DustSheetParticle extends DustMoteParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new DustSheetParticle(level, x, y, z, this.provider);
+            return new DustParticle(level, x, y, z, this.provider);
         }
     }
 }

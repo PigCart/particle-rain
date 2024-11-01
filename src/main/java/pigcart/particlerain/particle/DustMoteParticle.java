@@ -16,8 +16,11 @@ import pigcart.particlerain.ParticleRainClient;
 import java.awt.Color;
 
 public class DustMoteParticle extends WeatherParticle {
+    // currently unused
+
     protected DustMoteParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.sand.gravity, provider);
+        this.setSprite(provider.get(level.getRandom()));
         this.quadSize = ParticleRainClient.config.sand.moteSize;
         this.xd = ParticleRainClient.config.sand.windStrength;
         this.zd = ParticleRainClient.config.sand.windStrength;
@@ -46,10 +49,6 @@ public class DustMoteParticle extends WeatherParticle {
         } else {
             this.xd = 0.2;
             this.zd = 0.2;
-        }
-
-        if (age < 10) {
-            this.alpha = (age * 1.0f) / 10;
         }
     }
     @Override

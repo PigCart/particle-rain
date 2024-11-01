@@ -12,15 +12,12 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.joml.AxisAngle4f;
+import net.minecraft.world.phys.Vec3;
+import org.joml.*;
 import org.joml.Math;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
 
 import java.awt.*;
@@ -30,22 +27,26 @@ public class RainParticle extends WeatherParticle {
     protected RainParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, ParticleRainClient.config.rain.gravity, provider);
 
-        this.quadSize = ParticleRainClient.config.rain.sheetSize;
-        ResourceLocation atlasLocation = ResourceLocation.withDefaultNamespace("textures/atlas/blocks.png");
-        ResourceLocation spriteLocation = ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "rainn");
-        TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getAtlas(atlasLocation).getSprite(spriteLocation);
-        this.setSprite(sprite);
+        if (ParticleRainClient.config.rain.biomeTint) {
+            final Color waterColor = new Color(BiomeColors.getAverageWaterColor(clientWorld, this.pos));
+            final Color fogColor = new Color(this.level.getBiome(this.pos).value().getFogColor());
+            this.rCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getRed(), fogColor.getRed()) / 255F);
+            this.gCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getGreen(), fogColor.getGreen()) / 255F);
+            this.bCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getBlue(), fogColor.getBlue()) / 255F);
+        }
 
-        final Color waterColor = new Color(BiomeColors.getAverageWaterColor(clientWorld, this.pos));
-        final Color fogColor = new Color(this.level.getBiome(this.pos).value().getFogColor()).darker();
-        this.rCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getRed(), fogColor.getRed()) / 255F);
-        this.gCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getGreen(), fogColor.getGreen()) / 255F);
-        this.bCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getBlue(), fogColor.getBlue()) / 255F);
+        this.quadSize = ParticleRainClient.config.rain.size;
+        this.gravity = ParticleRainClient.config.rain.gravity;
+        this.setSprite(Minecraft.getInstance().getModelManager().getAtlas(ParticleRainClient.BLOCKS_LOCATION).getSprite(ParticleRainClient.RAIN_SPRITE));
+        //System.out.println(Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_PARTICLES).getSprite(ParticleRainClient.RAIN_SPRITE));
+        //TODO: figure out how to get the sprite on the particle atlas to fix mipmapping
 
         this.xd = gravity * ParticleRainClient.config.rain.windStrength;
         this.zd = gravity * ParticleRainClient.config.rain.windStrength;
 
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
+        Vec3 vec3 = Minecraft.getInstance().cameraEntity.position();
+        this.roll = (float) (Math.atan2(x - vec3.x, z - vec3.z) + Mth.HALF_PI);
     }
 
     @Override
@@ -79,11 +80,10 @@ public class RainParticle extends WeatherParticle {
         Quaternionf quaternion = new Quaternionf(new AxisAngle4f(-angle, axis));
 
         // rotate particle to face camera
-        //FIXME: results in some backfaced particles and weird rotation because of the off-axis tilt. not sure what the correct approach is.
-        Vector3f local = new Vector3f(x, y, z);
-        local.rotate(quaternion);
-        quaternion.mul(Axis.YP.rotation(Math.atan2(local.x, local.z) + Mth.PI));
-
+        //quaternion.mul(Axis.YN.rotation(Math.atan2(x, z) + Mth.HALF_PI));
+        //FIXME: idk how to translate this to work with the angled axis, using as-is results in weird rotation
+        // for now the rotation is calculated once when the particle spawns, which looks good enough
+        quaternion.mul(Axis.YN.rotation(this.roll));
         quaternion = this.flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, tickPercentage);
     }

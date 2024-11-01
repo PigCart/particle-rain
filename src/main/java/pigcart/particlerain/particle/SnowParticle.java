@@ -13,21 +13,22 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import pigcart.particlerain.ParticleRainClient;
 
-public class SnowFlakeParticle extends WeatherParticle {
+public class SnowParticle extends WeatherParticle {
 
-    float amountToRotateBy;
+    float rotationAmount;
 
-    protected SnowFlakeParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
+    protected SnowParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.snow.gravity, provider);
-        this.quadSize = ParticleRainClient.config.snow.flakeSize;
+        this.quadSize = ParticleRainClient.config.snow.size;
+        this.setSprite(Minecraft.getInstance().getModelManager().getAtlas(ParticleRainClient.BLOCKS_LOCATION).getSprite(ParticleRainClient.SNOW_SPRITE));
 
         this.xd = level.getRandom().nextFloat() * ParticleRainClient.config.snow.windStrength;
         this.zd = level.getRandom().nextFloat() * ParticleRainClient.config.snow.windStrength;
 
         if (level.getRandom().nextBoolean()) {
-            this.amountToRotateBy = ParticleRainClient.config.snow.rotationAmount;
+            this.rotationAmount = ParticleRainClient.config.snow.rotationAmount;
         } else {
-            this.amountToRotateBy = -ParticleRainClient.config.snow.rotationAmount;
+            this.rotationAmount = -ParticleRainClient.config.snow.rotationAmount;
         }
     }
 
@@ -38,7 +39,7 @@ public class SnowFlakeParticle extends WeatherParticle {
         zd = Mth.clamp(zd, 0.05, 100);
 
         this.oRoll = this.roll;
-        this.roll = this.oRoll + this.amountToRotateBy;
+        this.roll = this.oRoll + this.rotationAmount;
         if (this.onGround || this.removeIfObstructed()) {
             if (this.isHotBlock()) {
                 Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
@@ -49,7 +50,7 @@ public class SnowFlakeParticle extends WeatherParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleRenderType.TERRAIN_SHEET;
     }
 
     @Environment(EnvType.CLIENT)
@@ -63,7 +64,7 @@ public class SnowFlakeParticle extends WeatherParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new SnowFlakeParticle(level, x, y, z, this.provider);
+            return new SnowParticle(level, x, y, z, this.provider);
         }
     }
 }

@@ -24,7 +24,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, SpriteSet provider) {
         super(level, x, y, z);
-        this.setSprite(provider.get(level.getRandom()));
         this.lifetime = ParticleRainClient.config.particleRadius * 10;
         this.gravity = gravity;
 
