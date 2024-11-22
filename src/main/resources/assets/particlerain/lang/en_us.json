@@ -60,7 +60,9 @@
   "text.autoconfig.particlerain.option.fog.gravity": "Gravity",
   "text.autoconfig.particlerain.option.fog.size": "Size",
 
-  "text.autoconfig.particlerain.option.renderVanillaWeather": "Render Vanilla Weather",
-  "text.autoconfig.particlerain.option.tickVanillaWeather": "Tick Vanilla Weather",
-  "text.autoconfig.particlerain.option.alwaysRaining": "Always Raining"
+  "text.autoconfig.particlerain.option.renderVanillaWeather": "Render Default Weather",
+  "text.autoconfig.particlerain.option.tickVanillaWeather": "Tick Default Rain Splashing",
+  "text.autoconfig.particlerain.option.alwaysRaining": "Always Raining",
+  "text.autoconfig.particlerain.option.syncRegistry": "Sync Registry",
+  "text.autoconfig.particlerain.option.syncRegistry.@Tooltip": "Disable this if players can't connect to your LAN server"
 }

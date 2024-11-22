@@ -22,8 +22,13 @@ public class SnowParticle extends WeatherParticle {
         this.quadSize = ParticleRainClient.config.snow.size;
         this.setSprite(Minecraft.getInstance().getModelManager().getAtlas(ParticleRainClient.BLOCKS_LOCATION).getSprite(ParticleRainClient.SNOW_SPRITE));
 
-        this.xd = level.getRandom().nextFloat() * ParticleRainClient.config.snow.windStrength;
-        this.zd = level.getRandom().nextFloat() * ParticleRainClient.config.snow.windStrength;
+        if (level.isThundering()) {
+            this.xd = gravity * ParticleRainClient.config.snow.stormWindStrength;
+            this.zd = gravity * ParticleRainClient.config.snow.stormWindStrength;
+        } else {
+            this.xd = gravity * ParticleRainClient.config.snow.windStrength;
+            this.zd = gravity * ParticleRainClient.config.snow.windStrength;
+        }
 
         if (level.getRandom().nextBoolean()) {
             this.rotationAmount = ParticleRainClient.config.snow.rotationAmount;

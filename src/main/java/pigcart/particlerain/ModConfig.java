@@ -15,7 +15,11 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public int particleRadius = 30;
 
+    @ConfigEntry.Gui.PrefixText
     public boolean doRainParticles = true;
+    public boolean doSplashParticles = true;
+    public boolean doRippleParticles = false;
+    public boolean doStreakParticles = false;
     public boolean doSnowParticles = true;
     public boolean doSandParticles = true;
     public boolean doShrubParticles = true;
@@ -29,13 +33,13 @@ public class ModConfig implements ConfigData {
         public int density = 100;
         public float gravity = 1.0F;
         public float windStrength = 0.3F;
+        public float stormWindStrength = 0.5F;
         public boolean biomeTint = true;
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100) @ConfigEntry.Gui.Tooltip
         public int mix = 70;
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100) @ConfigEntry.Gui.Tooltip
         public int opacity = 100;
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 100) @ConfigEntry.Gui.Tooltip
-        public int splashDensity = 3;
+        public int splashDensity = 5;
         public float size = 2F;
     }
     @ConfigEntry.Gui.CollapsibleObject
@@ -45,7 +49,9 @@ public class ModConfig implements ConfigData {
         public int density = 40;
         public float gravity = 0.1F;
         public float rotationAmount = 0.03F;
+        public float stormRotationAmount = 0.05F;
         public float windStrength = 0.1F;
+        public float stormWindStrength = 0.5F;
         public float size = 2F;
     }
     @ConfigEntry.Gui.CollapsibleObject
@@ -85,7 +91,10 @@ public class ModConfig implements ConfigData {
         public int spawnTime = 0;
         public float size = 2.5F;
     }
+    @ConfigEntry.Gui.PrefixText
     public boolean renderVanillaWeather = false;
     public boolean tickVanillaWeather = false;
     public boolean alwaysRaining = false;
+    @ConfigEntry.Gui.Tooltip
+    public boolean syncRegistry = true;
 }
