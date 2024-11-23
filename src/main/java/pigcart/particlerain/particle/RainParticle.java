@@ -56,6 +56,7 @@ public class RainParticle extends WeatherParticle {
             this.xd = gravity * ParticleRainClient.config.rain.windStrength;
             this.zd = gravity * ParticleRainClient.config.rain.windStrength;
         }
+        //TODO: multiply wind strength by Y level - angled rain looks weird when it falls into caves
 
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
         Vec3 vec3 = Minecraft.getInstance().cameraEntity.position();
@@ -66,7 +67,6 @@ public class RainParticle extends WeatherParticle {
     public void tick() {
         super.tick();
          if (this.age < 10) this.alpha = Math.clamp(0, ParticleRainClient.config.rain.opacity / 100F, this.alpha);
-        //TODO: variable wind/angle
         if (this.onGround) {
             if (ParticleRainClient.config.doSplashParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < ParticleRainClient.config.particleRadius - (ParticleRainClient.config.particleRadius / 2.0)) {
                 for (int i = 0; i < ParticleRainClient.config.rain.splashDensity; i++) {
@@ -83,7 +83,6 @@ public class RainParticle extends WeatherParticle {
                     Vec3 raycastStart = new Vec3(this.x, this.y, this.z);
                     Vec3 raycastEnd = new Vec3(spawnPos.x, this.y, spawnPos.z);
                     BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty()));
-                    //System.out.println(hit.getLocation() + " " + level.getBlockState(hit.getBlockPos()).getBlock().getName() + " " + this.y + " " + spawnPos.y);
                     if (m != 0 && hit.getLocation().distanceTo(new Vec3(spawnPos.x, spawnPos.y + 1, spawnPos.z)) < 0.01) {
                         if (this.isHotBlock()) {
                             Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, spawnPos.x, spawnPos.y + m, spawnPos.z, 0, 0, 0);

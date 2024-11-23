@@ -35,8 +35,8 @@ public class LevelRendererMixin {
     private int rainSoundTime;
 
     //TODO: Support mods that add their own splashing mechanics (Particular)
-    //easier to just provide my own alternative to water ripples,
-    //but if this can be rewritten to not just cancel everything that would be good for future-proofing and more choice for users
+    // easier to just provide my own alternative to water ripples,
+    // but if this can be rewritten to not just cancel everything that would be good for future-proofing and more choice for users
     // also maybe a toggle for vanilla splashes
     @Inject(method = "tickRain", at = @At("HEAD"), cancellable = true)
     public void tickRain(Camera camera, CallbackInfo ci) {

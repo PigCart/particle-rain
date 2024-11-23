@@ -24,6 +24,8 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, SpriteSet provider) {
         super(level, x, y, z);
+        //TODO: switch to the constructor that takes velocity i think thats how that works
+        // let the particle spawner handle the velocity, may allow better compat with the wind mods.
         this.lifetime = ParticleRainClient.config.particleRadius * 10;
         this.gravity = gravity;
 

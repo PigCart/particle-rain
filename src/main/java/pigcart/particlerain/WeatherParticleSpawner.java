@@ -20,7 +20,6 @@ public final class WeatherParticleSpawner {
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
-        //TODO: per biome overrides to whitelist/blacklist effects for specific biomes
         //TODO: make sand rise from the ground
         if (ParticleRainClient.particleCount > ParticleRainClient.config.maxParticleAmount) {
             return;
@@ -36,7 +35,7 @@ public final class WeatherParticleSpawner {
             if (level.random.nextFloat() < ParticleRainClient.config.snow.density / 100F) {
                 level.addParticle(ParticleRainClient.SNOW, x, y, z, 0, 0, 0);
             }
-        } else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains("sand") && biome.value().getBaseTemperature() > 0.25) {
+        } else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains(ParticleRainClient.config.sand.matchIds) && biome.value().getBaseTemperature() > 0.25) {
             // this is for future me to optimize. offers decent out of the box support for modded biomes.
             if (ParticleRainClient.config.doSandParticles) {
                 if (level.random.nextFloat() < ParticleRainClient.config.sand.density / 100F) {
