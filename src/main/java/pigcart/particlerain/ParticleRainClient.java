@@ -93,6 +93,7 @@ public class ParticleRainClient implements ClientModInitializer {
         });
     }
 
+    //TODO: figure out something similar for the vanilla drop and splash water particles
     public static IntUnaryOperator desaturateOperation = (int rgba) -> {
             Color col = new Color(rgba, true);
             int gray = (col.getRed() + col.getGreen() + col.getBlue()) / 3;
