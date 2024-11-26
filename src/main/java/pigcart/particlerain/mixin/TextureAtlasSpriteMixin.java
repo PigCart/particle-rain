@@ -19,6 +19,7 @@ public abstract class TextureAtlasSpriteMixin {
     public void createTicker(CallbackInfoReturnable<TextureAtlasSprite.Ticker> cir) {
         if (this.contents.name().getNamespace().equals(ParticleRainClient.MOD_ID)) {
             cir.cancel();
+            //TODO: figure out how to use the other frames to randomise the rain texture
         }
     }
 }

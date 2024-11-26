@@ -70,6 +70,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         }
 
     }
+    //FIXME: triggers when wind is 0...
     protected boolean removeIfObstructed() {
         if (x == xo || z == zo) {
             this.remove();
@@ -78,6 +79,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
             return false;
         }
     }
+    //FIXME: needs reworking for the new splash logic
     protected boolean isHotBlock() {
         FluidState fluidState = this.level.getFluidState(this.pos);
         BlockState blockState = this.level.getBlockState(this.pos);

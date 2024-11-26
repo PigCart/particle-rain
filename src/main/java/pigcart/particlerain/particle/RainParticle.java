@@ -52,6 +52,10 @@ public class RainParticle extends WeatherParticle {
             this.xd = gravity * ParticleRainClient.config.rain.windStrength;
             this.zd = gravity * ParticleRainClient.config.rain.windStrength;
         }
+        if (ParticleRainClient.config.yLevelWindAdjustment) {
+            this.xd = this.xd * Math.clamp(0.01, 1, (y - 64) / 40);
+            this.zd = this.zd * Math.clamp(0.01, 1, (y - 64) / 40);
+        }
         //TODO: multiply wind strength by Y level - angled rain looks weird when it falls into caves
 
         this.lifetime = ParticleRainClient.config.particleRadius * 5;

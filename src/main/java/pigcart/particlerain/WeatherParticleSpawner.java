@@ -22,6 +22,7 @@ public final class WeatherParticleSpawner {
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         //TODO: make sand rise from the ground
         if (ParticleRainClient.particleCount > ParticleRainClient.config.maxParticleAmount) {
+            //TODO: also cancel spawns above cloud height
             return;
         }
         if (ParticleRainClient.config.doFogParticles && level.random.nextFloat() < ParticleRainClient.config.fog.density / 100F) {
