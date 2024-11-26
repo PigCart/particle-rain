@@ -20,7 +20,7 @@ public class SnowParticle extends WeatherParticle {
     protected SnowParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.snow.gravity, provider);
         this.quadSize = ParticleRainClient.config.snow.size;
-        this.setSprite(Minecraft.getInstance().getModelManager().getAtlas(ParticleRainClient.BLOCKS_LOCATION).getSprite(ParticleRainClient.SNOW_SPRITE));
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ParticleRainClient.SNOW_SPRITE));
 
         if (level.isThundering()) {
             this.xd = gravity * ParticleRainClient.config.snow.stormWindStrength;
@@ -55,7 +55,7 @@ public class SnowParticle extends WeatherParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.TERRAIN_SHEET;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     @Environment(EnvType.CLIENT)

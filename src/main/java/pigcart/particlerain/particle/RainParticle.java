@@ -7,11 +7,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -45,9 +43,7 @@ public class RainParticle extends WeatherParticle {
 
         this.quadSize = ParticleRainClient.config.rain.size;
         this.gravity = ParticleRainClient.config.rain.gravity;
-        this.setSprite(Minecraft.getInstance().getModelManager().getAtlas(ParticleRainClient.BLOCKS_LOCATION).getSprite(ParticleRainClient.RAIN_SPRITE));
-        //System.out.println(Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_PARTICLES).getSprite(ParticleRainClient.RAIN_SPRITE));
-        //TODO: figure out how to get the sprite on the particle atlas to fix mipmapping
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ParticleRainClient.RAIN_SPRITE));
 
         if (level.isThundering()) {
             this.xd = gravity * ParticleRainClient.config.rain.stormWindStrength;
@@ -125,7 +121,7 @@ public class RainParticle extends WeatherParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.TERRAIN_SHEET;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     @Environment(EnvType.CLIENT)
