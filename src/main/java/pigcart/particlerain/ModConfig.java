@@ -20,15 +20,15 @@ public class ModConfig implements ConfigData {
     public boolean doRainParticles = true;
     public boolean doSplashParticles = true;
     @Comment("❌ NOT IMPLEMENTED YET")
-    public boolean doRippleParticles = false;
+    public boolean doRippleParticles = true;
     @Comment("❌ NOT IMPLEMENTED YET")
-    public boolean doStreakParticles = false;
+    public boolean doStreakParticles = true;
     public boolean doSnowParticles = true;
     public boolean doSandParticles = true;
     public boolean doShrubParticles = true;
     public boolean doFogParticles = false;
     @Comment("❌ NOT IMPLEMENTED YET")
-    public boolean doGroundFogParticles = false;
+    public boolean doGroundFogParticles = true;
 
     @ConfigEntry.Gui.CollapsibleObject
     public RainOptions rain = new RainOptions();
@@ -69,7 +69,7 @@ public class ModConfig implements ConfigData {
         public float moteSize = 0.1F;
         public float size = 2F;
         @Comment("❌ NOT IMPLEMENTED YET")
-        public boolean spawnOnGround = false;
+        public boolean spawnOnGround = true;
         public String matchIds = "sand";
     }
     @ConfigEntry.Gui.CollapsibleObject
@@ -105,8 +105,7 @@ public class ModConfig implements ConfigData {
     public boolean renderVanillaWeather = false;
     public boolean tickVanillaWeather = false;
     public boolean alwaysRaining = false;
-    @Comment("❌ NOT IMPLEMENTED YET")
-    public boolean yLevelWindAdjustment = false;
+    public boolean yLevelWindAdjustment = true;
     @ConfigEntry.Gui.Tooltip
     public boolean syncRegistry = true;
 }

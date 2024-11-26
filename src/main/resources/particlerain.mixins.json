@@ -6,10 +6,7 @@
   "mixins": [
     "LevelRendererMixin",
     "RegistrySyncManagerMixin",
-    "StitcherMixin",
-    "TextureAtlasSpriteMixin"
-  ],
-  "client": [
+    "StitcherMixin"
   ],
   "injectors": {
     "defaultRequire": 1

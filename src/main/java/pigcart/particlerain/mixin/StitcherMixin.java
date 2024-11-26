@@ -1,11 +1,8 @@
 package pigcart.particlerain.mixin;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.Stitcher;
-import net.minecraft.client.resources.metadata.animation.FrameSize;
-import net.minecraft.server.packs.resources.ResourceMetadata;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,9 +14,6 @@ import pigcart.particlerain.ParticleRainClient;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Predicate;
-
-import static pigcart.particlerain.ParticleRainClient.RAIN_TEXTURE;
-import static pigcart.particlerain.ParticleRainClient.SNOW_TEXTURE;
 
 @Mixin(Stitcher.class)
 public abstract class StitcherMixin<T extends Stitcher.Entry> {
@@ -38,18 +32,20 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
             NativeImage rainImage = null;
             NativeImage snowImage = null;
             try {
-                rainImage = ParticleRainClient.loadTexture(RAIN_TEXTURE);
-                snowImage = ParticleRainClient.loadTexture(SNOW_TEXTURE);
-                if (ParticleRainClient.config.rain.biomeTint)
-                    rainImage.applyToAllPixels(ParticleRainClient.desaturateOperation);
+                rainImage = ParticleRainClient.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/rain.png"));
+                snowImage = ParticleRainClient.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/snow.png"));
+                if (ParticleRainClient.config.rain.biomeTint) rainImage.applyToAllPixels(ParticleRainClient.desaturateOperation);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            var rainSpriteContents = new SpriteContents(ParticleRainClient.RAIN_SPRITE, new FrameSize(rainImage.getWidth(), rainImage.getWidth()), rainImage, new ResourceMetadata.Builder().build());
-            var snowSpriteContents = new SpriteContents(ParticleRainClient.SNOW_SPRITE, new FrameSize(snowImage.getWidth(), snowImage.getWidth()), snowImage, new ResourceMetadata.Builder().build());
-            this.registerSprite(rainSpriteContents);
-            this.registerSprite(snowSpriteContents);
+            // split both weather textures into four sprites
+            for (int i = 0; i < 4; i++) {
+                this.registerSprite(ParticleRainClient.splitImage(rainImage, i, "rain"));
+            }
+            for (int i = 0; i < 4; i++) {
+                this.registerSprite(ParticleRainClient.splitImage(snowImage, i, "snow"));
+            }
         }
     }
 }

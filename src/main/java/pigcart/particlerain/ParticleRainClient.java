@@ -14,6 +14,8 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.sounds.SoundEvent;
 import pigcart.particlerain.particle.*;
 
@@ -47,12 +50,6 @@ public class ParticleRainClient implements ClientModInitializer {
     public static ModConfig config;
     public static int particleCount;
 
-    public static final ResourceLocation RAIN_TEXTURE = ResourceLocation.withDefaultNamespace("textures/environment/rain.png");
-    public static final ResourceLocation SNOW_TEXTURE = ResourceLocation.withDefaultNamespace("textures/environment/snow.png");
-    public static final ResourceLocation RAIN_SPRITE = ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "rain");
-    public static final ResourceLocation SNOW_SPRITE = ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "snow");
-    public static final ResourceLocation BLOCKS_LOCATION = ResourceLocation.withDefaultNamespace("textures/atlas/blocks.png");
-
     @Override
     public void onInitializeClient() {
         RAIN = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "rain"), FabricParticleTypes.simple(true));
@@ -61,7 +58,6 @@ public class ParticleRainClient implements ClientModInitializer {
         DUST = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dust"), FabricParticleTypes.simple(true));
         SHRUB = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "shrub"), FabricParticleTypes.simple(true));
         FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "fog"), FabricParticleTypes.simple(true));
-
 
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
@@ -120,25 +116,25 @@ public class ParticleRainClient implements ClientModInitializer {
     public static NativeImage loadTexture(ResourceLocation resourceLocation) throws IOException {
         Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(resourceLocation);
         InputStream inputStream = resource.open();
-
         NativeImage nativeImage;
         try {
             nativeImage = NativeImage.read(inputStream);
         } catch (Throwable owo) {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (Throwable uwu) {
-                    owo.addSuppressed(uwu);
-                }
+            try {
+                inputStream.close();
+            } catch (Throwable uwu) {
+                owo.addSuppressed(uwu);
             }
-
             throw owo;
         }
-
-        if (inputStream != null) {
-            inputStream.close();
-        }
+        inputStream.close();
         return nativeImage;
+    }
+
+    public static SpriteContents splitImage(NativeImage image, int segment, String id) {
+        int size = image.getWidth();
+        NativeImage sprite = new NativeImage(size, size, false);
+        image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
+        return(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, id + segment), new FrameSize(size, size), sprite, new ResourceMetadata.Builder().build()));
     }
 }

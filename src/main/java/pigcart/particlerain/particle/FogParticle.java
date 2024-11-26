@@ -74,7 +74,7 @@ public class FogParticle extends WeatherParticle {
         float yAngle = (float) Math.asin(y / localPos.length());
         quaternion.rotateX(yAngle);
         quaternion.rotateZ((float) Math.atan2(x, z));
-        //FIXME: the z rotation doubles up on the -y axis instead of negating it like the positive axis. idk how to fix
+        // the z rotation doubles up on the -y axis instead of negating it like the positive axis. idk how to fix
         // for now we remove them before it gets to look too weird
         if (yAngle < -1) shouldFadeOut = true;
 

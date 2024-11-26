@@ -10,6 +10,7 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import pigcart.particlerain.ParticleRainClient;
 
@@ -20,7 +21,7 @@ public class SnowParticle extends WeatherParticle {
     protected SnowParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z, ParticleRainClient.config.snow.gravity, provider);
         this.quadSize = ParticleRainClient.config.snow.size;
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ParticleRainClient.SNOW_SPRITE));
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "snow" + random.nextInt(4))));
 
         if (level.isThundering()) {
             this.xd = gravity * ParticleRainClient.config.snow.stormWindStrength;

@@ -9,11 +9,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,7 +43,7 @@ public class RainParticle extends WeatherParticle {
 
         this.quadSize = ParticleRainClient.config.rain.size;
         this.gravity = ParticleRainClient.config.rain.gravity;
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ParticleRainClient.RAIN_SPRITE));
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "rain" + random.nextInt(4))));
 
         if (level.isThundering()) {
             this.xd = gravity * ParticleRainClient.config.rain.stormWindStrength;
@@ -56,7 +56,6 @@ public class RainParticle extends WeatherParticle {
             this.xd = this.xd * Math.clamp(0.01, 1, (y - 64) / 40);
             this.zd = this.zd * Math.clamp(0.01, 1, (y - 64) / 40);
         }
-        //TODO: multiply wind strength by Y level - angled rain looks weird when it falls into caves
 
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
         Vec3 vec3 = Minecraft.getInstance().cameraEntity.position();
@@ -116,7 +115,7 @@ public class RainParticle extends WeatherParticle {
 
         // rotate particle to face camera
         //quaternion.mul(Axis.YN.rotation(Math.atan2(x, z) + Mth.HALF_PI));
-        //FIXME: idk how to translate this to work with the angled axis, using as-is results in weird rotation
+        // idk how to translate this to work with the angled axis, using as-is results in weird rotation
         // for now the rotation is calculated once when the particle spawns, which looks good enough
         quaternion.mul(Axis.YN.rotation(this.roll));
         quaternion = this.flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
