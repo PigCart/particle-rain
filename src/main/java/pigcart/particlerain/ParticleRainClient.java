@@ -3,6 +3,7 @@ package pigcart.particlerain;
 import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.IntUnaryOperator;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -10,8 +11,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.texture.SpriteContents;
@@ -20,11 +19,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionResult;
 import pigcart.particlerain.particle.*;
 
 import java.awt.*;
@@ -49,6 +47,7 @@ public class ParticleRainClient implements ClientModInitializer {
 
     public static ModConfig config;
     public static int particleCount;
+    public static boolean previousBiomeTintOption;
 
     @Override
     public void onInitializeClient() {
@@ -73,20 +72,18 @@ public class ParticleRainClient implements ClientModInitializer {
 
         AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        AutoConfig.getConfigHolder(ModConfig.class).registerSaveListener(ParticleRainClient::saveListener);
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
         ClientPlayConnectionEvents.JOIN.register(this::onJoin);
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-            @Override
-            public void onResourceManagerReload(ResourceManager resourceManager) {
-                particleCount = 0;
-                // minecraft forcefully removes particles on resource reload
-            }
-            @Override
-            public ResourceLocation getFabricId() {
-                return null;
-            }
-        });
+    }
+
+    private static InteractionResult saveListener(ConfigHolder<ModConfig> modConfigConfigHolder, ModConfig modConfig) {
+        if (ParticleRainClient.config.rain.biomeTint != previousBiomeTintOption) {
+            Minecraft.getInstance().reloadResourcePacks();
+            previousBiomeTintOption = ParticleRainClient.config.rain.biomeTint;
+        }
+        return InteractionResult.PASS;
     }
 
     //TODO: figure out something similar for the vanilla drop and splash water particles

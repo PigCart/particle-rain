@@ -55,6 +55,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
                 this.alpha = (age * 1.0f) / 10;
             }
         }
+        //TODO: check the biome at intervals (age based?) and fade the particle if its outside of its home biome
     }
 
     @Override
@@ -79,7 +80,8 @@ public abstract class WeatherParticle extends TextureSheetParticle {
             return false;
         }
     }
-    //FIXME: needs reworking for the new splash logic
+    //FIXME AGAIN: needs reworking for the new splash logic
+    // should also be expanded to handle selecting the splash and sound effects
     protected boolean isHotBlock() {
         FluidState fluidState = this.level.getFluidState(this.pos);
         BlockState blockState = this.level.getBlockState(this.pos);

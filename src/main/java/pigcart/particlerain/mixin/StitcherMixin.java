@@ -28,6 +28,8 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
         // check for the existence of particle rain textures on this atlas to ensure we're only adding to the particle atlas
         Predicate<? super Stitcher.Holder<T>> predicate = h -> h.entry().name().getNamespace().equals(ParticleRainClient.MOD_ID);
         if (this.texturesToBeStitched.stream().anyMatch(predicate)) {
+            // resource reload clears all particles. we can just reset the counter here instead of registering a listener.
+            ParticleRainClient.particleCount = 0;
 
             NativeImage rainImage = null;
             NativeImage snowImage = null;

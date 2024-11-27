@@ -29,6 +29,7 @@ public class ModConfig implements ConfigData {
     public boolean doFogParticles = false;
     @Comment("❌ NOT IMPLEMENTED YET")
     public boolean doGroundFogParticles = true;
+    //TODO: public boolean doWindSounds = true;
 
     @ConfigEntry.Gui.CollapsibleObject
     public RainOptions rain = new RainOptions();

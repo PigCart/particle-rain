@@ -18,11 +18,10 @@ import org.jetbrains.annotations.Nullable;
 public final class WeatherParticleSpawner {
 
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-
+    //TODO: investigate serene seasons
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
-        //TODO: make sand rise from the ground
         if (ParticleRainClient.particleCount > ParticleRainClient.config.maxParticleAmount) {
-            //TODO: also cancel spawns above cloud height
+            //TODO: cancel spawns above cloud height
             return;
         }
         if (ParticleRainClient.config.doFogParticles && level.random.nextFloat() < ParticleRainClient.config.fog.density / 100F) {
@@ -38,6 +37,7 @@ public final class WeatherParticleSpawner {
             }
         } else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains(ParticleRainClient.config.sand.matchIds) && biome.value().getBaseTemperature() > 0.25) {
             // this is for future me to optimize. offers decent out of the box support for modded biomes.
+            //TODO: make sand rise from the ground
             if (ParticleRainClient.config.doSandParticles) {
                 if (level.random.nextFloat() < ParticleRainClient.config.sand.density / 100F) {
                     level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
