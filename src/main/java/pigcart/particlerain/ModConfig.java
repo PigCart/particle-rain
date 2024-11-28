@@ -27,9 +27,8 @@ public class ModConfig implements ConfigData {
     public boolean doSandParticles = true;
     public boolean doShrubParticles = true;
     public boolean doFogParticles = false;
-    @Comment("❌ NOT IMPLEMENTED YET")
     public boolean doGroundFogParticles = true;
-    //TODO: public boolean doWindSounds = true;
+    //TODO: sound options
 
     @ConfigEntry.Gui.CollapsibleObject
     public RainOptions rain = new RainOptions();
@@ -88,17 +87,15 @@ public class ModConfig implements ConfigData {
         public float gravity = 0.2F;
         public float size = 0.5F;
     }
-    @ConfigEntry.Gui.CollapsibleObject @Comment("❌ NOT IMPLEMENTED YET")
+    @ConfigEntry.Gui.CollapsibleObject
     public GroundFogOptions groundFog = new GroundFogOptions();
     public static class GroundFogOptions {
-        @ConfigEntry.BoundedDiscrete(min = 1, max = 100) @Comment("❌ NOT IMPLEMENTED YET")
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
         public int density = 20;
-        @Comment("❌ NOT IMPLEMENTED YET")
         public int spawnHeight = 64;
         @Comment("❌ NOT IMPLEMENTED YET")
         public int spawnTime = 0;
-        @Comment("❌ NOT IMPLEMENTED YET")
-        public float size = 2.5F;
+        public float size = 8F;
     }
     @ConfigEntry.Gui.PrefixText
     public boolean renderVanillaWeather = false;

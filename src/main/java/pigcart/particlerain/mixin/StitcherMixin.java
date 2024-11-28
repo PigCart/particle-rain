@@ -30,6 +30,7 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
         if (this.texturesToBeStitched.stream().anyMatch(predicate)) {
             // resource reload clears all particles. we can just reset the counter here instead of registering a listener.
             ParticleRainClient.particleCount = 0;
+            ParticleRainClient.fogCount = 0;
 
             NativeImage rainImage = null;
             NativeImage snowImage = null;

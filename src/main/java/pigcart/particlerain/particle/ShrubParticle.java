@@ -29,6 +29,7 @@ public class ShrubParticle extends WeatherParticle {
         this.gravity = ParticleRainClient.config.shrub.gravity;
         this.xd = ParticleRainClient.config.sand.windStrength;
         this.zd = ParticleRainClient.config.sand.windStrength;
+        //TODO: pick sprite from a block in the world
         ItemStack itemStack = new ItemStack(Items.DEAD_BUSH);
         this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(itemStack, level, null, 0).getParticleIcon());
     }

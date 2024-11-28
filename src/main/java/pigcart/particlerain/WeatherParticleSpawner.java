@@ -12,6 +12,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,10 +22,10 @@ import static pigcart.particlerain.ParticleRainClient.config;
 public final class WeatherParticleSpawner {
 
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-    //TODO: investigate serene seasons
+    //TODO: investigate serene seasons compatibility
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         if (ParticleRainClient.particleCount > config.maxParticleAmount) {
-            //TODO: cancel spawns above cloud height
+            //TODO: cancel particle spawns above cloud height
             return;
         }
         if (config.doFogParticles && level.random.nextFloat() < config.fog.density / 100F) {
@@ -31,8 +33,16 @@ public final class WeatherParticleSpawner {
         }
         Precipitation precipitation = biome.value().getPrecipitationAt(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos));
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
-        if (precipitation == Precipitation.RAIN && config.doRainParticles && level.random.nextFloat() < config.rain.density / 100F) {
-            level.addParticle(ParticleRainClient.RAIN, x, y, z, 0, 0, 0);
+        if (precipitation == Precipitation.RAIN) {
+            if (config.doGroundFogParticles && ParticleRainClient.fogCount < config.groundFog.density) {
+                int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
+                if (height <= config.groundFog.spawnHeight && height >= config.groundFog.spawnHeight - 4 && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
+                    level.addParticle(ParticleRainClient.GROUND_FOG, x, height + (level.random.nextFloat() * 0.8), z, 0, 0, 0);
+                }
+            }
+            if (config.doRainParticles && level.random.nextFloat() < config.rain.density / 100F) {
+                level.addParticle(ParticleRainClient.RAIN, x, y, z, 0, 0, 0);
+            }
         } else if (precipitation == Precipitation.SNOW && config.doSnowParticles) {
             if (level.random.nextFloat() < config.snow.density / 100F) {
                 level.addParticle(ParticleRainClient.SNOW, x, y, z, 0, 0, 0);

@@ -46,6 +46,7 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType DUST_MOTE;
     public static SimpleParticleType DUST;
     public static SimpleParticleType FOG;
+    public static SimpleParticleType GROUND_FOG;
     public static SimpleParticleType SHRUB;
 
     public static SoundEvent WEATHER_SNOW;
@@ -55,6 +56,7 @@ public class ParticleRainClient implements ClientModInitializer {
 
     public static ModConfig config;
     public static int particleCount;
+    public static int fogCount;
     public static boolean previousBiomeTintOption;
 
     @Override
@@ -65,6 +67,7 @@ public class ParticleRainClient implements ClientModInitializer {
         DUST = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dust"), FabricParticleTypes.simple(true));
         SHRUB = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "shrub"), FabricParticleTypes.simple(true));
         FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "fog"), FabricParticleTypes.simple(true));
+        GROUND_FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "ground_fog"), FabricParticleTypes.simple(true));
 
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
@@ -77,6 +80,7 @@ public class ParticleRainClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(DUST, DustParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(SHRUB, ShrubParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(FOG, FogParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(GROUND_FOG, GroundFogParticle.DefaultFactory::new);
 
         AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
@@ -88,6 +92,7 @@ public class ParticleRainClient implements ClientModInitializer {
             LiteralArgumentBuilder<FabricClientCommandSource> cmd = ClientCommandManager.literal(ParticleRainClient.MOD_ID)
                     .executes(ctx -> {
                         ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", particleCount, config.maxParticleAmount)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", fogCount, config.groundFog.density)));
                         return 0;
                     });
             dispatcher.register(cmd);
@@ -101,7 +106,7 @@ public class ParticleRainClient implements ClientModInitializer {
         return InteractionResult.PASS;
     }
 
-    //TODO: figure out something similar for the vanilla drop and splash water particles
+    //TODO: recolor the vanilla drop and splash water particles
     public static IntUnaryOperator desaturateOperation = (int rgba) -> {
             Color col = new Color(rgba, true);
             int gray = (col.getRed() + col.getGreen() + col.getBlue()) / 3;
@@ -113,6 +118,7 @@ public class ParticleRainClient implements ClientModInitializer {
 
     private void onJoin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
         particleCount = 0;
+        fogCount = 0;
     }
 
     private void onTick(Minecraft client) {

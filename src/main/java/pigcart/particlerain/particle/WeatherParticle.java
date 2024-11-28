@@ -52,7 +52,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
                 this.alpha = (age * 1.0f) / 20;
             }
         }
-        //TODO: check the biome at intervals (age based?) and fade the particle if its outside of its home biome
     }
 
     @Override
@@ -68,7 +67,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         }
 
     }
-    //FIXME: triggers when wind is 0...
+    //FIXME: obstruction removal triggers when wind is 0...
     protected boolean removeIfObstructed() {
         if (x == xo || z == zo) {
             this.remove();
@@ -77,7 +76,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
             return false;
         }
     }
-    //FIXME AGAIN: needs reworking for the new splash logic
+    //FIXME AGAIN: steam needs reworking for the new splash logic
     // should also be expanded to handle selecting the splash and sound effects
     protected boolean isHotBlock() {
         FluidState fluidState = this.level.getFluidState(this.pos);
