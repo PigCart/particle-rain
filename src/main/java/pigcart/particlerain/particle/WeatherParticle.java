@@ -3,15 +3,16 @@ package pigcart.particlerain.particle;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -21,21 +22,14 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected BlockPos.MutableBlockPos pos;
     boolean shouldFadeOut = false;
+    float temperature;
 
-    protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, SpriteSet provider) {
+    protected WeatherParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
-        //TODO: switch to the constructor that takes velocity i think thats how that works
-        // let the particle spawner handle the velocity, may allow better compat with the wind mods.
         this.lifetime = ParticleRainClient.config.particleRadius * 10;
-        this.gravity = gravity;
-
         this.alpha = 0.0F;
-
-        this.xd = 0.0F;
-        this.yd = -gravity;
-        this.zd = 0.0F;
-
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
+        this.temperature = level.getBiome(this.pos).value().getBaseTemperature();
         ParticleRainClient.particleCount++;
     }
 
@@ -43,16 +37,19 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.pos.set(this.x, this.y - 0.2, this.z);
+        if (this.age % 10 == 0) {
+            if (Mth.abs(level.getBiome(this.pos).value().getBaseTemperature() - this.temperature) > 0.4) shouldFadeOut = true;
+        }
         this.removeIfOOB();
         if (shouldFadeOut) {
             if (this.alpha < 0.01) {
                 remove();
             } else {
-                this.alpha = this.alpha - 0.1F;
+                this.alpha = this.alpha - 0.05F;
             }
         } else {
-            if (age < 10) {
-                this.alpha = (age * 1.0f) / 10;
+            if (age < 20) {
+                this.alpha = (age * 1.0f) / 20;
             }
         }
         //TODO: check the biome at intervals (age based?) and fade the particle if its outside of its home biome

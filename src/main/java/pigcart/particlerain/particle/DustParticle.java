@@ -18,6 +18,7 @@ public class DustParticle extends DustMoteParticle {
         super(clientWorld, x, y, z, provider);
         this.quadSize = ParticleRainClient.config.sand.size;
         this.gravity = ParticleRainClient.config.sand.gravity - 0.1F;
+        if (ParticleRainClient.config.sand.spawnOnGround) this.yd = 0.1F;
     }
     @Override
     public void tick() {

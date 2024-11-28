@@ -54,7 +54,6 @@ public class ModConfig implements ConfigData {
         public int density = 40;
         public float gravity = 0.1F;
         public float rotationAmount = 0.03F;
-        @Comment("❌ NOT IMPLEMENTED YET")
         public float stormRotationAmount = 0.05F;
         public float windStrength = 0.1F;
         public float stormWindStrength = 0.5F;
@@ -69,7 +68,6 @@ public class ModConfig implements ConfigData {
         public float windStrength = 0.3F;
         public float moteSize = 0.1F;
         public float size = 2F;
-        @Comment("❌ NOT IMPLEMENTED YET")
         public boolean spawnOnGround = true;
         public String matchIds = "sand";
     }

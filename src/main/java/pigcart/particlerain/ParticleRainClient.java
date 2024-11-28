@@ -1,11 +1,15 @@
 package pigcart.particlerain;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import it.unimi.dsi.fastutil.ints.IntUnaryOperator;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -15,14 +19,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionResult;
+import org.joml.Math;
 import pigcart.particlerain.particle.*;
 
 import java.awt.*;
@@ -76,12 +84,19 @@ public class ParticleRainClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
         ClientPlayConnectionEvents.JOIN.register(this::onJoin);
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
+            LiteralArgumentBuilder<FabricClientCommandSource> cmd = ClientCommandManager.literal(ParticleRainClient.MOD_ID)
+                    .executes(ctx -> {
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", particleCount, config.maxParticleAmount)));
+                        return 0;
+                    });
+            dispatcher.register(cmd);
+        });
     }
 
     private static InteractionResult saveListener(ConfigHolder<ModConfig> modConfigConfigHolder, ModConfig modConfig) {
         if (ParticleRainClient.config.rain.biomeTint != previousBiomeTintOption) {
             Minecraft.getInstance().reloadResourcePacks();
-            previousBiomeTintOption = ParticleRainClient.config.rain.biomeTint;
         }
         return InteractionResult.PASS;
     }
@@ -133,5 +148,9 @@ public class ParticleRainClient implements ClientModInitializer {
         NativeImage sprite = new NativeImage(size, size, false);
         image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
         return(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, id + segment), new FrameSize(size, size), sprite, new ResourceMetadata.Builder().build()));
+    }
+
+    public static double yLevelWindAdjustment(double y) {
+        return Math.clamp(0.01, 1, (y - 64) / 40);
     }
 }

@@ -19,11 +19,12 @@ public class DustMoteParticle extends WeatherParticle {
     // currently unused
 
     protected DustMoteParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, ParticleRainClient.config.sand.gravity, provider);
+        super(level, x, y, z);
         this.setSprite(provider.get(level.getRandom()));
         this.quadSize = ParticleRainClient.config.sand.moteSize;
         this.xd = ParticleRainClient.config.sand.windStrength;
         this.zd = ParticleRainClient.config.sand.windStrength;
+        this.gravity = ParticleRainClient.config.sand.gravity;
 
         final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateRGBColor(MapColor.Brightness.NORMAL));
         // Red and blue seem to be swapped

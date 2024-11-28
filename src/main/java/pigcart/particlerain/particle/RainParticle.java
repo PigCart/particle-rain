@@ -30,8 +30,8 @@ import java.awt.*;
 
 public class RainParticle extends WeatherParticle {
 
-    protected RainParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, ParticleRainClient.config.rain.gravity, provider);
+    protected RainParticle(ClientLevel level, double x, double y, double z) {
+        super(level, x, y, z);
 
         if (ParticleRainClient.config.rain.biomeTint) {
             final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, this.pos));
@@ -43,19 +43,18 @@ public class RainParticle extends WeatherParticle {
 
         this.quadSize = ParticleRainClient.config.rain.size;
         this.gravity = ParticleRainClient.config.rain.gravity;
+        this.yd = -gravity;
         this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "rain" + random.nextInt(4))));
 
         if (level.isThundering()) {
             this.xd = gravity * ParticleRainClient.config.rain.stormWindStrength;
-            this.zd = gravity * ParticleRainClient.config.rain.stormWindStrength;
         } else {
             this.xd = gravity * ParticleRainClient.config.rain.windStrength;
-            this.zd = gravity * ParticleRainClient.config.rain.windStrength;
         }
         if (ParticleRainClient.config.yLevelWindAdjustment) {
-            this.xd = this.xd * Math.clamp(0.01, 1, (y - 64) / 40);
-            this.zd = this.zd * Math.clamp(0.01, 1, (y - 64) / 40);
+            this.xd = this.xd * ParticleRainClient.yLevelWindAdjustment(y);
         }
+        this.zd = this.xd;
 
         this.lifetime = ParticleRainClient.config.particleRadius * 5;
         Vec3 vec3 = Minecraft.getInstance().cameraEntity.position();
@@ -76,17 +75,17 @@ public class RainParticle extends WeatherParticle {
                     BlockState blockState = level.getBlockState(blockPos);
                     FluidState fluidState = level.getFluidState(blockPos);
                     VoxelShape voxelShape = blockState.getCollisionShape(level, blockPos);
-                    double g = voxelShape.max(Direction.Axis.Y, d, e);
-                    double h = fluidState.getHeight(level, blockPos);
-                    double m = java.lang.Math.max(g, h);
+                    double voxelHeight = voxelShape.max(Direction.Axis.Y, d, e);
+                    double fluidHeight = fluidState.getHeight(level, blockPos);
+                    double height = java.lang.Math.max(voxelHeight, fluidHeight);
                     Vec3 raycastStart = new Vec3(this.x, this.y, this.z);
                     Vec3 raycastEnd = new Vec3(spawnPos.x, this.y, spawnPos.z);
                     BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty()));
-                    if (m != 0 && hit.getLocation().distanceTo(new Vec3(spawnPos.x, spawnPos.y + 1, spawnPos.z)) < 0.01) {
+                    if (height != 0 && hit.getLocation().distanceTo(new Vec3(spawnPos.x, spawnPos.y + 1, spawnPos.z)) < 0.01) {
                         if (this.isHotBlock()) {
-                            Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, spawnPos.x, spawnPos.y + m, spawnPos.z, 0, 0, 0);
+                            Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         } else {
-                            Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + m, spawnPos.z, 0, 0, 0);
+                            Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         }
                     }
                 }
@@ -130,15 +129,12 @@ public class RainParticle extends WeatherParticle {
     @Environment(EnvType.CLIENT)
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
-        private final SpriteSet provider;
-
         public DefaultFactory(SpriteSet provider) {
-            this.provider = provider;
         }
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new RainParticle(level, x, y, z, this.provider);
+            return new RainParticle(level, x, y, z);
         }
     }
 }

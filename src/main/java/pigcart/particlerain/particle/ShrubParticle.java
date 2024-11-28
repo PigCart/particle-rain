@@ -23,14 +23,16 @@ import pigcart.particlerain.ParticleRainClient;
 
 public class ShrubParticle extends WeatherParticle {
 
-    protected ShrubParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, ParticleRainClient.config.shrub.gravity, provider);
+    protected ShrubParticle(ClientLevel level, double x, double y, double z) {
+        super(level, x, y, z);
         this.quadSize = 0.5F;
+        this.gravity = ParticleRainClient.config.shrub.gravity;
         this.xd = ParticleRainClient.config.sand.windStrength;
         this.zd = ParticleRainClient.config.sand.windStrength;
         ItemStack itemStack = new ItemStack(Items.DEAD_BUSH);
         this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(itemStack, level, null, 0).getParticleIcon());
     }
+
     @Override
     public void tick() {
         super.tick();
@@ -52,10 +54,12 @@ public class ShrubParticle extends WeatherParticle {
             this.yd = ParticleRainClient.config.shrub.bounciness;
         }
     }
+
     @Override
     public ParticleRenderType getRenderType() {
         return ParticleRenderType.TERRAIN_SHEET;
     }
+
     @Override
     public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercentage) {
         Vector3f camPos = camera.getPosition().toVector3f();
@@ -76,18 +80,16 @@ public class ShrubParticle extends WeatherParticle {
         this.renderRotatedQuad(vertexConsumer, quat1, x, y, z, tickPercentage);
         this.renderRotatedQuad(vertexConsumer, quat2, x, y, z, tickPercentage);
     }
+
     @Environment(EnvType.CLIENT)
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
-        private final SpriteSet provider;
-
         public DefaultFactory(SpriteSet provider) {
-            this.provider = provider;
         }
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new ShrubParticle(level, x, y, z, this.provider);
+            return new ShrubParticle(level, x, y, z);
         }
     }
 }

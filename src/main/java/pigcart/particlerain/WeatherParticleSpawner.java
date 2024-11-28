@@ -15,36 +15,42 @@ import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
 
+import static pigcart.particlerain.ParticleRainClient.config;
+
 public final class WeatherParticleSpawner {
 
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
     //TODO: investigate serene seasons
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
-        if (ParticleRainClient.particleCount > ParticleRainClient.config.maxParticleAmount) {
+        if (ParticleRainClient.particleCount > config.maxParticleAmount) {
             //TODO: cancel spawns above cloud height
             return;
         }
-        if (ParticleRainClient.config.doFogParticles && level.random.nextFloat() < ParticleRainClient.config.fog.density / 100F) {
+        if (config.doFogParticles && level.random.nextFloat() < config.fog.density / 100F) {
             level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
         }
-        Precipitation precipitation = biome.value().getPrecipitationAt(pos);
+        Precipitation precipitation = biome.value().getPrecipitationAt(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos));
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
-        if (precipitation == Precipitation.RAIN && ParticleRainClient.config.doRainParticles && level.random.nextFloat() < ParticleRainClient.config.rain.density / 100F) {
+        if (precipitation == Precipitation.RAIN && config.doRainParticles && level.random.nextFloat() < config.rain.density / 100F) {
             level.addParticle(ParticleRainClient.RAIN, x, y, z, 0, 0, 0);
-        } else if (precipitation == Precipitation.SNOW && ParticleRainClient.config.doSnowParticles) {
-            if (level.random.nextFloat() < ParticleRainClient.config.snow.density / 100F) {
+        } else if (precipitation == Precipitation.SNOW && config.doSnowParticles) {
+            if (level.random.nextFloat() < config.snow.density / 100F) {
                 level.addParticle(ParticleRainClient.SNOW, x, y, z, 0, 0, 0);
             }
-        } else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains(ParticleRainClient.config.sand.matchIds) && biome.value().getBaseTemperature() > 0.25) {
+        }else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains(config.sand.matchIds) && biome.value().getBaseTemperature() > 0.25) {
             // this is for future me to optimize. offers decent out of the box support for modded biomes.
-            //TODO: make sand rise from the ground
-            if (ParticleRainClient.config.doSandParticles) {
-                if (level.random.nextFloat() < ParticleRainClient.config.sand.density / 100F) {
-                    level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
+            if (config.sand.spawnOnGround) y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
+            if (config.doSandParticles) {
+                if (level.random.nextFloat() < config.sand.density / 100F) {
+                    if (config.sand.spawnOnGround) {
+                        level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
+                    } else {
+                        level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
+                    }
                 }
             }
-            if (ParticleRainClient.config.doShrubParticles) {
-                if (level.random.nextFloat() < ParticleRainClient.config.shrub.density / 1000F) {
+            if (config.doShrubParticles) {
+                if (level.random.nextFloat() < config.shrub.density / 1000F) {
                     level.addParticle(ParticleRainClient.SHRUB, x, y, z, 0, 0, 0);
                 }
             }
@@ -52,18 +58,18 @@ public final class WeatherParticleSpawner {
     }
 
     public static void update(ClientLevel level, Entity entity, float partialTicks) {
-        if (level.isRaining() || ParticleRainClient.config.alwaysRaining) {
+        if (level.isRaining() || config.alwaysRaining) {
             int density;
             if (level.isThundering())
-                if (ParticleRainClient.config.alwaysRaining) {
-                    density = ParticleRainClient.config.particleStormDensity;
+                if (config.alwaysRaining) {
+                    density = config.particleStormDensity;
                 } else {
-                    density = (int) (ParticleRainClient.config.particleStormDensity * level.getRainLevel(partialTicks));
+                    density = (int) (config.particleStormDensity * level.getRainLevel(partialTicks));
                 }
-            else if (ParticleRainClient.config.alwaysRaining) {
-                density = ParticleRainClient.config.particleDensity;
+            else if (config.alwaysRaining) {
+                density = config.particleDensity;
             } else {
-                density = (int) (ParticleRainClient.config.particleDensity * level.getRainLevel(partialTicks));
+                density = (int) (config.particleDensity * level.getRainLevel(partialTicks));
             }
 
 
@@ -73,9 +79,9 @@ public final class WeatherParticleSpawner {
 
                 float theta = (float) (2 * Math.PI * rand.nextFloat());
                 float phi = (float) Math.acos(2 * rand.nextFloat() - 1);
-                double x = ParticleRainClient.config.particleRadius * Mth.sin(phi) * Math.cos(theta);
-                double y = ParticleRainClient.config.particleRadius * Mth.sin(phi) * Math.sin(theta);
-                double z = ParticleRainClient.config.particleRadius * Mth.cos(phi);
+                double x = config.particleRadius * Mth.sin(phi) * Math.cos(theta);
+                double y = config.particleRadius * Mth.sin(phi) * Math.sin(theta);
+                double z = config.particleRadius * Mth.cos(phi);
 
                 pos.set(x + entity.getX(), y + entity.getY(), z + entity.getZ());
                 if (level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) > pos.getY())
