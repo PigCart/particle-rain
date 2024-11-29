@@ -10,55 +10,45 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
 
 import java.awt.*;
 
-public class GroundFogParticle extends WeatherParticle {
+public class RippleParticle extends WeatherParticle {
 
-    float xdxd;
-    float zdzd;
-
-    private GroundFogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
+    private RippleParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
-        ParticleRainClient.fogCount++;
-        this.setSprite(provider.get(level.getRandom()));
-        this.quadSize = ParticleRainClient.config.groundFog.size;
-        this.lifetime = 30000;
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple0")));
+        this.quadSize = 0.25F;
+        this.alpha = 0.1F;
+        this.shouldFadeOut = true;
+        this.x = Math.round(this.x / (1F / 16F)) * (1F / 16F);
+        this.z = Math.round(this.z / (1F / 16F)) * (1F / 16F);
 
         Color color = new Color(this.level.getBiome(this.pos).value().getFogColor());
         this.rCol = color.getRed() / 255F;
         this.gCol = color.getGreen() / 255F;
         this.bCol = color.getBlue() / 255F;
-
-        this.roll = Mth.HALF_PI * level.random.nextInt(4);
-        this.oRoll = this.roll;
-
-        this.xdxd = (this.random.nextFloat() - 0.5F) / 100;
-        this.zdzd = (this.random.nextFloat() - 0.5F) / 100;
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.onGround) this.remove();
-        //if (this.age > 160) this.shouldFadeOut = true;
-        this.xd = this.xdxd;
-        this.zd = this.zdzd;
-    }
-
-    public void remove() {
-        if (this.isAlive()) ParticleRainClient.fogCount--;
-        super.remove();
+        if (this.age > 2) {
+            this.shouldFadeOut = true;
+        } else {
+            this.alpha = 0.5F;
+        }
+        int frame = Math.clamp(0, 7, this.age - 1);
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple" + frame)));
     }
 
     @Override
@@ -69,8 +59,7 @@ public class GroundFogParticle extends WeatherParticle {
         float z = (float) (Mth.lerp(f, this.zo, this.z) - camPos.z());
 
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(Mth.HALF_PI, -1, 0, 0));
-
-        quaternion.rotateZ(Mth.lerp(f, this.oRoll, this.roll));
+        this.flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
     }
 
@@ -82,15 +71,12 @@ public class GroundFogParticle extends WeatherParticle {
     @Environment(EnvType.CLIENT)
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
-        private final SpriteSet provider;
-
         public DefaultFactory(SpriteSet provider) {
-            this.provider = provider;
         }
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new GroundFogParticle(level, x, y, z, this.provider);
+            return new RippleParticle(level, x, y, z);
         }
     }
 }

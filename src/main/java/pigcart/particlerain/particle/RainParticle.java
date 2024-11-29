@@ -17,8 +17,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -65,7 +68,7 @@ public class RainParticle extends WeatherParticle {
     public void tick() {
         super.tick();
          if (this.age < 10) this.alpha = Math.clamp(0, ParticleRainClient.config.rain.opacity / 100F, this.alpha);
-        if (this.onGround) {
+        if (this.onGround || !this.level.getFluidState(this.pos).isEmpty()) {
             if (ParticleRainClient.config.doSplashParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < ParticleRainClient.config.particleRadius - (ParticleRainClient.config.particleRadius / 2.0)) {
                 for (int i = 0; i < ParticleRainClient.config.rain.splashDensity; i++) {
                     Vec3 spawnPos = Vec3.atLowerCornerWithOffset(this.pos, (random.nextFloat() * 3) - 1, 0, (random.nextFloat() * 3) - 1);
@@ -80,18 +83,19 @@ public class RainParticle extends WeatherParticle {
                     double height = java.lang.Math.max(voxelHeight, fluidHeight);
                     Vec3 raycastStart = new Vec3(this.x, this.y, this.z);
                     Vec3 raycastEnd = new Vec3(spawnPos.x, this.y, spawnPos.z);
-                    BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty()));
-                    if (height != 0 && hit.getLocation().distanceTo(new Vec3(spawnPos.x, spawnPos.y + 1, spawnPos.z)) < 0.01) {
-                        if (this.isHotBlock()) {
-                            Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
+                    BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
+                    Vec2 raycastHit = new Vec2((float)hit.getLocation().x, (float)hit.getLocation().z);
+                    // this is SUCH a god damn mess
+                    if (height != 0 && raycastHit.distanceToSqr(new Vec2((float) spawnPos.x, (float) spawnPos.z)) < 0.01) {
+
+                        if (fluidState.isSourceOfType(Fluids.WATER)) {
+                            Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.RIPPLE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         } else {
                             Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         }
                     }
                 }
             }
-            this.remove();
-        } else if (!this.level.getFluidState(this.pos).isEmpty()) {
             this.remove();
         } else if (this.removeIfObstructed()) {
             Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);

@@ -19,8 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -48,6 +46,7 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType FOG;
     public static SimpleParticleType GROUND_FOG;
     public static SimpleParticleType SHRUB;
+    public static SimpleParticleType RIPPLE;
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;
@@ -68,6 +67,7 @@ public class ParticleRainClient implements ClientModInitializer {
         SHRUB = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "shrub"), FabricParticleTypes.simple(true));
         FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "fog"), FabricParticleTypes.simple(true));
         GROUND_FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "ground_fog"), FabricParticleTypes.simple(true));
+        RIPPLE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "ripple"), FabricParticleTypes.simple(true));
 
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
@@ -81,6 +81,7 @@ public class ParticleRainClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(SHRUB, ShrubParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(FOG, FogParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(GROUND_FOG, GroundFogParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(RIPPLE, RippleParticle.DefaultFactory::new);
 
         AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
@@ -158,5 +159,56 @@ public class ParticleRainClient implements ClientModInitializer {
 
     public static double yLevelWindAdjustment(double y) {
         return Math.clamp(0.01, 1, (y - 64) / 40);
+    }
+
+    public static SpriteContents generateRipple(int i) {
+        int size = 16;
+        float radius = ((size / 2F) / 8) * (i + 1);
+        NativeImage image = new NativeImage(size, size, true);
+        Color color = Color.WHITE;
+        int colorint = ((color.getAlpha() & 0xFF) << 24) |
+                ((color.getRed() & 0xFF) << 16) |
+                ((color.getGreen() & 0xFF) << 8)  |
+                ((color.getBlue() & 0xFF));
+
+        generateBresenhamCircle(image, size, (int) Math.clamp(1, (size / 2F) - 1, radius), colorint);
+        return(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple" + i), new FrameSize(size, size), image, new ResourceMetadata.Builder().build()));
+    }
+
+    public static void generateBresenhamCircle(NativeImage image, int imgSize, int radius, int colorint) {
+        int centerX = imgSize / 2;
+        int centerY = imgSize / 2;
+        int x = 0, y = radius;
+        int d = 3 - 2 * radius;
+        drawCirclePixel(centerX, centerY, x, y, image, colorint);
+        while (y >= x){
+
+            // check for decision parameter
+            // and correspondingly
+            // update d, y
+            if (d > 0) {
+                y--;
+                d = d + 4 * (x - y) + 10;
+            }
+            else
+                d = d + 4 * x + 6;
+
+            // Increment x after updating decision parameter
+            x++;
+
+            // Draw the circle using the new coordinates
+            drawCirclePixel(centerX, centerY, x, y, image, colorint);
+        }
+    }
+
+    static void drawCirclePixel(int xc, int yc, int x, int y, NativeImage img, int col){
+        img.setPixelRGBA(xc+x, yc+y, col);
+        img.setPixelRGBA(xc-x, yc+y, col);
+        img.setPixelRGBA(xc+x, yc-y, col);
+        img.setPixelRGBA(xc-x, yc-y, col);
+        img.setPixelRGBA(xc+y, yc+x, col);
+        img.setPixelRGBA(xc-y, yc+x, col);
+        img.setPixelRGBA(xc+y, yc-x, col);
+        img.setPixelRGBA(xc-y, yc-x, col);
     }
 }

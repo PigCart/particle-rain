@@ -37,7 +37,7 @@ public final class WeatherParticleSpawner {
             if (config.doGroundFogParticles && ParticleRainClient.fogCount < config.groundFog.density) {
                 int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
                 if (height <= config.groundFog.spawnHeight && height >= config.groundFog.spawnHeight - 4 && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
-                    level.addParticle(ParticleRainClient.GROUND_FOG, x, height + (level.random.nextFloat() * 0.8), z, 0, 0, 0);
+                    level.addParticle(ParticleRainClient.GROUND_FOG, x, height + level.random.nextFloat(), z, 0, 0, 0);
                 }
             }
             if (config.doRainParticles && level.random.nextFloat() < config.rain.density / 100F) {
@@ -60,7 +60,7 @@ public final class WeatherParticleSpawner {
                 }
             }
             if (config.doShrubParticles) {
-                if (level.random.nextFloat() < config.shrub.density / 1000F) {
+                if (level.random.nextFloat() < config.shrub.density / 100F) {
                     level.addParticle(ParticleRainClient.SHRUB, x, y, z, 0, 0, 0);
                 }
             }

@@ -14,7 +14,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public int particleStormDensity = 200;
     @ConfigEntry.Gui.Tooltip
-    public int particleRadius = 30;
+    public int particleRadius = 25;
 
     @ConfigEntry.Gui.PrefixText
     public boolean doRainParticles = true;

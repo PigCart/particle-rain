@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRainClient;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Predicate;
@@ -48,6 +49,9 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
             }
             for (int i = 0; i < 4; i++) {
                 this.registerSprite(ParticleRainClient.splitImage(snowImage, i, "snow"));
+            }
+            for (int i = 0; i < 8; i++) {
+                this.registerSprite(ParticleRainClient.generateRipple(i));
             }
         }
     }
