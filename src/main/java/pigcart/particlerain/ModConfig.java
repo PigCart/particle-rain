@@ -40,7 +40,7 @@ public class ModConfig implements ConfigData {
         public float stormWindStrength = 0.5F;
         public boolean biomeTint = true;
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100) @ConfigEntry.Gui.Tooltip
-        public int mix = 70;
+        public int mix = 50;
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100) @ConfigEntry.Gui.Tooltip
         public int opacity = 100;
         public int splashDensity = 5;

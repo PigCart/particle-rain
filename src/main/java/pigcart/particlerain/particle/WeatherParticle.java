@@ -26,6 +26,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
+        this.setSize(0.01F, 0.01F);
         this.lifetime = ParticleRainClient.config.particleRadius * 10;
         this.alpha = 0.0F;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);

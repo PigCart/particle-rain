@@ -47,6 +47,7 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType GROUND_FOG;
     public static SimpleParticleType SHRUB;
     public static SimpleParticleType RIPPLE;
+    public static SimpleParticleType STREAK;
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;
@@ -68,6 +69,7 @@ public class ParticleRainClient implements ClientModInitializer {
         FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "fog"), FabricParticleTypes.simple(true));
         GROUND_FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "ground_fog"), FabricParticleTypes.simple(true));
         RIPPLE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "ripple"), FabricParticleTypes.simple(true));
+        STREAK = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "streak"), FabricParticleTypes.simple(true));
 
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
@@ -82,6 +84,7 @@ public class ParticleRainClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(FOG, FogParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(GROUND_FOG, GroundFogParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(RIPPLE, RippleParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(STREAK, StreakParticle.DefaultFactory::new);
 
         AutoConfig.register(ModConfig.class, JanksonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
@@ -162,7 +165,7 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     public static SpriteContents generateRipple(int i) {
-        int size = 16;
+        int size = 64;
         float radius = ((size / 2F) / 8) * (i + 1);
         NativeImage image = new NativeImage(size, size, true);
         Color color = Color.WHITE;

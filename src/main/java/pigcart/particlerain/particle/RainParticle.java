@@ -9,11 +9,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.texture.Stitcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,6 +24,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -30,6 +34,7 @@ import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
 
 import java.awt.*;
+import java.util.function.Predicate;
 
 public class RainParticle extends WeatherParticle {
 
@@ -67,7 +72,7 @@ public class RainParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-         if (this.age < 10) this.alpha = Math.clamp(0, ParticleRainClient.config.rain.opacity / 100F, this.alpha);
+        if (this.age < 10) this.alpha = Math.clamp(0, ParticleRainClient.config.rain.opacity / 100F, this.alpha);
         if (this.onGround || !this.level.getFluidState(this.pos).isEmpty()) {
             if (ParticleRainClient.config.doSplashParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < ParticleRainClient.config.particleRadius - (ParticleRainClient.config.particleRadius / 2.0)) {
                 for (int i = 0; i < ParticleRainClient.config.rain.splashDensity; i++) {
@@ -88,7 +93,7 @@ public class RainParticle extends WeatherParticle {
                     // this is SUCH a god damn mess
                     if (height != 0 && raycastHit.distanceToSqr(new Vec2((float) spawnPos.x, (float) spawnPos.z)) < 0.01) {
 
-                        if (fluidState.isSourceOfType(Fluids.WATER)) {
+                        if (fluidState.isSourceOfType(Fluids.WATER)) { //TODO can i schedule these
                             Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.RIPPLE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         } else {
                             Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
@@ -98,8 +103,19 @@ public class RainParticle extends WeatherParticle {
             }
             this.remove();
         } else if (this.removeIfObstructed()) {
-            Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);
-            this.remove();
+            Vec3 raycastStart = new Vec3(this.x, this.y, this.z);
+            Vec3 raycastEnd = new Vec3(this.x + ParticleRainClient.config.rain.windStrength, this.y, this.z + ParticleRainClient.config.rain.windStrength);
+            BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
+            if (hit.getType().equals(HitResult.Type.BLOCK)) {
+                if (ParticleRainClient.config.doStreakParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < ParticleRainClient.config.particleRadius - (ParticleRainClient.config.particleRadius / 2.0)) {
+                    BlockState state = level.getBlockState(hit.getBlockPos());
+                    if (state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
+                        Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.STREAK, this.x, this.y, this.z, hit.getDirection().get2DDataValue(), 0, 0);
+                        Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);
+                    }
+                }
+                this.remove();
+            }
         }
     }
 
