@@ -10,8 +10,11 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
@@ -22,7 +25,9 @@ import java.awt.*;
 
 public class StreakParticle extends WeatherParticle {
 
-    private StreakParticle(ClientLevel level, double x, double y, double z, double facingRotation, SpriteSet provider) {
+    Direction direction;
+
+    private StreakParticle(ClientLevel level, double x, double y, double z, int direction2D, SpriteSet provider) {
         super(level, x, y, z);
 
         if (ParticleRainClient.config.rain.biomeTint) {
@@ -35,7 +40,9 @@ public class StreakParticle extends WeatherParticle {
 
         this.setSprite(provider.get(level.getRandom()));
         this.quadSize = 0.5F;
-        this.roll = (float) (facingRotation * Mth.HALF_PI);
+
+        this.roll = direction2D * Mth.HALF_PI;
+        direction = Direction.from2DDataValue(direction2D);
     }
 
     @Override
@@ -47,8 +54,11 @@ public class StreakParticle extends WeatherParticle {
             } else {
                 this.gravity = 0;
             }
+            BlockState state = level.getBlockState(this.pos.relative(direction.getOpposite()));
+            if (this.onGround || !(state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE))) {
+                this.shouldFadeOut = true;
+            }
         }
-        if (this.onGround) this.shouldFadeOut = true;
     }
 
     @Override
@@ -79,7 +89,7 @@ public class StreakParticle extends WeatherParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new StreakParticle(level, x, y, z, velocityX, this.provider);
+            return new StreakParticle(level, x, y, z, (int) velocityX, this.provider);
         }
     }
 }
