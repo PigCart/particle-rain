@@ -20,8 +20,6 @@ import org.joml.Vector3f;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
 
-import java.awt.*;
-
 public class RippleParticle extends WeatherParticle {
 
     private RippleParticle(ClientLevel level, double x, double y, double z) {
@@ -29,7 +27,6 @@ public class RippleParticle extends WeatherParticle {
         this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple0")));
         this.quadSize = 0.25F;
         this.alpha = 0.1F;
-        this.shouldFadeOut = true;
         this.x = Math.round(this.x / (1F / 16F)) * (1F / 16F);
         this.z = Math.round(this.z / (1F / 16F)) * (1F / 16F);
     }
@@ -37,12 +34,9 @@ public class RippleParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        if (this.age > 2) {
-            this.shouldFadeOut = true;
-        } else {
-            this.alpha = 0.5F;
-        }
-        int frame = Math.clamp(0, 7, this.age - 1);
+        this.alpha = Mth.lerp(this.age / 10F, 0.3F, 0);
+        int frame = (int) Mth.lerp(this.age / 10F, 0, 8);
+        if (frame == 8) this.remove();
         this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple" + frame)));
     }
 

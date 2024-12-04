@@ -9,18 +9,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.texture.Stitcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -34,7 +31,6 @@ import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
 
 import java.awt.*;
-import java.util.function.Predicate;
 
 public class RainParticle extends WeatherParticle {
 
@@ -92,9 +88,10 @@ public class RainParticle extends WeatherParticle {
                     Vec2 raycastHit = new Vec2((float)hit.getLocation().x, (float)hit.getLocation().z);
                     // this is SUCH a god damn mess
                     if (height != 0 && raycastHit.distanceToSqr(new Vec2((float) spawnPos.x, (float) spawnPos.z)) < 0.01) {
-
-                        if (fluidState.isSourceOfType(Fluids.WATER)) { //TODO can i schedule these
-                            Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.RIPPLE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
+                        if (fluidState.isSourceOfType(Fluids.WATER) && ParticleRainClient.config.doRippleParticles) {
+                            if (height != 1) { // lazy workaround
+                                Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.RIPPLE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
+                            }
                         } else {
                             Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         }

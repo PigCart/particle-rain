@@ -165,7 +165,7 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     public static SpriteContents generateRipple(int i) {
-        int size = 64;
+        int size = 16;
         float radius = ((size / 2F) / 8) * (i + 1);
         NativeImage image = new NativeImage(size, size, true);
         Color color = Color.WHITE;

@@ -19,9 +19,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.PrefixText
     public boolean doRainParticles = true;
     public boolean doSplashParticles = true;
-    @Comment("❌ NOT IMPLEMENTED YET")
     public boolean doRippleParticles = true;
-    @Comment("❌ NOT IMPLEMENTED YET")
     public boolean doStreakParticles = true;
     public boolean doSnowParticles = true;
     public boolean doSandParticles = true;
@@ -93,8 +91,6 @@ public class ModConfig implements ConfigData {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
         public int density = 20;
         public int spawnHeight = 64;
-        @Comment("❌ NOT IMPLEMENTED YET")
-        public int spawnTime = 0;
         public float size = 8F;
     }
     @ConfigEntry.Gui.PrefixText
