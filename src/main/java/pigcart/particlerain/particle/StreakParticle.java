@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -11,6 +12,7 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -40,6 +42,7 @@ public class StreakParticle extends WeatherParticle {
 
         this.setSprite(provider.get(level.getRandom()));
         this.quadSize = 0.5F;
+        this.gravity = random.nextFloat() / 10;
 
         this.roll = direction2D * Mth.HALF_PI;
         direction = Direction.from2DDataValue(direction2D);
@@ -54,10 +57,13 @@ public class StreakParticle extends WeatherParticle {
             } else {
                 this.gravity = 0;
             }
-            BlockState state = level.getBlockState(this.pos.relative(direction.getOpposite()));
-            if (this.onGround || !(state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE))) {
-                this.shouldFadeOut = true;
-            }
+        }
+        BlockState state = level.getBlockState(this.pos.relative(direction.getOpposite()));
+        if (!this.shouldFadeOut && (this.onGround || !(state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)))) {
+            if (state.isAir()) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.DRIPPING_WATER, this.x, this.y - 0.25F, this.z, 0, 0, 0);
+            this.gravity = 0;
+            this.yd = 0;
+            this.shouldFadeOut = true;
         }
     }
 
@@ -70,7 +76,7 @@ public class StreakParticle extends WeatherParticle {
 
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(this.roll, 0, 1, 0));
         this.flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
-        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
+        this.renderRotatedQuad(vertexConsumer, quaternion, x, y + 0.25F, z, f);
     }
 
     @Override
