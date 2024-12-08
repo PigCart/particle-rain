@@ -1,8 +1,11 @@
 package pigcart.particlerain.mixin;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.Stitcher;
+import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceMetadata;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,6 +55,19 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
             // generate ripple sprites
             for (int i = 0; i < 8; i++) {
                 this.registerSprite(ParticleRainClient.generateRipple(i));
+            }
+            // add tinted versions of the default splashes
+            if (ParticleRainClient.config.biomeTint) {
+                for (int i = 0; i < 4; i++) {
+                    NativeImage splashImage = null;
+                    try {
+                        splashImage = ParticleRainClient.loadTexture(ResourceLocation.withDefaultNamespace(String.format("textures/particle/splash_%d.png", i)));
+                        splashImage.applyToAllPixels(ParticleRainClient.desaturateOperation);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    this.registerSprite(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "splash" + i), new FrameSize(splashImage.getWidth(), splashImage.getHeight()), splashImage, new ResourceMetadata.Builder().build()));
+                }
             }
         }
     }
