@@ -35,7 +35,6 @@ public class ModConfig implements ConfigData {
         public float gravity = 1.0F;
         public float windStrength = 0.3F;
         public float stormWindStrength = 0.5F;
-        public boolean biomeTint = true;
         @ConfigEntry.BoundedDiscrete(min = 0, max = 100) @ConfigEntry.Gui.Tooltip
         public int mix = 50;
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100) @ConfigEntry.Gui.Tooltip
@@ -95,6 +94,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.PrefixText
     public boolean renderVanillaWeather = false;
     public boolean tickVanillaWeather = false;
+    public boolean biomeTint = true;
     public boolean alwaysRaining = false;
     public boolean yLevelWindAdjustment = true;
     @ConfigEntry.Gui.Tooltip

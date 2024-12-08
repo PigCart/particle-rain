@@ -1,6 +1,7 @@
 {
   "text.autoconfig.particlerain.title": "Particle Rain",
   "text.autoconfig.particlerain.category.default": "General",
+
   "text.autoconfig.particlerain.option.maxParticleAmount.@PrefixText": "§lPerformance Options",
   "text.autoconfig.particlerain.option.maxParticleAmount": "Maximum particle amount",
   "text.autoconfig.particlerain.option.maxParticleAmount.@Tooltip": "New weather particles will not be spawned if there are this many already in the world",
@@ -27,7 +28,6 @@
   "text.autoconfig.particlerain.option.rain.gravity": "Gravity",
   "text.autoconfig.particlerain.option.rain.windStrength": "Wind strength",
   "text.autoconfig.particlerain.option.rain.stormWindStrength": "Wind strength during thunderstorms",
-  "text.autoconfig.particlerain.option.rain.biomeTint": "Tint rain based on biome colors",
   "text.autoconfig.particlerain.option.rain.mix": "Tint water / sky color mix",
   "text.autoconfig.particlerain.option.rain.mix.@Tooltip": "Mix of color between the biome water color (0) and the biome sky color (100)",
   "text.autoconfig.particlerain.option.rain.opacity": "Opacity",
@@ -74,6 +74,7 @@
   "text.autoconfig.particlerain.option.renderVanillaWeather.@PrefixText": "§lCompatibility Options",
   "text.autoconfig.particlerain.option.renderVanillaWeather": "Render default weather",
   "text.autoconfig.particlerain.option.tickVanillaWeather": "Tick default rain splashing",
+  "text.autoconfig.particlerain.option.biomeTint": "Tint water particles based on biome colors",
   "text.autoconfig.particlerain.option.alwaysRaining": "Always spawn weather particles",
   "text.autoconfig.particlerain.option.yLevelWindAdjustment": "Y-level wind adjustment",
   "text.autoconfig.particlerain.option.syncRegistry": "Sync registry",

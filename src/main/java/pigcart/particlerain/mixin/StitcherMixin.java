@@ -37,7 +37,7 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
             try {
                 rainImage = ParticleRainClient.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/rain.png"));
                 snowImage = ParticleRainClient.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/snow.png"));
-                if (ParticleRainClient.config.rain.biomeTint) rainImage.applyToAllPixels(ParticleRainClient.desaturateOperation);
+                if (ParticleRainClient.config.biomeTint) rainImage.applyToAllPixels(ParticleRainClient.desaturateOperation);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,6 +49,7 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
             for (int i = 0; i < 4; i++) {
                 this.registerSprite(ParticleRainClient.splitImage(snowImage, i, "snow"));
             }
+            // generate ripple sprites
             for (int i = 0; i < 8; i++) {
                 this.registerSprite(ParticleRainClient.generateRipple(i));
             }

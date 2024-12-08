@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.Screen;
 public class ModMenuIntegration implements ModMenuApi {
 
     private static Screen create(Screen parent) {
-        ParticleRainClient.previousBiomeTintOption = ParticleRainClient.config.rain.biomeTint;
+        ParticleRainClient.previousBiomeTintOption = ParticleRainClient.config.biomeTint;
         return AutoConfig.getConfigScreen(ModConfig.class, parent).get();
     }
 

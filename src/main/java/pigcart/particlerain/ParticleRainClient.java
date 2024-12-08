@@ -104,7 +104,7 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     private static InteractionResult saveListener(ConfigHolder<ModConfig> modConfigConfigHolder, ModConfig modConfig) {
-        if (ParticleRainClient.config.rain.biomeTint != previousBiomeTintOption) {
+        if (ParticleRainClient.config.biomeTint != previousBiomeTintOption) {
             Minecraft.getInstance().reloadResourcePacks();
         }
         return InteractionResult.PASS;

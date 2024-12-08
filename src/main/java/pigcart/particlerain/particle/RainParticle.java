@@ -37,7 +37,7 @@ public class RainParticle extends WeatherParticle {
     protected RainParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
 
-        if (ParticleRainClient.config.rain.biomeTint) {
+        if (ParticleRainClient.config.biomeTint) {
             final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, this.pos));
             final Color fogColor = new Color(this.level.getBiome(this.pos).value().getFogColor());
             this.rCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getRed(), fogColor.getRed()) / 255F);
