@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRainClient;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Predicate;

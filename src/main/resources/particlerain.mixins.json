@@ -6,7 +6,9 @@
   "mixins": [
     "LevelRendererMixin",
     "RegistrySyncManagerMixin",
-    "StitcherMixin"
+    "StitcherMixin",
+    "WaterDropParticleMixin",
+    "TextureSheetParticleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
