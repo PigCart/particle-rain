@@ -7,8 +7,9 @@
     "LevelRendererMixin",
     "RegistrySyncManagerMixin",
     "StitcherMixin",
+    "TextureSheetParticleMixin",
     "WaterDropParticleMixin",
-    "TextureSheetParticleMixin"
+    "DripParticleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
