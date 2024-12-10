@@ -16,9 +16,13 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import org.joml.Math;
 import pigcart.particlerain.particle.*;
@@ -110,15 +115,23 @@ public class ParticleRainClient implements ClientModInitializer {
         return InteractionResult.PASS;
     }
 
-    //TODO: recolor the vanilla drop and splash water particles
     public static IntUnaryOperator desaturateOperation = (int rgba) -> {
             Color col = new Color(rgba, true);
-            int gray = (col.getRed() + col.getGreen() + col.getBlue()) / 3;
+            int gray = Math.max(Math.max(col.getRed(), col.getGreen()), col.getBlue());
             return ((col.getAlpha() & 0xFF) << 24) |
                     ((gray & 0xFF) << 16) |
                     ((gray & 0xFF) << 8)  |
                     ((gray & 0xFF));
     };
+
+    public static void applyWaterTint(TextureSheetParticle particle, ClientLevel clientLevel, BlockPos blockPos) {
+        final Color waterColor = new Color(BiomeColors.getAverageWaterColor(clientLevel, blockPos));
+        final Color fogColor = new Color(clientLevel.getBiome(blockPos).value().getFogColor());
+        float rCol = (Mth.lerp(config.rain.mix / 100F, waterColor.getRed(), fogColor.getRed()) / 255F);
+        float gCol = (Mth.lerp(config.rain.mix / 100F, waterColor.getGreen(), fogColor.getGreen()) / 255F);
+        float bCol = (Mth.lerp(config.rain.mix / 100F, waterColor.getBlue(), fogColor.getBlue()) / 255F);
+        particle.setColor(rCol, gCol, bCol);
+    }
 
     private void onJoin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
         particleCount = 0;
@@ -173,7 +186,6 @@ public class ParticleRainClient implements ClientModInitializer {
                 ((color.getRed() & 0xFF) << 16) |
                 ((color.getGreen() & 0xFF) << 8)  |
                 ((color.getBlue() & 0xFF));
-
         generateBresenhamCircle(image, size, (int) Math.clamp(1, (size / 2F) - 1, radius), colorint);
         return(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple" + i), new FrameSize(size, size), image, new ResourceMetadata.Builder().build()));
     }
@@ -185,21 +197,13 @@ public class ParticleRainClient implements ClientModInitializer {
         int d = 3 - 2 * radius;
         drawCirclePixel(centerX, centerY, x, y, image, colorint);
         while (y >= x){
-
-            // check for decision parameter
-            // and correspondingly
-            // update d, y
             if (d > 0) {
                 y--;
                 d = d + 4 * (x - y) + 10;
             }
             else
                 d = d + 4 * x + 6;
-
-            // Increment x after updating decision parameter
             x++;
-
-            // Draw the circle using the new coordinates
             drawCirclePixel(centerX, centerY, x, y, image, colorint);
         }
     }

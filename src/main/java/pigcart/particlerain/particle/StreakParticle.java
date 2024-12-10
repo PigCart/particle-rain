@@ -10,7 +10,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -23,8 +22,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
 
-import java.awt.*;
-
 public class StreakParticle extends WeatherParticle {
 
     Direction direction;
@@ -33,11 +30,9 @@ public class StreakParticle extends WeatherParticle {
         super(level, x, y, z);
 
         if (ParticleRainClient.config.biomeTint) {
-            final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, this.pos));
-            final Color fogColor = new Color(this.level.getBiome(this.pos).value().getFogColor());
-            this.rCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getRed(), fogColor.getRed()) / 255F);
-            this.gCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getGreen(), fogColor.getGreen()) / 255F);
-            this.bCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getBlue(), fogColor.getBlue()) / 255F);
+            ParticleRainClient.applyWaterTint(this, level, this.pos);
+        } else {
+            this.setColor(0.2f, 0.3f, 1.0f);
         }
 
         this.setSprite(provider.get(level.getRandom()));

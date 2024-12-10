@@ -36,20 +36,27 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.pos.set(this.x, this.y - 0.2, this.z);
-        if (this.age % 10 == 0) {
-            if (Mth.abs(level.getBiome(this.pos).value().getBaseTemperature() - this.temperature) > 0.4) shouldFadeOut = true;
-        }
         this.removeIfOOB();
         if (shouldFadeOut) {
-            if (this.alpha < 0.01) {
-                remove();
-            } else {
-                this.alpha = this.alpha - 0.05F;
-            }
+            fadeOut();
+        } else if (this.age % 10 == 0) {
+            if (Mth.abs(level.getBiome(this.pos).value().getBaseTemperature() - this.temperature) > 0.4) shouldFadeOut = true;
         } else {
-            if (age < 20) {
-                this.alpha = (age * 1.0f) / 20;
-            }
+            fadeIn();
+        }
+    }
+
+    public void fadeIn() {
+        if (age < 20) {
+            this.alpha = (age * 1.0f) / 20;
+        }
+    }
+
+    public void fadeOut() {
+        if (this.alpha < 0.01) {
+            remove();
+        } else {
+            this.alpha = this.alpha - 0.05F;
         }
     }
 
@@ -74,13 +81,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         } else {
             return false;
         }
-    }
-    //FIXME AGAIN: steam needs reworking for the new splash logic
-    // should also be expanded to handle selecting the splash and sound effects
-    protected boolean isHotBlock() {
-        FluidState fluidState = this.level.getFluidState(this.pos);
-        BlockState blockState = this.level.getBlockState(this.pos);
-        return fluidState.is(FluidTags.LAVA) || blockState.is(Blocks.MAGMA_BLOCK) || CampfireBlock.isLitCampfire(blockState);
     }
     public Quaternionf flipItTurnwaysIfBackfaced(Quaternionf quaternion, Vector3f toCamera) {
         Vector3f normal = new Vector3f(0, 0, 1);

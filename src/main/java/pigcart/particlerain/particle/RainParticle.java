@@ -8,7 +8,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -30,20 +29,12 @@ import org.joml.*;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
 
-import java.awt.*;
-
 public class RainParticle extends WeatherParticle {
 
     protected RainParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
 
-        if (ParticleRainClient.config.biomeTint) {
-            final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, this.pos));
-            final Color fogColor = new Color(this.level.getBiome(this.pos).value().getFogColor());
-            this.rCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getRed(), fogColor.getRed()) / 255F);
-            this.gCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getGreen(), fogColor.getGreen()) / 255F);
-            this.bCol = (Mth.lerp(ParticleRainClient.config.rain.mix / 100F, waterColor.getBlue(), fogColor.getBlue()) / 255F);
-        }
+        if (ParticleRainClient.config.biomeTint) ParticleRainClient.applyWaterTint(this, level, this.pos);
 
         this.quadSize = ParticleRainClient.config.rain.size;
         this.gravity = ParticleRainClient.config.rain.gravity;
@@ -91,7 +82,11 @@ public class RainParticle extends WeatherParticle {
                         if (fluidState.isSourceOfType(Fluids.WATER) && ParticleRainClient.config.doRippleParticles) {
                             if (height != 1) { // lazy workaround
                                 Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.RIPPLE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
+                                if (level.isThundering()) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                             }
+                        } else if (blockState.is(BlockTags.INFINIBURN_OVERWORLD) || blockState.is(BlockTags.STRIDER_WARM_BLOCKS)) {
+                            Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
+                            if (level.isThundering()) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.LARGE_SMOKE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         } else {
                             Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         }

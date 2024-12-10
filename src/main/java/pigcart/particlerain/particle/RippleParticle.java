@@ -34,10 +34,14 @@ public class RippleParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        this.alpha = Mth.lerp(this.age / 10F, 0.3F, 0);
-        int frame = (int) Mth.lerp(this.age / 10F, 0, 8);
-        if (frame == 8) this.remove();
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple" + frame)));
+        this.alpha = Mth.lerp(this.age / 9F, 0.3F, 0F);
+        if (this.age > 8) this.remove();
+        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple" + (this.age - 1))));
+    }
+
+    @Override
+    public void fadeIn() {
+        //dont
     }
 
     @Override

@@ -11,8 +11,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
 
 import static pigcart.particlerain.ParticleRainClient.config;
@@ -47,17 +45,9 @@ public class SnowParticle extends WeatherParticle {
 
     public void tick() {
         super.tick();
-
-        //xd = Mth.clamp(xd, 0.05, 100);
-        //zd = Mth.clamp(zd, 0.05, 100);
-        // do not remember what this is supposed to accomplish
-
         this.oRoll = this.roll;
         this.roll = this.oRoll + (level.isThundering() ? config.snow.stormRotationAmount : config.snow.rotationAmount) * this.rotationAmount;
         if (this.onGround || this.removeIfObstructed()) {
-            if (this.isHotBlock()) {
-                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
-            }
             this.remove();
         }
     }

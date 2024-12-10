@@ -50,8 +50,8 @@ public class ModConfig implements ConfigData {
         public float gravity = 0.1F;
         public float rotationAmount = 0.03F;
         public float stormRotationAmount = 0.05F;
-        public float windStrength = 0.1F;
-        public float stormWindStrength = 0.5F;
+        public float windStrength = 0.5F;
+        public float stormWindStrength = 2F;
         public float size = 2F;
     }
     @ConfigEntry.Gui.CollapsibleObject

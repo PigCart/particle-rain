@@ -37,12 +37,8 @@ public class ShrubParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        if (this.removeIfObstructed()) {
-            if (this.isHotBlock()) {
-                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
-            }
-        }
-        else if (!this.level.getFluidState(this.pos).isEmpty()) {
+        this.removeIfObstructed();
+        if (!this.level.getFluidState(this.pos).isEmpty()) {
             this.shouldFadeOut = true;
             this.gravity = 0;
         } else {

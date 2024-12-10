@@ -39,12 +39,8 @@ public class DustMoteParticle extends WeatherParticle {
         if (this.onGround) {
             this.yd = 0.1F;
         }
-         else if (this.removeIfObstructed()) {
-            if (this.isHotBlock()) {
-                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
-            }
-        }
-        else if (!this.level.getFluidState(this.pos).isEmpty()) {
+        this.removeIfObstructed();
+        if (!this.level.getFluidState(this.pos).isEmpty()) {
             this.shouldFadeOut = true;
             this.gravity = 0;
         } else {
