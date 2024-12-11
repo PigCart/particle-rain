@@ -21,6 +21,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.renderer.texture.Stitcher;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -39,6 +40,7 @@ import pigcart.particlerain.particle.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class ParticleRainClient implements ClientModInitializer {
 
@@ -177,8 +179,17 @@ public class ParticleRainClient implements ClientModInitializer {
         return Math.clamp(0.01, 1, (y - 64) / 40);
     }
 
-    public static SpriteContents generateRipple(int i) {
-        int size = 16;
+    public static <T extends Stitcher.Entry> T getTextureToBeStitched(List<Stitcher.Holder<T>> texturesToBeStitched, ResourceLocation resourceLocation) {
+        for (Stitcher.Holder<T> tHolder : texturesToBeStitched) {
+            T entry = tHolder.entry();
+            if (entry.name().equals(resourceLocation)) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
+    public static SpriteContents generateRipple(int i, int size) {
         float radius = ((size / 2F) / 8) * (i + 1);
         NativeImage image = new NativeImage(size, size, true);
         Color color = Color.WHITE;

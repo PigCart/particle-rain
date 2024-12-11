@@ -29,8 +29,8 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
     @Inject(method = "stitch", at = @At("HEAD"))
     public void stitch(CallbackInfo ci) {
         // check for the existence of particle rain textures on this atlas to ensure we're only adding to the particle atlas
-        Predicate<? super Stitcher.Holder<T>> predicate = h -> h.entry().name().getNamespace().equals(ParticleRainClient.MOD_ID);
-        if (this.texturesToBeStitched.stream().anyMatch(predicate)) {
+        Predicate<? super Stitcher.Holder<T>> namespacePredicate = h -> h.entry().name().getNamespace().equals(ParticleRainClient.MOD_ID);
+        if (this.texturesToBeStitched.stream().anyMatch(namespacePredicate)) {
             // resource reload clears all particles. we can just reset the counter here instead of registering a listener.
             ParticleRainClient.particleCount = 0;
             ParticleRainClient.fogCount = 0;
@@ -53,8 +53,15 @@ public abstract class StitcherMixin<T extends Stitcher.Entry> {
                 this.registerSprite(ParticleRainClient.splitImage(snowImage, i, "snow"));
             }
             // generate ripple sprites
-            for (int i = 0; i < 8; i++) {
-                this.registerSprite(ParticleRainClient.generateRipple(i));
+            T entry = ParticleRainClient.getTextureToBeStitched(this.texturesToBeStitched, ResourceLocation.withDefaultNamespace("big_smoke_0"));
+            if (entry != null) {
+                for (int i = 0; i < 8; i++) {
+                    this.registerSprite(ParticleRainClient.generateRipple(i, entry.width()));
+                }
+            } else {
+                for (int i = 0; i < 8; i++) {
+                    this.registerSprite(ParticleRainClient.generateRipple(i, 16));
+                }
             }
             // add tinted versions of the default splashes
             if (ParticleRainClient.config.biomeTint) {
