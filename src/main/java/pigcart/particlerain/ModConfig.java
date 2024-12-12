@@ -70,10 +70,10 @@ public class ModConfig implements ConfigData {
     public ShrubOptions shrub = new ShrubOptions();
     public static class ShrubOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
-        public int density = 5;
+        public int density = 2;
         public float gravity = 0.2F;
         public float rotationAmount = 0.2F;
-        public float bounciness = 0.1F;
+        public float bounciness = 0.15F;
     }
     @ConfigEntry.Gui.CollapsibleObject
     public FogOptions fog = new FogOptions();

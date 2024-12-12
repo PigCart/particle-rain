@@ -45,16 +45,12 @@ public final class WeatherParticleSpawner {
             if (level.random.nextFloat() < config.snow.density / 100F) {
                 level.addParticle(ParticleRainClient.SNOW, x, y, z, 0, 0, 0);
             }
-        }else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains(config.sand.matchIds) && biome.value().getBaseTemperature() > 0.25) {
+        } else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains(config.sand.matchIds) && biome.value().getBaseTemperature() > 0.25) {
             // this is for future me to optimize. offers decent out of the box support for modded biomes.
             if (config.sand.spawnOnGround) y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
             if (config.doSandParticles) {
                 if (level.random.nextFloat() < config.sand.density / 100F) {
-                    if (config.sand.spawnOnGround) {
-                        level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
-                    } else {
-                        level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
-                    }
+                    level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
                 }
             }
             if (config.doShrubParticles) {

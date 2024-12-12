@@ -11,6 +11,7 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,7 +52,6 @@ public class GroundFogParticle extends WeatherParticle {
     public void tick() {
         super.tick();
         if (this.onGround) this.remove();
-        //if (this.age > 160) this.shouldFadeOut = true;
         this.xd = this.xdxd;
         this.zd = this.zdzd;
     }
