@@ -129,9 +129,9 @@ public class ParticleRainClient implements ClientModInitializer {
     public static void applyWaterTint(TextureSheetParticle particle, ClientLevel clientLevel, BlockPos blockPos) {
         final Color waterColor = new Color(BiomeColors.getAverageWaterColor(clientLevel, blockPos));
         final Color fogColor = new Color(clientLevel.getBiome(blockPos).value().getFogColor());
-        float rCol = (Mth.lerp(config.rain.mix / 100F, waterColor.getRed(), fogColor.getRed()) / 255F);
-        float gCol = (Mth.lerp(config.rain.mix / 100F, waterColor.getGreen(), fogColor.getGreen()) / 255F);
-        float bCol = (Mth.lerp(config.rain.mix / 100F, waterColor.getBlue(), fogColor.getBlue()) / 255F);
+        float rCol = (Mth.lerp(config.tintMix / 100F, waterColor.getRed(), fogColor.getRed()) / 255F);
+        float gCol = (Mth.lerp(config.tintMix / 100F, waterColor.getGreen(), fogColor.getGreen()) / 255F);
+        float bCol = (Mth.lerp(config.tintMix / 100F, waterColor.getBlue(), fogColor.getBlue()) / 255F);
         particle.setColor(rCol, gCol, bCol);
     }
 
