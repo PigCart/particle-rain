@@ -71,7 +71,7 @@ public class ModConfig implements ConfigData {
         public int density = 2;
         public float gravity = 0.2F;
         public float rotationAmount = 0.2F;
-        public float bounciness = 0.15F;
+        public float bounciness = 0.2F;
     }
     @ConfigEntry.Gui.CollapsibleObject
     public FogOptions fog = new FogOptions();

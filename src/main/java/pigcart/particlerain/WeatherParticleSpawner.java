@@ -7,6 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -45,8 +46,7 @@ public final class WeatherParticleSpawner {
             if (level.random.nextFloat() < config.snow.density / 100F) {
                 level.addParticle(ParticleRainClient.SNOW, x, y, z, 0, 0, 0);
             }
-        } else if (precipitation == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock())).contains(config.sand.matchIds) && biome.value().getBaseTemperature() > 0.25) {
-            // this is for future me to optimize. offers decent out of the box support for modded biomes.
+        } else if (precipitation == Precipitation.NONE && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).is(BlockTags.SAND) && biome.value().getBaseTemperature() > 0.25) {
             if (config.sand.spawnOnGround) y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
             if (config.doSandParticles) {
                 if (level.random.nextFloat() < config.sand.density / 100F) {

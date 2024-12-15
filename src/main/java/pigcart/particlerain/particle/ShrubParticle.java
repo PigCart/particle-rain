@@ -1,24 +1,44 @@
 package pigcart.particlerain.particle;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.ColorResolver;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.joml.AxisAngle4f;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
+
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 public class ShrubParticle extends WeatherParticle {
 
@@ -30,7 +50,36 @@ public class ShrubParticle extends WeatherParticle {
         this.zd = ParticleRainClient.config.sand.windStrength;
         if (ParticleRainClient.config.sand.spawnOnGround) this.yd = 0.1F; //otherwise they get stuck and despawn for some reason >:?
         //TODO: pick sprite from a block in the world
+        // not easily possible because of how minecraft does tints...
         ItemStack itemStack = new ItemStack(Items.DEAD_BUSH);
+
+        BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
+        if (blockState.is(BlockTags.SWORD_EFFICIENT)) {
+            if (!blockState.is(BlockTags.CROPS)) {
+                itemStack = blockState.getBlock().asItem().getDefaultInstance();
+                final TextureAtlasSprite particleIcon = Minecraft.getInstance().getItemRenderer().getModel(itemStack, level, null, 0).getParticleIcon();
+                try {
+                    //bakedQuad.hasTint is always true and i cant find anything else so i guess were gonna do some bullshit >:[
+                    ResourceLocation resourceLocation = ResourceLocation.parse(particleIcon.contents().name().getNamespace() + ":models/" + particleIcon.contents().name().toString().substring(particleIcon.contents().name().getNamespace().toString().length() + 1) + ".json");
+                    Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(resourceLocation);
+                    String string;
+                    try (InputStream inputStream = resource.open()) {
+                        string = new String(inputStream.readAllBytes());
+                    }
+                    // works for most items
+                    if (string.contains("tint")) {
+                        final int colorInt = BiomeColors.getAverageFoliageColor(level, this.pos);
+                        Color color = new Color(colorInt);
+                        this.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } else {
+            if (level.random.nextFloat() < 0.9) this.remove();
+        }
+
         this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(itemStack, level, null, 0).getParticleIcon());
     }
 
@@ -49,6 +98,13 @@ public class ShrubParticle extends WeatherParticle {
         this.roll = this.roll + ParticleRainClient.config.shrub.rotationAmount;
         if (this.onGround) {
             this.yd = ParticleRainClient.config.shrub.bounciness;
+        }
+    }
+
+    @Override
+    public void fadeIn() {
+        if (age < 10) {
+            this.alpha = (age * 1.0f) / 10;
         }
     }
 
