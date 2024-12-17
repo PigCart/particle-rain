@@ -9,7 +9,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip @ConfigEntry.Gui.PrefixText
     public int maxParticleAmount = 1500;
     @ConfigEntry.Gui.Tooltip
-    public int particleDensity = 80;
+    public int particleDensity = 100;
     @ConfigEntry.Gui.Tooltip
     public int particleStormDensity = 200;
     @ConfigEntry.Gui.Tooltip

@@ -30,7 +30,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         super.tick();
-        this.pos.set(this.x, this.y, this.z);
+        this.pos.set(this.x, this.y - 0.2, this.z);
         this.removeIfOOB();
         if (shouldFadeOut) {
             fadeOut();
