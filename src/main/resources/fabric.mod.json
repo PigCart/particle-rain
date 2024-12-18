@@ -25,6 +25,7 @@
   "mixins": [
     "particlerain.mixins.json"
   ],
+  "accessWidener" : "particlerain.accesswidener",
   "depends": {
     "fabricloader": ">=0.12.8",
     "fabric-api": "*",
