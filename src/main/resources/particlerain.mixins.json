@@ -6,7 +6,7 @@
   "mixins": [
     "LevelRendererMixin",
     "RegistrySyncManagerMixin",
-    "StitcherMixin",
+    "SpriteLoaderMixin",
     "TextureSheetParticleMixin",
     "WaterDropParticleMixin",
     "DripParticleMixin"

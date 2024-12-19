@@ -21,7 +21,6 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.texture.SpriteContents;
-import net.minecraft.client.renderer.texture.Stitcher;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -179,14 +178,14 @@ public class ParticleRainClient implements ClientModInitializer {
         return Math.clamp(0.01, 1, (y - 64) / 40);
     }
 
-    public static <T extends Stitcher.Entry> T getTextureToBeStitched(List<Stitcher.Holder<T>> texturesToBeStitched, ResourceLocation resourceLocation) {
-        for (Stitcher.Holder<T> tHolder : texturesToBeStitched) {
-            T entry = tHolder.entry();
-            if (entry.name().equals(resourceLocation)) {
-                return entry;
+    public static int getRippleResolution(List<SpriteContents> contents) {
+        ResourceLocation resourceLocation = ResourceLocation.withDefaultNamespace("big_smoke_0");
+        for (SpriteContents spriteContents : contents) {
+            if (spriteContents.name().equals(resourceLocation)) {
+                return spriteContents.width();
             }
         }
-        return null;
+        return 16;
     }
 
     public static SpriteContents generateRipple(int i, int size) {
