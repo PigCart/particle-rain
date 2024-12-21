@@ -62,7 +62,7 @@ public class ModConfig implements ConfigData {
         public float moteSize = 0.1F;
         public float size = 2F;
         public boolean spawnOnGround = true;
-        public String matchIds = "sand";
+        public String matchTags = "minecraft:camel_sand_step_sound_blocks";
     }
     @ConfigEntry.Gui.CollapsibleObject
     public ShrubOptions shrub = new ShrubOptions();

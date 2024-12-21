@@ -50,7 +50,7 @@
   "text.autoconfig.particlerain.option.sand.moteSize": "Розмір піщинки",
   "text.autoconfig.particlerain.option.sand.grainSize.@Tooltip": "Розмір окремих піщинок, які відскакують по землі",
   "text.autoconfig.particlerain.option.sand.spawnOnGround": "Поява на землі",
-  "text.autoconfig.particlerain.option.sand.matchIds": "Створення над блоками з ідентифікаторами, що містять:",
+  "text.autoconfig.particlerain.option.sand.matchTags": "Створення над блоками з ідентифікаторами, що містять:",
 
   "text.autoconfig.particlerain.option.shrub": "Налаштування частинок кущів",
   "text.autoconfig.particlerain.option.shrub.density": "Щільність",

@@ -49,7 +49,7 @@
   "text.autoconfig.particlerain.option.sand.moteSize": "Размер песчинки",
   "text.autoconfig.particlerain.option.sand.grainSize.@Tooltip": "Размер отдельных песчинок, которые подпрыгивают по земле",
   "text.autoconfig.particlerain.option.sand.spawnOnGround": "Появление на земле",
-  "text.autoconfig.particlerain.option.sand.matchIds": "Создавать над блоками с идентификаторами, содержащими:",
+  "text.autoconfig.particlerain.option.sand.matchTags": "Создавать над блоками с идентификаторами, содержащими:",
 
   "text.autoconfig.particlerain.option.shrub": "Настройки частиц кустов",
   "text.autoconfig.particlerain.option.shrub.density": "Плотность",

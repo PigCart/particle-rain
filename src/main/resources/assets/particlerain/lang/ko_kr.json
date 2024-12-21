@@ -49,7 +49,7 @@
   "text.autoconfig.particlerain.option.sand.moteSize": "알갱이 크기",
   "text.autoconfig.particlerain.option.sand.grainSize.@Tooltip": "땅을 따라 튕겨 나가는 각각의 모래 알갱이 크기를 정합니다.",
   "text.autoconfig.particlerain.option.sand.spawnOnGround": "지면 위 생성",
-  "text.autoconfig.particlerain.option.sand.matchIds": "다음 아이디가 포함된 블록 위에서 생성:",
+  "text.autoconfig.particlerain.option.sand.matchTags": "다음 아이디가 포함된 블록 위에서 생성:",
 
   "text.autoconfig.particlerain.option.shrub": "덤불 파티클 설정",
   "text.autoconfig.particlerain.option.shrub.density": "상대 밀도",

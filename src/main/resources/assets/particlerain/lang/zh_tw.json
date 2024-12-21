@@ -50,7 +50,7 @@
   "text.autoconfig.particlerain.option.sand.moteSize": "Grain size",
   "text.autoconfig.particlerain.option.sand.grainSize.@Tooltip": "Size of individual sand grains that bounce along the ground",
   "text.autoconfig.particlerain.option.sand.spawnOnGround": "Spawn on ground",
-  "text.autoconfig.particlerain.option.sand.matchIds": "Spawn above blocks with Ids that contain:",
+  "text.autoconfig.particlerain.option.sand.matchTags": "Spawn above blocks with Ids that contain:",
 
   "text.autoconfig.particlerain.option.shrub": "Shrub Particle Options",
   "text.autoconfig.particlerain.option.shrub.density": "Relative density",
