@@ -16,6 +16,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
@@ -54,7 +55,8 @@ public class StreakParticle extends WeatherParticle {
             }
         }
         BlockState state = level.getBlockState(this.pos.relative(direction.getOpposite()));
-        if (!this.shouldFadeOut && (this.onGround || !(state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)))) {
+        FluidState fluidState = level.getFluidState(this.pos);
+        if (!this.shouldFadeOut && (this.onGround || !(state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)) || !fluidState.isEmpty())) {
             if (state.isAir()) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.DRIPPING_WATER, this.x, this.y - 0.25F, this.z, 0, 0, 0);
             this.gravity = 0;
             this.yd = 0;
