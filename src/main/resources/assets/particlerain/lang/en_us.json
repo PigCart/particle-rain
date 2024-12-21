@@ -15,6 +15,7 @@
   "text.autoconfig.particlerain.option.doRainParticles.@PrefixText": "§lEnable or disable individual effects",
   "text.autoconfig.particlerain.option.doRainParticles": "Spawn rain particles",
   "text.autoconfig.particlerain.option.doSplashParticles": "Spawn rain splashing on the ground",
+  "text.autoconfig.particlerain.option.doSmokeParticles": "Spawn smoke on hot blocks",
   "text.autoconfig.particlerain.option.doRippleParticles": "Spawn rain ripples on water",
   "text.autoconfig.particlerain.option.doStreakParticles": "Spawn streak particles on block edges",
   "text.autoconfig.particlerain.option.doSnowParticles": "Spawn snow particles",

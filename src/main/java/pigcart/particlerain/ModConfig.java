@@ -18,6 +18,7 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.PrefixText
     public boolean doRainParticles = true;
     public boolean doSplashParticles = true;
+    public boolean doSmokeParticles = true;
     public boolean doRippleParticles = true;
     public boolean doStreakParticles = true;
     public boolean doSnowParticles = true;
