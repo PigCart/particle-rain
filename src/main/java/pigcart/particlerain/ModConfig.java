@@ -3,6 +3,7 @@ package pigcart.particlerain;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "particlerain")
 public class ModConfig implements ConfigData {
@@ -33,9 +34,6 @@ public class ModConfig implements ConfigData {
     public boolean doSandSounds = true;
 
     @ConfigEntry.Gui.PrefixText
-    public boolean spawnAboveClouds = false;
-    public int cloudHeight = 191;
-
     @ConfigEntry.Gui.CollapsibleObject
     public RainOptions rain = new RainOptions();
     public static class RainOptions {
@@ -54,11 +52,11 @@ public class ModConfig implements ConfigData {
     public static class SnowOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
         public int density = 40;
-        public float gravity = 0.1F;
+        public float gravity = 0.08F;
         public float rotationAmount = 0.03F;
         public float stormRotationAmount = 0.05F;
-        public float windStrength = 0.5F;
-        public float stormWindStrength = 2F;
+        public float windStrength = 1F;
+        public float stormWindStrength = 3F;
         public float size = 2F;
     }
     @ConfigEntry.Gui.CollapsibleObject
@@ -83,6 +81,14 @@ public class ModConfig implements ConfigData {
         public float bounciness = 0.2F;
     }
     @ConfigEntry.Gui.CollapsibleObject
+    public RippleOptions ripple = new RippleOptions();
+    public static class RippleOptions {
+        @Comment("\uD83D\uDEAB UNIMPLEMENTED \uD83D\uDEAB")
+        public int density = 69420;
+        public int resolution = 16;
+        public boolean useResourcepackResolution = true;
+    }
+    @ConfigEntry.Gui.CollapsibleObject
     public FogOptions fog = new FogOptions();
     public static class FogOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
@@ -104,6 +110,8 @@ public class ModConfig implements ConfigData {
     public boolean biomeTint = true;
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100) @ConfigEntry.Gui.Tooltip
     public int tintMix = 50;
+    public boolean spawnAboveClouds = false;
+    public int cloudHeight = 191;
     public boolean alwaysRaining = false;
     public boolean yLevelWindAdjustment = true;
     @ConfigEntry.Gui.Tooltip

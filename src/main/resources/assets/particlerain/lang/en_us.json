@@ -29,10 +29,7 @@
   "text.autoconfig.particlerain.option.doSnowSounds": "Play snow sounds",
   "text.autoconfig.particlerain.option.doSandSounds": "Play wind blowing sand sounds",
 
-  "text.autoconfig.particlerain.option.spawnAboveClouds.@PrefixText": "§lParticle Options",
-  "text.autoconfig.particlerain.option.spawnAboveClouds": "Spawn weather particles above cloud height",
-  "text.autoconfig.particlerain.option.cloudHeight": "Cloud height",
-
+  "text.autoconfig.particlerain.option.rain.@PrefixText": "§lParticle Options",
   "text.autoconfig.particlerain.option.rain": "Rain Particle Options",
   "text.autoconfig.particlerain.option.rain.density": "Relative density",
   "text.autoconfig.particlerain.option.rain.gravity": "Gravity",
@@ -68,6 +65,11 @@
   "text.autoconfig.particlerain.option.shrub.rotationAmount": "Rotation speed",
   "text.autoconfig.particlerain.option.shrub.bounciness": "Bounciness",
 
+  "text.autoconfig.particlerain.option.ripple": "Ripple Particle Options",
+  "text.autoconfig.particlerain.option.ripple.density": "Amount of ripples to spawn",
+  "text.autoconfig.particlerain.option.ripple.useResourcepackResolution": "Use resource pack resolution",
+  "text.autoconfig.particlerain.option.ripple.resolution": "Resolution",
+
   "text.autoconfig.particlerain.option.fog": "Fog Particle Options",
   "text.autoconfig.particlerain.option.fog.density": "Relative density",
   "text.autoconfig.particlerain.option.fog.gravity": "Gravity",
@@ -85,6 +87,8 @@
   "text.autoconfig.particlerain.option.biomeTint": "Tint water particles based on biome colors",
   "text.autoconfig.particlerain.option.tintMix": "Tint water / sky color mix",
   "text.autoconfig.particlerain.option.tintMix.@Tooltip": "Mix of color between the biome water color (0) and the biome sky color (100)",
+  "text.autoconfig.particlerain.option.spawnAboveClouds": "Spawn weather particles above cloud height",
+  "text.autoconfig.particlerain.option.cloudHeight": "Cloud height",
   "text.autoconfig.particlerain.option.alwaysRaining": "Always spawn weather particles",
   "text.autoconfig.particlerain.option.yLevelWindAdjustment": "Y-level wind adjustment",
   "text.autoconfig.particlerain.option.syncRegistry": "Sync registry",

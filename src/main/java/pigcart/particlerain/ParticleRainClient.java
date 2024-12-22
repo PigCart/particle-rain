@@ -64,7 +64,10 @@ public class ParticleRainClient implements ClientModInitializer {
     public static ModConfig config;
     public static int particleCount;
     public static int fogCount;
+
     public static boolean previousBiomeTintOption;
+    public static boolean previousUseResolutionOption;
+    public static int previousResolutionOption;
 
     @Override
     public void onInitializeClient() {
@@ -111,7 +114,7 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     private static InteractionResult saveListener(ConfigHolder<ModConfig> modConfigConfigHolder, ModConfig modConfig) {
-        if (ParticleRainClient.config.biomeTint != previousBiomeTintOption) {
+        if (config.biomeTint != previousBiomeTintOption || config.ripple.useResourcepackResolution != previousUseResolutionOption || config.ripple.resolution != previousResolutionOption) {
             Minecraft.getInstance().reloadResourcePacks();
         }
         return InteractionResult.PASS;
@@ -180,13 +183,17 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     public static int getRippleResolution(List<SpriteContents> contents) {
-        ResourceLocation resourceLocation = ResourceLocation.withDefaultNamespace("big_smoke_0");
-        for (SpriteContents spriteContents : contents) {
-            if (spriteContents.name().equals(resourceLocation)) {
-                return spriteContents.width();
+        if (config.ripple.useResourcepackResolution) {
+            ResourceLocation resourceLocation = ResourceLocation.withDefaultNamespace("big_smoke_0");
+            for (SpriteContents spriteContents : contents) {
+                if (spriteContents.name().equals(resourceLocation)) {
+                    return java.lang.Math.max(spriteContents.width(), 256);
+                }
             }
         }
-        return 16;
+        if (config.ripple.resolution < 4) config.ripple.resolution = 4;
+        if (config.ripple.resolution > 256) config.ripple.resolution = 256;
+        return config.ripple.resolution;
     }
 
     public static SpriteContents generateRipple(int i, int size) {

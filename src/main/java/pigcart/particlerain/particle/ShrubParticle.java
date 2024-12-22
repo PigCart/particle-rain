@@ -40,8 +40,7 @@ public class ShrubParticle extends WeatherParticle {
         this.xd = ParticleRainClient.config.sand.windStrength;
         this.zd = ParticleRainClient.config.sand.windStrength;
         if (ParticleRainClient.config.sand.spawnOnGround) this.yd = 0.1F; //otherwise they get stuck and despawn for some reason >:?
-        //TODO: pick sprite from a block in the world
-        // not easily possible because of how minecraft does tints...
+
         ItemStack itemStack = new ItemStack(Items.DEAD_BUSH);
 
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));

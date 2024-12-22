@@ -12,6 +12,8 @@ public class ModMenuIntegration implements ModMenuApi {
 
     private static Screen create(Screen parent) {
         ParticleRainClient.previousBiomeTintOption = ParticleRainClient.config.biomeTint;
+        ParticleRainClient.previousUseResolutionOption = ParticleRainClient.config.ripple.useResourcepackResolution;
+        ParticleRainClient.previousResolutionOption = ParticleRainClient.config.ripple.resolution;
         return AutoConfig.getConfigScreen(ModConfig.class, parent).get();
     }
 
