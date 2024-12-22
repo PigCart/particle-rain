@@ -16,11 +16,15 @@ import pigcart.particlerain.ParticleRainClient;
 import java.awt.Color;
 
 public class DustMoteParticle extends WeatherParticle {
+    // currently unused
+
     protected DustMoteParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, ParticleRainClient.config.desertDustGravity, provider);
-        this.quadSize = ParticleRainClient.config.size.dustMoteSize;
-        this.xd = 0.3F;
-        this.zd = 0.3F;
+        super(level, x, y, z);
+        this.setSprite(provider.get(level.getRandom()));
+        this.quadSize = ParticleRainClient.config.sand.moteSize;
+        this.xd = ParticleRainClient.config.sand.windStrength;
+        this.zd = ParticleRainClient.config.sand.windStrength;
+        this.gravity = ParticleRainClient.config.sand.gravity;
 
         final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateRGBColor(MapColor.Brightness.NORMAL));
         // Red and blue seem to be swapped
@@ -35,21 +39,13 @@ public class DustMoteParticle extends WeatherParticle {
         if (this.onGround) {
             this.yd = 0.1F;
         }
-         else if (this.removeIfObstructed()) {
-            if (this.isHotBlock()) {
-                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, this.x, this.y, this.z, 0, 0, 0);
-            }
-        }
-        else if (!this.level.getFluidState(this.pos).isEmpty()) {
+        this.removeIfObstructed();
+        if (!this.level.getFluidState(this.pos).isEmpty()) {
             this.shouldFadeOut = true;
             this.gravity = 0;
         } else {
             this.xd = 0.2;
             this.zd = 0.2;
-        }
-
-        if (age < 10) {
-            this.alpha = (age * 1.0f) / 10;
         }
     }
     @Override

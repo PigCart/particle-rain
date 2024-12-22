@@ -1,0 +1,3 @@
+accessWidener v2 named
+accessible class net/minecraft/client/renderer/texture/Stitcher$Holder
+accessible field net/minecraft/client/particle/ParticleEngine textureAtlas Lnet/minecraft/client/renderer/texture/TextureAtlas;
