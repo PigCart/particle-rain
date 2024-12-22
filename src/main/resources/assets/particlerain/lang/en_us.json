@@ -24,6 +24,11 @@
   "text.autoconfig.particlerain.option.doFogParticles": "Spawn fog particles",
   "text.autoconfig.particlerain.option.doGroundFogParticles": "Spawn ground fog particles",
 
+  "text.autoconfig.particlerain.option.doRainSounds.@PrefixText": "§lSound Options",
+  "text.autoconfig.particlerain.option.doRainSounds": "Play rain sounds",
+  "text.autoconfig.particlerain.option.doSnowSounds": "Play snow sounds",
+  "text.autoconfig.particlerain.option.doSandSounds": "Play wind blowing sand sounds",
+
   "text.autoconfig.particlerain.option.rain": "Rain Particle Options",
   "text.autoconfig.particlerain.option.rain.density": "Relative density",
   "text.autoconfig.particlerain.option.rain.gravity": "Gravity",

@@ -48,7 +48,7 @@ public final class WeatherParticleSpawner {
             if (level.random.nextFloat() < config.snow.density / 100F) {
                 level.addParticle(ParticleRainClient.SNOW, x, y, z, 0, 0, 0);
             }
-        } else if (precipitation == Precipitation.NONE && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.parse(config.sand.matchTags))) && biome.value().getBaseTemperature() > 0.25) {
+        } else if (doesThisBlockHaveDustBlowing(precipitation, level, BlockPos.containing(x, y, z), biome)) {
             if (config.sand.spawnOnGround) y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
             if (config.doSandParticles) {
                 if (level.random.nextFloat() < config.sand.density / 100F) {
@@ -101,15 +101,18 @@ public final class WeatherParticleSpawner {
     @Nullable
     public static SoundEvent getBiomeSound(BlockPos blockPos, boolean above) {
         Holder<Biome> biome = Minecraft.getInstance().level.getBiome(blockPos);
-        if (biome.value().hasPrecipitation()) {
-            if (biome.value().getPrecipitationAt(blockPos) == Precipitation.RAIN) {
-                return above ? SoundEvents.WEATHER_RAIN_ABOVE : SoundEvents.WEATHER_RAIN;
-            } else if (biome.value().getPrecipitationAt(blockPos) == Precipitation.SNOW) {
-                return above ? ParticleRainClient.WEATHER_SNOW_ABOVE : ParticleRainClient.WEATHER_SNOW;
-            }
-        } else if (biome.value().getPrecipitationAt(blockPos) == Precipitation.NONE && String.valueOf(BuiltInRegistries.BLOCK.getKey(Minecraft.getInstance().level.getBlockState(Minecraft.getInstance().level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).getBlock())).contains("sand") && biome.value().getBaseTemperature() >= 1.0F) {
-            return above ? ParticleRainClient.WEATHER_SANDSTORM_ABOVE : ParticleRainClient.WEATHER_SANDSTORM;
+        Precipitation precipitation = biome.value().getPrecipitationAt(blockPos);
+        if (precipitation == Precipitation.RAIN && config.doRainSounds) {
+            return above ? SoundEvents.WEATHER_RAIN_ABOVE : SoundEvents.WEATHER_RAIN;
+        } else if (precipitation == Precipitation.SNOW && config.doSnowSounds) {
+            return above ? ParticleRainClient.WEATHER_SNOW_ABOVE : ParticleRainClient.WEATHER_SNOW;
+        } else if (doesThisBlockHaveDustBlowing(precipitation, Minecraft.getInstance().level, blockPos, biome) && config.doSandSounds) {
+        return above ? ParticleRainClient.WEATHER_SANDSTORM_ABOVE : ParticleRainClient.WEATHER_SANDSTORM;
         }
         return null;
+    }
+
+    public static boolean doesThisBlockHaveDustBlowing(Precipitation precipitation, ClientLevel level, BlockPos blockPos, Holder<Biome> biome) {
+        return precipitation == Precipitation.NONE && level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.parse(config.sand.matchTags))) && biome.value().getBaseTemperature() > 0.25;
     }
 }

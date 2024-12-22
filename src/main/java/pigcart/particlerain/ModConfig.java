@@ -26,7 +26,11 @@ public class ModConfig implements ConfigData {
     public boolean doShrubParticles = true;
     public boolean doFogParticles = false;
     public boolean doGroundFogParticles = true;
-    //TODO: sound options
+
+    @ConfigEntry.Gui.PrefixText
+    public boolean doRainSounds = true;
+    public boolean doSnowSounds = true;
+    public boolean doSandSounds = true;
 
     @ConfigEntry.Gui.CollapsibleObject
     public RainOptions rain = new RainOptions();
