@@ -227,13 +227,13 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     static void drawCirclePixel(int xc, int yc, int x, int y, NativeImage img, int col){
-        img.setPixelRGBA(xc+x, yc+y, col);
-        img.setPixelRGBA(xc-x, yc+y, col);
-        img.setPixelRGBA(xc+x, yc-y, col);
-        img.setPixelRGBA(xc-x, yc-y, col);
-        img.setPixelRGBA(xc+y, yc+x, col);
-        img.setPixelRGBA(xc-y, yc+x, col);
-        img.setPixelRGBA(xc+y, yc-x, col);
-        img.setPixelRGBA(xc-y, yc-x, col);
+        img.setPixel(xc+x, yc+y, col);
+        img.setPixel(xc-x, yc+y, col);
+        img.setPixel(xc+x, yc-y, col);
+        img.setPixel(xc-x, yc-y, col);
+        img.setPixel(xc+y, yc+x, col);
+        img.setPixel(xc-y, yc+x, col);
+        img.setPixel(xc+y, yc-x, col);
+        img.setPixel(xc-y, yc-x, col);
     }
 }
