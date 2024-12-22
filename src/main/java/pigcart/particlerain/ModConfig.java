@@ -32,6 +32,10 @@ public class ModConfig implements ConfigData {
     public boolean doSnowSounds = true;
     public boolean doSandSounds = true;
 
+    @ConfigEntry.Gui.PrefixText
+    public boolean spawnAboveClouds = false;
+    public int cloudHeight = 191;
+
     @ConfigEntry.Gui.CollapsibleObject
     public RainOptions rain = new RainOptions();
     public static class RainOptions {

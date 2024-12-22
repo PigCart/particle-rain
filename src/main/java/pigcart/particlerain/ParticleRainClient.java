@@ -54,6 +54,7 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType SHRUB;
     public static SimpleParticleType RIPPLE;
     public static SimpleParticleType STREAK;
+    //TODO: hail particles
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;

@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -23,11 +22,12 @@ import static pigcart.particlerain.ParticleRainClient.config;
 public final class WeatherParticleSpawner {
 
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-    //TODO: investigate serene seasons compatibility
+
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         if (ParticleRainClient.particleCount > config.maxParticleAmount) {
-            //TODO: cancel particle spawns above cloud height
             return;
+        } else if (!config.spawnAboveClouds && y > config.cloudHeight) {
+            y = config.cloudHeight;
         }
         if (config.doFogParticles && level.random.nextFloat() < config.fog.density / 100F) {
             level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
