@@ -4,14 +4,16 @@
   "package": "pigcart.particlerain.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "LevelRendererMixin",
+    "DripParticleMixin",
     "RegistrySyncManagerMixin",
     "SpriteLoaderMixin",
     "TextureSheetParticleMixin",
-    "WaterDropParticleMixin",
-    "DripParticleMixin"
+    "WaterDropParticleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "WeatherEffectRendererMixin"
+  ]
 }

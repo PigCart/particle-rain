@@ -32,7 +32,7 @@ public final class WeatherParticleSpawner {
         if (config.doFogParticles && level.random.nextFloat() < config.fog.density / 100F) {
             level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
         }
-        Precipitation precipitation = biome.value().getPrecipitationAt(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos));
+        Precipitation precipitation = biome.value().getPrecipitationAt(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos),level.getSeaLevel());
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
         if (precipitation == Precipitation.RAIN) {
             if (config.doGroundFogParticles && ParticleRainClient.fogCount < config.groundFog.density) {
@@ -101,7 +101,7 @@ public final class WeatherParticleSpawner {
     @Nullable
     public static SoundEvent getBiomeSound(BlockPos blockPos, boolean above) {
         Holder<Biome> biome = Minecraft.getInstance().level.getBiome(blockPos);
-        Precipitation precipitation = biome.value().getPrecipitationAt(blockPos);
+        Precipitation precipitation = biome.value().getPrecipitationAt(blockPos, Minecraft.getInstance().level.getSeaLevel());
         if (precipitation == Precipitation.RAIN && config.doRainSounds) {
             return above ? SoundEvents.WEATHER_RAIN_ABOVE : SoundEvents.WEATHER_RAIN;
         } else if (precipitation == Precipitation.SNOW && config.doSnowSounds) {

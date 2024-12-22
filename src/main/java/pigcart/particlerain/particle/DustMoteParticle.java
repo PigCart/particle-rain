@@ -26,10 +26,11 @@ public class DustMoteParticle extends WeatherParticle {
         this.zd = ParticleRainClient.config.sand.windStrength;
         this.gravity = ParticleRainClient.config.sand.gravity;
 
-        final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateRGBColor(MapColor.Brightness.NORMAL));
+        final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL));
         // Red and blue seem to be swapped
-        this.bCol = (float)color.getRed() / 255;
-        this.rCol = (float)color.getBlue() / 255;
+        //Not anymore
+        this.bCol = (float)color.getBlue() / 255;
+        this.rCol = (float)color.getRed() / 255;
         this.gCol = (float)color.getGreen() / 255;
     }
 
