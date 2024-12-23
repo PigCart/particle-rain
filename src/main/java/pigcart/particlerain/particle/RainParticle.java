@@ -59,9 +59,15 @@ public class RainParticle extends WeatherParticle {
     }
 
     @Override
+    public void fadeIn() {
+        if (age < 20) {
+            this.alpha = Math.clamp(0, config.rain.opacity / 100F, (age * 1.0f) / 20);
+        }
+    }
+
+    @Override
     public void tick() {
         super.tick();
-        if (this.age < 10) this.alpha = Math.clamp(0, config.rain.opacity / 100F, this.alpha);
         if (this.onGround || !this.level.getFluidState(this.pos).isEmpty()) {
             // TODO: rewrite this whole bit
             if ((config.doSplashParticles || config.doSmokeParticles || config.doRippleParticles) && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < config.particleRadius - (config.particleRadius / 2.0)) {
