@@ -3,7 +3,6 @@ package pigcart.particlerain;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "particlerain")
 public class ModConfig implements ConfigData {
@@ -69,7 +68,7 @@ public class ModConfig implements ConfigData {
         public float moteSize = 0.1F;
         public float size = 2F;
         public boolean spawnOnGround = true;
-        public String matchTags = "minecraft:camel_sand_step_sound_blocks";
+        public String matchTags = "minecraft:sand";
     }
     @ConfigEntry.Gui.CollapsibleObject
     public ShrubOptions shrub = new ShrubOptions();
@@ -83,8 +82,6 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     public RippleOptions ripple = new RippleOptions();
     public static class RippleOptions {
-        @Comment("\uD83D\uDEAB UNIMPLEMENTED \uD83D\uDEAB")
-        public int density = 69420;
         public int resolution = 16;
         public boolean useResourcepackResolution = true;
     }
@@ -114,6 +111,4 @@ public class ModConfig implements ConfigData {
     public int cloudHeight = 191;
     public boolean alwaysRaining = false;
     public boolean yLevelWindAdjustment = true;
-    @ConfigEntry.Gui.Tooltip
-    public boolean syncRegistry = true;
 }

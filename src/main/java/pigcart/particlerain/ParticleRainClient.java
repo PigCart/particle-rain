@@ -188,7 +188,9 @@ public class ParticleRainClient implements ClientModInitializer {
             ResourceLocation resourceLocation = new ResourceLocation("big_smoke_0");
             for (SpriteContents spriteContents : contents) {
                 if (spriteContents.name().equals(resourceLocation)) {
-                    return java.lang.Math.max(spriteContents.width(), 256);
+                    if (spriteContents.width() < 256) {
+                        return spriteContents.width();
+                    }
                 }
             }
         }

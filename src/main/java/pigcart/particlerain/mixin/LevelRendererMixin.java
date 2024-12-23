@@ -36,7 +36,7 @@ public class LevelRendererMixin {
 
     @Inject(method = "tickRain", at = @At("HEAD"), cancellable = true)
     public void tickRain(Camera camera, CallbackInfo ci) {
-        if (!ParticleRainClient.config.renderVanillaWeather) {
+        if (!ParticleRainClient.config.tickVanillaWeather) {
             float f = this.minecraft.level.getRainLevel(1.0F);
             if (f > 0.0F) {
                 Random random = new Random((long) this.ticks * 312987231L);
