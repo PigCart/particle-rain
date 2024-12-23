@@ -88,6 +88,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         else return quaternion;
     }
     public void renderRotatedQuad(VertexConsumer vertexConsumer, Quaternionf quaternion, float x, float y, float z, float tickPercentage) {
+        quaternion.rotateX(Mth.PI);
         float quadSize = this.getQuadSize(tickPercentage);
         float u0 = this.getU0();
         float u1 = this.getU1();
@@ -107,7 +108,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
             vector3f.mul(quadSize);
             vector3f.add(x, y, z);
         }
-
         vertexConsumer.vertex((double)vector3fs[0].x(), (double)vector3fs[0].y(), (double)vector3fs[0].z()).uv(u1, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(lightColor).endVertex();
         vertexConsumer.vertex((double)vector3fs[1].x(), (double)vector3fs[1].y(), (double)vector3fs[1].z()).uv(u1, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(lightColor).endVertex();
         vertexConsumer.vertex((double)vector3fs[2].x(), (double)vector3fs[2].y(), (double)vector3fs[2].z()).uv(u0, v0).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(lightColor).endVertex();
