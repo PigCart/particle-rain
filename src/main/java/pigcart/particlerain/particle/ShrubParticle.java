@@ -11,7 +11,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
@@ -44,22 +43,12 @@ public class ShrubParticle extends WeatherParticle {
         if (ParticleRainClient.config.sand.spawnOnGround) this.yd = 0.1F; //otherwise they get stuck and despawn for some reason >:?
 
         ItemStack itemStack = new ItemStack(Items.DEAD_BUSH);
-        ItemStackRenderState renderState = new ItemStackRenderState();
 
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
         if (blockState.is(BlockTags.SWORD_EFFICIENT)) {
             if (!blockState.is(BlockTags.CROPS)) {
                 itemStack = blockState.getBlock().asItem().getDefaultInstance();
-                Minecraft.getInstance().getItemModelResolver().updateForTopItem(
-                        renderState,
-                        itemStack,
-                        ItemDisplayContext.NONE,
-                        false,
-                        level,
-                        null,
-                        0
-                );
-                TextureAtlasSprite particleIcon = renderState.layers[0].model.getParticleIcon();
+                final TextureAtlasSprite particleIcon = Minecraft.getInstance().getItemRenderer().getModel(itemStack, level, null, 0).getParticleIcon();
                 try {
                     //bakedQuad.hasTint is always true and i cant find anything else so i guess were gonna do some bullshit >:[
                     ResourceLocation resourceLocation = ResourceLocation.parse(particleIcon.contents().name().getNamespace() + ":models/" + particleIcon.contents().name().toString().substring(particleIcon.contents().name().getNamespace().toString().length() + 1) + ".json");
@@ -82,8 +71,7 @@ public class ShrubParticle extends WeatherParticle {
             if (level.random.nextFloat() < 0.9) this.remove();
         }
 
-        Minecraft.getInstance().getItemModelResolver().updateForTopItem(renderState, itemStack, ItemDisplayContext.NONE, false, level, null, 0);
-        this.setSprite(renderState.layers[0].model.getParticleIcon());
+        this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(itemStack, level, null, 0).getParticleIcon());
     }
 
     @Override
