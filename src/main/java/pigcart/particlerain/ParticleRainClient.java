@@ -187,8 +187,9 @@ public class ParticleRainClient implements ClientModInitializer {
             ResourceLocation resourceLocation = ResourceLocation.withDefaultNamespace("big_smoke_0");
             for (SpriteContents spriteContents : contents) {
                 if (spriteContents.name().equals(resourceLocation)) {
+                    // "Can be replaced with Math.min" NO! NO IT CANNOT! SHOOSH!!!
                     if (spriteContents.width() < 256) {
-                        return java.lang.Math.max(spriteContents.width(), 256);
+                        return spriteContents.width();
                     } else {
                         return 256;
                     }
