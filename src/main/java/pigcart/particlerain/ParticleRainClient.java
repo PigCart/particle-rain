@@ -55,6 +55,8 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType RIPPLE;
     public static SimpleParticleType STREAK;
     //TODO: hail particles
+    //TODO: puddle blocks
+    //TODO: vertical fog
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;

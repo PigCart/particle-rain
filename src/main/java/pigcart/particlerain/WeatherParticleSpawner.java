@@ -64,6 +64,7 @@ public final class WeatherParticleSpawner {
     }
 
     public static void update(ClientLevel level, Entity entity, float partialTicks) {
+        //TODO: twilight fog and skittering sand when not raining
         if (level.isRaining() || config.alwaysRaining) {
             int density;
             if (level.isThundering())
