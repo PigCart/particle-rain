@@ -34,7 +34,7 @@ public class ModConfig implements ConfigData {
     public boolean doSandSounds = true;
 
     @ConfigEntry.Gui.PrefixText
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public RainOptions rain = new RainOptions();
     public static class RainOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
@@ -47,7 +47,7 @@ public class ModConfig implements ConfigData {
         public int splashDensity = 5;
         public float size = 2F;
     }
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public SnowOptions snow = new SnowOptions();
     public static class SnowOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
@@ -59,7 +59,7 @@ public class ModConfig implements ConfigData {
         public float stormWindStrength = 3F;
         public float size = 2F;
     }
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public SandOptions sand = new SandOptions();
     public static class SandOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
@@ -71,7 +71,7 @@ public class ModConfig implements ConfigData {
         public boolean spawnOnGround = true;
         public String matchTags = "minecraft:camel_sand_step_sound_blocks";
     }
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public ShrubOptions shrub = new ShrubOptions();
     public static class ShrubOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
@@ -80,7 +80,7 @@ public class ModConfig implements ConfigData {
         public float rotationAmount = 0.2F;
         public float bounciness = 0.2F;
     }
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public RippleOptions ripple = new RippleOptions();
     public static class RippleOptions {
         @Comment("\uD83D\uDEAB UNIMPLEMENTED \uD83D\uDEAB")
@@ -88,7 +88,7 @@ public class ModConfig implements ConfigData {
         public int resolution = 16;
         public boolean useResourcepackResolution = true;
     }
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public FogOptions fog = new FogOptions();
     public static class FogOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
@@ -96,7 +96,7 @@ public class ModConfig implements ConfigData {
         public float gravity = 0.2F;
         public float size = 0.5F;
     }
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public GroundFogOptions groundFog = new GroundFogOptions();
     public static class GroundFogOptions {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
