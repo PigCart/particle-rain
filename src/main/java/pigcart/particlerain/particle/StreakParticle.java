@@ -10,10 +10,10 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -54,9 +54,9 @@ public class StreakParticle extends WeatherParticle {
                 this.gravity = 0;
             }
         }
-        BlockState state = level.getBlockState(this.pos.relative(direction.getOpposite()));
+        BlockState state = level.getBlockState(BlockPos.containing(new Vec3(this.x, this.y, this.z).relative(this.direction.getOpposite(), 0.2f)));
         FluidState fluidState = level.getFluidState(this.pos);
-        if (!this.shouldFadeOut && (this.onGround || !(state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)) || !fluidState.isEmpty())) {
+        if (!this.shouldFadeOut && (this.onGround || !ParticleRainClient.canHostStreaks(state) || !fluidState.isEmpty())) {
             if (state.isAir()) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.DRIPPING_WATER, this.x, this.y - 0.25F, this.z, 0, 0, 0);
             this.gravity = 0;
             this.yd = 0;

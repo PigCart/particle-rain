@@ -110,8 +110,7 @@ public class RainParticle extends WeatherParticle {
             BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
             if (hit.getType().equals(HitResult.Type.BLOCK)) {
                 if (config.doStreakParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < config.particleRadius - (config.particleRadius / 2.0)) {
-                    BlockState state = level.getBlockState(hit.getBlockPos());
-                    if (state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
+                    if (ParticleRainClient.canHostStreaks(level.getBlockState(hit.getBlockPos()))) {
                         Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.STREAK, this.x, this.y, this.z, hit.getDirection().get2DDataValue(), 0, 0);
                         Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);
                     }

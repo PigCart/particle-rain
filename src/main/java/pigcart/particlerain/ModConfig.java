@@ -110,7 +110,7 @@ public class ModConfig implements ConfigData {
     public boolean biomeTint = true;
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100) @ConfigEntry.Gui.Tooltip
     public int tintMix = 50;
-    public boolean spawnAboveClouds = false;
+    public boolean spawnAboveClouds = true;
     public int cloudHeight = 191;
     public boolean alwaysRaining = false;
     public boolean yLevelWindAdjustment = true;
