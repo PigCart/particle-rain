@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,6 +36,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Math;
 import pigcart.particlerain.particle.*;
@@ -112,6 +114,17 @@ public class ParticleRainClient implements ClientModInitializer {
                     .executes(ctx -> {
                         ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", particleCount, config.maxParticleAmount)));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", fogCount, config.groundFog.density)));
+                        BlockPos pos = BlockPos.containing(ctx.getSource().getPlayer().position());
+                        final Holder<Biome> holder = Minecraft.getInstance().level.getBiome(pos);
+                        String biomeStr = holder.unwrap().map((resourceKey) -> {
+                            return resourceKey.location().toString();
+                        }, (biome) -> {
+                            return "[unregistered " + String.valueOf(biome) + "]";
+                        });
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Biome: " + biomeStr)));
+                        Biome.Precipitation precipitation = holder.value().getPrecipitationAt(pos, ctx.getSource().getPlayer().level().getSeaLevel());
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Precipitation: " + precipitation)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Base Temp: " + holder.value().getBaseTemperature())));
                         return 0;
                     });
             dispatcher.register(cmd);
