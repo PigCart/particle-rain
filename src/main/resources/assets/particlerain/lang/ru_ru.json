@@ -1,6 +1,7 @@
 {
   "text.autoconfig.particlerain.title": "Дождь из частиц",
   "text.autoconfig.particlerain.category.default": "Общие",
+
   "text.autoconfig.particlerain.option.maxParticleAmount.@PrefixText": "§lПараметры производительности",
   "text.autoconfig.particlerain.option.maxParticleAmount": "Максимальное количество частиц",
   "text.autoconfig.particlerain.option.maxParticleAmount.@Tooltip": "Новые погодные частицы не будут создаваться, если в мире их уже настолько много",
@@ -14,6 +15,7 @@
   "text.autoconfig.particlerain.option.doRainParticles.@PrefixText": "§lВключение или отключение отдельных эффектов",
   "text.autoconfig.particlerain.option.doRainParticles": "Отображать частицы дождя",
   "text.autoconfig.particlerain.option.doSplashParticles": "Появление капель дождя, падающих на землю",
+  "text.autoconfig.particlerain.option.doSmokeParticles": "Появление дыма на горячих блоках",
   "text.autoconfig.particlerain.option.doRippleParticles": "Появление дождевой ряби на воде",
   "text.autoconfig.particlerain.option.doStreakParticles": "Появление полосчатых частиц на краях блоков",
   "text.autoconfig.particlerain.option.doSnowParticles": "Отображать частицы снега",
@@ -22,6 +24,12 @@
   "text.autoconfig.particlerain.option.doFogParticles": "Появление частиц тумана",
   "text.autoconfig.particlerain.option.doGroundFogParticles": "Появление частиц приземного тумана",
 
+  "text.autoconfig.particlerain.option.doRainSounds.@PrefixText": "§lПараметры звука",
+  "text.autoconfig.particlerain.option.doRainSounds": "Воспроизведение звуков дождя",
+  "text.autoconfig.particlerain.option.doSnowSounds": "Воспроизведение звуков снега",
+  "text.autoconfig.particlerain.option.doSandSounds": "Воспроизведение звуков дующего ветра и песка",
+
+  "text.autoconfig.particlerain.option.rain.@PrefixText": "§lПараметры частиц",
   "text.autoconfig.particlerain.option.rain": "Настройки частиц дождя",
   "text.autoconfig.particlerain.option.rain.density": "Плотность",
   "text.autoconfig.particlerain.option.rain.gravity": "Гравитация",
@@ -57,6 +65,11 @@
   "text.autoconfig.particlerain.option.shrub.rotationAmount": "Величина вращения",
   "text.autoconfig.particlerain.option.shrub.bounciness": "Упругость",
 
+  "text.autoconfig.particlerain.option.ripple": "Параметры частиц ряби",
+  "text.autoconfig.particlerain.option.ripple.density": "Количество появляющейся ряби",
+  "text.autoconfig.particlerain.option.ripple.useResourcepackResolution": "Используйте разрешение набора ресурсов",
+  "text.autoconfig.particlerain.option.ripple.resolution": "Разрешение",
+
   "text.autoconfig.particlerain.option.fog": "Настройки частиц тумана",
   "text.autoconfig.particlerain.option.fog.density": "Плотность",
   "text.autoconfig.particlerain.option.fog.gravity": "Гравитация",
@@ -72,8 +85,10 @@
   "text.autoconfig.particlerain.option.renderVanillaWeather": "Отображать ванильную погоду",
   "text.autoconfig.particlerain.option.tickVanillaWeather": "Такты ванильной погоды",
   "text.autoconfig.particlerain.option.biomeTint": "Затенять дождь в зависимости от цвета биома",
-  "text.autoconfig.particlerain.option.tintMix": "Сочетание цветов",
+  "text.autoconfig.particlerain.option.tintMix": "Сочетание оттенков воды и неба",
   "text.autoconfig.particlerain.option.tintMix.@Tooltip": "Сочетание цветов между цветом воды биома (0) и цветом неба биома (100)",
+  "text.autoconfig.particlerain.option.spawnAboveClouds": "Появление погодных частиц выше высоты облаков",
+  "text.autoconfig.particlerain.option.cloudHeight": "Высота облаков",
   "text.autoconfig.particlerain.option.alwaysRaining": "Всегда идёт дождь",
   "text.autoconfig.particlerain.option.yLevelWindAdjustment": "Корректировка ветра по уровню Y",
   "text.autoconfig.particlerain.option.syncRegistry": "Синхронизировать реестр",
