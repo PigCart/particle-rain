@@ -32,6 +32,7 @@ public final class WeatherParticleSpawner {
         if (config.doFogParticles && level.random.nextFloat() < config.fog.density / 100F) {
             level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
         }
+        //TODO: add toggle for clamping to heightmap position
         Precipitation precipitation = biome.value().getPrecipitationAt(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos),level.getSeaLevel());
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
         if (precipitation == Precipitation.RAIN) {
