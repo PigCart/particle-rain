@@ -4,23 +4,18 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.particle.render.FogRenderType;
 
 import java.awt.*;
 
@@ -51,7 +46,7 @@ public class GroundFogParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        if (this.onGround) this.remove();
+        if (level.getBlockState(pos).isSolid()) this.remove();
         this.xd = this.xdxd;
         this.zd = this.zdzd;
     }
@@ -76,7 +71,7 @@ public class GroundFogParticle extends WeatherParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return FogRenderType.INSTANCE;
     }
 
     @Environment(EnvType.CLIENT)

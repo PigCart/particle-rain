@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.particle.render.FogRenderType;
 
 import java.awt.*;
 
@@ -85,7 +86,7 @@ public class FogParticle extends WeatherParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return FogRenderType.INSTANCE;
     }
 
     @Environment(EnvType.CLIENT)

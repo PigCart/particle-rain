@@ -62,6 +62,7 @@ public class ParticleRainClient implements ClientModInitializer {
     //TODO: hail particles
     //TODO: puddle blocks
     //TODO: vertical fog
+    //TODO: light rays???? under the ocean surface
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;
