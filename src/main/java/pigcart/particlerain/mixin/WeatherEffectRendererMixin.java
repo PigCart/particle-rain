@@ -20,15 +20,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.WeatherParticleSpawner;
+import pigcart.particlerain.config.ModConfig;
 
 @Mixin(WeatherEffectRenderer.class)
 public class WeatherEffectRendererMixin {
     @Unique
-    private int pretty_Rain$rainSoundTime;
+    private int rainSoundTime;
 
     @Inject(method = "tickRainParticles", at = @At("HEAD"), cancellable = true)
     public void tickRainParticles(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus, CallbackInfo ci) {
-        if (!ParticleRainClient.config.tickVanillaWeather) {
+        if (!ModConfig.INSTANCE.compat.tickVanillaWeather) {
             float f = level.getRainLevel(1.0F);
             if (f > 0.0F) {
                 RandomSource random = RandomSource.create((long) ticks * 312987231L);
@@ -44,8 +45,8 @@ public class WeatherEffectRendererMixin {
                     }
                 }
 
-                if (blockPos2 != null && random.nextInt(3) < this.pretty_Rain$rainSoundTime++) {
-                    this.pretty_Rain$rainSoundTime = 0;
+                if (blockPos2 != null && random.nextInt(3) < this.rainSoundTime++) {
+                    this.rainSoundTime = 0;
                     if (blockPos2.getY() > blockPos.getY() + 1 && level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).getY() > Mth.floor((float) blockPos.getY())) {
                         SoundEvent sound = WeatherParticleSpawner.getBiomeSound(blockPos2, true);
                         if (sound != null)
@@ -63,7 +64,7 @@ public class WeatherEffectRendererMixin {
 
     @Inject(method = "render(Lnet/minecraft/world/level/Level;Lnet/minecraft/client/renderer/MultiBufferSource;IFLnet/minecraft/world/phys/Vec3;)V", at = @At("HEAD"), cancellable = true)
     public void render(Level level, MultiBufferSource bufferSource, int ticks, float partialTick, Vec3 cameraPosition, CallbackInfo ci) {
-        if (!ParticleRainClient.config.renderVanillaWeather) {
+        if (!ModConfig.INSTANCE.compat.renderVanillaWeather) {
             ci.cancel();
         }
     }

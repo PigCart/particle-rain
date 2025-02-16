@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.particle.render.FogRenderType;
 
 import java.awt.*;
@@ -28,7 +29,7 @@ public class GroundFogParticle extends WeatherParticle {
         super(level, x, y, z);
         ParticleRainClient.fogCount++;
         this.setSprite(provider.get(level.getRandom()));
-        this.quadSize = ParticleRainClient.config.groundFog.size;
+        this.quadSize = ModConfig.INSTANCE.groundFog.size;
         this.lifetime = 30000;
 
         Color color = new Color(this.level.getBiome(this.pos).value().getFogColor());

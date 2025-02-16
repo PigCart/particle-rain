@@ -7,9 +7,11 @@ import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.config.ModConfig;
 
 public abstract class WeatherParticle extends TextureSheetParticle {
 
@@ -20,7 +22,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     protected WeatherParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
         this.setSize(0.01F, 0.01F);
-        this.lifetime = ParticleRainClient.config.particleRadius * 10;
+        this.lifetime = ModConfig.INSTANCE.perf.particleRadius * 100;
         this.alpha = 0.0F;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.temperature = level.getBiome(this.pos).value().getBaseTemperature();
@@ -63,7 +65,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     void removeIfOOB() {
         Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
-        if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > Mth.square(ParticleRainClient.config.particleRadius)) {
+        if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > Mth.square(ModConfig.INSTANCE.perf.particleRadius)) {
             shouldFadeOut = true;
         }
 
@@ -85,5 +87,8 @@ public abstract class WeatherParticle extends TextureSheetParticle {
             return quaternion.mul(Axis.YP.rotation(Mth.PI));
         }
         else return quaternion;
+    }
+    public static double yLevelWindAdjustment(double y) {
+        return Math.clamp(0.01, 1, (y - 64) / 40);
     }
 }

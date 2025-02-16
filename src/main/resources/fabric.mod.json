@@ -19,7 +19,7 @@
       "pigcart.particlerain.ParticleRainClient"
     ],
     "modmenu": [
-      "pigcart.particlerain.ModMenuIntegration"
+      "pigcart.particlerain.config.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -29,7 +29,7 @@
   "depends": {
     "fabricloader": ">=0.12.8",
     "fabric-api": "*",
-    "cloth-config2": "*",
+    "yet_another_config_lib_v3": "*",
     "minecraft": ">=1.21.4"
   }
 }

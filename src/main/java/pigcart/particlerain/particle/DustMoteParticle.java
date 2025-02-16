@@ -12,6 +12,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.config.ModConfig;
 
 import java.awt.Color;
 
@@ -21,10 +22,10 @@ public class DustMoteParticle extends WeatherParticle {
     protected DustMoteParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z);
         this.setSprite(provider.get(level.getRandom()));
-        this.quadSize = ParticleRainClient.config.sand.moteSize;
-        this.xd = ParticleRainClient.config.sand.windStrength;
-        this.zd = ParticleRainClient.config.sand.windStrength;
-        this.gravity = ParticleRainClient.config.sand.gravity;
+        //this.quadSize = ModConfig.INSTANCE.dust.moteSize;
+        this.xd = level.isThundering() ? ModConfig.INSTANCE.dust.stormWindStrength : ModConfig.INSTANCE.dust.windStrength;
+        this.zd = level.isThundering() ? ModConfig.INSTANCE.dust.stormWindStrength : ModConfig.INSTANCE.dust.windStrength;
+        this.gravity =  ModConfig.INSTANCE.dust.gravity;
 
         final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL));
         // Red and blue seem to be swapped
@@ -45,8 +46,8 @@ public class DustMoteParticle extends WeatherParticle {
             this.shouldFadeOut = true;
             this.gravity = 0;
         } else {
-            this.xd = 0.2;
-            this.zd = 0.2;
+            this.xd = level.isThundering() ? ModConfig.INSTANCE.dust.stormWindStrength : ModConfig.INSTANCE.dust.windStrength;
+            this.zd = level.isThundering() ? ModConfig.INSTANCE.dust.stormWindStrength : ModConfig.INSTANCE.dust.windStrength;
         }
     }
     @Override

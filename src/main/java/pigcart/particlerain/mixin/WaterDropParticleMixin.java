@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.Util;
+import pigcart.particlerain.config.ModConfig;
 
 @Mixin(WaterDropParticle.class)
 public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
@@ -18,9 +20,10 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
         super(clientLevel, d, e, f);
     }
 
+    //TODO: whoa hey i should probably not be using override for this!
     @Override
     public void pickSprite(SpriteSet spriteSet, CallbackInfo ci) {
-        if (ParticleRainClient.config.biomeTint) {
+        if (ModConfig.INSTANCE.compat.biomeTint) {
             try {
                 this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "splash" + random.nextInt(4))));
             } catch (Exception e) {
@@ -28,7 +31,7 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
                 // causing the atlas to be accessed before its initialized??
                 throw new RuntimeException(e);
             }
-            ParticleRainClient.applyWaterTint((TextureSheetParticle) (Object) this, this.level, BlockPos.containing(x, y, z));
+            Util.applyWaterTint((TextureSheetParticle) (Object) this, this.level, BlockPos.containing(x, y, z));
         }
     }
 }

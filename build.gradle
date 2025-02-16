@@ -17,9 +17,9 @@ loom {
 repositories {
     mavenCentral()
     maven { url "https://maven.fabricmc.net/" }
-    maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/" }
     maven { url "https://maven.parchmentmc.org" }
+    maven { url "https://maven.isxander.dev/releases" }
 }
 
 dependencies {
@@ -32,16 +32,13 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Mod Menu
-    modImplementation ("com.terraformersmc:modmenu:${project.modmenu_version}")
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    // Config
-    modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}"
+    // yacl
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
+    // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricapi_version}"
-
-    // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-    // You may need to force-disable transitiveness on them.
 }
 
 processResources {

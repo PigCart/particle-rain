@@ -22,6 +22,8 @@ import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.Util;
+import pigcart.particlerain.config.ModConfig;
 
 public class StreakParticle extends WeatherParticle {
 
@@ -30,8 +32,8 @@ public class StreakParticle extends WeatherParticle {
     private StreakParticle(ClientLevel level, double x, double y, double z, int direction2D, SpriteSet provider) {
         super(level, x, y, z);
 
-        if (ParticleRainClient.config.biomeTint) {
-            ParticleRainClient.applyWaterTint(this, level, this.pos);
+        if (ModConfig.INSTANCE.compat.biomeTint) {
+            Util.applyWaterTint(this, level, this.pos);
         } else {
             this.setColor(0.2f, 0.3f, 1.0f);
         }
@@ -56,7 +58,7 @@ public class StreakParticle extends WeatherParticle {
         }
         BlockState state = level.getBlockState(BlockPos.containing(new Vec3(this.x, this.y, this.z).relative(this.direction.getOpposite(), 0.2f)));
         FluidState fluidState = level.getFluidState(this.pos);
-        if (!this.shouldFadeOut && (this.onGround || !ParticleRainClient.canHostStreaks(state) || !fluidState.isEmpty())) {
+        if (!this.shouldFadeOut && (this.onGround || !Util.canHostStreaks(state) || !fluidState.isEmpty())) {
             if (state.isAir()) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.DRIPPING_WATER, this.x, this.y - 0.25F, this.z, 0, 0, 0);
             this.gravity = 0;
             this.yd = 0;

@@ -11,14 +11,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.config.ModConfig;
 
 public class DustParticle extends DustMoteParticle {
 
     protected DustParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
         super(clientWorld, x, y, z, provider);
-        this.quadSize = ParticleRainClient.config.sand.size;
-        this.gravity = ParticleRainClient.config.sand.gravity - 0.1F;
-        if (ParticleRainClient.config.sand.spawnOnGround) this.yd = 0.1F;
+        this.quadSize = ModConfig.INSTANCE.dust.size;
+        this.gravity = ModConfig.INSTANCE.dust.gravity - 0.1F;
+        if (ModConfig.INSTANCE.dust.spawnOnGround) this.yd = 0.1F;
     }
     @Override
     public void tick() {

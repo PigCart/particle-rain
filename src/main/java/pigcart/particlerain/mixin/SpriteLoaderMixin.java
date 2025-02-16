@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.Util;
+import pigcart.particlerain.config.ModConfig;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +40,7 @@ public abstract class SpriteLoaderMixin {
             method = "stitch",
             at = @At(value = "NEW", args = "class=net/minecraft/client/renderer/texture/Stitcher")
     )
-    private Stitcher<SpriteContents> registerWeatherParticles(Stitcher<SpriteContents> stitcher) {
+    private Stitcher<SpriteContents> registerWeatherParticleSprites(Stitcher<SpriteContents> stitcher) {
         if (this.location.equals(ResourceLocation.withDefaultNamespace("textures/atlas/particles.png"))) {
             // resource reload clears all particles. we can just reset the counter here instead of registering a listener.
             ParticleRainClient.particleCount = 0;
@@ -48,32 +50,32 @@ public abstract class SpriteLoaderMixin {
             NativeImage rainImage = null;
             NativeImage snowImage = null;
             try {
-                rainImage = ParticleRainClient.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/rain.png"));
-                snowImage = ParticleRainClient.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/snow.png"));
-                if (ParticleRainClient.config.biomeTint) rainImage.applyToAllPixels(ParticleRainClient.desaturateOperation);
+                rainImage = Util.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/rain.png"));
+                snowImage = Util.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/snow.png"));
+                if (ModConfig.INSTANCE.compat.biomeTint) rainImage.applyToAllPixels(Util.desaturateOperation);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             // split both weather textures into four sprites
             for (int i = 0; i < 4; i++) {
-                stitcher.registerSprite(ParticleRainClient.splitImage(rainImage, i, "rain"));
+                stitcher.registerSprite(Util.splitImage(rainImage, i, "rain"));
             }
             for (int i = 0; i < 4; i++) {
-                stitcher.registerSprite(ParticleRainClient.splitImage(snowImage, i, "snow"));
+                stitcher.registerSprite(Util.splitImage(snowImage, i, "snow"));
             }
             // generate ripple sprites
-            int rippleResolution = ParticleRainClient.getRippleResolution(this.spriteContentsList);
+            int rippleResolution = Util.getRippleResolution(this.spriteContentsList);
             for (int i = 0; i < 8; i++) {
-                stitcher.registerSprite(ParticleRainClient.generateRipple(i, rippleResolution));
+                stitcher.registerSprite(Util.generateRipple(i, rippleResolution));
             }
             // create gray versions of the default splashes so tint can be applied
-            if (ParticleRainClient.config.biomeTint) {
+            if (ModConfig.INSTANCE.compat.biomeTint) {
                 for (int i = 0; i < 4; i++) {
                     NativeImage splashImage = null;
                     try {
-                        splashImage = ParticleRainClient.loadTexture(ResourceLocation.withDefaultNamespace("textures/particle/splash_" + i + ".png"));
-                        splashImage.applyToAllPixels(ParticleRainClient.desaturateOperation);
+                        splashImage = Util.loadTexture(ResourceLocation.withDefaultNamespace("textures/particle/splash_" + i + ".png"));
+                        splashImage.applyToAllPixels(Util.desaturateOperation);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

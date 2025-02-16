@@ -11,8 +11,9 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.config.ModConfig;
 
-import static pigcart.particlerain.ParticleRainClient.config;
+import static pigcart.particlerain.config.ModConfig.INSTANCE;
 
 public class SnowParticle extends WeatherParticle {
 
@@ -20,18 +21,18 @@ public class SnowParticle extends WeatherParticle {
 
     protected SnowParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
-        this.quadSize = config.snow.size;
-        this.gravity = config.snow.gravity;
+        this.quadSize = INSTANCE.snow.size;
+        this.gravity = INSTANCE.snow.gravity;
         this.yd = -gravity;
         this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "snow" + random.nextInt(4))));
 
         if (level.isThundering()) {
-            this.xd = gravity * config.snow.stormWindStrength;
+            this.xd = gravity * INSTANCE.snow.stormWindStrength;
         } else {
-            this.xd = gravity * config.snow.windStrength;
+            this.xd = gravity * INSTANCE.snow.windStrength;
         }
-        if (ParticleRainClient.config.yLevelWindAdjustment) {
-            this.xd = this.xd * ParticleRainClient.yLevelWindAdjustment(y);
+        if (ModConfig.INSTANCE.compat.yLevelWindAdjustment) {
+            this.xd = this.xd * yLevelWindAdjustment(y);
         }
         this.zd = this.xd;
 
@@ -45,7 +46,7 @@ public class SnowParticle extends WeatherParticle {
     public void tick() {
         super.tick();
         this.oRoll = this.roll;
-        this.roll = this.oRoll + (level.isThundering() ? config.snow.stormRotationAmount : config.snow.rotationAmount) * this.rotationAmount;
+        this.roll = this.oRoll + (level.isThundering() ? INSTANCE.snow.stormRotationAmount : INSTANCE.snow.rotationAmount) * this.rotationAmount;
         if (this.onGround || this.removeIfObstructed()) {
             this.remove();
         }
