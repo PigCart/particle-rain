@@ -106,10 +106,10 @@ public class ModConfig {
         public boolean useHeightmapTemp = true;
         public boolean canSpawnAboveClouds = true;
         public int cloudHeight = 191;
+        public transient URI openWiki = URI.create("https://minecraft.wiki/w/Block_tags_(Java_Edition)#camel_sand_step_sound_blocks");
         public List<String> dustyBlockTags = new ArrayList<>(Collections.singleton("minecraft:camel_sand_step_sound_blocks"));
         //public List<String> hotBlockTags = new ArrayList<>();
         //public List<String> biomeWeatherOverrides = new ArrayList<>(Collections.singleton("minecraft:ice_spikes HAIL"));
-        public transient URI openWiki = URI.create("https://minecraft.wiki/w/Block_tags_(Java_Edition)#camel_sand_step_sound_blocks");
     }
 
     @SerialEntry

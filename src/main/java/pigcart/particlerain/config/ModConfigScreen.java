@@ -137,7 +137,8 @@ public class ModConfigScreen {
     }
     private static Option<Float> getFloatOption(Object defaultGroup, Object group, Field field) {
         return ModConfigScreen.<Float>getOptionBuilder(defaultGroup, group, field)
-                .controller(FloatFieldControllerBuilder::create)
+                .controller(opt -> FloatFieldControllerBuilder.create(opt)
+                        .formatValue(val -> Component.literal(val.toString())))
                 .build();
     }
     private static Option<Float> getPercentOption(Object defaultGroup, Object group, Field field) {
