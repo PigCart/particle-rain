@@ -35,4 +35,4 @@ jobs:
           dependencies: |
             fabric(required){modrinth:P7dR8mSH}{curseforge:306612}#(ignore:github)
             modmenu(recommended){modrinth:mOgUt4GM}{curseforge:308702}#(ignore:github)
-            clothconfig(required){modrinth:9s6osm5g}{curseforge:348521}#(ignore:github)
+            yacl(required){modrinth:1eAoo2KR}{curseforge:667299}#(ignore:github)
