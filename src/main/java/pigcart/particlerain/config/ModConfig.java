@@ -12,6 +12,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -108,6 +109,7 @@ public class ModConfig {
         public List<String> dustyBlockTags = new ArrayList<>(Collections.singleton("minecraft:camel_sand_step_sound_blocks"));
         //public List<String> hotBlockTags = new ArrayList<>();
         //public List<String> biomeWeatherOverrides = new ArrayList<>(Collections.singleton("minecraft:ice_spikes HAIL"));
+        public transient URI openWiki = URI.create("https://minecraft.wiki/w/Block_tags_(Java_Edition)#camel_sand_step_sound_blocks");
     }
 
     @SerialEntry

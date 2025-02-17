@@ -2,10 +2,15 @@ package pigcart.particlerain.config;
 
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,11 +80,44 @@ public class ModConfigScreen {
                 options.add(getPrecipitationOption(defaultGroup, group, field));
             } else if (type.equals(List.class)) {
                 optionGroups.add(getStringListOption(defaultGroup, group, field));
+            } else if (type.equals(URI.class)) {
+                options.add(getLinkButtonOption(group, field));
             } else {
                 System.out.println("Unable to create option for field " + field.getName());
             }
         }
         return options;
+    }
+    private static ButtonOption getLinkButtonOption(Object group, Field field) {
+        String groupName = group.getClass().getSimpleName();
+        if (group.getClass().getAnnotation(ModConfig.OverrideName.class) != null) {
+            groupName = group.getClass().getAnnotation(ModConfig.OverrideName.class).newName();
+        }
+        final String fieldName = field.getName();
+        try {
+            return ButtonOption.createBuilder()
+                    .name(getComponent(groupName + "." + fieldName))
+                    .description(OptionDescription.of(Component.literal(field.get(group).toString())))
+                    .text(CommonComponents.GUI_OPEN_IN_BROWSER)
+                    .action(((yaclScreen, buttonOption) -> {
+                        Minecraft minecraft = Minecraft.getInstance();
+                        try {
+                            minecraft.setScreen(new ConfirmLinkScreen((result) -> {
+                                    try {
+                                        if (result) Util.getPlatform().openUri((URI) field.get(group));
+                                    } catch (IllegalAccessException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                minecraft.setScreen(yaclScreen);
+                            }, field.get(group).toString(), true
+                            ));
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })).build();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
     private static Option<ModConfig.Precipitation> getPrecipitationOption(Object defaultGroup, Object group, Field field) {
         return ModConfigScreen.<ModConfig.Precipitation>getOptionBuilder(defaultGroup, group, field)
