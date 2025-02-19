@@ -30,31 +30,31 @@ import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.Util;
 
-import static pigcart.particlerain.config.ModConfig.INSTANCE;
+import static pigcart.particlerain.config.ModConfig.CONFIG;
 
 public class RainParticle extends WeatherParticle {
 
     protected RainParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
 
-        if (INSTANCE.compat.biomeTint) Util.applyWaterTint(this, level, this.pos);
+        if (CONFIG.compat.biomeTint) Util.applyWaterTint(this, level, this.pos);
 
-        this.quadSize = INSTANCE.rain.size;
-        this.gravity = INSTANCE.rain.gravity;
+        this.quadSize = CONFIG.rain.size;
+        this.gravity = CONFIG.rain.gravity;
         this.yd = -gravity;
         this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "rain" + random.nextInt(4))));
 
         if (level.isThundering()) {
-            this.xd = gravity * INSTANCE.rain.stormWindStrength;
+            this.xd = gravity * CONFIG.rain.stormWindStrength;
         } else {
-            this.xd = gravity * INSTANCE.rain.windStrength;
+            this.xd = gravity * CONFIG.rain.windStrength;
         }
-        if (INSTANCE.compat.yLevelWindAdjustment) {
+        if (CONFIG.compat.yLevelWindAdjustment) {
             this.xd = this.xd * yLevelWindAdjustment(y);
         }
         this.zd = this.xd;
 
-        this.lifetime = INSTANCE.perf.particleRadius * 5;
+        this.lifetime = CONFIG.perf.particleRadius * 5;
         Vec3 vec3 = Minecraft.getInstance().cameraEntity.position();
         this.roll = (float) (Math.atan2(x - vec3.x, z - vec3.z) + Mth.HALF_PI);
     }
@@ -62,7 +62,7 @@ public class RainParticle extends WeatherParticle {
     @Override
     public void fadeIn() {
         if (age < 20) {
-            this.alpha = Math.clamp(0, INSTANCE.rain.opacity, (age * 1.0f) / 20);
+            this.alpha = Math.clamp(0, CONFIG.rain.opacity, (age * 1.0f) / 20);
         }
     }
 
@@ -72,8 +72,8 @@ public class RainParticle extends WeatherParticle {
         if (this.onGround || !this.level.getFluidState(this.pos).isEmpty()) {
             // TODO: rewrite this whole bit
             // TODO: really: REWRITE THIS WHOLE BIT!!!
-            if ((INSTANCE.effect.doSplashParticles || INSTANCE.effect.doSmokeParticles || INSTANCE.effect.doRippleParticles) && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < INSTANCE.perf.particleRadius - (INSTANCE.perf.particleRadius / 2.0)) {
-                for (int i = 0; i < INSTANCE.rain.impactEffectAmount; i++) {
+            if ((CONFIG.effect.doSplashParticles || CONFIG.effect.doSmokeParticles || CONFIG.effect.doRippleParticles) && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < CONFIG.perf.particleRadius - (CONFIG.perf.particleRadius / 2.0)) {
+                for (int i = 0; i < CONFIG.rain.impactEffectAmount; i++) {
                     Vec3 spawnPos = Vec3.atLowerCornerWithOffset(this.pos, (random.nextFloat() * 3) - 1, 0, (random.nextFloat() * 3) - 1);
                     double d = random.nextDouble();
                     double e = random.nextDouble();
@@ -90,16 +90,16 @@ public class RainParticle extends WeatherParticle {
                     Vec2 raycastHit = new Vec2((float)hit.getLocation().x, (float)hit.getLocation().z);
                     // this is SUCH a god damn mess
                     if (height != 0 && raycastHit.distanceToSqr(new Vec2((float) spawnPos.x, (float) spawnPos.z)) < 0.01) {
-                        if (INSTANCE.effect.doRippleParticles && fluidState.isSourceOfType(Fluids.WATER)) {
+                        if (CONFIG.effect.doRippleParticles && fluidState.isSourceOfType(Fluids.WATER)) {
                             if (height != 1) { // lazy workaround
                                 Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.RIPPLE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
-                                if (level.isThundering() && INSTANCE.effect.doSplashParticles) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
+                                if (level.isThundering() && CONFIG.effect.doSplashParticles) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                             }
-                        } else if (INSTANCE.effect.doSmokeParticles && (blockState.is(BlockTags.INFINIBURN_OVERWORLD) || blockState.is(BlockTags.STRIDER_WARM_BLOCKS))) {
+                        } else if (CONFIG.effect.doSmokeParticles && (blockState.is(BlockTags.INFINIBURN_OVERWORLD) || blockState.is(BlockTags.STRIDER_WARM_BLOCKS))) {
                             //TODO: config option for warm block tags
                             Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.SMOKE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                             if (level.isThundering()) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.LARGE_SMOKE, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
-                        } else if (INSTANCE.effect.doSplashParticles) {
+                        } else if (CONFIG.effect.doSplashParticles) {
                             Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, spawnPos.x, spawnPos.y + height, spawnPos.z, 0, 0, 0);
                         }
                     }
@@ -108,10 +108,10 @@ public class RainParticle extends WeatherParticle {
             this.remove();
         } else if (this.removeIfObstructed()) {
             Vec3 raycastStart = new Vec3(this.x, this.y, this.z);
-            Vec3 raycastEnd = new Vec3(this.x + INSTANCE.rain.windStrength, this.y, this.z + INSTANCE.rain.windStrength);
+            Vec3 raycastEnd = new Vec3(this.x + CONFIG.rain.windStrength, this.y, this.z + CONFIG.rain.windStrength);
             BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
             if (hit.getType().equals(HitResult.Type.BLOCK)) {
-                if (INSTANCE.effect.doStreakParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < INSTANCE.perf.particleRadius - (INSTANCE.perf.particleRadius / 2.0)) {
+                if (CONFIG.effect.doStreakParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < CONFIG.perf.particleRadius - (CONFIG.perf.particleRadius / 2.0)) {
                     if (Util.canHostStreaks(level.getBlockState(hit.getBlockPos()))) {
                         Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.STREAK, this.x, this.y, this.z, hit.getDirection().get2DDataValue(), 0, 0);
                         Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);

@@ -23,7 +23,7 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
     //TODO: whoa hey i should probably not be using override for this!
     @Override
     public void pickSprite(SpriteSet spriteSet, CallbackInfo ci) {
-        if (ModConfig.INSTANCE.compat.biomeTint) {
+        if (ModConfig.CONFIG.compat.biomeTint) {
             try {
                 this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "splash" + random.nextInt(4))));
             } catch (Exception e) {

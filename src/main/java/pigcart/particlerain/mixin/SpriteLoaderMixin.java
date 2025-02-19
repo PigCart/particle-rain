@@ -52,7 +52,7 @@ public abstract class SpriteLoaderMixin {
             try {
                 rainImage = Util.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/rain.png"));
                 snowImage = Util.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/snow.png"));
-                if (ModConfig.INSTANCE.compat.biomeTint) rainImage.applyToAllPixels(Util.desaturateOperation);
+                if (ModConfig.CONFIG.compat.biomeTint) rainImage.applyToAllPixels(Util.desaturateOperation);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -70,7 +70,7 @@ public abstract class SpriteLoaderMixin {
                 stitcher.registerSprite(Util.generateRipple(i, rippleResolution));
             }
             // create gray versions of the default splashes so tint can be applied
-            if (ModConfig.INSTANCE.compat.biomeTint) {
+            if (ModConfig.CONFIG.compat.biomeTint) {
                 for (int i = 0; i < 4; i++) {
                     NativeImage splashImage = null;
                     try {

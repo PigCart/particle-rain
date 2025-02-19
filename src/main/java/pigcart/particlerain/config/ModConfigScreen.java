@@ -21,22 +21,22 @@ public class ModConfigScreen {
                 .title(getComponent("title"))
                 .category(ConfigCategory.createBuilder()
                         .name(getComponent("category.general"))
-                        .group(getGroup(ModConfig.DEFAULT.perf, ModConfig.INSTANCE.perf))
-                        .group(getGroup(ModConfig.DEFAULT.effect, ModConfig.INSTANCE.effect))
-                        .group(getGroup(ModConfig.DEFAULT.sound, ModConfig.INSTANCE.sound))
-                        .group(getGroup(ModConfig.DEFAULT.compat, ModConfig.INSTANCE.compat))
+                        .group(getGroup(ModConfig.DEFAULT.perf, ModConfig.CONFIG.perf))
+                        .group(getGroup(ModConfig.DEFAULT.effect, ModConfig.CONFIG.effect))
+                        .group(getGroup(ModConfig.DEFAULT.sound, ModConfig.CONFIG.sound))
+                        .group(getGroup(ModConfig.DEFAULT.compat, ModConfig.CONFIG.compat))
                         .build())
                 .category(ConfigCategory.createBuilder()
                         .name(getComponent("category.effects"))
-                        .group(getGroup(ModConfig.DEFAULT.rain, ModConfig.INSTANCE.rain))
-                        .group(getGroup(ModConfig.DEFAULT.snow, ModConfig.INSTANCE.snow))
-                        .group(getGroup(ModConfig.DEFAULT.dust, ModConfig.INSTANCE.dust))
-                        .group(getGroup(ModConfig.DEFAULT.shrub, ModConfig.INSTANCE.shrub))
-                        .group(getGroup(ModConfig.DEFAULT.ripple, ModConfig.INSTANCE.ripple))
-                        .group(getGroup(ModConfig.DEFAULT.fog, ModConfig.INSTANCE.fog))
-                        .group(getGroup(ModConfig.DEFAULT.groundFog, ModConfig.INSTANCE.groundFog))
+                        .group(getGroup(ModConfig.DEFAULT.rain, ModConfig.CONFIG.rain))
+                        .group(getGroup(ModConfig.DEFAULT.snow, ModConfig.CONFIG.snow))
+                        .group(getGroup(ModConfig.DEFAULT.dust, ModConfig.CONFIG.dust))
+                        .group(getGroup(ModConfig.DEFAULT.shrub, ModConfig.CONFIG.shrub))
+                        .group(getGroup(ModConfig.DEFAULT.ripple, ModConfig.CONFIG.ripple))
+                        .group(getGroup(ModConfig.DEFAULT.fog, ModConfig.CONFIG.fog))
+                        .group(getGroup(ModConfig.DEFAULT.groundFog, ModConfig.CONFIG.groundFog))
                         .build())
-                .category(getCategory("category.SpawnOptions", ModConfig.DEFAULT.spawn, ModConfig.INSTANCE.spawn))
+                .category(getCategory("category.SpawnOptions", ModConfig.DEFAULT.spawn, ModConfig.CONFIG.spawn))
                 .save(ModConfig::saveConfig)
                 .build()
                 .generateScreen(screen);
@@ -76,8 +76,8 @@ public class ModConfigScreen {
                 }
             } else if (type.equals(int.class)) {
                 options.add(getIntOption(defaultGroup, group, field));
-            } else if (type.equals(ModConfig.Precipitation.class)) {
-                options.add(getPrecipitationOption(defaultGroup, group, field));
+            } else if (type.isEnum()) {
+                options.add(getEnumOption(defaultGroup, group, field, type));
             } else if (type.equals(List.class)) {
                 optionGroups.add(getStringListOption(defaultGroup, group, field));
             } else if (type.equals(URI.class)) {
@@ -119,9 +119,10 @@ public class ModConfigScreen {
             throw new RuntimeException(e);
         }
     }
-    private static Option<ModConfig.Precipitation> getPrecipitationOption(Object defaultGroup, Object group, Field field) {
-        return ModConfigScreen.<ModConfig.Precipitation>getOptionBuilder(defaultGroup, group, field)
-                .controller(opt -> EnumControllerBuilder.create(opt).enumClass(ModConfig.Precipitation.class))
+    @SuppressWarnings("unchecked")
+    private static <T extends Enum<T>> Option<T> getEnumOption(Object defaultGroup, Object group, Field field, Class<?> eClass) {
+        return ModConfigScreen.<T>getOptionBuilder(defaultGroup, group, field)
+                .controller(opt -> EnumControllerBuilder.create(opt).enumClass((Class<T>) eClass))
                 .build();
     }
     private static ListOption<String> getStringListOption(Object defaultGroup, Object group, Field field) {

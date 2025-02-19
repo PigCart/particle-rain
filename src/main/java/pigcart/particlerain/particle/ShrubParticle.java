@@ -27,7 +27,6 @@ import org.joml.AxisAngle4f;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.config.ModConfig;
 
 import java.awt.*;
@@ -39,10 +38,10 @@ public class ShrubParticle extends WeatherParticle {
     protected ShrubParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
         this.quadSize = 0.5F;
-        this.gravity = ModConfig.INSTANCE.shrub.gravity;
-        this.xd = level.isThundering() ? ModConfig.INSTANCE.shrub.stormWindStrength : ModConfig.INSTANCE.shrub.windStrength;
-        this.zd = level.isThundering() ? ModConfig.INSTANCE.shrub.stormWindStrength : ModConfig.INSTANCE.shrub.windStrength;
-        if (ModConfig.INSTANCE.dust.spawnOnGround) this.yd = 0.1F; //otherwise they get stuck and despawn for some reason >:?
+        this.gravity = ModConfig.CONFIG.shrub.gravity;
+        this.xd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
+        this.zd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
+        if (ModConfig.CONFIG.dust.spawnOnGround) this.yd = 0.1F; //otherwise they get stuck and despawn for some reason >:?
 
         ItemStack itemStack = new ItemStack(Items.DEAD_BUSH);
         ItemStackRenderState renderState = new ItemStackRenderState();
@@ -95,13 +94,13 @@ public class ShrubParticle extends WeatherParticle {
             this.shouldFadeOut = true;
             this.gravity = 0;
         } else {
-            this.xd = level.isThundering() ? ModConfig.INSTANCE.shrub.stormWindStrength : ModConfig.INSTANCE.shrub.windStrength;
-            this.zd = level.isThundering() ? ModConfig.INSTANCE.shrub.stormWindStrength : ModConfig.INSTANCE.shrub.windStrength;
+            this.xd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
+            this.zd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
         }
         this.oRoll = this.roll;
-        this.roll = this.roll + ModConfig.INSTANCE.shrub.rotationAmount;
+        this.roll = this.roll + ModConfig.CONFIG.shrub.rotationAmount;
         if (this.onGround) {
-            this.yd = ModConfig.INSTANCE.shrub.bounciness;
+            this.yd = ModConfig.CONFIG.shrub.bounciness;
         }
     }
 

@@ -2,9 +2,7 @@ package pigcart.particlerain.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.isxander.yacl3.api.NameableEnum;
-import dev.isxander.yacl3.config.v2.api.SerialEntry;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.biome.Biome;
 import pigcart.particlerain.ParticleRainClient;
 
 import java.io.*;
@@ -22,7 +20,7 @@ import java.util.List;
 public class ModConfig {
     public static final Path CONFIG_FILE = Path.of("config").resolve(ParticleRainClient.MOD_ID + ".json");
 
-    public static ModConfig INSTANCE = new ModConfig();
+    public static ModConfig CONFIG = new ModConfig();
     public static ModConfig DEFAULT = new ModConfig();
 
     /*
@@ -51,7 +49,6 @@ public class ModConfig {
     public Preset preset = Preset.FANCY;
      */
 
-    @SerialEntry
     public PerformanceOptions perf = new PerformanceOptions();
     public static class PerformanceOptions {
         public int maxParticleAmount = 1500;
@@ -60,7 +57,6 @@ public class ModConfig {
         public int particleRadius = 25;
     }
 
-    @SerialEntry
     public EffectOptions effect = new EffectOptions();
     public static class EffectOptions {
         public boolean doRainParticles = true;
@@ -76,7 +72,6 @@ public class ModConfig {
         //public boolean doPuddles = true;
     }
 
-    @SerialEntry
     public SoundOptions sound = new SoundOptions();
     public static class SoundOptions {
         //public boolean doMaterialSounds = true;
@@ -85,7 +80,6 @@ public class ModConfig {
         public boolean doSandSounds = true;
     }
 
-    @SerialEntry
     public CompatibilityOptions compat = new CompatibilityOptions();
     public static class CompatibilityOptions {
         public boolean renderVanillaWeather = false;
@@ -98,11 +92,10 @@ public class ModConfig {
         public boolean yLevelWindAdjustment = true;
         public boolean syncRegistry = true;
     }
-    @SerialEntry
     public SpawnOptions spawn = new SpawnOptions();
     public static class SpawnOptions {
-        //public boolean doOverrideWeather = false;
-        //public Precipitation overrideWeather = Precipitation.SNOW;
+        public boolean doOverrideWeather = false;
+        public Biome.Precipitation overrideWeather = Biome.Precipitation.SNOW;
         public boolean useHeightmapTemp = true;
         public boolean canSpawnAboveClouds = true;
         public int cloudHeight = 191;
@@ -112,7 +105,6 @@ public class ModConfig {
         //public List<String> biomeWeatherOverrides = new ArrayList<>(Collections.singleton("minecraft:ice_spikes HAIL"));
     }
 
-    @SerialEntry
     public RainOptions rain = new RainOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class RainOptions {
@@ -126,7 +118,6 @@ public class ModConfig {
         public float size = 2F;
         public int impactEffectAmount = 5;
     }
-    @SerialEntry
     public SnowOptions snow = new SnowOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class SnowOptions {
@@ -139,7 +130,6 @@ public class ModConfig {
         public float stormWindStrength = 3F;
         public float size = 2F;
     }
-    @SerialEntry
     public DustOptions dust = new DustOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class DustOptions {
@@ -152,7 +142,6 @@ public class ModConfig {
         public float size = 2F;
         public boolean spawnOnGround = true;
     }
-    @SerialEntry
     public ShrubOptions shrub = new ShrubOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class ShrubOptions {
@@ -164,7 +153,6 @@ public class ModConfig {
         public float stormWindStrength = 0.3F;
         public float bounciness = 0.2F;
     }
-    @SerialEntry
     public RippleOptions ripple = new RippleOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class RippleOptions {
@@ -174,7 +162,6 @@ public class ModConfig {
         @ReloadsResources
         public boolean useResourcepackResolution = true;
     }
-    @SerialEntry
     public FogOptions fog = new FogOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class FogOptions {
@@ -183,26 +170,12 @@ public class ModConfig {
         public float gravity = 0.2F;
         public float size = 0.5F;
     }
-    @SerialEntry
     public GroundFogOptions groundFog = new GroundFogOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class GroundFogOptions {
         public int density = 20;
         public int spawnHeight = 64;
         public float size = 8F;
-    }
-
-    public enum Precipitation implements NameableEnum {
-        OFF,
-        NONE,
-        RAIN,
-        SNOW,
-        DUST;
-
-        @Override
-        public Component getDisplayName() {
-            return ModConfigScreen.getComponent(name());
-        }
     }
 
     static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -214,20 +187,20 @@ public class ModConfig {
             try (BufferedReader fileReader = new BufferedReader(
                     new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)
             )) {
-                ModConfig.INSTANCE = GSON.fromJson(fileReader, ModConfig.class);
+                ModConfig.CONFIG = GSON.fromJson(fileReader, ModConfig.class);
             } catch (IOException e) {
                 throw new RuntimeException("Particle Rain config failed to load: ", e);
             }
         }
-        if (ModConfig.INSTANCE == null) {
-            ModConfig.INSTANCE = new ModConfig();
+        if (ModConfig.CONFIG == null) {
+            ModConfig.CONFIG = new ModConfig();
         }
     }
 
     public static void saveConfig() {
         File file = CONFIG_FILE.toFile();
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
-            GSON.toJson(ModConfig.INSTANCE, writer);
+            GSON.toJson(ModConfig.CONFIG, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }

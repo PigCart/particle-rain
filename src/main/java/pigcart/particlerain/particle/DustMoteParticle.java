@@ -1,17 +1,14 @@
 package pigcart.particlerain.particle;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
-import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.config.ModConfig;
 
 import java.awt.Color;
@@ -23,9 +20,9 @@ public class DustMoteParticle extends WeatherParticle {
         super(level, x, y, z);
         this.setSprite(provider.get(level.getRandom()));
         //this.quadSize = ModConfig.INSTANCE.dust.moteSize;
-        this.xd = level.isThundering() ? ModConfig.INSTANCE.dust.stormWindStrength : ModConfig.INSTANCE.dust.windStrength;
-        this.zd = level.isThundering() ? ModConfig.INSTANCE.dust.stormWindStrength : ModConfig.INSTANCE.dust.windStrength;
-        this.gravity =  ModConfig.INSTANCE.dust.gravity;
+        this.xd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
+        this.zd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
+        this.gravity =  ModConfig.CONFIG.dust.gravity;
 
         final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL));
         // Red and blue seem to be swapped
@@ -46,8 +43,8 @@ public class DustMoteParticle extends WeatherParticle {
             this.shouldFadeOut = true;
             this.gravity = 0;
         } else {
-            this.xd = level.isThundering() ? ModConfig.INSTANCE.dust.stormWindStrength : ModConfig.INSTANCE.dust.windStrength;
-            this.zd = level.isThundering() ? ModConfig.INSTANCE.dust.stormWindStrength : ModConfig.INSTANCE.dust.windStrength;
+            this.xd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
+            this.zd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
         }
     }
     @Override

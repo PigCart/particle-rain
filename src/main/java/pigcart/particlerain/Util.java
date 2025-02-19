@@ -38,9 +38,9 @@ public class Util {
     public static void applyWaterTint(TextureSheetParticle particle, ClientLevel clientLevel, BlockPos blockPos) {
         final Color waterColor = new Color(BiomeColors.getAverageWaterColor(clientLevel, blockPos));
         final Color fogColor = new Color(clientLevel.getBiome(blockPos).value().getFogColor());
-        float rCol = (Mth.lerp(ModConfig.INSTANCE.compat.tintMix, waterColor.getRed(), fogColor.getRed()) / 255F);
-        float gCol = (Mth.lerp(ModConfig.INSTANCE.compat.tintMix, waterColor.getGreen(), fogColor.getGreen()) / 255F);
-        float bCol = (Mth.lerp(ModConfig.INSTANCE.compat.tintMix, waterColor.getBlue(), fogColor.getBlue()) / 255F);
+        float rCol = (Mth.lerp(ModConfig.CONFIG.compat.tintMix, waterColor.getRed(), fogColor.getRed()) / 255F);
+        float gCol = (Mth.lerp(ModConfig.CONFIG.compat.tintMix, waterColor.getGreen(), fogColor.getGreen()) / 255F);
+        float bCol = (Mth.lerp(ModConfig.CONFIG.compat.tintMix, waterColor.getBlue(), fogColor.getBlue()) / 255F);
         particle.setColor(rCol, gCol, bCol);
     }
 
@@ -70,7 +70,7 @@ public class Util {
     }
 
     public static int getRippleResolution(List<SpriteContents> contents) {
-        if (ModConfig.INSTANCE.ripple.useResourcepackResolution) {
+        if (ModConfig.CONFIG.ripple.useResourcepackResolution) {
             ResourceLocation resourceLocation = ResourceLocation.withDefaultNamespace("big_smoke_0");
             for (SpriteContents spriteContents : contents) {
                 if (spriteContents.name().equals(resourceLocation)) {
@@ -83,9 +83,9 @@ public class Util {
                 }
             }
         }
-        if (ModConfig.INSTANCE.ripple.resolution < 4) ModConfig.INSTANCE.ripple.resolution = 4;
-        if (ModConfig.INSTANCE.ripple.resolution > 256) ModConfig.INSTANCE.ripple.resolution = 256;
-        return ModConfig.INSTANCE.ripple.resolution;
+        if (ModConfig.CONFIG.ripple.resolution < 4) ModConfig.CONFIG.ripple.resolution = 4;
+        if (ModConfig.CONFIG.ripple.resolution > 256) ModConfig.CONFIG.ripple.resolution = 256;
+        return ModConfig.CONFIG.ripple.resolution;
     }
 
     public static SpriteContents generateRipple(int i, int size) {

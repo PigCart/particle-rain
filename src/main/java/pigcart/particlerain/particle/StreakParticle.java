@@ -21,7 +21,6 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.Util;
 import pigcart.particlerain.config.ModConfig;
 
@@ -32,7 +31,7 @@ public class StreakParticle extends WeatherParticle {
     private StreakParticle(ClientLevel level, double x, double y, double z, int direction2D, SpriteSet provider) {
         super(level, x, y, z);
 
-        if (ModConfig.INSTANCE.compat.biomeTint) {
+        if (ModConfig.CONFIG.compat.biomeTint) {
             Util.applyWaterTint(this, level, this.pos);
         } else {
             this.setColor(0.2f, 0.3f, 1.0f);

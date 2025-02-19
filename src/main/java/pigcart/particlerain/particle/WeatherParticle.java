@@ -22,7 +22,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     protected WeatherParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
         this.setSize(0.01F, 0.01F);
-        this.lifetime = ModConfig.INSTANCE.perf.particleRadius * 100;
+        this.lifetime = ModConfig.CONFIG.perf.particleRadius * 100;
         this.alpha = 0.0F;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.temperature = level.getBiome(this.pos).value().getBaseTemperature();
@@ -65,7 +65,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     void removeIfOOB() {
         Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
-        if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > Mth.square(ModConfig.INSTANCE.perf.particleRadius)) {
+        if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > Mth.square(ModConfig.CONFIG.perf.particleRadius)) {
             shouldFadeOut = true;
         }
 

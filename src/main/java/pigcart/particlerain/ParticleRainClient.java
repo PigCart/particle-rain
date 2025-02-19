@@ -83,8 +83,8 @@ public class ParticleRainClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
             LiteralArgumentBuilder<FabricClientCommandSource> cmd = ClientCommandManager.literal(ParticleRainClient.MOD_ID)
                     .executes(ctx -> {
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", particleCount, ModConfig.INSTANCE.perf.maxParticleAmount)));
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", fogCount, ModConfig.INSTANCE.groundFog.density)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", particleCount, ModConfig.CONFIG.perf.maxParticleAmount)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", fogCount, ModConfig.CONFIG.groundFog.density)));
                         BlockPos pos = BlockPos.containing(ctx.getSource().getPlayer().position());
                         final Holder<Biome> holder = Minecraft.getInstance().level.getBiome(pos);
                         String biomeStr = holder.unwrap().map((resourceKey) -> {

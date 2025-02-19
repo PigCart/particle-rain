@@ -19,7 +19,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.particle.render.FogRenderType;
 
@@ -30,9 +29,9 @@ public class FogParticle extends WeatherParticle {
     private FogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z);
         this.setSprite(provider.get(level.getRandom()));
-        this.lifetime = ModConfig.INSTANCE.perf.particleRadius * 5;
+        this.lifetime = ModConfig.CONFIG.perf.particleRadius * 5;
         final double distance = Minecraft.getInstance().cameraEntity.position().distanceTo(new Vec3(x, y, z));
-        this.quadSize = (float) (ModConfig.INSTANCE.fog.size / distance);
+        this.quadSize = (float) (ModConfig.CONFIG.fog.size / distance);
 
         Color color = new Color(this.level.getBiome(this.pos).value().getFogColor()).darker();
         this.rCol = color.getRed() / 255F;
@@ -44,7 +43,7 @@ public class FogParticle extends WeatherParticle {
 
         this.xd = gravity / 3;
         this.zd = gravity / 3;
-        this.gravity = ModConfig.INSTANCE.fog.gravity;
+        this.gravity = ModConfig.CONFIG.fog.gravity;
     }
 
     public void tick() {

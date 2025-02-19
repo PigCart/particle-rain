@@ -29,7 +29,7 @@ public class GroundFogParticle extends WeatherParticle {
         super(level, x, y, z);
         ParticleRainClient.fogCount++;
         this.setSprite(provider.get(level.getRandom()));
-        this.quadSize = ModConfig.INSTANCE.groundFog.size;
+        this.quadSize = ModConfig.CONFIG.groundFog.size;
         this.lifetime = 30000;
 
         Color color = new Color(this.level.getBiome(this.pos).value().getFogColor());
