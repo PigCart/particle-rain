@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin;
+package pigcart.particlerain.mixin.render;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.platform.NativeImage;

@@ -64,7 +64,7 @@ public final class WeatherParticleSpawner {
         }
     }
 
-    public static void update(ClientLevel level, Entity entity, float partialTicks) {
+    public static void tick(ClientLevel level, Entity entity) {
         //TODO: twilight fog and skittering sand when not raining
         if (level.isRaining() || CONFIG.compat.alwaysRaining) {
             int density;
@@ -72,12 +72,12 @@ public final class WeatherParticleSpawner {
                 if (CONFIG.compat.alwaysRaining) {
                     density = CONFIG.perf.particleStormDensity;
                 } else {
-                    density = (int) (CONFIG.perf.particleStormDensity * level.getRainLevel(partialTicks));
+                    density = (int) (CONFIG.perf.particleStormDensity * level.getRainLevel(0));
                 }
             else if (CONFIG.compat.alwaysRaining) {
                 density = CONFIG.perf.particleDensity;
             } else {
-                density = (int) (CONFIG.perf.particleDensity * level.getRainLevel(partialTicks));
+                density = (int) (CONFIG.perf.particleDensity * level.getRainLevel(0));
             }
 
             //TODO: calculate vertical velocity and use it to switch which hemisphere is spawning particles

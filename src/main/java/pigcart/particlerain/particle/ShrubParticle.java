@@ -62,6 +62,7 @@ public class ShrubParticle extends WeatherParticle {
                 TextureAtlasSprite particleIcon = renderState.layers[0].model.getParticleIcon();
                 try {
                     //bakedQuad.hasTint is always true and i cant find anything else so i guess were gonna do some bullshit >:[
+                    //TODO: reinvestigate the recent model changes
                     ResourceLocation resourceLocation = ResourceLocation.parse(particleIcon.contents().name().getNamespace() + ":models/" + particleIcon.contents().name().toString().substring(particleIcon.contents().name().getNamespace().toString().length() + 1) + ".json");
                     Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(resourceLocation);
                     String string;

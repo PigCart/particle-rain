@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin;
+package pigcart.particlerain.mixin.tint;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

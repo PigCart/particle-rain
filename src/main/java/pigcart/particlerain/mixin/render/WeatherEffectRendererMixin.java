@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin;
+package pigcart.particlerain.mixin.render;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;

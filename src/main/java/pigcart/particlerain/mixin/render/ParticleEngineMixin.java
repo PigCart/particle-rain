@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin;
+package pigcart.particlerain.mixin.render;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.particle.ParticleEngine;
