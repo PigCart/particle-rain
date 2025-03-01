@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin.render;
+package pigcart.particlerain.mixin.render.puddle;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
@@ -16,7 +16,7 @@ import pigcart.particlerain.WeatherBlockSpawner;
 public class SectionCompilerMixin {
 
     @ModifyVariable(method = "compile", at = @At(value = "STORE"))
-    private FluidState addPuddleToChunk(FluidState value, @Local(ordinal = 2) BlockPos blockPos3) {
+    private FluidState getFluidState(FluidState value, @Local(ordinal = 2) BlockPos blockPos3) {
         if (WeatherBlockSpawner.hasPuddle(Minecraft.getInstance().level, blockPos3)) {
             value = Blocks.WATER.defaultBlockState().setValue(BlockStateProperties.LEVEL, 7).getFluidState();
         }

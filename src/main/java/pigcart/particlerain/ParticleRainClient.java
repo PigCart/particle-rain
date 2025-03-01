@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -21,7 +22,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.state.BlockState;
 import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.particle.*;
 
@@ -89,22 +89,22 @@ public class ParticleRainClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
             LiteralArgumentBuilder<FabricClientCommandSource> cmd = ClientCommandManager.literal(ParticleRainClient.MOD_ID)
                     .executes(ctx -> {
+                        ClientLevel level = Minecraft.getInstance().level;
                         ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", particleCount, ModConfig.CONFIG.perf.maxParticleAmount)));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", fogCount, ModConfig.CONFIG.groundFog.density)));
                         BlockPos blockPos = BlockPos.containing(ctx.getSource().getPlayer().position());
-                        final Holder<Biome> holder = Minecraft.getInstance().level.getBiome(blockPos);
+                        final Holder<Biome> holder = level.getBiome(blockPos);
                         String biomeStr = holder.unwrap().map((resourceKey) -> {
                             return resourceKey.location().toString();
                         }, (biome) -> {
                             return "[unregistered " + String.valueOf(biome) + "]";
                         });
                         ctx.getSource().sendFeedback(Component.literal(String.format("Biome: " + biomeStr)));
-                        Biome.Precipitation precipitation = holder.value().getPrecipitationAt(blockPos, ctx.getSource().getPlayer().level().getSeaLevel());
+                        Biome.Precipitation precipitation = holder.value().getPrecipitationAt(blockPos, level.getSeaLevel());
                         ctx.getSource().sendFeedback(Component.literal(String.format("Precipitation: " + precipitation)));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Base Temp: " + holder.value().getBaseTemperature())));
-                        //WeatherBlockSpawner.tick(Minecraft.getInstance().level);
-                        BlockState blockState = Minecraft.getInstance().level.getBlockState(blockPos);
-                        System.out.println(blockState);
+                        //WeatherBlockSpawner.tick(level);
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Block has puddle: " + WeatherBlockSpawner.hasPuddle(level, blockPos.below()))));
                         return 0;
                     });
             dispatcher.register(cmd);

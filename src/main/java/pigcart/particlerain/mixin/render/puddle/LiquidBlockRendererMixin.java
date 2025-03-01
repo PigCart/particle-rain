@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin.render;
+package pigcart.particlerain.mixin.render.puddle;
 
 import net.minecraft.client.renderer.block.LiquidBlockRenderer;
 import net.minecraft.core.BlockPos;

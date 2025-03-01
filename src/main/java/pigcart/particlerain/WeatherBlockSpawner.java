@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
 
 import java.awt.*;
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class WeatherBlockSpawner {
             throw new RuntimeException(e);
         }
     }
+    public static int puddleThreshold = 100;
 
     public static int getPuddleLevel(int x, int z) {
         x = Mth.abs(x % puddleMap.getWidth());
@@ -32,15 +34,14 @@ public class WeatherBlockSpawner {
         return color.getBlue();
     }
     public static boolean hasPuddle(ClientLevel level, BlockPos puddlePos) {
-        return (level.isRainingAt(puddlePos) &&
-                getPuddleLevel(puddlePos.getX(), puddlePos.getZ()) > 100 &&
-                //level.getBlockState(puddlePos).getFluidState().isEmpty() &&
+        return (level.getBiome(puddlePos).value().getPrecipitationAt(puddlePos, level.getSeaLevel()) == Biome.Precipitation.RAIN &&
+                level.canSeeSky(puddlePos) &&
+                getPuddleLevel(puddlePos.getX(), puddlePos.getZ()) > puddleThreshold &&
                 level.getBlockState(puddlePos.below()).isFaceSturdy(level, puddlePos, Direction.DOWN) &&
-                level.getBlockState(puddlePos.offset(1, -1, 0)).isSolid() &&
-                level.getBlockState(puddlePos.offset(-1, -1, 0)).isSolid() &&
-                level.getBlockState(puddlePos.offset(0, -1, 1)).isSolid() &&
-                level.getBlockState(puddlePos.offset(0, -1, -1)).isSolid()
-                );
+                level.getBlockState(puddlePos.north().below()).isSolid() && level.getBlockState(puddlePos.north()).getFluidState().isEmpty() &&
+                level.getBlockState(puddlePos.east().below()).isSolid() && level.getBlockState(puddlePos.east()).getFluidState().isEmpty() &&
+                level.getBlockState(puddlePos.south().below()).isSolid() && level.getBlockState(puddlePos.south()).getFluidState().isEmpty() &&
+                level.getBlockState(puddlePos.west().below()).isSolid() && level.getBlockState(puddlePos.west()).getFluidState().isEmpty());
     }
 
     public static boolean wasRaining = false;
@@ -60,7 +61,6 @@ public class WeatherBlockSpawner {
     public static void setLevelDirty(ClientLevel level) {
         int renderDistance = Minecraft.getInstance().options.renderDistance().get();
         ChunkPos playerPos = Minecraft.getInstance().player.chunkPosition();
-        System.out.println("marking chunks dirty to refresh puddles");
         // parchment mappings mixed up x and y
         Minecraft.getInstance().levelRenderer.setSectionRangeDirty(
                 playerPos.x - renderDistance,

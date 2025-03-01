@@ -11,10 +11,12 @@
     "tint.DripParticleMixin",
     "tint.TextureSheetParticleMixin",
     "tint.WaterDropParticleMixin",
-    "render.LiquidBlockRendererMixin",
     "render.ParticleEngineMixin",
-    "render.SectionCompilerMixin",
     "render.SpriteLoaderMixin",
-    "render.WeatherEffectRendererMixin"
+    "render.WeatherEffectRendererMixin",
+    "render.puddle.SectionCompilerMixin",
+    "render.puddle.LiquidBlockRendererMixin",
+    "render.puddle.sodium.ChunkBuilderMeshingTaskMixin",
+    "render.puddle.sodium.DefaultFluidRendererMixin"
   ]
 }
