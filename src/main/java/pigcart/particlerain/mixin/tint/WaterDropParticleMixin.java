@@ -26,10 +26,10 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
         if (ModConfig.CONFIG.compat.biomeTint) {
             try {
                 this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "splash" + random.nextInt(4))));
-            } catch (Exception e) {
-                // guessing that this is caused by servers sending particle events while the client is reloading?
-                // causing the atlas to be accessed before its initialized??
-                throw new RuntimeException(e);
+            } catch (IllegalStateException e) {
+                // "Tried to lookup sprite, but atlas is not initialized" no idea what causes this. seems random. can't reproduce.
+                // happens in the getSprite call when `this.texturesByName.getOrDefault(name, this.missingSprite)` returns null
+                System.out.println(e.getMessage());
             }
             TextureUtil.applyWaterTint((TextureSheetParticle) (Object) this, this.level, BlockPos.containing(x, y, z));
         }

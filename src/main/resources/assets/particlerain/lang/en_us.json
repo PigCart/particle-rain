@@ -103,7 +103,7 @@
   "particlerain.SpawnOptions.useHeightmapTemp": "Use heightmap temperature",
   "particlerain.SpawnOptions.useHeightmapTemp.description": "Prevents snow falling where it should be raining in biomes where the weather can vary by height, such as the Windswept Hills.",
   "particlerain.SpawnOptions.canSpawnAboveClouds": "Spawn weather particles above cloud height",
-  "particlerain.SpawnOptions.cloudHeight": "Cloud height",
+  "particlerain.SpawnOptions.cloudHeight": "The height above which particles should not spawn",
 
   "particlerain.SpawnOptions.dustyBlockTags": "Spawn dust on blocks tagged as：",
   "particlerain.SpawnOptions.openWiki": "View block tags on Minecraft Wiki"
