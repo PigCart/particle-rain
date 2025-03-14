@@ -14,6 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ModConfig;
@@ -68,6 +69,7 @@ public class GroundFogParticle extends WeatherParticle {
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(Mth.HALF_PI, -1, 0, 0));
 
         quaternion.rotateZ(Mth.lerp(f, this.oRoll, this.roll));
+        flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
     }
 
