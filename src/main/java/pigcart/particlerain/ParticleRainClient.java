@@ -49,6 +49,8 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
 
+    public static int weatherIntensity = 0;
+
     @Override
     public void onInitializeClient() {
         ModConfig.loadConfig();
@@ -102,6 +104,8 @@ public class ParticleRainClient implements ClientModInitializer {
                         ctx.getSource().sendFeedback(Component.literal(String.format("Block has puddle: " + WeatherBlockManager.hasPuddle(level, blockPos.below()))));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Block is solid: " + level.getBlockState(blockPos.below()).isCollisionShapeFullBlock(level, blockPos.below()))));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Block is exposed: " + WeatherBlockManager.isExposed(level, blockPos))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Puddle target level: " + WeatherBlockManager.puddleTargetLevel)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Puddle threshold: " + WeatherBlockManager.puddleThreshold)));
                         return 0;
                     });
             dispatcher.register(cmd);

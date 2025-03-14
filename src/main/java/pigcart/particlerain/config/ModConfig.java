@@ -177,6 +177,13 @@ public class ModConfig {
         public int spawnHeight = 64;
         public float size = 8F;
     }
+    public PuddleOptions puddle = new PuddleOptions();
+    public static class PuddleOptions {
+        public int updateDelay = 100;
+        public int updateStep = 5;
+        public int rainLevel = 90;
+        public int stormLevel = 130;
+    }
 
     static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 

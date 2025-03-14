@@ -30,6 +30,7 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
                 // "Tried to lookup sprite, but atlas is not initialized" no idea what causes this. seems random. can't reproduce.
                 // happens in the getSprite call when `this.texturesByName.getOrDefault(name, this.missingSprite)` returns null
                 System.out.println(e.getMessage());
+                this.remove();
             }
             TextureUtil.applyWaterTint((TextureSheetParticle) (Object) this, this.level, BlockPos.containing(x, y, z));
         }

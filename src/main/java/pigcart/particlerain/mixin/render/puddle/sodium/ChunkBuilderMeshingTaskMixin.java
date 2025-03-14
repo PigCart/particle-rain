@@ -30,11 +30,7 @@ public class ChunkBuilderMeshingTaskMixin {
     @WrapOperation(method = "execute(Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildContext;Lnet/caffeinemc/mods/sodium/client/util/task/CancellationToken;)Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildOutput;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"), remap = false)
     private boolean isAir(BlockState instance, Operation<Boolean> original) {
-        if (Minecraft.getInstance().level.isRaining()) {
-            return false;
-            // sorry. its probably fine.
-        } else {
-            return original.call(instance);
-        }
+        return false;
+        // sorry. its probably fine.
     }
 }

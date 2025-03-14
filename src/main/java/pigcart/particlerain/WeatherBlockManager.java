@@ -14,6 +14,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import java.awt.*;
 import java.io.IOException;
 
+import static pigcart.particlerain.config.ModConfig.CONFIG;
+
 public class WeatherBlockManager {
     //static final BlockState PUDDLE_STATE = ParticleRainClient.PUDDLE.defaultBlockState();//Blocks.WATER.defaultBlockState().setValue(BlockStateProperties.LEVEL, 7);
 
@@ -25,7 +27,6 @@ public class WeatherBlockManager {
             throw new RuntimeException(e);
         }
     }
-    public static int puddleThreshold = 100;
 
     public static int getPuddleLevel(int x, int z) {
         x = Mth.abs(x % puddleMap.getWidth());
@@ -37,8 +38,8 @@ public class WeatherBlockManager {
     public static boolean hasPuddle(ClientLevel level, BlockPos puddlePos) {
         return (level.getBiome(puddlePos).value().getPrecipitationAt(puddlePos, level.getSeaLevel()) == Biome.Precipitation.RAIN &&
                 isExposed(level, puddlePos) &&
-                getPuddleLevel(puddlePos.getX(), puddlePos.getZ()) > puddleThreshold &&
-                level.getBlockState(puddlePos.below()).isFaceSturdy(level, puddlePos, Direction.DOWN) &&
+                getPuddleLevel(puddlePos.getX(), puddlePos.getZ()) < puddleThreshold &&
+                level.getBlockState(puddlePos.below()).isFaceSturdy(level, puddlePos, Direction.DOWN) && level.getBlockState(puddlePos.below()).isCollisionShapeFullBlock(level, puddlePos.below()) &&
                 level.getBlockState(puddlePos.north().below()).isSolid() && level.getBlockState(puddlePos.north()).getFluidState().isEmpty() &&
                 level.getBlockState(puddlePos.east().below()).isSolid() && level.getBlockState(puddlePos.east()).getFluidState().isEmpty() &&
                 level.getBlockState(puddlePos.south().below()).isSolid() && level.getBlockState(puddlePos.south()).getFluidState().isEmpty() &&
@@ -55,17 +56,28 @@ public class WeatherBlockManager {
         return false;
     }
 
-    public static boolean wasRaining = false;
+    public static int puddleThreshold = 0;
+    public static int puddleTargetLevel = 0;
+    public static int ticksUntilBlockUpdate = 0;
+
     public static void tick(ClientLevel level) {
-        //TODO: variable weather intensity
-        if (level.isRaining()) {
-            if (!wasRaining) {
+        if (ticksUntilBlockUpdate-- == 0) {
+            ticksUntilBlockUpdate = CONFIG.puddle.updateDelay;
+            if (puddleThreshold != puddleTargetLevel) {
+                if (puddleThreshold < puddleTargetLevel) {
+                    puddleThreshold += CONFIG.puddle.updateStep;
+                    if (puddleThreshold > puddleTargetLevel) puddleThreshold = puddleTargetLevel;
+                } else {
+                    puddleThreshold -= CONFIG.puddle.updateStep;
+                    if (puddleThreshold < puddleTargetLevel) puddleThreshold = puddleTargetLevel;
+                }
                 setLevelDirty(level);
-                wasRaining = true;
             }
-        } else if (wasRaining) {
-            setLevelDirty(level);
-            wasRaining = false;
+            if (level.isRaining()) {
+                puddleTargetLevel = level.isThundering() ? CONFIG.puddle.stormLevel : CONFIG.puddle.rainLevel;
+            } else {
+                puddleTargetLevel = 0;
+            }
         }
     }
 

@@ -97,6 +97,12 @@
   "particlerain.FogOptions": "Fog Particle Options",
   "particlerain.GroundFogOptions": "Ground Fog Particle Options",
 
+  "particlerain.PuddleOptions": "Puddle Options",
+  "particlerain.PuddleOptions.updateDelay": "Delay between puddle updates",
+  "particlerain.PuddleOptions.updateStep": "Amount to update puddle coverage by",
+  "particlerain.PuddleOptions.rainLevel": "Coverage during rain",
+  "particlerain.PuddleOptions.stormLevel": "Coverage during storms",
+
   "particlerain.category.SpawnOptions": "Edit Spawn Conditions",
   "particlerain.SpawnOptions.doOverrideWeather": "Override global weather effects",
   "particlerain.SpawnOptions.overrideWeather": "Global weather override: ",
