@@ -49,9 +49,6 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
 
-    public static int particleCount;
-    public static int fogCount;
-
     @Override
     public void onInitializeClient() {
         ModConfig.loadConfig();
@@ -88,8 +85,8 @@ public class ParticleRainClient implements ClientModInitializer {
             LiteralArgumentBuilder<FabricClientCommandSource> cmd = ClientCommandManager.literal(ParticleRainClient.MOD_ID)
                     .executes(ctx -> {
                         ClientLevel level = Minecraft.getInstance().level;
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", particleCount, ModConfig.CONFIG.perf.maxParticleAmount)));
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", fogCount, ModConfig.CONFIG.groundFog.density)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", WeatherParticleManager.particleCount, ModConfig.CONFIG.perf.maxParticleAmount)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", WeatherParticleManager.fogCount, ModConfig.CONFIG.groundFog.density)));
                         BlockPos blockPos = BlockPos.containing(ctx.getSource().getPlayer().position());
                         final Holder<Biome> holder = level.getBiome(blockPos);
                         String biomeStr = holder.unwrap().map((resourceKey) -> {
@@ -102,7 +99,9 @@ public class ParticleRainClient implements ClientModInitializer {
                         ctx.getSource().sendFeedback(Component.literal(String.format("Precipitation: " + precipitation)));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Base Temp: " + holder.value().getBaseTemperature())));
                         //WeatherBlockSpawner.tick(level);
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Block has puddle: " + WeatherBlockSpawner.hasPuddle(level, blockPos.below()))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Block has puddle: " + WeatherBlockManager.hasPuddle(level, blockPos.below()))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Block is solid: " + level.getBlockState(blockPos.below()).isCollisionShapeFullBlock(level, blockPos.below()))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Block is exposed: " + WeatherBlockManager.isExposed(level, blockPos))));
                         return 0;
                     });
             dispatcher.register(cmd);
@@ -110,19 +109,13 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     private void onLevelChange(Minecraft minecraft, ClientLevel clientLevel) {
-        resetParticleCount();
-        System.out.println("balls");
-    }
-
-    public static void resetParticleCount() {
-        particleCount = 0;
-        fogCount = 0;
+        WeatherParticleManager.resetParticleCount();
     }
 
     private void onTick(Minecraft client) {
         if (!client.isPaused() && client.level != null && client.getCameraEntity() != null) {
-            WeatherParticleSpawner.tick(client.level, client.getCameraEntity());
-            WeatherBlockSpawner.tick(client.level);
+            WeatherParticleManager.tick(client.level, client.getCameraEntity());
+            WeatherBlockManager.tick(client.level);
         }
     }
 

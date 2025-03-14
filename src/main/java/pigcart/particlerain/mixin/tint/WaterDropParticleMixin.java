@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRainClient;
-import pigcart.particlerain.Util;
+import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.ModConfig;
 
 @Mixin(WaterDropParticle.class)
@@ -31,7 +31,7 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
                 // causing the atlas to be accessed before its initialized??
                 throw new RuntimeException(e);
             }
-            Util.applyWaterTint((TextureSheetParticle) (Object) this, this.level, BlockPos.containing(x, y, z));
+            TextureUtil.applyWaterTint((TextureSheetParticle) (Object) this, this.level, BlockPos.containing(x, y, z));
         }
     }
 }

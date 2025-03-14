@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pigcart.particlerain.WeatherParticleSpawner;
+import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ModConfig;
 
 @Mixin(WeatherEffectRenderer.class)
@@ -47,11 +47,11 @@ public class WeatherEffectRendererMixin {
                 if (blockPos2 != null && random.nextInt(3) < this.rainSoundTime++) {
                     this.rainSoundTime = 0;
                     if (blockPos2.getY() > blockPos.getY() + 1 && level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).getY() > Mth.floor((float) blockPos.getY())) {
-                        SoundEvent sound = WeatherParticleSpawner.getBiomeSound(blockPos2, true);
+                        SoundEvent sound = WeatherParticleManager.getBiomeSound(blockPos2, true);
                         if (sound != null)
                             level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.1F, 0.5F, false);
                     } else {
-                        SoundEvent sound = WeatherParticleSpawner.getBiomeSound(blockPos2, false);
+                        SoundEvent sound = WeatherParticleManager.getBiomeSound(blockPos2, false);
                         if (sound != null)
                             level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.2F, 1.0F, false);
                     }

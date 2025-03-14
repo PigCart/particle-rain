@@ -11,6 +11,7 @@ import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ModConfig;
 
 public abstract class WeatherParticle extends TextureSheetParticle {
@@ -26,7 +27,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         this.alpha = 0.0F;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.temperature = level.getBiome(this.pos).value().getBaseTemperature();
-        ParticleRainClient.particleCount++;
+        WeatherParticleManager.particleCount++;
     }
 
     @Override
@@ -59,7 +60,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     @Override
     public void remove() {
-        if (this.isAlive()) ParticleRainClient.particleCount--;
+        if (this.isAlive()) WeatherParticleManager.particleCount--;
         super.remove();
     }
 

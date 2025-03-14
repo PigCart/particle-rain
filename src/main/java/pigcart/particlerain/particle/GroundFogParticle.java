@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.particle.render.FogRenderType;
 
@@ -27,7 +28,7 @@ public class GroundFogParticle extends WeatherParticle {
 
     private GroundFogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z);
-        ParticleRainClient.fogCount++;
+        WeatherParticleManager.fogCount++;
         this.setSprite(provider.get(level.getRandom()));
         this.quadSize = ModConfig.CONFIG.groundFog.size;
         this.lifetime = 30000;
@@ -53,7 +54,7 @@ public class GroundFogParticle extends WeatherParticle {
     }
 
     public void remove() {
-        if (this.isAlive()) ParticleRainClient.fogCount--;
+        if (this.isAlive()) WeatherParticleManager.fogCount--;
         super.remove();
     }
 

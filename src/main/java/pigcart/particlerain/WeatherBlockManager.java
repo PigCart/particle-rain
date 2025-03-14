@@ -9,17 +9,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.awt.*;
 import java.io.IOException;
 
-public class WeatherBlockSpawner {
+public class WeatherBlockManager {
     //static final BlockState PUDDLE_STATE = ParticleRainClient.PUDDLE.defaultBlockState();//Blocks.WATER.defaultBlockState().setValue(BlockStateProperties.LEVEL, 7);
 
     static NativeImage puddleMap;
     static {
         try {
-            puddleMap = Util.loadTexture(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "textures/puddles.png"));
+            puddleMap = TextureUtil.loadTexture(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "textures/puddles.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -35,13 +36,23 @@ public class WeatherBlockSpawner {
     }
     public static boolean hasPuddle(ClientLevel level, BlockPos puddlePos) {
         return (level.getBiome(puddlePos).value().getPrecipitationAt(puddlePos, level.getSeaLevel()) == Biome.Precipitation.RAIN &&
-                level.canSeeSky(puddlePos) &&
+                isExposed(level, puddlePos) &&
                 getPuddleLevel(puddlePos.getX(), puddlePos.getZ()) > puddleThreshold &&
                 level.getBlockState(puddlePos.below()).isFaceSturdy(level, puddlePos, Direction.DOWN) &&
                 level.getBlockState(puddlePos.north().below()).isSolid() && level.getBlockState(puddlePos.north()).getFluidState().isEmpty() &&
                 level.getBlockState(puddlePos.east().below()).isSolid() && level.getBlockState(puddlePos.east()).getFluidState().isEmpty() &&
                 level.getBlockState(puddlePos.south().below()).isSolid() && level.getBlockState(puddlePos.south()).getFluidState().isEmpty() &&
                 level.getBlockState(puddlePos.west().below()).isSolid() && level.getBlockState(puddlePos.west()).getFluidState().isEmpty());
+    }
+    public static boolean isExposed(ClientLevel level, BlockPos blockPos) {
+        final BlockPos heightmapPos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos);
+        if (level.canSeeSky(blockPos)) {
+            if (heightmapPos.getY() > blockPos.getY()) {
+                return !level.getBlockState(heightmapPos.below()).isCollisionShapeFullBlock(level, heightmapPos);
+            }
+            return true;
+        }
+        return false;
     }
 
     public static boolean wasRaining = false;
