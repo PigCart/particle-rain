@@ -43,8 +43,7 @@ public abstract class SpriteLoaderMixin {
     private Stitcher<SpriteContents> registerWeatherParticleSprites(Stitcher<SpriteContents> stitcher) {
         if (this.location.equals(ResourceLocation.withDefaultNamespace("textures/atlas/particles.png"))) {
             // resource reload clears all particles. we can just reset the counter here instead of registering a listener.
-            ParticleRainClient.particleCount = 0;
-            ParticleRainClient.fogCount = 0;
+            ParticleRainClient.resetParticleCount();
 
             // load weather textures
             NativeImage rainImage = null;
