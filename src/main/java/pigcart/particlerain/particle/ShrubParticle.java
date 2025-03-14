@@ -76,7 +76,8 @@ public class ShrubParticle extends WeatherParticle {
                         this.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
                     }
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    // just dont crash. smiley face.
+                    itemStack = new ItemStack(Items.DEAD_BUSH);
                 }
             }
         } else {
