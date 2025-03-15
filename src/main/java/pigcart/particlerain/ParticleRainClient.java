@@ -51,8 +51,6 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
 
-    public static int weatherIntensity = 0;
-
     @Override
     public void onInitializeClient() {
         ModConfig.loadConfig();
