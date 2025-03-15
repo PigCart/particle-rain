@@ -6,12 +6,13 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -83,7 +84,7 @@ public class ParticleRainClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(STREAK, StreakParticle.DefaultFactory::new);
 
         ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
-        ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(this::onLevelChange);
+        ClientPlayConnectionEvents.JOIN.register(this::onJoin);
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
             LiteralArgumentBuilder<FabricClientCommandSource> cmd = ClientCommandManager.literal(ParticleRainClient.MOD_ID)
                     .executes(ctx -> {
@@ -113,8 +114,8 @@ public class ParticleRainClient implements ClientModInitializer {
         });
     }
 
-    private void onLevelChange(Minecraft minecraft, ClientLevel clientLevel) {
-        WeatherParticleManager.resetParticleCount();
+    private void onJoin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
+        WeatherBlockManager.puddleThreshold = 0;
     }
 
     private void onTick(Minecraft client) {

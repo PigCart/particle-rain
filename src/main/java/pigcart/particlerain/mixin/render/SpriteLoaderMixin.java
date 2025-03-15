@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.TextureUtil;
-import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ModConfig;
 
 import java.io.IOException;
@@ -45,9 +44,6 @@ public abstract class SpriteLoaderMixin {
     )
     private Stitcher<SpriteContents> registerWeatherParticleSprites(Stitcher<SpriteContents> stitcher) {
         if (this.location.equals(ResourceLocation.withDefaultNamespace("textures/atlas/particles.png"))) {
-            // resource reload clears all particles. we can just reset the counter here instead of registering a listener.
-            WeatherParticleManager.resetParticleCount();
-
             // load weather textures
             NativeImage rainImage = null;
             NativeImage snowImage = null;
