@@ -12,6 +12,7 @@
   "particlerain.PerformanceOptions.particleStormDensity.description": "The number of times weather particles will try to spawn per tick during storms.",
   "particlerain.PerformanceOptions.particleRadius": "Particle render distance",
   "particlerain.PerformanceOptions.particleRadius.description": "How many blocks away from the camera particles will spawn.",
+  "particlerain.PerformanceOptions.fogParticleRadius": "Fog particle render distance",
 
   "particlerain.EffectOptions": "Effect Toggles",
   "particlerain.EffectOptions.description": "Turn individual effects on or off.",
@@ -84,7 +85,8 @@
   "particlerain.ParticleOptions.resolution": "Resolution",
   "particlerain.ParticleOptions.spawnOnGround": "Spawn on ground",
   "particlerain.ParticleOptions.spawnOnGround.description": "Makes dust blow up from the ground instead of falling from the sky.",
-  "particlerain.ParticleOptions.spawnHeight": "Spawn height",
+  "particlerain.ParticleOptions.maxSpawnHeight": "Maximum spawn height",
+  "particlerain.ParticleOptions.minSpawnHeight": "Minimum spawn height",
   "particlerain.ParticleOptions.spawnTime": "Spawn time",
   "particlerain.ParticleOptions.impactEffectAmount": "Amount of impact effects to spawn",
   "particlerain.ParticleOptions.impactEffectAmount.description": "Controls the amount of ripples, splashes, or smoke that appears when colliding with a block",

@@ -10,7 +10,6 @@ import net.minecraft.world.entity.Entity;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ModConfig;
 

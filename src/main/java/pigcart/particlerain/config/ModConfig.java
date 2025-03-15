@@ -55,6 +55,7 @@ public class ModConfig {
         public int particleDensity = 100;
         public int particleStormDensity = 200;
         public int particleRadius = 25;
+        public int fogParticleRadius = 90;
     }
 
     public EffectOptions effect = new EffectOptions();
@@ -174,7 +175,8 @@ public class ModConfig {
     @OverrideName(newName = "ParticleOptions")
     public static class GroundFogOptions {
         public int density = 20;
-        public int spawnHeight = 64;
+        public int maxSpawnHeight = 64;
+        public int minSpawnHeight = 60;
         public float size = 8F;
     }
     public PuddleOptions puddle = new PuddleOptions();

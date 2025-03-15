@@ -43,7 +43,7 @@ public final class WeatherParticleManager {
         if (precipitation == Precipitation.RAIN) {
             if (CONFIG.effect.doGroundFogParticles && fogCount < CONFIG.groundFog.density) {
                 int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
-                if (height <= CONFIG.groundFog.spawnHeight && height >= CONFIG.groundFog.spawnHeight - 4 && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
+                if (height <= CONFIG.groundFog.maxSpawnHeight && height >= CONFIG.groundFog.minSpawnHeight && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
                     level.addParticle(ParticleRainClient.GROUND_FOG, x, height + level.random.nextFloat(), z, 0, 0, 0);
                 }
             }
