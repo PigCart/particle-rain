@@ -58,26 +58,31 @@ public class WeatherBlockManager {
 
     public static int puddleThreshold = 0;
     public static int puddleTargetLevel = 0;
-    public static int ticksUntilBlockUpdate = 0;
+    public static int ticksUntilPuddleUpdate = 0;
 
     public static void tick(ClientLevel level) {
-        if (ticksUntilBlockUpdate-- == 0) {
-            ticksUntilBlockUpdate = CONFIG.puddle.updateDelay;
-            if (puddleThreshold != puddleTargetLevel) {
-                if (puddleThreshold < puddleTargetLevel) {
-                    puddleThreshold += CONFIG.puddle.updateStep;
-                    if (puddleThreshold > puddleTargetLevel) puddleThreshold = puddleTargetLevel;
-                } else {
-                    puddleThreshold -= CONFIG.puddle.updateStep;
-                    if (puddleThreshold < puddleTargetLevel) puddleThreshold = puddleTargetLevel;
+        if (CONFIG.effect.doPuddles) {
+            if (ticksUntilPuddleUpdate-- == 0) {
+                ticksUntilPuddleUpdate = CONFIG.puddle.updateDelay;
+                if (puddleThreshold != puddleTargetLevel) {
+                    if (puddleThreshold < puddleTargetLevel) {
+                        puddleThreshold += CONFIG.puddle.updateStep;
+                        if (puddleThreshold > puddleTargetLevel) puddleThreshold = puddleTargetLevel;
+                    } else {
+                        puddleThreshold -= CONFIG.puddle.updateStep;
+                        if (puddleThreshold < puddleTargetLevel) puddleThreshold = puddleTargetLevel;
+                    }
+                    setLevelDirty(level);
                 }
-                setLevelDirty(level);
+                if (level.isRaining()) {
+                    puddleTargetLevel = level.isThundering() ? CONFIG.puddle.stormLevel : CONFIG.puddle.rainLevel;
+                } else {
+                    puddleTargetLevel = 0;
+                }
             }
-            if (level.isRaining()) {
-                puddleTargetLevel = level.isThundering() ? CONFIG.puddle.stormLevel : CONFIG.puddle.rainLevel;
-            } else {
-                puddleTargetLevel = 0;
-            }
+        } else if (puddleThreshold != 0) {
+            puddleThreshold = 0;
+            setLevelDirty(level);
         }
     }
 

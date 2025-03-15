@@ -11,13 +11,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import pigcart.particlerain.WeatherBlockManager;
+import pigcart.particlerain.config.ModConfig;
 
 @Mixin(SectionCompiler.class)
 public class SectionCompilerMixin {
 
     @ModifyVariable(method = "compile", at = @At(value = "STORE"))
     private FluidState getFluidState(FluidState value, @Local(ordinal = 2) BlockPos blockPos3) {
-        if (WeatherBlockManager.hasPuddle(Minecraft.getInstance().level, blockPos3)) {
+        if (ModConfig.CONFIG.effect.doPuddles && WeatherBlockManager.hasPuddle(Minecraft.getInstance().level, blockPos3)) {
             value = Blocks.WATER.defaultBlockState().setValue(BlockStateProperties.LEVEL, 7).getFluidState();
         }
         return value;

@@ -70,7 +70,7 @@ public class ModConfig {
         public boolean doShrubParticles = true;
         public boolean doFogParticles = false;
         public boolean doGroundFogParticles = true;
-        //public boolean doPuddles = true;
+        public boolean doPuddles = true;
     }
 
     public SoundOptions sound = new SoundOptions();

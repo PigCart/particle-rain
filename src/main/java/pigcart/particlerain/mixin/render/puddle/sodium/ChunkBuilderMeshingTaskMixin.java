@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import pigcart.particlerain.WeatherBlockManager;
+import pigcart.particlerain.config.ModConfig;
 
 @Mixin(ChunkBuilderMeshingTask.class)
 public class ChunkBuilderMeshingTaskMixin {
@@ -21,7 +22,7 @@ public class ChunkBuilderMeshingTaskMixin {
     @ModifyVariable(method = "execute(Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildContext;Lnet/caffeinemc/mods/sodium/client/util/task/CancellationToken;)Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildOutput;",
         at = @At(value = "STORE"), remap = false)
     private FluidState getFluidState(FluidState value, @Local(ordinal = 0) BlockPos.MutableBlockPos blockPos) {
-        if (WeatherBlockManager.hasPuddle(Minecraft.getInstance().level, blockPos)) {
+        if (ModConfig.CONFIG.effect.doPuddles && WeatherBlockManager.hasPuddle(Minecraft.getInstance().level, blockPos)) {
             value = Blocks.WATER.defaultBlockState().setValue(BlockStateProperties.LEVEL, 7).getFluidState();
         }
         return value;
@@ -30,7 +31,11 @@ public class ChunkBuilderMeshingTaskMixin {
     @WrapOperation(method = "execute(Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildContext;Lnet/caffeinemc/mods/sodium/client/util/task/CancellationToken;)Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildOutput;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"))
     private boolean isAir(BlockState instance, Operation<Boolean> original) {
-        return false;
-        // sorry. its probably fine.
+        if (ModConfig.CONFIG.effect.doPuddles) {
+            return false;
+            // sorry. its probably fine.
+        } else {
+            return original.call(instance);
+        }
     }
 }
