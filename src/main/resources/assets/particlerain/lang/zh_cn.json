@@ -12,6 +12,7 @@
   "particlerain.PerformanceOptions.particleStormDensity.description": "雷暴时每游戏刻尝试生成天气粒子的次数。",
   "particlerain.PerformanceOptions.particleRadius": "粒子半径",
   "particlerain.PerformanceOptions.particleRadius.description": "粒子将在距离玩家视角多少格方块外生成。",
+  "particlerain.PerformanceOptions.fogParticleRadius": "雾气粒子渲染半径",
 
   "particlerain.EffectOptions": "效果选项",
   "particlerain.EffectOptions.description": "切换独立效果",
@@ -84,7 +85,8 @@
   "particlerain.ParticleOptions.resolution": "分辨率",
   "particlerain.ParticleOptions.spawnOnGround": "在地表生成",
   "particlerain.ParticleOptions.spawnOnGround.description": "使沙尘从地表吹起而不是从天而降。",
-  "particlerain.ParticleOptions.spawnHeight": "生成高度",
+  "particlerain.ParticleOptions.maxSpawnHeight": "最大生成高度",
+  "particlerain.ParticleOptions.minSpawnHeight": "最小生成高度",
   "particlerain.ParticleOptions.spawnTime": "生成时间",
   "particlerain.ParticleOptions.impactEffectAmount": "碰撞粒子生成数量调整",
   "particlerain.ParticleOptions.impactEffectAmount.description": "控制与方块碰撞时生成的涟漪，雨滴飞溅，烟雾粒子。",
@@ -97,6 +99,12 @@
   "particlerain.FogOptions": "雾粒子选项",
   "particlerain.GroundFogOptions": "低雾粒子选项",
 
+  "particlerain.PuddleOptions": "水坑粒子选项",
+  "particlerain.PuddleOptions.updateDelay": "水坑刷新延迟",
+  "particlerain.PuddleOptions.updateStep": "水坑覆盖范围更新量",
+  "particlerain.PuddleOptions.rainLevel": "在降雨时覆盖",
+  "particlerain.PuddleOptions.stormLevel": "在雷暴时覆盖",
+
   "particlerain.category.SpawnOptions": "编辑生成条件",
   "particlerain.SpawnOptions.doOverrideWeather": "覆盖全局天气效果",
   "particlerain.SpawnOptions.overrideWeather": "覆盖全局天气：",
@@ -106,5 +114,5 @@
   "particlerain.SpawnOptions.cloudHeight": "云层高度",
 
   "particlerain.SpawnOptions.dustyBlockTags": "在包含这些标签的方块表面生成沙尘：",
-  "particlerain.SpawnOptions.openWiki": "在Minecraft Wiki上查看方块标签"
+  "particlerain.SpawnOptions.openWiki": "在 Minecraft Wiki 上查看方块标签"
 }
