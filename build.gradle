@@ -20,6 +20,7 @@ repositories {
     maven { url "https://maven.terraformersmc.com/" }
     maven { url "https://maven.parchmentmc.org" }
     maven { url "https://maven.isxander.dev/releases" }
+    maven { url "https://api.modrinth.com/maven" }
 }
 
 dependencies {
@@ -39,6 +40,9 @@ dependencies {
 
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricapi_version}"
+
+    //sodium
+    modCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
 }
 
 processResources {

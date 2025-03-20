@@ -3,18 +3,20 @@
   "minVersion": "0.8",
   "package": "pigcart.particlerain.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "DripParticleMixin",
-    "RegistrySyncManagerMixin",
-    "SpriteLoaderMixin",
-    "TextureSheetParticleMixin",
-    "WaterDropParticleMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
-    "ParticleEngineMixin",
-    "WeatherEffectRendererMixin"
+    "fabric.RegistrySyncManagerMixin",
+    "tint.DripParticleMixin",
+    "tint.TextureSheetParticleMixin",
+    "tint.WaterDropParticleMixin",
+    "render.ParticleEngineMixin",
+    "render.SpriteLoaderMixin",
+    "render.WeatherEffectRendererMixin",
+    "render.puddle.SectionCompilerMixin",
+    "render.puddle.LiquidBlockRendererMixin",
+    "render.puddle.sodium.ChunkBuilderMeshingTaskMixin",
+    "render.puddle.sodium.DefaultFluidRendererMixin"
   ]
 }

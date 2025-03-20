@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin;
+package pigcart.particlerain.mixin.fabric;
 
 import net.fabricmc.fabric.impl.registry.sync.RegistrySyncManager;
 import net.minecraft.server.MinecraftServer;

@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin;
+package pigcart.particlerain.mixin.render;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.particle.ParticleEngine;
@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.particle.render.FogRenderType;
 
 import java.util.List;
@@ -30,5 +31,10 @@ public class ParticleEngineMixin {
         RENDER_ORDER = ImmutableList.<ParticleRenderType>builder().addAll(RENDER_ORDER)
                 .add(FogRenderType.INSTANCE)
                 .build();
+    }
+
+    @Inject(at = @At("HEAD"), method = "clearParticles")
+    private void clearParticles(CallbackInfo ci) {
+        WeatherParticleManager.resetParticleCount();
     }
 }

@@ -1,5 +1,6 @@
 package pigcart.particlerain;
 
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -8,23 +9,27 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
-public final class WeatherParticleSpawner {
+public final class WeatherParticleManager {
 
+    public static int particleCount;
+    public static int fogCount;
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
     private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
-        if (ParticleRainClient.particleCount > CONFIG.perf.maxParticleAmount) {
+        if (particleCount > CONFIG.perf.maxParticleAmount) {
             return;
         } else if (!CONFIG.spawn.canSpawnAboveClouds && y > CONFIG.spawn.cloudHeight) {
             y = CONFIG.spawn.cloudHeight;
@@ -36,9 +41,9 @@ public final class WeatherParticleSpawner {
         Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : biome.value().getPrecipitationAt(getPrecipitationFromBlockPos,level.getSeaLevel());
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
         if (precipitation == Precipitation.RAIN) {
-            if (CONFIG.effect.doGroundFogParticles && ParticleRainClient.fogCount < CONFIG.groundFog.density) {
+            if (CONFIG.effect.doGroundFogParticles && fogCount < CONFIG.groundFog.density) {
                 int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
-                if (height <= CONFIG.groundFog.spawnHeight && height >= CONFIG.groundFog.spawnHeight - 4 && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
+                if (height <= CONFIG.groundFog.maxSpawnHeight && height >= CONFIG.groundFog.minSpawnHeight && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
                     level.addParticle(ParticleRainClient.GROUND_FOG, x, height + level.random.nextFloat(), z, 0, 0, 0);
                 }
             }
@@ -64,7 +69,7 @@ public final class WeatherParticleSpawner {
         }
     }
 
-    public static void update(ClientLevel level, Entity entity, float partialTicks) {
+    public static void tick(ClientLevel level, Entity entity) {
         //TODO: twilight fog and skittering sand when not raining
         if (level.isRaining() || CONFIG.compat.alwaysRaining) {
             int density;
@@ -72,12 +77,12 @@ public final class WeatherParticleSpawner {
                 if (CONFIG.compat.alwaysRaining) {
                     density = CONFIG.perf.particleStormDensity;
                 } else {
-                    density = (int) (CONFIG.perf.particleStormDensity * level.getRainLevel(partialTicks));
+                    density = (int) (CONFIG.perf.particleStormDensity * level.getRainLevel(0));
                 }
             else if (CONFIG.compat.alwaysRaining) {
                 density = CONFIG.perf.particleDensity;
             } else {
-                density = (int) (CONFIG.perf.particleDensity * level.getRainLevel(partialTicks));
+                density = (int) (CONFIG.perf.particleDensity * level.getRainLevel(0));
             }
 
             //TODO: calculate vertical velocity and use it to switch which hemisphere is spawning particles
@@ -131,5 +136,14 @@ public final class WeatherParticleSpawner {
             }
         }
         return precipitation == Precipitation.NONE && matchesTag && biome.value().getBaseTemperature() > 0.25;
+    }
+
+    public static boolean canHostStreaks(BlockState state) {
+        return state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(ConventionalBlockTags.GLASS_PANES);
+    }
+
+    public static void resetParticleCount() {
+        particleCount = 0;
+        fogCount = 0;
     }
 }

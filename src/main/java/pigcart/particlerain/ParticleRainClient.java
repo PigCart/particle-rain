@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -42,13 +43,13 @@ public class ParticleRainClient implements ClientModInitializer {
     //TODO: vertical fog
     //TODO: light rays???? under the ocean surface
 
+    //public static Block PUDDLE;
+    //public static final ResourceKey<Block> PUDDLE_KEY = ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "puddle"));
+
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
-
-    public static int particleCount;
-    public static int fogCount;
 
     @Override
     public void onInitializeClient() {
@@ -62,6 +63,8 @@ public class ParticleRainClient implements ClientModInitializer {
         GROUND_FOG = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "ground_fog"), FabricParticleTypes.simple(true));
         RIPPLE = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "ripple"), FabricParticleTypes.simple(true));
         STREAK = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "streak"), FabricParticleTypes.simple(true));
+
+        //PUDDLE = Registry.register(BuiltInRegistries.BLOCK, PUDDLE_KEY, new PuddleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).setId(PUDDLE_KEY)));
 
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
@@ -83,19 +86,26 @@ public class ParticleRainClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
             LiteralArgumentBuilder<FabricClientCommandSource> cmd = ClientCommandManager.literal(ParticleRainClient.MOD_ID)
                     .executes(ctx -> {
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", particleCount, ModConfig.CONFIG.perf.maxParticleAmount)));
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", fogCount, ModConfig.CONFIG.groundFog.density)));
-                        BlockPos pos = BlockPos.containing(ctx.getSource().getPlayer().position());
-                        final Holder<Biome> holder = Minecraft.getInstance().level.getBiome(pos);
+                        ClientLevel level = Minecraft.getInstance().level;
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Particle count: %d/%d", WeatherParticleManager.particleCount, ModConfig.CONFIG.perf.maxParticleAmount)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Fog density: %d/%d", WeatherParticleManager.fogCount, ModConfig.CONFIG.groundFog.density)));
+                        BlockPos blockPos = BlockPos.containing(ctx.getSource().getPlayer().position());
+                        final Holder<Biome> holder = level.getBiome(blockPos);
                         String biomeStr = holder.unwrap().map((resourceKey) -> {
                             return resourceKey.location().toString();
                         }, (biome) -> {
                             return "[unregistered " + String.valueOf(biome) + "]";
                         });
                         ctx.getSource().sendFeedback(Component.literal(String.format("Biome: " + biomeStr)));
-                        Biome.Precipitation precipitation = holder.value().getPrecipitationAt(pos, ctx.getSource().getPlayer().level().getSeaLevel());
+                        Biome.Precipitation precipitation = holder.value().getPrecipitationAt(blockPos, level.getSeaLevel());
                         ctx.getSource().sendFeedback(Component.literal(String.format("Precipitation: " + precipitation)));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Base Temp: " + holder.value().getBaseTemperature())));
+                        //WeatherBlockSpawner.tick(level);
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Block has puddle: " + WeatherBlockManager.hasPuddle(level, blockPos.below()))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Block is solid: " + level.getBlockState(blockPos.below()).isCollisionShapeFullBlock(level, blockPos.below()))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Block is exposed: " + WeatherBlockManager.isExposed(level, blockPos))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Puddle target level: " + WeatherBlockManager.puddleTargetLevel)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("Puddle threshold: " + WeatherBlockManager.puddleThreshold)));
                         return 0;
                     });
             dispatcher.register(cmd);
@@ -103,14 +113,13 @@ public class ParticleRainClient implements ClientModInitializer {
     }
 
     private void onJoin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
-        particleCount = 0;
-        fogCount = 0;
+        WeatherBlockManager.puddleThreshold = 0;
     }
 
     private void onTick(Minecraft client) {
         if (!client.isPaused() && client.level != null && client.getCameraEntity() != null) {
-            WeatherParticleSpawner.update(client.level, client.getCameraEntity(), client.getFrameTimeNs());
-            //System.out.println(config.compat.biomeTint);
+            WeatherParticleManager.tick(client.level, client.getCameraEntity());
+            WeatherBlockManager.tick(client.level);
         }
     }
 

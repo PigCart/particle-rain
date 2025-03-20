@@ -1,4 +1,4 @@
-package pigcart.particlerain.mixin;
+package pigcart.particlerain.mixin.tint;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRainClient;
-import pigcart.particlerain.Util;
+import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.ModConfig;
 
 @Mixin(WaterDropParticle.class)
@@ -26,12 +26,13 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
         if (ModConfig.CONFIG.compat.biomeTint) {
             try {
                 this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "splash" + random.nextInt(4))));
-            } catch (Exception e) {
-                // guessing that this is caused by servers sending particle events while the client is reloading?
-                // causing the atlas to be accessed before its initialized??
-                throw new RuntimeException(e);
+            } catch (IllegalStateException e) {
+                // "Tried to lookup sprite, but atlas is not initialized" no idea what causes this. seems random. can't reproduce.
+                // happens in the getSprite call when `this.texturesByName.getOrDefault(name, this.missingSprite)` returns null
+                System.out.println(e.getMessage());
+                this.remove();
             }
-            Util.applyWaterTint((TextureSheetParticle) (Object) this, this.level, BlockPos.containing(x, y, z));
+            TextureUtil.applyWaterTint((TextureSheetParticle) (Object) this, this.level, BlockPos.containing(x, y, z));
         }
     }
 }

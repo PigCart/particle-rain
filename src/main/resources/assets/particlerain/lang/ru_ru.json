@@ -12,6 +12,7 @@
   "particlerain.PerformanceOptions.particleStormDensity.description": "Количество попыток появления погодных частиц за один такт во время штормов",
   "particlerain.PerformanceOptions.particleRadius": "Радиус частиц",
   "particlerain.PerformanceOptions.particleRadius.description": "За сколько блоков от камеры будут появляться частицы",
+  "particlerain.PerformanceOptions.fogParticleRadius": "Дальность отрисовки частиц тумана",
 
   "particlerain.EffectOptions": "Включение или отключение отдельных эффектов",
   "particlerain.EffectOptions.description": "Включайте или выключайте отдельные эффекты.",
@@ -84,7 +85,8 @@
   "particlerain.ParticleOptions.resolution": "Разрешение",
   "particlerain.ParticleOptions.spawnOnGround": "Появление на земле",
   "particlerain.ParticleOptions.spawnOnGround.description": "Заставляет пыль подниматься с земли, а не падать с неба.",
-  "particlerain.ParticleOptions.spawnHeight": "Высота появления",
+  "particlerain.ParticleOptions.maxSpawnHeight": "Максимальная высота появления",
+  "particlerain.ParticleOptions.minSpawnHeight": "Минимальная высота появления",
   "particlerain.ParticleOptions.spawnTime": "Время появления",
   "particlerain.ParticleOptions.impactEffectAmount": "Количество возникающих ударных эффектов",
   "particlerain.ParticleOptions.impactEffectAmount.description": "Контролирует количество ряби, брызг или дыма, которые появляются при столкновении с блоком",
@@ -96,6 +98,12 @@
   "particlerain.RippleOptions": "Параметры частиц ряби",
   "particlerain.FogOptions": "Настройки частиц тумана",
   "particlerain.GroundFogOptions": "Настройки частиц приземного тумана",
+
+  "particlerain.PuddleOptions": "Настройки луж",
+  "particlerain.PuddleOptions.updateDelay": "Задержка между обновлениями луж",
+  "particlerain.PuddleOptions.updateStep": "Значение для обновления покрытия луж на",
+  "particlerain.PuddleOptions.rainLevel": "Покрытие во время дождя",
+  "particlerain.PuddleOptions.stormLevel": "Покрытие во время штормов",
 
   "particlerain.category.SpawnOptions": "Редактировать условия появления",
   "particlerain.SpawnOptions.doOverrideWeather": "Переопределение глобальных погодных эффектов",

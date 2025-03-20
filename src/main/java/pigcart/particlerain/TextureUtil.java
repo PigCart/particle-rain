@@ -2,7 +2,6 @@ package pigcart.particlerain;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.IntUnaryOperator;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TextureSheetParticle;
@@ -13,9 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceMetadata;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Math;
 import pigcart.particlerain.config.ModConfig;
 
@@ -24,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class Util {
+public class TextureUtil {
 
     public static IntUnaryOperator desaturateOperation = (int rgba) -> {
         Color col = new Color(rgba, true);
@@ -127,9 +124,5 @@ public class Util {
         img.setPixel(xc-y, yc+x, col);
         img.setPixel(xc+y, yc-x, col);
         img.setPixel(xc-y, yc-x, col);
-    }
-
-    public static boolean canHostStreaks(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(ConventionalBlockTags.GLASS_PANES);
     }
 }

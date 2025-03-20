@@ -24,6 +24,7 @@ public class ModConfigScreen {
                         .group(getGroup(ModConfig.DEFAULT.perf, ModConfig.CONFIG.perf))
                         .group(getGroup(ModConfig.DEFAULT.effect, ModConfig.CONFIG.effect))
                         .group(getGroup(ModConfig.DEFAULT.sound, ModConfig.CONFIG.sound))
+                        .group(getGroup(ModConfig.DEFAULT.puddle, ModConfig.CONFIG.puddle))
                         .group(getGroup(ModConfig.DEFAULT.compat, ModConfig.CONFIG.compat))
                         .build())
                 .category(ConfigCategory.createBuilder()

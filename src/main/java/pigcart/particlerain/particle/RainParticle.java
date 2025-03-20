@@ -28,7 +28,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.*;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
-import pigcart.particlerain.Util;
+import pigcart.particlerain.TextureUtil;
+import pigcart.particlerain.WeatherParticleManager;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
@@ -37,7 +38,7 @@ public class RainParticle extends WeatherParticle {
     protected RainParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z);
 
-        if (CONFIG.compat.biomeTint) Util.applyWaterTint(this, level, this.pos);
+        if (CONFIG.compat.biomeTint) TextureUtil.applyWaterTint(this, level, this.pos);
 
         this.quadSize = CONFIG.rain.size;
         this.gravity = CONFIG.rain.gravity;
@@ -112,7 +113,7 @@ public class RainParticle extends WeatherParticle {
             BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
             if (hit.getType().equals(HitResult.Type.BLOCK)) {
                 if (CONFIG.effect.doStreakParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < CONFIG.perf.particleRadius - (CONFIG.perf.particleRadius / 2.0)) {
-                    if (Util.canHostStreaks(level.getBlockState(hit.getBlockPos()))) {
+                    if (WeatherParticleManager.canHostStreaks(level.getBlockState(hit.getBlockPos()))) {
                         Minecraft.getInstance().particleEngine.createParticle(ParticleRainClient.STREAK, this.x, this.y, this.z, hit.getDirection().get2DDataValue(), 0, 0);
                         Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.RAIN, this.x, this.y, this.z, 0, 0, 0);
                     }

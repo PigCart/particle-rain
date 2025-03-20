@@ -55,6 +55,7 @@ public class ModConfig {
         public int particleDensity = 100;
         public int particleStormDensity = 200;
         public int particleRadius = 25;
+        public int fogParticleRadius = 90;
     }
 
     public EffectOptions effect = new EffectOptions();
@@ -69,7 +70,7 @@ public class ModConfig {
         public boolean doShrubParticles = true;
         public boolean doFogParticles = false;
         public boolean doGroundFogParticles = true;
-        //public boolean doPuddles = true;
+        public boolean doPuddles = true;
     }
 
     public SoundOptions sound = new SoundOptions();
@@ -174,8 +175,16 @@ public class ModConfig {
     @OverrideName(newName = "ParticleOptions")
     public static class GroundFogOptions {
         public int density = 20;
-        public int spawnHeight = 64;
+        public int maxSpawnHeight = 64;
+        public int minSpawnHeight = 60;
         public float size = 8F;
+    }
+    public PuddleOptions puddle = new PuddleOptions();
+    public static class PuddleOptions {
+        public int updateDelay = 100;
+        public int updateStep = 5;
+        public int rainLevel = 90;
+        public int stormLevel = 130;
     }
 
     static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();

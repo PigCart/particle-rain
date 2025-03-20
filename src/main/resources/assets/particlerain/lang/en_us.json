@@ -12,6 +12,7 @@
   "particlerain.PerformanceOptions.particleStormDensity.description": "The number of times weather particles will try to spawn per tick during storms.",
   "particlerain.PerformanceOptions.particleRadius": "Particle render distance",
   "particlerain.PerformanceOptions.particleRadius.description": "How many blocks away from the camera particles will spawn.",
+  "particlerain.PerformanceOptions.fogParticleRadius": "Fog particle render distance",
 
   "particlerain.EffectOptions": "Effect Toggles",
   "particlerain.EffectOptions.description": "Turn individual effects on or off.",
@@ -84,7 +85,8 @@
   "particlerain.ParticleOptions.resolution": "Resolution",
   "particlerain.ParticleOptions.spawnOnGround": "Spawn on ground",
   "particlerain.ParticleOptions.spawnOnGround.description": "Makes dust blow up from the ground instead of falling from the sky.",
-  "particlerain.ParticleOptions.spawnHeight": "Spawn height",
+  "particlerain.ParticleOptions.maxSpawnHeight": "Maximum spawn height",
+  "particlerain.ParticleOptions.minSpawnHeight": "Minimum spawn height",
   "particlerain.ParticleOptions.spawnTime": "Spawn time",
   "particlerain.ParticleOptions.impactEffectAmount": "Amount of impact effects to spawn",
   "particlerain.ParticleOptions.impactEffectAmount.description": "Controls the amount of ripples, splashes, or smoke that appears when colliding with a block",
@@ -97,13 +99,19 @@
   "particlerain.FogOptions": "Fog Particle Options",
   "particlerain.GroundFogOptions": "Ground Fog Particle Options",
 
+  "particlerain.PuddleOptions": "Puddle Options",
+  "particlerain.PuddleOptions.updateDelay": "Delay between puddle updates",
+  "particlerain.PuddleOptions.updateStep": "Amount to update puddle coverage by",
+  "particlerain.PuddleOptions.rainLevel": "Coverage during rain",
+  "particlerain.PuddleOptions.stormLevel": "Coverage during storms",
+
   "particlerain.category.SpawnOptions": "Edit Spawn Conditions",
   "particlerain.SpawnOptions.doOverrideWeather": "Override global weather effects",
   "particlerain.SpawnOptions.overrideWeather": "Global weather override: ",
   "particlerain.SpawnOptions.useHeightmapTemp": "Use heightmap temperature",
   "particlerain.SpawnOptions.useHeightmapTemp.description": "Prevents snow falling where it should be raining in biomes where the weather can vary by height, such as the Windswept Hills.",
   "particlerain.SpawnOptions.canSpawnAboveClouds": "Spawn weather particles above cloud height",
-  "particlerain.SpawnOptions.cloudHeight": "Cloud height",
+  "particlerain.SpawnOptions.cloudHeight": "The height above which particles should not spawn",
 
   "particlerain.SpawnOptions.dustyBlockTags": "Spawn dust on blocks tagged as：",
   "particlerain.SpawnOptions.openWiki": "View block tags on Minecraft Wiki"
