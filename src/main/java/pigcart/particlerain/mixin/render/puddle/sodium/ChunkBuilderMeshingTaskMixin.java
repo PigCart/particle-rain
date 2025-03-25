@@ -19,6 +19,7 @@ import pigcart.particlerain.config.ModConfig;
 @Mixin(ChunkBuilderMeshingTask.class)
 public class ChunkBuilderMeshingTaskMixin {
 
+    // insert a fake water block if the blockpos has a puddle
     @ModifyVariable(method = "execute(Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildContext;Lnet/caffeinemc/mods/sodium/client/util/task/CancellationToken;)Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildOutput;",
         at = @At(value = "STORE"), remap = false)
     private FluidState getFluidState(FluidState value, @Local(ordinal = 0) BlockPos.MutableBlockPos blockPos) {
@@ -28,12 +29,12 @@ public class ChunkBuilderMeshingTaskMixin {
         return value;
     }
 
+    // disable skipping of air blocks (sorry) so that puddles can be calculated
     @WrapOperation(method = "execute(Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildContext;Lnet/caffeinemc/mods/sodium/client/util/task/CancellationToken;)Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildOutput;",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"))
     private boolean isAir(BlockState instance, Operation<Boolean> original) {
         if (ModConfig.CONFIG.effect.doPuddles) {
             return false;
-            // sorry. its probably fine.
         } else {
             return original.call(instance);
         }
