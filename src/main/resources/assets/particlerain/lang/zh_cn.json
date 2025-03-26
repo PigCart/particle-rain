@@ -33,7 +33,17 @@
   "particlerain.EffectOptions.doFogParticles": "生成雾气粒子",
   "particlerain.EffectOptions.doFogParticles.description": "随着雨落下的云雾。此效果将会造成严重卡顿！",
   "particlerain.EffectOptions.doGroundFogParticles": "生成低雾粒子",
+  "particlerain.EffectOptions.doHailParticles": "生成冰雹粒子",
+  "particlerain.EffectOptions.doHailParticles.description": "在寒冷生物群系将有概率取代降雨粒子生成",
+  "particlerain.EffectOptions.doSleetParticles": "生成雨夹雪粒子",
+  "particlerain.EffectOptions.doSleetParticles.description": "在积雪生物群系边界将取代降雨粒子生成",
   "particlerain.EffectOptions.doPuddles": "水坑",
+
+  "particlerain.PuddleOptions": "水坑选项",
+  "particlerain.PuddleOptions.updateDelay": "水坑刷新延迟",
+  "particlerain.PuddleOptions.updateStep": "水坑覆盖范围更新量",
+  "particlerain.PuddleOptions.rainLevel": "在降雨时覆盖",
+  "particlerain.PuddleOptions.stormLevel": "在雷暴时覆盖",
 
   "particlerain.SoundOptions": "声音选项",
   "particlerain.SoundOptions.doMaterialSounds": "播放对应材质声",
@@ -59,7 +69,7 @@
   "particlerain.CompatibilityOptions.syncRegistry": "同步登录（区域）",
   "particlerain.CompatibilityOptions.syncRegistry.description": "当玩家无法连接到你的局域网游戏时请关闭此选项",
 
-  "particlerain.category.effects": "粒子选项",
+  "particlerain.category.effects": "编辑粒子选项",
 
   "particlerain.ParticleOptions.density": "相对密度",
   "particlerain.ParticleOptions.density.description": "相对于整个粒子密度，粒子产生的频率。",
@@ -99,19 +109,13 @@
   "particlerain.FogOptions": "雾粒子选项",
   "particlerain.GroundFogOptions": "低雾粒子选项",
 
-  "particlerain.PuddleOptions": "水坑粒子选项",
-  "particlerain.PuddleOptions.updateDelay": "水坑刷新延迟",
-  "particlerain.PuddleOptions.updateStep": "水坑覆盖范围更新量",
-  "particlerain.PuddleOptions.rainLevel": "在降雨时覆盖",
-  "particlerain.PuddleOptions.stormLevel": "在雷暴时覆盖",
-
   "particlerain.category.SpawnOptions": "编辑生成条件",
-  "particlerain.SpawnOptions.doOverrideWeather": "覆盖全局天气效果",
-  "particlerain.SpawnOptions.overrideWeather": "覆盖全局天气：",
+  "particlerain.SpawnOptions.doOverrideWeather": "全局天气效果覆盖",
+  "particlerain.SpawnOptions.overrideWeather": "全局天气类型：",
   "particlerain.SpawnOptions.useHeightmapTemp": "使用高度图的温度属性",
   "particlerain.SpawnOptions.useHeightmapTemp.description": "在天气会因高度而变化的生物群系中，例如在风袭丘陵生物群系，可防止本该下雨的地方下雪。",
   "particlerain.SpawnOptions.canSpawnAboveClouds": "在云层高度上方生成天气粒子。",
-  "particlerain.SpawnOptions.cloudHeight": "云层高度",
+  "particlerain.SpawnOptions.cloudHeight": "在此高度以上的天气粒子将不会生成",
 
   "particlerain.SpawnOptions.dustyBlockTags": "在包含这些标签的方块表面生成沙尘：",
   "particlerain.SpawnOptions.openWiki": "在 Minecraft Wiki 上查看方块标签"
