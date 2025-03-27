@@ -1,5 +1,8 @@
 package pigcart.particlerain.mixin.render.puddle.sodium;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.DefaultFluidRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,20 +19,16 @@ import pigcart.particlerain.config.ModConfig;
 @Mixin(DefaultFluidRenderer.class)
 public class DefaultFluidRendererMixin {
 
-    @Inject(method = "fluidHeight", at = @At("HEAD"), cancellable = true)
-    private void fluidHeight(BlockAndTintGetter world, Fluid fluid, BlockPos blockPos, Direction direction, CallbackInfoReturnable<Float> cir) {
-        if (ModConfig.CONFIG.effect.doPuddles && world.getFluidState(blockPos).isEmpty() || (world.getFluidState(blockPos.relative(direction.getOpposite())).isEmpty() && direction != Direction.UP)) {
-            cir.setReturnValue(0.02F);
+    // flatten puddle
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/pipeline/DefaultFluidRenderer;fluidHeight(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)F"))
+    private float fluidHeight(DefaultFluidRenderer instance, BlockAndTintGetter world, Fluid fluid, BlockPos blockPos, Direction direction, Operation<Float> original, @Local(ordinal = 0, argsOnly = true) BlockPos renderBlockPos) {
+        if (ModConfig.CONFIG.effect.doPuddles && world.getFluidState(renderBlockPos).isEmpty()) {
+            return 0.02F;
         }
+        return original.call(instance, world, fluid, blockPos, direction);
     }
 
-    @Inject(method = "fluidCornerHeight", at = @At("HEAD"), cancellable = true)
-    private void fluidCornerHeight(BlockAndTintGetter world, Fluid fluid, float fluidHeight, float fluidHeightX, float fluidHeightY, BlockPos blockPos, CallbackInfoReturnable<Float> cir) {
-        if (ModConfig.CONFIG.effect.doPuddles && fluidHeight == 0.02F) {
-            cir.setReturnValue(0.02F);
-        }
-    }
-
+    // remove faces between puddles
     @Inject(method = "isFullBlockFluidOccluded", at = @At("HEAD"), cancellable = true)
     private void isFullBlockFluidOccluded(BlockAndTintGetter world, BlockPos pos, Direction dir, BlockState blockState, FluidState fluid, CallbackInfoReturnable<Boolean> cir) {
         if (ModConfig.CONFIG.effect.doPuddles && world.getFluidState(pos).isEmpty() && dir != Direction.UP) {

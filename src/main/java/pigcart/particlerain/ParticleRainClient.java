@@ -101,11 +101,12 @@ public class ParticleRainClient implements ClientModInitializer {
                         ctx.getSource().sendFeedback(Component.literal(String.format("Precipitation: " + precipitation)));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Base Temp: " + holder.value().getBaseTemperature())));
                         //WeatherBlockSpawner.tick(level);
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Block has puddle: " + WeatherBlockManager.hasPuddle(level, blockPos.below()))));
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Block is solid: " + level.getBlockState(blockPos.below()).isCollisionShapeFullBlock(level, blockPos.below()))));
-                        ctx.getSource().sendFeedback(Component.literal(String.format("Block is exposed: " + WeatherBlockManager.isExposed(level, blockPos))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("has puddle: " + WeatherBlockManager.hasPuddle(level, blockPos))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("standing on full block: " + level.getBlockState(blockPos.below()).isCollisionShapeFullBlock(level, blockPos.below()))));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("is exposed: " + WeatherBlockManager.isExposed(level, blockPos))));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Puddle target level: " + WeatherBlockManager.puddleTargetLevel)));
                         ctx.getSource().sendFeedback(Component.literal(String.format("Puddle threshold: " + WeatherBlockManager.puddleThreshold)));
+                        ctx.getSource().sendFeedback(Component.literal(String.format("fluid amount: " + level.getFluidState(blockPos).getAmount())));
                         return 0;
                     });
             dispatcher.register(cmd);

@@ -7,18 +7,6 @@
   "authors": [
     "PigCart"
   ],
-  "contributors": [
-    "mpustovoi",
-    "yichifauzi",
-    "good7777865",
-    "Ocelot5836",
-    "K0-RR",
-    "Sasaki-Akari",
-    "Leclowndu93150",
-    "Tarteroycc",
-    "drshockz",
-    "9gv"
-  ],
   "contact": {
     "sources": "https://github.com/PigCart/particle-rain",
     "issues": "https://github.com/PigCart/particle-rain/issues",
@@ -43,7 +31,7 @@
     "fabricloader": ">=0.12.8",
     "fabric-api": "*",
     "yet_another_config_lib_v3": "*",
-    "minecraft": ">=1.21.4"
+    "minecraft": "1.21.4"
   },
   "custom": {
     "modmenu": {
