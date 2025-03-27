@@ -16,6 +16,7 @@ import pigcart.particlerain.config.ModConfig;
 @Mixin(SectionCompiler.class)
 public class SectionCompilerMixin {
 
+    // insert a fake water block if the blockpos has a puddle
     @ModifyVariable(method = "compile", at = @At(value = "STORE"))
     private FluidState getFluidState(FluidState value, @Local(ordinal = 2) BlockPos blockPos3) {
         if (ModConfig.CONFIG.effect.doPuddles && WeatherBlockManager.hasPuddle(Minecraft.getInstance().level, blockPos3)) {

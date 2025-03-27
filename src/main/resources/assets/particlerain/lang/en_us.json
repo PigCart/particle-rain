@@ -33,6 +33,10 @@
   "particlerain.EffectOptions.doFogParticles": "Spawn fog particles",
   "particlerain.EffectOptions.doFogParticles.description": "Clouds of fog that drift down with the rain. This effect can be quite laggy!",
   "particlerain.EffectOptions.doGroundFogParticles": "Spawn ground fog particles",
+  "particlerain.EffectOptions.doHailParticles": "Spawn Hail Particles",
+  "particlerain.EffectOptions.doHailParticles.description": "Has a chance to replace rain in cold temperatures.",
+  "particlerain.EffectOptions.doSleetParticles": "Spawn Sleet Particles",
+  "particlerain.EffectOptions.doSleetParticles.description": "Replaces rain at the border of snowy biomes.",
   "particlerain.EffectOptions.doPuddles": "Puddles",
 
   "particlerain.SoundOptions": "Sound Toggles",
@@ -41,6 +45,12 @@
   "particlerain.SoundOptions.doRainSounds": "Play rain sounds",
   "particlerain.SoundOptions.doSnowSounds": "Play snow sounds",
   "particlerain.SoundOptions.doSandSounds": "Play wind sounds",
+
+  "particlerain.PuddleOptions": "Puddle Options",
+  "particlerain.PuddleOptions.updateDelay": "Delay between puddle updates",
+  "particlerain.PuddleOptions.updateStep": "Amount to update puddle coverage by",
+  "particlerain.PuddleOptions.rainLevel": "Coverage during rain",
+  "particlerain.PuddleOptions.stormLevel": "Coverage during storms",
 
   "particlerain.CompatibilityOptions": "Compatibility Options",
   "particlerain.CompatibilityOptions.description": "",
@@ -98,12 +108,6 @@
   "particlerain.RippleOptions": "Ripple Particle Options",
   "particlerain.FogOptions": "Fog Particle Options",
   "particlerain.GroundFogOptions": "Ground Fog Particle Options",
-
-  "particlerain.PuddleOptions": "Puddle Options",
-  "particlerain.PuddleOptions.updateDelay": "Delay between puddle updates",
-  "particlerain.PuddleOptions.updateStep": "Amount to update puddle coverage by",
-  "particlerain.PuddleOptions.rainLevel": "Coverage during rain",
-  "particlerain.PuddleOptions.stormLevel": "Coverage during storms",
 
   "particlerain.category.SpawnOptions": "Edit Spawn Conditions",
   "particlerain.SpawnOptions.doOverrideWeather": "Override global weather effects",
