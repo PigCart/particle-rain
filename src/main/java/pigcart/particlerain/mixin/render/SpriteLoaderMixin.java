@@ -50,7 +50,7 @@ public abstract class SpriteLoaderMixin {
             try {
                 rainImage = TextureUtil.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/rain.png"));
                 snowImage = TextureUtil.loadTexture(ResourceLocation.withDefaultNamespace("textures/environment/snow.png"));
-                if (ModConfig.CONFIG.compat.biomeTint) rainImage.applyToAllPixels(TextureUtil.desaturateOperation);
+                if (ModConfig.CONFIG.compat.biomeTint) TextureUtil.applyToAllPixels(TextureUtil.desaturateOperation, rainImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -73,7 +73,7 @@ public abstract class SpriteLoaderMixin {
                     NativeImage splashImage = null;
                     try {
                         splashImage = TextureUtil.loadTexture(ResourceLocation.withDefaultNamespace("textures/particle/splash_" + i + ".png"));
-                        splashImage.applyToAllPixels(TextureUtil.desaturateOperation);
+                        TextureUtil.applyToAllPixels(TextureUtil.desaturateOperation, splashImage);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

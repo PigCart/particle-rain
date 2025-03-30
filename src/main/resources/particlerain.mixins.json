@@ -7,16 +7,18 @@
     "defaultRequire": 1
   },
   "client": [
+    "access.NativeImageAccessor",
+    "access.ParticleEngineAccessor",
     "fabric.RegistrySyncManagerMixin",
-    "tint.DripParticleMixin",
-    "tint.TextureSheetParticleMixin",
-    "tint.WaterDropParticleMixin",
     "render.ParticleEngineMixin",
     "render.SpriteLoaderMixin",
     "render.WeatherEffectRendererMixin",
-    "render.puddle.SectionCompilerMixin",
     "render.puddle.LiquidBlockRendererMixin",
+    "render.puddle.SectionCompilerMixin",
     "render.puddle.sodium.ChunkBuilderMeshingTaskMixin",
-    "render.puddle.sodium.DefaultFluidRendererMixin"
+    "render.puddle.sodium.DefaultFluidRendererMixin",
+    "tint.DripParticleMixin",
+    "tint.TextureSheetParticleMixin",
+    "tint.WaterDropParticleMixin"
   ]
 }

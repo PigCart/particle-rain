@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.9.+'
+    id 'fabric-loom' version '1.10.+'
     id 'maven-publish'
 }
 
@@ -9,10 +9,6 @@ targetCompatibility = JavaVersion.VERSION_21
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
-
-loom {
-    accessWidenerPath = file("src/main/resources/particlerain.accesswidener")
-}
 
 repositories {
     mavenCentral()
