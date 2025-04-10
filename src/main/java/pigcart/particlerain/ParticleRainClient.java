@@ -1,7 +1,6 @@
 package pigcart.particlerain;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -25,7 +24,7 @@ import net.minecraft.world.level.biome.Biome;
 import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.particle.*;
 
-public class ParticleRainClient implements ClientModInitializer {
+public class ParticleRainClient {
 
     public static final String MOD_ID = "particlerain";
 
@@ -54,8 +53,7 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
 
-    @Override
-    public void onInitializeClient() {
+    public static void onInitializeClient() {
         ModConfig.loadConfig();
         RAIN = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "rain"), FabricParticleTypes.simple(true));
         SNOW = Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "snow"), FabricParticleTypes.simple(true));
@@ -84,8 +82,8 @@ public class ParticleRainClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(RIPPLE, RippleParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(STREAK, StreakParticle.DefaultFactory::new);
 
-        ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
-        ClientPlayConnectionEvents.JOIN.register(this::onJoin);
+        ClientTickEvents.END_CLIENT_TICK.register(ParticleRainClient::onTick);
+        ClientPlayConnectionEvents.JOIN.register(ParticleRainClient::onJoin);
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
             LiteralArgumentBuilder<FabricClientCommandSource> cmd = ClientCommandManager.literal(ParticleRainClient.MOD_ID)
                     .executes(ctx -> {
@@ -116,11 +114,11 @@ public class ParticleRainClient implements ClientModInitializer {
         });
     }
 
-    private void onJoin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
+    private static void onJoin(ClientPacketListener clientPacketListener, PacketSender packetSender, Minecraft minecraft) {
         WeatherBlockManager.puddleThreshold = 0;
     }
 
-    private void onTick(Minecraft client) {
+    private static void onTick(Minecraft client) {
         if (!client.isPaused() && client.level != null && client.getCameraEntity() != null) {
             WeatherParticleManager.tick(client.level, client.getCameraEntity());
             WeatherBlockManager.tick(client.level);

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "particlerain",
-  "version": "${version}",
-  "name": "Particle Rain",
-  "description": "Replaces rain with a particle effect.",
+  "id": "${mod_id}",
+  "name": "${mod_name}",
+  "version": "${mod_version}",
+  "description": "${mod_description}",
   "authors": [
     "PigCart"
   ],
@@ -17,15 +17,12 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "pigcart.particlerain.ParticleRainClient"
+      "pigcart.particlerain.loaders.fabric.FabricEntrypoint"
     ],
     "modmenu": [
-      "pigcart.particlerain.config.ModMenuIntegration"
+      "pigcart.particlerain.config.ModMenuEntrypoint"
     ]
   },
-  "mixins": [
-    "particlerain.mixins.json"
-  ],
   "depends": {
     "fabricloader": ">=0.12.8",
     "fabric-api": "*",
