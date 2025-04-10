@@ -1,7 +1,5 @@
 package pigcart.particlerain.particle;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -59,7 +57,6 @@ public class SnowParticle extends WeatherParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    @Environment(EnvType.CLIENT)
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
         public DefaultFactory(SpriteSet provider) {

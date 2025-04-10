@@ -1,8 +1,6 @@
 package pigcart.particlerain.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -64,7 +62,6 @@ public class RippleParticle extends WeatherParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    @Environment(EnvType.CLIENT)
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
         public DefaultFactory(SpriteSet provider) {

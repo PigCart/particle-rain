@@ -9,7 +9,6 @@
   "client": [
     "access.NativeImageAccessor",
     "access.ParticleEngineAccessor",
-    "fabric.RegistrySyncManagerMixin",
     "render.ParticleEngineMixin",
     "render.SpriteLoaderMixin",
     "render.WeatherEffectRendererMixin",

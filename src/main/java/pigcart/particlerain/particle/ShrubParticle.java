@@ -1,8 +1,6 @@
 package pigcart.particlerain.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -104,7 +102,6 @@ public class ShrubParticle extends WeatherParticle {
         this.renderRotatedQuad(vertexConsumer, quat2, x, y, z, tickPercentage);
     }
 
-    @Environment(EnvType.CLIENT)
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
         public DefaultFactory(SpriteSet provider) {

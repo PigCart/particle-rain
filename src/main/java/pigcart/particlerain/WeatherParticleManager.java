@@ -1,6 +1,5 @@
 package pigcart.particlerain;
 
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -139,7 +138,7 @@ public final class WeatherParticleManager {
     }
 
     public static boolean canHostStreaks(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(ConventionalBlockTags.GLASS_PANES);
+        return state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(ParticleRainClient.GLASS_PANES);
     }
 
     public static void resetParticleCount() {
