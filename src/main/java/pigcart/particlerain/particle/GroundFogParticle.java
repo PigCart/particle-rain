@@ -86,7 +86,7 @@ public class GroundFogParticle extends WeatherParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return FogRenderType.INSTANCE;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {

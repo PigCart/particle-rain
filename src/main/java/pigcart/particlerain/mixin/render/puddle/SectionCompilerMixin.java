@@ -17,6 +17,7 @@ import pigcart.particlerain.config.ModConfig;
 public class SectionCompilerMixin {
 
     // insert a fake water block if the blockpos has a puddle
+    //? if fabric {
     @ModifyVariable(method = "compile", at = @At(value = "STORE"))
     private FluidState getFluidState(FluidState value, @Local(ordinal = 2) BlockPos blockPos3) {
         if (ModConfig.CONFIG.effect.doPuddles && WeatherBlockManager.hasPuddle(Minecraft.getInstance().level, blockPos3)) {
@@ -24,4 +25,17 @@ public class SectionCompilerMixin {
         }
         return value;
     }
+    //?}
+
+    // neoforge modifies the compile method so seperate implementations are needed
+    //? if neoforge {
+    /*@ModifyVariable(method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;Ljava/util/List;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;",
+            at = @At(value = "STORE"))
+    private FluidState getFluidStateNeoForge(FluidState value, @Local(ordinal = 2) BlockPos blockPos3) {
+        if (ModConfig.CONFIG.effect.doPuddles && WeatherBlockManager.hasPuddle(Minecraft.getInstance().level, blockPos3)) {
+            value = Blocks.WATER.defaultBlockState().setValue(BlockStateProperties.LEVEL, 7).getFluidState();
+        }
+        return value;
+    }
+    *///?}
 }

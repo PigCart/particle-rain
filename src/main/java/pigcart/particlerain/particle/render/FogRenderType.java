@@ -5,6 +5,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.util.TriState;
@@ -15,13 +16,16 @@ public class FogRenderType {
     public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
     public static final RenderPipeline FOG_PIPELINE = null;
     //? if fabric {
-    /*public static final RenderPipeline FOG_PIPELINE = RenderPipelines.register(
+
+     okay whatever
+    FOG_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
                     .withBlend(FOG_BLEND)
                     .withDepthWrite(false).build()
     );
-    *///?}
+
+    //?}
     private static final RenderType fog = RenderType.create(
             "particlerain_fog",
             1536,

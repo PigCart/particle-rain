@@ -96,7 +96,7 @@ modstitch {
         // Most of the time you wont ever need loader specific mixins.
         // If you do, simply make the mixin file and add it like so for the respective loader:
         if (isLoom) configs.register("particlerain-fabric")
-        if (isModDevGradleRegular) configs.register("particlerain-neoforge")
+        //if (isModDevGradleRegular) configs.register("particlerain-neoforge")
     }
 }
 

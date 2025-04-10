@@ -1,5 +1,5 @@
 //? if fabric {
-/*package pigcart.particlerain.loaders.fabric;
+package pigcart.particlerain.loaders.fabric;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
@@ -13,4 +13,4 @@ public class ModMenuEntrypoint implements ModMenuApi {
     }
 
 }
-*///?}
+//?}

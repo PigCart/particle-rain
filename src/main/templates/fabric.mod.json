@@ -20,7 +20,7 @@
       "pigcart.particlerain.loaders.fabric.FabricEntrypoint"
     ],
     "modmenu": [
-      "pigcart.particlerain.config.ModMenuEntrypoint"
+      "pigcart.particlerain.loaders.fabric.ModMenuEntrypoint"
     ]
   },
   "depends": {

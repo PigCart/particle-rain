@@ -1,5 +1,5 @@
 //? if fabric {
-/*package pigcart.particlerain.loaders.fabric.mixin;
+package pigcart.particlerain.mixin.fabric;
 
 import net.fabricmc.fabric.impl.registry.sync.RegistrySyncManager;
 import net.minecraft.server.MinecraftServer;
@@ -22,4 +22,4 @@ public abstract class RegistrySyncManagerMixin {
     }
 
 }
-*///?}
+//?}
