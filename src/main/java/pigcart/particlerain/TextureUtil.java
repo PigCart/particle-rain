@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceMetadata;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.joml.Math;
 import org.lwjgl.system.MemoryUtil;
@@ -47,12 +46,15 @@ public class TextureUtil {
             IntBuffer intBuffer = MemoryUtil.memIntBuffer(((NativeImageAccessor)(Object)image).getPixels(), i);
 
             for(int j = 0; j < i; ++j) {
-                int k = ARGB.fromABGR(intBuffer.get(j));
+                int k = argbToABGR(intBuffer.get(j));
                 int l = function.applyAsInt(k);
-                intBuffer.put(j, ARGB.toABGR(l));
+                intBuffer.put(j, argbToABGR(l));
             }
 
         }
+    }
+    public static int argbToABGR(int i) {
+        return i & -16711936 | (i & 16711680) >> 16 | (i & 255) << 16;
     }
 
     public static void applyWaterTint(TextureSheetParticle particle, ClientLevel clientLevel, BlockPos blockPos) {
@@ -139,6 +141,7 @@ public class TextureUtil {
     }
 
     static void drawCirclePixel(int xc, int yc, int x, int y, NativeImage img, int col){
+        //? if >1.21.1 {
         img.setPixel(xc+x, yc+y, col);
         img.setPixel(xc-x, yc+y, col);
         img.setPixel(xc+x, yc-y, col);
@@ -147,5 +150,15 @@ public class TextureUtil {
         img.setPixel(xc-y, yc+x, col);
         img.setPixel(xc+y, yc-x, col);
         img.setPixel(xc-y, yc-x, col);
+        //?} else {
+        /*img.setPixelRGBA(xc+x, yc+y, col);
+        img.setPixelRGBA(xc-x, yc+y, col);
+        img.setPixelRGBA(xc+x, yc-y, col);
+        img.setPixelRGBA(xc-x, yc-y, col);
+        img.setPixelRGBA(xc+y, yc+x, col);
+        img.setPixelRGBA(xc-y, yc+x, col);
+        img.setPixelRGBA(xc+y, yc-x, col);
+        img.setPixelRGBA(xc-y, yc-x, col);
+        *///?}
     }
 }
