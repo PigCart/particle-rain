@@ -68,10 +68,8 @@ modstitch {
     // ModDevGradle (NeoForge, Forge, Forgelike)
     moddevgradle {
         enable {
-            prop("deps.forge") { forgeVersion = it }
             prop("deps.neoform") { neoFormVersion = it }
             prop("deps.neoforge") { neoForgeVersion = it }
-            prop("deps.mcp") { mcpVersion = it }
         }
 
         // Configures client and server runs for MDG, it is not done by default
@@ -106,9 +104,7 @@ var constraint: String = name.split("-")[1]
 stonecutter {
     consts(
         "fabric" to constraint.equals("fabric"),
-        "neoforge" to constraint.equals("neoforge"),
-        "forge" to constraint.equals("forge"),
-        "vanilla" to constraint.equals("vanilla")
+        "neoforge" to constraint.equals("neoforge")
     )
 }
 

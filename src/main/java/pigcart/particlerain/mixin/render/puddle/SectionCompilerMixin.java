@@ -16,6 +16,8 @@ import pigcart.particlerain.config.ModConfig;
 @Mixin(SectionCompiler.class)
 public class SectionCompilerMixin {
 
+    //TODO: this whole thing gotta go. liquids in sodium only. use block models normally in vanilla.
+
     // insert a fake water block if the blockpos has a puddle
     //? if fabric {
     @ModifyVariable(method = "compile", at = @At(value = "STORE"))

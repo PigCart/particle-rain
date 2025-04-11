@@ -10,7 +10,6 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -25,6 +24,12 @@ import pigcart.particlerain.config.ModConfig;
 
 import java.awt.*;
 
+//? if >=1.21.5 {
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+//?} else {
+/*import net.minecraft.client.resources.model.BakedModel;
+*///?}
+
 public class ShrubParticle extends WeatherParticle {
 
     protected ShrubParticle(ClientLevel level, double x, double y, double z) {
@@ -37,6 +42,7 @@ public class ShrubParticle extends WeatherParticle {
 
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
         // no foliage convention tag? :(
+        //? if >=1.21.5 {
         if (blockState.is(BlockTags.REPLACEABLE) && !blockState.isAir() && blockState.getFluidState().isEmpty() && !blockState.is(BlockTags.CROPS) && !blockState.is(BlockTags.SNOW)) {
             final BlockStateModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
             this.setSprite(model.particleIcon());
@@ -49,6 +55,20 @@ public class ShrubParticle extends WeatherParticle {
             blockState = Blocks.DEAD_BUSH.defaultBlockState();
         }
         this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).particleIcon());
+        //?} else {
+        /*if (blockState.is(BlockTags.REPLACEABLE) && !blockState.isAir() && blockState.getFluidState().isEmpty() && !blockState.is(BlockTags.CROPS) && !blockState.is(BlockTags.SNOW)) {
+            final BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
+            this.setSprite(model.getParticleIcon());
+            final BakedQuad quad = model.getQuads(blockState, null, this.random).getFirst();
+            if (quad.isTinted()) {
+                Color color = new Color(BiomeColors.getAverageFoliageColor(level, this.pos));
+                this.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+            }
+        } else {
+            blockState = Blocks.DEAD_BUSH.defaultBlockState();
+        }
+        this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).getParticleIcon());
+        *///?}
     }
 
     @Override

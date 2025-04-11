@@ -86,7 +86,11 @@ public class GroundFogParticle extends WeatherParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
+        //? if >=1.21.5 {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        //?} else {
+        /*return FogRenderType.INSTANCE;
+        *///?}
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {

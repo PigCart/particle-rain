@@ -68,6 +68,7 @@ public final class WeatherParticleManager {
         }
     }
 
+    //TODO: increase spawn rate when particle count is low, decrease when high
     public static void tick(ClientLevel level, Entity entity) {
         //TODO: twilight fog and skittering sand when not raining
         if (level.isRaining() || CONFIG.compat.alwaysRaining) {
