@@ -86,8 +86,8 @@ public class ParticleRainClient {
                         return "[unregistered " + String.valueOf(biome) + "]";
                     });
                     addChatMsg("Biome: " + biomeStr);
-                    Biome.Precipitation precipitation = holder.value().getPrecipitationAt(blockPos, level.getSeaLevel());
-                    addChatMsg("Precipitation: " + precipitation);
+                    //Biome.Precipitation precipitation = holder.value().getPrecipitationAt(blockPos, level.getSeaLevel());
+                    //addChatMsg("Precipitation: " + precipitation);
                     addChatMsg("Base Temp: " + holder.value().getBaseTemperature());
                     //WeatherBlockSpawner.tick(level);
                     addChatMsg("Block has puddle: " + WeatherBlockManager.hasPuddle(level, blockPos.below()));

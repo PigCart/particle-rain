@@ -31,12 +31,17 @@ public class WeatherBlockManager {
     public static int getPuddleLevel(int x, int z) {
         x = Mth.abs(x % puddleMap.getWidth());
         z = Mth.abs(z % puddleMap.getHeight());
+        //? if >=1.21.4 {
         final int pixel = puddleMap.getPixel(x, z);
+        //?} else {
+        /*final int pixel = puddleMap.getPixelRGBA(x, z);
+        *///?}
         Color color = new Color(pixel);
         return color.getBlue();
     }
     public static boolean hasPuddle(ClientLevel level, BlockPos puddlePos) {
-        return (level.getBiome(puddlePos).value().getPrecipitationAt(puddlePos, level.getSeaLevel()) == Biome.Precipitation.RAIN &&
+        return (
+                StonecutterUtil.getPrecipitationAt(level, level.getBiome(puddlePos).value(), puddlePos) == Biome.Precipitation.RAIN &&
                 isExposed(level, puddlePos) &&
                 getPuddleLevel(puddlePos.getX(), puddlePos.getZ()) < puddleThreshold &&
                 level.getBlockState(puddlePos.below()).isFaceSturdy(level, puddlePos, Direction.DOWN) && level.getBlockState(puddlePos.below()).isCollisionShapeFullBlock(level, puddlePos.below()) &&
@@ -90,12 +95,13 @@ public class WeatherBlockManager {
         int renderDistance = Minecraft.getInstance().options.renderDistance().get();
         ChunkPos playerPos = Minecraft.getInstance().player.chunkPosition();
         // parchment mappings mixed up x and y
+        /* no fuck this
         Minecraft.getInstance().levelRenderer.setSectionRangeDirty(
                 playerPos.x - renderDistance,
                 level.getMinSectionY(),
                 playerPos.z - renderDistance,
                 playerPos.x + renderDistance,
                 level.getMaxSectionY(),
-                playerPos.z + renderDistance);
+                playerPos.z + renderDistance);*/
     }
 }

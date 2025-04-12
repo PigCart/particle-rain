@@ -37,7 +37,7 @@ public final class WeatherParticleManager {
             level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
         }
         final BlockPos getPrecipitationFromBlockPos = CONFIG.spawn.useHeightmapTemp ? level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos) : pos ;
-        Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : biome.value().getPrecipitationAt(getPrecipitationFromBlockPos,level.getSeaLevel());
+        Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : StonecutterUtil.getPrecipitationAt(level, biome.value(), getPrecipitationFromBlockPos);
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
         if (precipitation == Precipitation.RAIN) {
             if (CONFIG.effect.doGroundFogParticles && fogCount < CONFIG.groundFog.density) {
@@ -115,13 +115,14 @@ public final class WeatherParticleManager {
     //TODO: better weather sounds
     @Nullable
     public static SoundEvent getBiomeSound(BlockPos blockPos, boolean above) {
-        Holder<Biome> biome = Minecraft.getInstance().level.getBiome(blockPos);
-        Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : biome.value().getPrecipitationAt(blockPos,Minecraft.getInstance().level.getSeaLevel());
+        ClientLevel level = Minecraft.getInstance().level;
+        Holder<Biome> biome = level.getBiome(blockPos);
+        Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : StonecutterUtil.getPrecipitationAt(level, biome.value(), blockPos);
         if (precipitation == Precipitation.RAIN && CONFIG.sound.doRainSounds) {
             return above ? SoundEvents.WEATHER_RAIN_ABOVE : SoundEvents.WEATHER_RAIN;
         } else if (precipitation == Precipitation.SNOW && CONFIG.sound.doSnowSounds) {
             return above ? ParticleRainClient.WEATHER_SNOW_ABOVE : ParticleRainClient.WEATHER_SNOW;
-        } else if (doesThisBlockHaveDustBlowing(precipitation, Minecraft.getInstance().level, blockPos, biome) && CONFIG.sound.doSandSounds) {
+        } else if (doesThisBlockHaveDustBlowing(precipitation, level, blockPos, biome) && CONFIG.sound.doSandSounds) {
         return above ? ParticleRainClient.WEATHER_SANDSTORM_ABOVE : ParticleRainClient.WEATHER_SANDSTORM;
         }
         return null;

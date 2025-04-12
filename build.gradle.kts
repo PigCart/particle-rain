@@ -45,12 +45,12 @@ modstitch {
             // You can put any other replacement properties/metadata here that
             // modstitch doesn't initially support. Some examples below.
             put("mod_issue_tracker", "https://github.com/pigcart/particlerain/issues")
-            put("pack_format", when (property("deps.minecraft")) {
-                "1.20.1" -> 15
-                "1.21.1" -> 48
-                "1.21.4" -> 46
-                "1.21.5" -> 71
-                else -> throw IllegalArgumentException("Please store the resource pack version for ${property("deps.minecraft")} in build.gradle.kts! https://minecraft.wiki/w/Pack_format")
+            put("RendererMixin", when (property("deps.minecraft")) {
+                "1.20.1" -> "LevelRendererMixin"
+                "1.21.1" -> "LevelRendererMixin"
+                "1.21.4" -> "WeatherEffectRendererMixin"
+                "1.21.5" -> "WeatherEffectRendererMixin"
+                else -> throw IllegalArgumentException("Missing RendererMixin value for ${property("deps.minecraft")} in build.gradle.kts!")
             }.toString())
         }
     }

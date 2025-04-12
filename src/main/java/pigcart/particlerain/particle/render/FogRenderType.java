@@ -1,8 +1,7 @@
-
 package pigcart.particlerain.particle.render;
 
 //? if >=1.21.5 {
-/^import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
@@ -13,33 +12,18 @@ import net.minecraft.util.TriState;
 
 import static net.minecraft.client.renderer.RenderPipelines.PARTICLE_SNIPPET;
 import static net.minecraft.client.renderer.RenderStateShard.*;
-*///?} else {
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.util.TriState;
-//?}
 
 import net.minecraft.client.particle.ParticleRenderType;
 
 // there doesnt seem to be an iris-compatible way to do this in >=1.21.5 ?
 public class FogRenderType {
-    //? if >=1.21.5 {
-    /^public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-    //? if neoforge {
-    /*/^²public static final RenderPipeline FOG_PIPELINE = null;
-    ¹^///?} else {
+    public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
     public static final RenderPipeline FOG_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
                     .withBlend(FOG_BLEND)
                     .withDepthWrite(false).build()
     );
-    *///?}
     private static final RenderType FOG = RenderType.create(
             "particlerain_fog",
             1536,
@@ -52,7 +36,26 @@ public class FogRenderType {
                     .setLightmapState(LIGHTMAP)
                     .createCompositeState(false)
     );
-    *///?} else {
+    public static final ParticleRenderType INSTANCE = new ParticleRenderType("particlerain:fog", FOG);
+}
+
+//?}
+//? if 1.21.4 {
+/*import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.TriState;
+import org.jetbrains.annotations.Nullable;
+
+public class FogRenderType {
     private static final RenderType FOG = RenderType.create(
             "particlerain:fog",
             DefaultVertexFormat.PARTICLE,
@@ -81,6 +84,37 @@ public class FogRenderType {
                     .setOutputState(RenderType.PARTICLES_TARGET)
                     .createCompositeState(false)
     );
-    //?}
-    public static final ParticleRenderType INSTANCE = new ParticleRenderType("particlerain:fog", FOG);
+
+    public static final ParticleRenderType INSTANCE = new ParticleRenderType(
+            "particlerain:fog",
+            FOG
+    );
 }
+*///?}
+//? if <=1.21.1 {
+/*import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.texture.TextureManager;
+import org.jetbrains.annotations.Nullable;
+
+public class FogRenderType {
+    public static final ParticleRenderType INSTANCE = new ParticleRenderType() {
+        @Override
+        public @Nullable BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
+            RenderSystem.depthMask(false);
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+    };
+}
+*///?}
+
+// mr dinnerbone... pleagse.. no more RenderType implementations.. killm it.,,,.,....
+
+// i can't decide whether i love or hate stonecutter

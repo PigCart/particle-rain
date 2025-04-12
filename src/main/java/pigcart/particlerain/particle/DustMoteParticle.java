@@ -24,14 +24,21 @@ public class DustMoteParticle extends WeatherParticle {
         //this.quadSize = ModConfig.INSTANCE.dust.moteSize;
         this.xd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
         this.zd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
-        this.gravity =  ModConfig.CONFIG.dust.gravity;
+        this.gravity = ModConfig.CONFIG.dust.gravity;
 
+        //? if >=1.21.4 {
         final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL));
-        // Red and blue seem to be swapped
-        //Not anymore
         this.bCol = (float)color.getBlue() / 255;
         this.rCol = (float)color.getRed() / 255;
         this.gCol = (float)color.getGreen() / 255;
+        //?}
+        //? if <=1.21.1 {
+        /*final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(x, y, z)).below()).getBlock().defaultMapColor().calculateRGBColor(MapColor.Brightness.NORMAL));
+        // red and blue are swapped
+        this.rCol = (float)color.getBlue() / 255;
+        this.bCol = (float)color.getRed() / 255;
+        this.gCol = (float)color.getGreen() / 255;
+        *///?}
     }
 
     @Override
