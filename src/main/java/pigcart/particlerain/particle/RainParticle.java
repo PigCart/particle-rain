@@ -26,6 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.*;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
@@ -43,7 +44,7 @@ public class RainParticle extends WeatherParticle {
         this.gravity = CONFIG.rain.gravity;
         this.yd = -gravity;
         ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        this.setSprite((particleEngine.getTextureAtlas().getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "rain" + random.nextInt(4)))));
+        this.setSprite((particleEngine.getTextureAtlas().getSprite(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "rain" + random.nextInt(4)))));
 
         if (level.isThundering()) {
             this.xd = gravity * CONFIG.rain.stormWindStrength;
@@ -85,9 +86,9 @@ public class RainParticle extends WeatherParticle {
                     double voxelHeight = voxelShape.max(Direction.Axis.Y, d, e);
                     double fluidHeight = fluidState.getHeight(level, blockPos);
                     double height = java.lang.Math.max(voxelHeight, fluidHeight);
-                    Vec3 raycastStart = new Vec3(this.x, this.y, this.z);
-                    Vec3 raycastEnd = new Vec3(spawnPos.x, this.y, spawnPos.z);
-                    BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
+                    Vec3 clipStart = new Vec3(this.x, this.y, this.z);
+                    Vec3 clipEnd = new Vec3(spawnPos.x, this.y, spawnPos.z);
+                    BlockHitResult hit = level.clip(StonecutterUtil.getClipContext(clipStart, clipEnd));
                     Vec2 raycastHit = new Vec2((float)hit.getLocation().x, (float)hit.getLocation().z);
                     // this is SUCH a god damn mess
                     if (height != 0 && raycastHit.distanceToSqr(new Vec2((float) spawnPos.x, (float) spawnPos.z)) < 0.01) {
@@ -108,9 +109,9 @@ public class RainParticle extends WeatherParticle {
             }
             this.remove();
         } else if (this.removeIfObstructed()) {
-            Vec3 raycastStart = new Vec3(this.x, this.y, this.z);
-            Vec3 raycastEnd = new Vec3(this.x + CONFIG.rain.windStrength, this.y, this.z + CONFIG.rain.windStrength);
-            BlockHitResult hit = level.clip(new ClipContext(raycastStart, raycastEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
+            Vec3 clipStart = new Vec3(this.x, this.y, this.z);
+            Vec3 clipEnd = new Vec3(this.x + CONFIG.rain.windStrength, this.y, this.z + CONFIG.rain.windStrength);
+            BlockHitResult hit = level.clip(StonecutterUtil.getClipContext(clipStart, clipEnd));
             if (hit.getType().equals(HitResult.Type.BLOCK)) {
                 if (CONFIG.effect.doStreakParticles && Minecraft.getInstance().cameraEntity.position().distanceTo(this.pos.getCenter()) < CONFIG.perf.particleRadius - (CONFIG.perf.particleRadius / 2.0)) {
                     if (WeatherParticleManager.canHostStreaks(level.getBlockState(hit.getBlockPos()))) {

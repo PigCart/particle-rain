@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
@@ -27,7 +28,7 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
         if (ModConfig.CONFIG.compat.biomeTint) {
             try {
                 ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-                this.setSprite(particleEngine.getTextureAtlas().getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "splash" + random.nextInt(4))));
+                this.setSprite(particleEngine.getTextureAtlas().getSprite(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "splash" + random.nextInt(4))));
             } catch (IllegalStateException e) {
                 // "Tried to lookup sprite, but atlas is not initialized" no idea what causes this. seems random. can't reproduce.
                 // happens in the getSprite call when `this.texturesByName.getOrDefault(name, this.missingSprite)` returns null

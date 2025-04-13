@@ -22,7 +22,7 @@ public class WeatherBlockManager {
     static NativeImage puddleMap;
     static {
         try {
-            puddleMap = TextureUtil.loadTexture(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "textures/puddles.png"));
+            puddleMap = TextureUtil.loadTexture(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "textures/puddles.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

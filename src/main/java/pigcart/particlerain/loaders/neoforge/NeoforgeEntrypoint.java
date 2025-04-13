@@ -26,7 +26,6 @@ public class NeoforgeEntrypoint {
 
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> RAIN = registerParticle("rain");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SNOW = registerParticle("snow");
-    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> DUST_MOTE = registerParticle("dust_mote");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> DUST = registerParticle("dust");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SHRUB = registerParticle("shrub");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> FOG = registerParticle("fog");
@@ -54,7 +53,6 @@ public class NeoforgeEntrypoint {
     public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(RAIN.get(), RainParticle.DefaultFactory::new);
         event.registerSpriteSet(SNOW.get(), SnowParticle.DefaultFactory::new);
-        event.registerSpriteSet(DUST_MOTE.get(), DustMoteParticle.DefaultFactory::new);
         event.registerSpriteSet(DUST.get(), DustParticle.DefaultFactory::new);
         event.registerSpriteSet(SHRUB.get(), ShrubParticle.DefaultFactory::new);
         event.registerSpriteSet(FOG.get(), FogParticle.DefaultFactory::new);
@@ -63,7 +61,6 @@ public class NeoforgeEntrypoint {
         event.registerSpriteSet(STREAK.get(), StreakParticle.DefaultFactory::new);
         ParticleRainClient.RAIN = RAIN.get();
         ParticleRainClient.SNOW = SNOW.get();
-        ParticleRainClient.DUST_MOTE = DUST_MOTE.get();
         ParticleRainClient.DUST = DUST.get();
         ParticleRainClient.SHRUB = SHRUB.get();
         ParticleRainClient.FOG = FOG.get();

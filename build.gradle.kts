@@ -42,32 +42,14 @@ modstitch {
         }
 
         replacementProperties.populate {
-            // You can put any other replacement properties/metadata here that
-            // modstitch doesn't initially support. Some examples below.
             put("mod_issue_tracker", "https://github.com/pigcart/particlerain/issues")
-            put("RendererMixin", when (property("deps.minecraft")) {
-                "1.20.1" -> "LevelRendererMixin"
-                "1.21.1" -> "LevelRendererMixin"
-                "1.21.4" -> "WeatherEffectRendererMixin"
-                "1.21.5" -> "WeatherEffectRendererMixin"
-                else -> throw IllegalArgumentException("Missing RendererMixin value for ${property("deps.minecraft")} in build.gradle.kts!")
-            }.toString())
         }
     }
 
-    // Fabric Loom (Fabric)
     loom {
-        // It's not recommended to store the Fabric Loader version in properties.
-        // Make sure its up to date.
         fabricLoaderVersion = "0.16.10"
-
-        // Configure loom like normal in this block.
-        configureLoom {
-
-        }
     }
 
-    // ModDevGradle (NeoForge, Forge, Forgelike)
     moddevgradle {
         enable {
             prop("deps.neoform") { neoFormVersion = it }
@@ -110,10 +92,6 @@ stonecutter {
     )
 }
 
-// All dependencies should be specified through modstitch's proxy configuration.
-// Wondering where the "repositories" block is? Go to "stonecutter.gradle.kts"
-// If you want to create proxy configurations for more source sets, such as client source sets,
-// use the modstitch.createProxyConfigurations(sourceSets["client"]) function.
 dependencies {
     modstitch.loom {
         modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabricapi")}")

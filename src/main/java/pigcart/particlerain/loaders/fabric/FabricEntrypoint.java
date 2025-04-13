@@ -12,6 +12,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.particle.*;
 
 import static pigcart.particlerain.ParticleRainClient.MOD_ID;
@@ -24,7 +25,6 @@ public class FabricEntrypoint implements ClientModInitializer {
 
         ParticleRainClient.RAIN = registerParticle("rain");
         ParticleRainClient.SNOW = registerParticle("snow");
-        ParticleRainClient.DUST_MOTE = registerParticle("dust_mote");
         ParticleRainClient.DUST = registerParticle("dust");
         ParticleRainClient.SHRUB = registerParticle("shrub");
         ParticleRainClient.FOG = registerParticle("fog");
@@ -36,7 +36,6 @@ public class FabricEntrypoint implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(ParticleRainClient.RAIN, RainParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(ParticleRainClient.SNOW, SnowParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.DUST_MOTE, DustMoteParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(ParticleRainClient.DUST, DustParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(ParticleRainClient.SHRUB, ShrubParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(ParticleRainClient.FOG, FogParticle.DefaultFactory::new);
@@ -51,7 +50,7 @@ public class FabricEntrypoint implements ClientModInitializer {
         });
     }
     private SimpleParticleType registerParticle(String name) {
-        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, name), FabricParticleTypes.simple(true));
+        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, StonecutterUtil.getResourceLocation(MOD_ID, name), FabricParticleTypes.simple(true));
     }
 }
 //?}

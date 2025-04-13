@@ -12,9 +12,6 @@
     "render.ParticleEngineMixin",
     "render.SpriteLoaderMixin",
     "render.WeatherEffectRendererMixin",
-    "render.puddle.SectionCompilerMixin",
-    "render.puddle.sodium.ChunkBuilderMeshingTaskMixin",
-    "render.puddle.sodium.DefaultFluidRendererMixin",
     "tint.DripParticleMixin",
     "tint.TextureSheetParticleMixin",
     "tint.WaterDropParticleMixin"

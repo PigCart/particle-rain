@@ -71,16 +71,10 @@ public final class WeatherParticleManager {
     //TODO: increase spawn rate when particle count is low, decrease when high
     public static void tick(ClientLevel level, Entity entity) {
         //TODO: twilight fog and skittering sand when not raining
-        if (level.isRaining() || CONFIG.compat.alwaysRaining) {
+        if (level.isRaining()) {
             int density;
-            if (level.isThundering())
-                if (CONFIG.compat.alwaysRaining) {
-                    density = CONFIG.perf.particleStormDensity;
-                } else {
-                    density = (int) (CONFIG.perf.particleStormDensity * level.getRainLevel(0));
-                }
-            else if (CONFIG.compat.alwaysRaining) {
-                density = CONFIG.perf.particleDensity;
+            if (level.isThundering()) {
+                density = (int) (CONFIG.perf.particleStormDensity * level.getRainLevel(0));
             } else {
                 density = (int) (CONFIG.perf.particleDensity * level.getRainLevel(0));
             }
@@ -131,7 +125,7 @@ public final class WeatherParticleManager {
     public static boolean doesThisBlockHaveDustBlowing(Precipitation precipitation, ClientLevel level, BlockPos blockPos, Holder<Biome> biome) {
         boolean matchesTag = false;
         for (int i = 0; i < CONFIG.spawn.dustyBlockTags.size(); i++) {
-            if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.parse(CONFIG.spawn.dustyBlockTags.get(i))))) {
+            if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).is(TagKey.create(Registries.BLOCK, StonecutterUtil.parseResourceLocation(CONFIG.spawn.dustyBlockTags.get(i))))) {
                 matchesTag = true;
                 break;
             }

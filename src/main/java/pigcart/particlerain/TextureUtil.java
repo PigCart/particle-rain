@@ -88,12 +88,12 @@ public class TextureUtil {
         int size = image.getWidth();
         NativeImage sprite = new NativeImage(size, size, false);
         image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
-        return(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, id + segment), new FrameSize(size, size), sprite, new ResourceMetadata.Builder().build()));
+        return(new SpriteContents(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, id + segment), new FrameSize(size, size), sprite, StonecutterUtil.getSpriteMetadata()));
     }
 
     public static int getRippleResolution(List<SpriteContents> contents) {
         if (ModConfig.CONFIG.ripple.useResourcepackResolution) {
-            ResourceLocation resourceLocation = ResourceLocation.withDefaultNamespace("big_smoke_0");
+            ResourceLocation resourceLocation = StonecutterUtil.getResourceLocation("big_smoke_0");
             for (SpriteContents spriteContents : contents) {
                 if (spriteContents.name().equals(resourceLocation)) {
                     //return Math.min(spriteContents.width(), 256); ...why does this not work?
@@ -119,7 +119,7 @@ public class TextureUtil {
                 ((color.getGreen() & 0xFF) << 8)  |
                 ((color.getBlue() & 0xFF));
         generateBresenhamCircle(image, size, (int) Math.clamp(1, (size / 2F) - 1, radius), colorint);
-        return(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple" + i), new FrameSize(size, size), image, new ResourceMetadata.Builder().build()));
+        return(new SpriteContents(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "ripple" + i), new FrameSize(size, size), image, StonecutterUtil.getSpriteMetadata()));
     }
 
     public static void generateBresenhamCircle(NativeImage image, int imgSize, int radius, int colorint) {

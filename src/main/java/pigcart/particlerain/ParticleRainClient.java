@@ -22,7 +22,7 @@ public class ParticleRainClient {
     // conventional tags
     public static final TagKey<Block> GLASS_PANES = tagOf("glass_panes");
     public static TagKey<Block> tagOf(String tagId) {
-        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", tagId));
+        return TagKey.create(Registries.BLOCK, StonecutterUtil.getResourceLocation("c", tagId));
     }
 
     public static SimpleParticleType RAIN;
@@ -67,7 +67,7 @@ public class ParticleRainClient {
     }
 
     private static SoundEvent createSoundEvent(String name) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+        ResourceLocation id = StonecutterUtil.getResourceLocation(MOD_ID, name);
         return SoundEvent.createVariableRangeEvent(id);
     }
 

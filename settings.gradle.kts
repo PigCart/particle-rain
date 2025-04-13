@@ -15,9 +15,6 @@ pluginManagement {
         // Stonecutter
         maven("https://maven.kikugie.dev/releases")
         maven("https://maven.kikugie.dev/snapshots")
-
-        // Modstitch
-        maven("https://maven.isxander.dev/releases")
     }
 }
 
@@ -41,9 +38,7 @@ stonecutter {
         mc("1.21.5", loaders = listOf("fabric", "neoforge"))
         mc("1.21.4", loaders = listOf("fabric", "neoforge"))
         mc("1.21.1", loaders = listOf("fabric", "neoforge"))
-        //mc("1.21.1", loaders = listOf("fabric", "neoforge"))
-        //mc("1.20.1", loaders = listOf("fabric", "neoforge"))
-        //mc("1.20.1", loaders = listOf("forge"))
+        mc("1.20.1", loaders = listOf("fabric"))
 
         // This is the default target.
         // https://stonecutter.kikugie.dev/stonecutter/guide/setup#settings-settings-gradle-kts

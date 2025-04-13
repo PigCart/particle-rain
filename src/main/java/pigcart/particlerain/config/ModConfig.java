@@ -76,6 +76,7 @@ public class ModConfig {
     public SoundOptions sound = new SoundOptions();
     public static class SoundOptions {
         //public boolean doMaterialSounds = true;
+        //public boolean doDripSplashing = true;
         public boolean doRainSounds = true;
         public boolean doSnowSounds = true;
         public boolean doSandSounds = true;
@@ -85,11 +86,10 @@ public class ModConfig {
     public static class CompatibilityOptions {
         public boolean renderVanillaWeather = false;
         public boolean tickVanillaWeather = false;
-        public boolean alwaysRaining = false;
         @ReloadsResources
         public boolean biomeTint = true;
         @Percentage
-        public float tintMix = 0.5F;
+        public float tintMix = 0.4F;
         public boolean yLevelWindAdjustment = true;
         public boolean syncRegistry = true;
     }
@@ -101,7 +101,7 @@ public class ModConfig {
         public boolean canSpawnAboveClouds = true;
         public int cloudHeight = 191;
         public transient URI openWiki = URI.create("https://minecraft.wiki/w/Block_tags_(Java_Edition)#camel_sand_step_sound_blocks");
-        public List<String> dustyBlockTags = new ArrayList<>(Collections.singleton("minecraft:camel_sand_step_sound_blocks"));
+        public List<String> dustyBlockTags = List.of("minecraft:camel_sand_step_sound_blocks", "minecraft:sand");
         //public List<String> hotBlockTags = new ArrayList<>();
         //public List<String> biomeWeatherOverrides = new ArrayList<>(Collections.singleton("minecraft:ice_spikes HAIL"));
     }

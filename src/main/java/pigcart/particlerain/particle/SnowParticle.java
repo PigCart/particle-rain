@@ -9,6 +9,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 
@@ -24,7 +25,7 @@ public class SnowParticle extends WeatherParticle {
         this.gravity = CONFIG.snow.gravity;
         this.yd = -gravity;
         ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        this.setSprite(particleEngine.getTextureAtlas().getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "snow" + random.nextInt(4))));
+        this.setSprite(particleEngine.getTextureAtlas().getSprite(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "snow" + random.nextInt(4))));
 
         if (level.isThundering()) {
             this.xd = gravity * CONFIG.snow.stormWindStrength;

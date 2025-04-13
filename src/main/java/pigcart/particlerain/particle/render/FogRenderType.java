@@ -39,8 +39,7 @@ public class FogRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType("particlerain:fog", FOG);
 }
 
-//?}
-//? if 1.21.4 {
+//?} else if 1.21.4 {
 /*import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -90,8 +89,7 @@ public class FogRenderType {
             FOG
     );
 }
-*///?}
-//? if <=1.21.1 {
+*///?} else if 1.21.1 {
 /*import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -110,6 +108,31 @@ public class FogRenderType {
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+    };
+}
+*///?} else if 1.20.1 {
+/*import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.texture.TextureManager;
+
+public class FogRenderType {
+    public static final ParticleRenderType INSTANCE = new ParticleRenderType() {
+        @Override
+        public void begin(BufferBuilder bufferBuilder, TextureManager textureManager) {
+            RenderSystem.depthMask(false);
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+        @Override
+        public void end(Tesselator tessellator) {
+            tessellator.end();
         }
     };
 }
