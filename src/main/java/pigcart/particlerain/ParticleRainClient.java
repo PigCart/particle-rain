@@ -13,11 +13,15 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pigcart.particlerain.config.ModConfig;
+import pigcart.particlerain.config.ModConfigScreen;
 
 public class ParticleRainClient {
 
     public static final String MOD_ID = "particlerain";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     // conventional tags
     public static final TagKey<Block> GLASS_PANES = tagOf("glass_panes");
@@ -27,7 +31,6 @@ public class ParticleRainClient {
 
     public static SimpleParticleType RAIN;
     public static SimpleParticleType SNOW;
-    public static SimpleParticleType DUST_MOTE;
     public static SimpleParticleType DUST;
     public static SimpleParticleType FOG;
     public static SimpleParticleType GROUND_FOG;
@@ -62,7 +65,9 @@ public class ParticleRainClient {
     public static void onTick(Minecraft client) {
         if (!client.isPaused() && client.level != null && client.getCameraEntity() != null) {
             WeatherParticleManager.tick(client.level, client.getCameraEntity());
-            WeatherBlockManager.tick(client.level);
+            //TODO
+            //WeatherBlockManager.tick(client.level);
+            TaskScheduler.tick();
         }
     }
 
@@ -75,28 +80,30 @@ public class ParticleRainClient {
     public static <S> LiteralArgumentBuilder<S> getCommands() {
         return (LiteralArgumentBuilder<S>) LiteralArgumentBuilder.literal(MOD_ID)
                 .executes(ctx -> {
-                    ClientLevel level = Minecraft.getInstance().level;
-                    addChatMsg(String.format("Particle count: %d/%d", WeatherParticleManager.particleCount, ModConfig.CONFIG.perf.maxParticleAmount));
-                    addChatMsg(String.format("Fog density: %d/%d", WeatherParticleManager.fogCount, ModConfig.CONFIG.groundFog.density));
-                    BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
-                    final Holder<Biome> holder = level.getBiome(blockPos);
-                    String biomeStr = holder.unwrap().map((resourceKey) -> {
-                        return resourceKey.location().toString();
-                    }, (biome) -> {
-                        return "[unregistered " + String.valueOf(biome) + "]";
+                    TaskScheduler.scheduleDelayed(1, () -> {
+                        Minecraft.getInstance().setScreen(ModConfigScreen.generateConfigScreen(null));
                     });
-                    addChatMsg("Biome: " + biomeStr);
-                    //Biome.Precipitation precipitation = holder.value().getPrecipitationAt(blockPos, level.getSeaLevel());
-                    //addChatMsg("Precipitation: " + precipitation);
-                    addChatMsg("Base Temp: " + holder.value().getBaseTemperature());
-                    //WeatherBlockSpawner.tick(level);
-                    addChatMsg("Block has puddle: " + WeatherBlockManager.hasPuddle(level, blockPos.below()));
-                    addChatMsg("Block is solid: " + level.getBlockState(blockPos.below()).isCollisionShapeFullBlock(level, blockPos.below()));
-                    addChatMsg("Block is exposed: " + WeatherBlockManager.isExposed(level, blockPos));
-                    addChatMsg("Puddle target level: " + WeatherBlockManager.puddleTargetLevel);
-                    addChatMsg("Puddle threshold: " + WeatherBlockManager.puddleThreshold);
                     return 0;
-                });
+                })
+                .then(LiteralArgumentBuilder.literal("debug")
+                        .executes(ctx -> {
+                            ClientLevel level = Minecraft.getInstance().level;
+                            addChatMsg(String.format("Particle count: %d/%d", WeatherParticleManager.particleCount, ModConfig.CONFIG.perf.maxParticleAmount));
+                            addChatMsg(String.format("Fog density: %d/%d", WeatherParticleManager.fogCount, ModConfig.CONFIG.groundFog.density));
+                            BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
+                            final Holder<Biome> holder = level.getBiome(blockPos);
+                            String biomeStr = holder.unwrap().map((resourceKey) -> {
+                                return resourceKey.location().toString();
+                            }, (biome) -> {
+                                return "[unregistered " + String.valueOf(biome) + "]";
+                            });
+                            addChatMsg("Biome: " + biomeStr);
+                            //Biome.Precipitation precipitation = holder.value().getPrecipitationAt(blockPos, level.getSeaLevel());
+                            //addChatMsg("Precipitation: " + precipitation);
+                            addChatMsg("Base Temp: " + holder.value().getBaseTemperature());
+                            return 0;
+                        })
+                );
     }
 
     private static void addChatMsg(String message) {
