@@ -2,7 +2,6 @@ package pigcart.particlerain.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -10,7 +9,6 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
@@ -22,19 +20,17 @@ import java.awt.*;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
-public class GroundFogParticle extends WeatherParticle {
+public class MistParticle extends WeatherParticle {
 
     float xdxd;
     float zdzd;
 
-    private GroundFogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z);
+    private MistParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
+        super(level, x, y, z, 0, CONFIG.mist.opacity, CONFIG.mist.size, CONFIG.mist.windStrength, CONFIG.mist.stormWindStrength);
+
         WeatherParticleManager.fogCount++;
         this.setSprite(provider.get(level.getRandom()));
-        this.quadSize = CONFIG.groundFog.size;
-        this.setSize(CONFIG.groundFog.size + 1, CONFIG.groundFog.size + 1);
-        this.hasPhysics = false;
-        this.lifetime = 30000;
+        this.setSize(CONFIG.mist.size + 1, CONFIG.mist.size + 1);
 
         Color color = new Color(this.level.getBiome(this.pos).value().getFogColor());
         this.rCol = color.getRed() / 255F;
@@ -62,12 +58,13 @@ public class GroundFogParticle extends WeatherParticle {
     }
 
     @Override
-    void removeIfOOB() {
-        Entity cameraEntity = Minecraft.getInstance().getCameraEntity();
-        if (cameraEntity == null || cameraEntity.distanceToSqr(this.x, this.y, this.z) > Mth.square(CONFIG.perf.fogParticleRadius)) {
-            shouldFadeOut = true;
+    public ParticleRenderType getRenderType() {
+        if (targetOpacity == 1F) {
+            return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        } else {
+            // if IrisApi.isShaderPackInUse() return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+            return FogRenderType.INSTANCE;
         }
-
     }
 
     @Override
@@ -84,15 +81,6 @@ public class GroundFogParticle extends WeatherParticle {
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
     }
 
-    @Override
-    public ParticleRenderType getRenderType() {
-        //? if >=1.21.5 {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-        //?} else {
-        /*return FogRenderType.INSTANCE;
-        *///?}
-    }
-
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
         private final SpriteSet provider;
@@ -103,7 +91,7 @@ public class GroundFogParticle extends WeatherParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new GroundFogParticle(level, x, y, z, this.provider);
+            return new MistParticle(level, x, y, z, this.provider);
         }
     }
 }

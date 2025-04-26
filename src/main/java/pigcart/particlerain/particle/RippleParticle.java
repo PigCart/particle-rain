@@ -6,10 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
@@ -20,14 +18,15 @@ import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 
+import static pigcart.particlerain.config.ModConfig.CONFIG;
+
 public class RippleParticle extends WeatherParticle {
 
     private RippleParticle(ClientLevel level, double x, double y, double z) {
-        super(level, x, y, z);
+        super(level, x, y, z, 0, CONFIG.ripple.opacity, CONFIG.ripple.size, 0, 0);
+
         ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
         this.setSprite(particleEngine.getTextureAtlas().getSprite(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "ripple0")));
-        this.quadSize = 0.25F;
-        this.alpha = 0.1F;
         this.x = Math.round(this.x / (1F / 16F)) * (1F / 16F);
         this.z = Math.round(this.z / (1F / 16F)) * (1F / 16F);
     }
@@ -42,11 +41,6 @@ public class RippleParticle extends WeatherParticle {
     }
 
     @Override
-    public void fadeIn() {
-        //dont
-    }
-
-    @Override
     public void render(VertexConsumer vertexConsumer, Camera camera, float f) {
         Vec3 camPos = camera.getPosition();
         float x = (float) (Mth.lerp(f, this.xo, this.x) - camPos.x());
@@ -56,11 +50,6 @@ public class RippleParticle extends WeatherParticle {
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(Mth.HALF_PI, -1, 0, 0));
         this.flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
-    }
-
-    @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {

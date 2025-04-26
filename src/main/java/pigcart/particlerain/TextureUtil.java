@@ -1,7 +1,9 @@
 package pigcart.particlerain;
 
+import com.llamalad7.mixinextras.platform.fabric.MixinExtrasConfigPlugin;
 import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.IntUnaryOperator;
+import net.caffeinemc.mods.sodium.client.data.config.MixinConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TextureSheetParticle;
@@ -58,6 +60,7 @@ public class TextureUtil {
     }
 
     public static void applyWaterTint(TextureSheetParticle particle, ClientLevel clientLevel, BlockPos blockPos) {
+        // IrisApi.isShaderPackInUse()
         final Color waterColor = new Color(BiomeColors.getAverageWaterColor(clientLevel, blockPos));
         final Color fogColor = new Color(clientLevel.getBiome(blockPos).value().getFogColor());
         float rCol = (Mth.lerp(ModConfig.CONFIG.compat.tintMix, waterColor.getRed(), fogColor.getRed()) / 255F);

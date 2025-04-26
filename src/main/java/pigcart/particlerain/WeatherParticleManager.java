@@ -5,7 +5,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
@@ -17,6 +16,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
@@ -40,10 +40,11 @@ public final class WeatherParticleManager {
         Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : StonecutterUtil.getPrecipitationAt(level, biome.value(), getPrecipitationFromBlockPos);
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
         if (precipitation == Precipitation.RAIN) {
-            if (CONFIG.effect.doGroundFogParticles && fogCount < CONFIG.groundFog.density) {
+            if (CONFIG.effect.doMistParticles && fogCount < CONFIG.mist.density) {
                 int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
-                if (height <= CONFIG.groundFog.maxSpawnHeight && height >= CONFIG.groundFog.minSpawnHeight && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
-                    level.addParticle(ParticleRainClient.GROUND_FOG, x, height + level.random.nextFloat(), z, 0, 0, 0);
+                int distance = (int) new Vec3(x, height, z).distanceToSqr(Minecraft.getInstance().cameraEntity.position());
+                if (distance > CONFIG.perf.particleDistance - 1 && height <= CONFIG.mist.maxSpawnHeight && height >= CONFIG.mist.minSpawnHeight && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
+                    level.addParticle(ParticleRainClient.MIST, x, height + level.random.nextFloat(), z, 0, 0, 0);
                 }
             }
             if (CONFIG.effect.doRainParticles && level.random.nextFloat() < CONFIG.rain.density) {
@@ -68,34 +69,22 @@ public final class WeatherParticleManager {
         }
     }
 
-    //TODO: increase spawn rate when particle count is low, decrease when high
     public static void tick(ClientLevel level, Entity entity) {
         //TODO: twilight fog and skittering sand when not raining
         if (level.isRaining()) {
-            int density;
-            if (level.isThundering()) {
-                density = (int) (CONFIG.perf.particleStormDensity * level.getRainLevel(0));
-            } else {
-                density = (int) (CONFIG.perf.particleDensity * level.getRainLevel(0));
-            }
+            int density = (int) ((level.isThundering() ? CONFIG.perf.particleStormDensity : CONFIG.perf.particleDensity) * level.getRainLevel(0));
+            final float speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().length();
+            density = (int) (density * ((speed * 2) + 1));
 
-            //TODO: calculate vertical velocity and use it to switch which hemisphere is spawning particles
-            // half of particle spawn calculations are wasted on checking blocks below ground
-            // or blocks where the particle would immediately fall out of the particle render distance
             RandomSource rand = RandomSource.create();
 
             for (int pass = 0; pass < density; pass++) {
 
-                //TODO: bias particle spawn weighting to center of current spawning hemisphere
-                // current solution ends up being biased towards the edges since the particles fall vertically
-                // in many scenes particles that dont spawn almost above the player end up out of view
-                // having more particles closer to the player helps the texture planes be less noticable
-                // and make the effect look less patchy.
                 float theta = (float) (2 * Math.PI * rand.nextFloat());
                 float phi = (float) Math.acos(2 * rand.nextFloat() - 1);
-                double x = CONFIG.perf.particleRadius * Mth.sin(phi) * Math.cos(theta);
-                double y = CONFIG.perf.particleRadius * Mth.sin(phi) * Math.sin(theta);
-                double z = CONFIG.perf.particleRadius * Mth.cos(phi);
+                double x = CONFIG.perf.particleDistance * Mth.sin(phi) * Math.cos(theta);
+                double y = CONFIG.perf.particleDistance * Mth.sin(phi) * Math.sin(theta);
+                double z = CONFIG.perf.particleDistance * Mth.cos(phi);
 
                 pos.set(x + entity.getX(), y + entity.getY(), z + entity.getZ());
                 if (level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) > pos.getY())
@@ -109,6 +98,7 @@ public final class WeatherParticleManager {
     //TODO: better weather sounds
     @Nullable
     public static SoundEvent getBiomeSound(BlockPos blockPos, boolean above) {
+        //TODO: this should be a more precise mixin instead of a whole reimplementation
         ClientLevel level = Minecraft.getInstance().level;
         Holder<Biome> biome = level.getBiome(blockPos);
         Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : StonecutterUtil.getPrecipitationAt(level, biome.value(), blockPos);

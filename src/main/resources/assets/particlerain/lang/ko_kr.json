@@ -9,8 +9,8 @@
   "particlerain.PerformanceOptions.particleDensity.description": "날씨 파티클이 비가 내리는 동안 틱당 소환을 시도하는 횟수입니다.",
   "particlerain.PerformanceOptions.particleStormDensity": "파티클 폭풍 밀도",
   "particlerain.PerformanceOptions.particleStormDensity.description": "날씨 파티클이 폭풍이 치는 동안 틱당 소환을 시도하는 횟수입니다.",
-  "particlerain.PerformanceOptions.particleRadius": "파티클 범위",
-  "particlerain.PerformanceOptions.particleRadius.description": "카메라로부터 몇 블록까지 파티클이 스폰할지 정합니다.",
+  "particlerain.PerformanceOptions.particleDistance": "파티클 범위",
+  "particlerain.PerformanceOptions.particleDistance.description": "카메라로부터 몇 블록까지 파티클이 스폰할지 정합니다.",
 
   "particlerain.EffectOptions": "개별 효과를 끄거나 켭니다",
   "particlerain.EffectOptions.doRainParticles": "빗방울 파티클 생성",

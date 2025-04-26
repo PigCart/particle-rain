@@ -1,5 +1,5 @@
 plugins {
-    id("dev.isxander.modstitch.base") version "0.5.12"
+    id("dev.isxander.modstitch.base") version "0.5.14-unstable"
 }
 
 fun prop(name: String, consumer: (prop: String) -> Unit) {

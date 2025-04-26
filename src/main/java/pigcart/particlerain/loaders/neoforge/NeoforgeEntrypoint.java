@@ -9,7 +9,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
@@ -29,7 +28,7 @@ public class NeoforgeEntrypoint {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> DUST = registerParticle("dust");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SHRUB = registerParticle("shrub");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> FOG = registerParticle("fog");
-    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> GROUND_FOG = registerParticle("ground_fog");
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> MIST = registerParticle("mist");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> RIPPLE = registerParticle("ripple");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> STREAK = registerParticle("streak");
 
@@ -39,10 +38,6 @@ public class NeoforgeEntrypoint {
 
     public static void onTick(ClientTickEvent.Post event) {
         ParticleRainClient.onTick(Minecraft.getInstance());
-    }
-
-    public static void onJoin(ClientPlayerNetworkEvent.LoggingIn event) {
-        ParticleRainClient.onJoin();
     }
 
     public static void onRegisterCommands(RegisterClientCommandsEvent event) {
@@ -56,7 +51,7 @@ public class NeoforgeEntrypoint {
         event.registerSpriteSet(DUST.get(), DustParticle.DefaultFactory::new);
         event.registerSpriteSet(SHRUB.get(), ShrubParticle.DefaultFactory::new);
         event.registerSpriteSet(FOG.get(), FogParticle.DefaultFactory::new);
-        event.registerSpriteSet(GROUND_FOG.get(), GroundFogParticle.DefaultFactory::new);
+        event.registerSpriteSet(MIST.get(), MistParticle.DefaultFactory::new);
         event.registerSpriteSet(RIPPLE.get(), RippleParticle.DefaultFactory::new);
         event.registerSpriteSet(STREAK.get(), StreakParticle.DefaultFactory::new);
         ParticleRainClient.RAIN = RAIN.get();
@@ -64,14 +59,13 @@ public class NeoforgeEntrypoint {
         ParticleRainClient.DUST = DUST.get();
         ParticleRainClient.SHRUB = SHRUB.get();
         ParticleRainClient.FOG = FOG.get();
-        ParticleRainClient.GROUND_FOG = GROUND_FOG.get();
+        ParticleRainClient.MIST = MIST.get();
         ParticleRainClient.RIPPLE = RIPPLE.get();
         ParticleRainClient.STREAK = STREAK.get();
     }
 
     public NeoforgeEntrypoint(IEventBus eventBus) {
         NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onTick);
-        NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onJoin);
         NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onRegisterCommands);
         PARTICLE_TYPES.register(eventBus);
         eventBus.addListener(NeoforgeEntrypoint::onRegisterParticleProviders);

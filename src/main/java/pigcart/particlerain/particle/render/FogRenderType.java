@@ -18,12 +18,18 @@ import net.minecraft.client.particle.ParticleRenderType;
 // there doesnt seem to be an iris-compatible way to do this in >=1.21.5 ?
 public class FogRenderType {
     public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-    public static final RenderPipeline FOG_PIPELINE = RenderPipelines.register(
+    public static final RenderPipeline FOG_PIPELINE =
+            //? if neoforge {
+            /*// cant be bothered to figure out neo impl lmao. might just need an access transformer?
+            RenderPipelines.TRANSLUCENT_PARTICLE;
+            *///?} else {
+            RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
                     .withBlend(FOG_BLEND)
                     .withDepthWrite(false).build()
-    );
+            );
+            //?}
     private static final RenderType FOG = RenderType.create(
             "particlerain_fog",
             1536,

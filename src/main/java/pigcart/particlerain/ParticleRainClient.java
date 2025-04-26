@@ -19,11 +19,9 @@ import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.config.ModConfigScreen;
 
 public class ParticleRainClient {
-
     public static final String MOD_ID = "particlerain";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-    // conventional tags
+    // conventional tag
     public static final TagKey<Block> GLASS_PANES = tagOf("glass_panes");
     public static TagKey<Block> tagOf(String tagId) {
         return TagKey.create(Registries.BLOCK, StonecutterUtil.getResourceLocation("c", tagId));
@@ -33,22 +31,15 @@ public class ParticleRainClient {
     public static SimpleParticleType SNOW;
     public static SimpleParticleType DUST;
     public static SimpleParticleType FOG;
-    public static SimpleParticleType GROUND_FOG;
+    public static SimpleParticleType MIST;
     public static SimpleParticleType SHRUB;
     public static SimpleParticleType RIPPLE;
     public static SimpleParticleType STREAK;
-    //TODO: hail particles
-    //TODO: vertical fog
-    //TODO: light rays???? under the ocean surface
-
-    //public static Block PUDDLE;
-    //public static final ResourceKey<Block> PUDDLE_KEY = ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "puddle"));
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
-
     public static void onInitializeClient() {
         ModConfig.loadConfig();
 
@@ -58,15 +49,9 @@ public class ParticleRainClient {
         WEATHER_SANDSTORM_ABOVE = createSoundEvent("weather.sandstorm.above");
     }
 
-    public static void onJoin() {
-        WeatherBlockManager.puddleThreshold = 0;
-    }
-
     public static void onTick(Minecraft client) {
         if (!client.isPaused() && client.level != null && client.getCameraEntity() != null) {
             WeatherParticleManager.tick(client.level, client.getCameraEntity());
-            //TODO
-            //WeatherBlockManager.tick(client.level);
             TaskScheduler.tick();
         }
     }
@@ -75,21 +60,21 @@ public class ParticleRainClient {
         ResourceLocation id = StonecutterUtil.getResourceLocation(MOD_ID, name);
         return SoundEvent.createVariableRangeEvent(id);
     }
-
     @SuppressWarnings("unchecked")
     public static <S> LiteralArgumentBuilder<S> getCommands() {
         return (LiteralArgumentBuilder<S>) LiteralArgumentBuilder.literal(MOD_ID)
                 .executes(ctx -> {
-                    TaskScheduler.scheduleDelayed(1, () -> {
-                        Minecraft.getInstance().setScreen(ModConfigScreen.generateConfigScreen(null));
-                    });
+                    // give minecraft a tick to close the chat screen
+                    TaskScheduler.scheduleDelayed(1, () ->
+                            Minecraft.getInstance().setScreen(ModConfigScreen.generateConfigScreen(null))
+                    );
                     return 0;
                 })
                 .then(LiteralArgumentBuilder.literal("debug")
                         .executes(ctx -> {
                             ClientLevel level = Minecraft.getInstance().level;
                             addChatMsg(String.format("Particle count: %d/%d", WeatherParticleManager.particleCount, ModConfig.CONFIG.perf.maxParticleAmount));
-                            addChatMsg(String.format("Fog density: %d/%d", WeatherParticleManager.fogCount, ModConfig.CONFIG.groundFog.density));
+                            addChatMsg(String.format("Fog density: %d/%f", WeatherParticleManager.fogCount, ModConfig.CONFIG.mist.density));
                             BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
                             final Holder<Biome> holder = level.getBiome(blockPos);
                             String biomeStr = holder.unwrap().map((resourceKey) -> {
@@ -98,14 +83,13 @@ public class ParticleRainClient {
                                 return "[unregistered " + String.valueOf(biome) + "]";
                             });
                             addChatMsg("Biome: " + biomeStr);
-                            //Biome.Precipitation precipitation = holder.value().getPrecipitationAt(blockPos, level.getSeaLevel());
-                            //addChatMsg("Precipitation: " + precipitation);
+                            Biome.Precipitation precipitation = StonecutterUtil.getPrecipitationAt(level, holder.value(), blockPos);
+                            addChatMsg("Precipitation: " + precipitation);
                             addChatMsg("Base Temp: " + holder.value().getBaseTemperature());
                             return 0;
                         })
                 );
     }
-
     private static void addChatMsg(String message) {
         Minecraft.getInstance().gui.getChat().addMessage(Component.literal(message));
     }

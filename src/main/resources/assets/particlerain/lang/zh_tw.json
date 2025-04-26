@@ -9,8 +9,8 @@
   "particlerain.PerformanceOptions.particleDensity.description": "一般雨天時，每個遊戲刻天氣粒子嘗試生成的次數",
   "particlerain.PerformanceOptions.particleStormDensity": "雷暴期間的粒子密度",
   "particlerain.PerformanceOptions.particleStormDensity.description": "暴風雨期間，每個遊戲刻天氣粒子嘗試生成的次數",
-  "particlerain.PerformanceOptions.particleRadius": "粒子範圍",
-  "particlerain.PerformanceOptions.particleRadius.description": "粒子將在距離相機視角多少方塊遠的地方生成",
+  "particlerain.PerformanceOptions.particleDistance": "粒子範圍",
+  "particlerain.PerformanceOptions.particleDistance.description": "粒子將在距離相機視角多少方塊遠的地方生成",
 
   "particlerain.EffectOptions": "啟用或停用個別效果",
   "particlerain.EffectOptions.doRainParticles": "生成降雨粒子",

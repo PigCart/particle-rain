@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,24 +20,23 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.WeatherParticleManager;
-import pigcart.particlerain.config.ModConfig;
+
+import static pigcart.particlerain.config.ModConfig.CONFIG;
 
 public class StreakParticle extends WeatherParticle {
 
     Direction direction;
 
     private StreakParticle(ClientLevel level, double x, double y, double z, int direction2D, SpriteSet provider) {
-        super(level, x, y, z);
+        super(level, x, y, z, level.random.nextFloat()/10, CONFIG.streak.opacity, CONFIG.streak.size, 0, 0);
 
-        if (ModConfig.CONFIG.compat.biomeTint) {
+        if (CONFIG.compat.biomeTint) {
             TextureUtil.applyWaterTint(this, level, this.pos);
         } else {
             this.setColor(0.2f, 0.3f, 1.0f);
         }
 
         this.setSprite(provider.get(level.getRandom()));
-        this.quadSize = 0.5F;
-        this.gravity = random.nextFloat() / 10;
 
         this.roll = direction2D * Mth.HALF_PI;
         direction = Direction.from2DDataValue(direction2D);
@@ -56,11 +54,11 @@ public class StreakParticle extends WeatherParticle {
         }
         BlockState state = level.getBlockState(BlockPos.containing(new Vec3(this.x, this.y, this.z).relative(this.direction.getOpposite(), 0.2f)));
         FluidState fluidState = level.getFluidState(this.pos);
-        if (!this.shouldFadeOut && (this.onGround || !WeatherParticleManager.canHostStreaks(state) || !fluidState.isEmpty())) {
+        if (!this.doCollisionAnim && (this.onGround || !WeatherParticleManager.canHostStreaks(state) || !fluidState.isEmpty())) {
             if (state.isAir()) Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.DRIPPING_WATER, this.x, this.y - 0.25F, this.z, 0, 0, 0);
             this.gravity = 0;
             this.yd = 0;
-            this.shouldFadeOut = true;
+            this.doCollisionAnim = true;
         }
     }
 
@@ -75,12 +73,6 @@ public class StreakParticle extends WeatherParticle {
         this.flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y + 0.25F, z, f);
     }
-
-    @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-    }
-
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
         private final SpriteSet provider;

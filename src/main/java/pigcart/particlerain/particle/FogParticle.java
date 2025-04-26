@@ -7,13 +7,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -21,14 +17,15 @@ import pigcart.particlerain.config.ModConfig;
 
 import java.awt.*;
 
+import static pigcart.particlerain.config.ModConfig.CONFIG;
+
 public class FogParticle extends WeatherParticle {
 
     private FogParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z);
+        super(level, x, y, z, CONFIG.fog.gravity, CONFIG.fog.opacity, CONFIG.fog.size, CONFIG.fog.windStrength, CONFIG.fog.stormWindStrength);
+
         this.setSprite(provider.get(level.getRandom()));
-        this.lifetime = ModConfig.CONFIG.perf.particleRadius * 5;
-        final double distance = Minecraft.getInstance().cameraEntity.position().distanceTo(new Vec3(x, y, z));
-        this.quadSize = (float) (ModConfig.CONFIG.fog.size / distance);
+        this.setSize(getSize(), getSize());
 
         Color color = new Color(this.level.getBiome(this.pos).value().getFogColor()).darker();
         this.rCol = color.getRed() / 255F;
@@ -37,26 +34,16 @@ public class FogParticle extends WeatherParticle {
 
         this.roll = level.random.nextFloat() * Mth.PI;
         this.oRoll = this.roll;
+    }
 
-        this.xd = gravity / 3;
-        this.zd = gravity / 3;
-        this.gravity = ModConfig.CONFIG.fog.gravity;
+    public float getSize() {
+        final double distance = Minecraft.getInstance().cameraEntity.position().distanceTo(new Vec3(x, y, z));
+        return (float) (distance * ModConfig.CONFIG.fog.size);
     }
 
     public void tick() {
         super.tick();
-        final double camdist = Minecraft.getInstance().cameraEntity.position().distanceTo(new Vec3(x, y, z));
-        this.quadSize = (float) camdist / 2;
-        BlockState fallingTowards = level.getBlockState(this.pos.offset(3, -1, 3));
-        BlockPos blockPos = this.pos.offset(2, -4, 2);
-        if (level.getHeight(Heightmap.Types.MOTION_BLOCKING, blockPos.getX(), blockPos.getZ()) >= blockPos.getY() || !fallingTowards.getFluidState().isEmpty()) {
-            if (!shouldFadeOut) {
-                shouldFadeOut = true;
-            }
-        }
-        if (onGround) {
-            remove();
-        }
+        this.quadSize = getSize();
     }
 
     @Override
@@ -75,15 +62,10 @@ public class FogParticle extends WeatherParticle {
         quaternion.rotateZ((float) Math.atan2(x, z));
         // the z rotation doubles up on the -y axis instead of negating it like the positive axis. idk how to fix
         // for now we remove them before it gets to look too weird
-        if (yAngle < -1) shouldFadeOut = true;
+        if (yAngle < -1) doCollisionAnim = true;
 
         quaternion.rotateZ(Mth.lerp(f, this.oRoll, this.roll));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
-    }
-
-    @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {

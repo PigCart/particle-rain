@@ -29,15 +29,13 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 //?} else {
 /*import net.minecraft.client.resources.model.BakedModel;
 *///?}
+import static pigcart.particlerain.config.ModConfig.CONFIG;
 
 public class ShrubParticle extends WeatherParticle {
 
     protected ShrubParticle(ClientLevel level, double x, double y, double z) {
-        super(level, x, y, z);
-        this.quadSize = 0.5F;
-        this.gravity = ModConfig.CONFIG.shrub.gravity;
-        this.xd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
-        this.zd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
+        super(level, x, y, z, CONFIG.shrub.gravity, CONFIG.shrub.opacity, CONFIG.shrub.size, CONFIG.shrub.windStrength, CONFIG.shrub.stormWindStrength);
+
         if (ModConfig.CONFIG.dust.spawnOnGround) this.yd = 0.1F; //otherwise they get stuck and despawn for some reason >:?
 
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
@@ -74,25 +72,12 @@ public class ShrubParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        this.removeIfObstructed();
-        if (!this.level.getFluidState(this.pos).isEmpty()) {
-            this.shouldFadeOut = true;
-            this.gravity = 0;
-        } else {
-            this.xd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
-            this.zd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
-        }
+        this.xd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
+        this.zd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
         this.oRoll = this.roll;
         this.roll = this.roll + ModConfig.CONFIG.shrub.rotationAmount;
         if (this.onGround) {
             this.yd = ModConfig.CONFIG.shrub.bounciness;
-        }
-    }
-
-    @Override
-    public void fadeIn() {
-        if (age < 10) {
-            this.alpha = (age * 1.0f) / 10;
         }
     }
 

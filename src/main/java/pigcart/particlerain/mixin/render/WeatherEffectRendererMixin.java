@@ -27,6 +27,7 @@ public class WeatherEffectRendererMixin {
     @Unique
     private int rainSoundTime;
 
+    //TODO: this could be more precise for greater compatibility and configurability
     @Inject(method = "tickRainParticles", at = @At("HEAD"), cancellable = true)
     public void tickRainParticles(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus, CallbackInfo ci) {
         if (!ModConfig.CONFIG.compat.tickVanillaWeather) {
@@ -53,8 +54,7 @@ public class WeatherEffectRendererMixin {
                             level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.1F, 0.5F, false);
                     } else {
                         SoundEvent sound = WeatherParticleManager.getBiomeSound(blockPos2, false);
-                        if (sound != null)
-                            level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.2F, 1.0F, false);
+                        if (sound != null) level.playLocalSound(blockPos2, sound, SoundSource.WEATHER, 0.2F, 1.0F, false);
                     }
                 }
             }

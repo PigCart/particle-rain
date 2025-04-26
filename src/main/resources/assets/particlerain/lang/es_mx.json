@@ -10,8 +10,8 @@
   "particlerain.PerformanceOptions.particleDensity.description": "La cantidad de veces que las partículas de clima intentarán generarse por tick durante la lluvia normal.",
   "particlerain.PerformanceOptions.particleStormDensity": "Densidad de partículas durante tormentas",
   "particlerain.PerformanceOptions.particleStormDensity.description": "La cantidad de veces que las partículas de clima intentarán generarse por tick durante tormentas.",
-  "particlerain.PerformanceOptions.particleRadius": "Distancia de renderizado de partículas",
-  "particlerain.PerformanceOptions.particleRadius.description": "A cuántos bloques de distancia de la cámara se generarán las partículas.",
+  "particlerain.PerformanceOptions.particleDistance": "Distancia de renderizado de partículas",
+  "particlerain.PerformanceOptions.particleDistance.description": "A cuántos bloques de distancia de la cámara se generarán las partículas.",
   "particlerain.PerformanceOptions.fogParticleRadius": "Distancia de renderizado de partículas de niebla",
 
   "particlerain.EffectOptions": "Alternar Efectos",

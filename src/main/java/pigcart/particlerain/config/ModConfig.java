@@ -13,8 +13,6 @@ import java.lang.annotation.Target;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ModConfig {
@@ -23,6 +21,9 @@ public class ModConfig {
     public static ModConfig CONFIG = new ModConfig();
     public static ModConfig DEFAULT = new ModConfig();
 
+    public int configVersion = 1;
+
+    //TODO
     /*
     public enum Preset {
         FAST,
@@ -54,29 +55,33 @@ public class ModConfig {
         public int maxParticleAmount = 1500;
         public int particleDensity = 100;
         public int particleStormDensity = 200;
-        public int particleRadius = 25;
-        public int fogParticleRadius = 90;
+        public int particleDistance = 20;
+        @Percentage
+        public float impactParticleDistance = 0.5F;
     }
 
     public EffectOptions effect = new EffectOptions();
     public static class EffectOptions {
         public boolean doRainParticles = true;
-        public boolean doSplashParticles = true;
-        public boolean doSmokeParticles = true;
-        public boolean doRippleParticles = true;
+        //TODO
+        //public boolean doSplashParticles = true;
+        //public boolean doSmokeParticles = true;
+        //public boolean doRippleParticles = true;
         public boolean doStreakParticles = true;
         public boolean doSnowParticles = true;
         public boolean doDustParticles = true;
         public boolean doShrubParticles = true;
-        public boolean doFogParticles = false;
-        public boolean doGroundFogParticles = true;
-        public boolean doPuddles = true;
+        public boolean doFogParticles = true;
+        public boolean doMistParticles = true;
+        //TODO
+        //public boolean doHailParticles = true;
+        //public boolean doSleetParticles = true;
     }
 
     public SoundOptions sound = new SoundOptions();
     public static class SoundOptions {
         //public boolean doMaterialSounds = true;
-        //public boolean doDripSplashing = true;
+        //public boolean doDripSounds = true;
         public boolean doRainSounds = true;
         public boolean doSnowSounds = true;
         public boolean doSandSounds = true;
@@ -92,6 +97,7 @@ public class ModConfig {
         public float tintMix = 0.4F;
         public boolean yLevelWindAdjustment = true;
         public boolean syncRegistry = true;
+        public boolean crossBiomeBorder = false;
     }
     public SpawnOptions spawn = new SpawnOptions();
     public static class SpawnOptions {
@@ -115,8 +121,9 @@ public class ModConfig {
         public float windStrength = 0.3F;
         public float stormWindStrength = 0.7F;
         @Percentage
-        public float opacity = 1;
-        public float size = 2F;
+        public float opacity = 0.9F;
+        public float size = 1.5F;
+
         public int impactEffectAmount = 5;
     }
     public SnowOptions snow = new SnowOptions();
@@ -125,11 +132,14 @@ public class ModConfig {
         @Percentage
         public float density = 0.4F;
         public float gravity = 0.05F;
-        public float rotationAmount = 0.02F;
-        public float stormRotationAmount = 0.05F;
         public float windStrength = 1F;
         public float stormWindStrength = 3F;
-        public float size = 2F;
+        @Percentage
+        public float opacity = 0.9F;
+        public float size = 1.5F;
+
+        public float rotationAmount = 0.02F;
+        public float stormRotationAmount = 0.05F;
     }
     public DustOptions dust = new DustOptions();
     @OverrideName(newName = "ParticleOptions")
@@ -139,8 +149,10 @@ public class ModConfig {
         public float gravity = 0.2F;
         public float windStrength = 0.2F;
         public float stormWindStrength = 0.3F;
-        //public float moteSize = 0.1F;
-        public float size = 2F;
+        @Percentage
+        public float opacity = 1F;
+        public float size = 1.5F;
+
         public boolean spawnOnGround = true;
     }
     public ShrubOptions shrub = new ShrubOptions();
@@ -149,42 +161,59 @@ public class ModConfig {
         @Percentage
         public float density = 0.02F;
         public float gravity = 0.2F;
-        public float rotationAmount = 0.2F;
         public float windStrength = 0.2F;
         public float stormWindStrength = 0.3F;
+        @Percentage
+        public float opacity = 1F;
+        public float size = 0.5F;
+
+        public float rotationAmount = 0.2F;
         public float bounciness = 0.2F;
     }
     public RippleOptions ripple = new RippleOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class RippleOptions {
-        //public int amount = 5;
+        @Percentage
+        public float opacity = 0.9F;
+        public float size = 0.25F;
+
         @ReloadsResources
         public int resolution = 16;
         @ReloadsResources
         public boolean useResourcepackResolution = true;
     }
+    public StreakOptions streak = new StreakOptions();
+    @OverrideName(newName = "ParticleOptions")
+    public static class StreakOptions {
+        @Percentage
+        public float opacity = 0.9F;
+        public float size = 0.5F;
+    }
     public FogOptions fog = new FogOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class FogOptions {
         @Percentage
-        public float density = 0.2F;
+        public float density = 0.1F;
         public float gravity = 0.2F;
-        public float size = 0.5F;
+        public float windStrength = 0.2F;
+        public float stormWindStrength = 0.3F;
+        @Percentage
+        public float opacity = 0.45F;
+        public float size = 0.4F;
     }
-    public GroundFogOptions groundFog = new GroundFogOptions();
+    public GroundFogOptions mist = new GroundFogOptions();
     @OverrideName(newName = "ParticleOptions")
     public static class GroundFogOptions {
-        public int density = 20;
+        @Percentage
+        public float density = 20;
+        public float windStrength = 0;
+        public float stormWindStrength = 0;
+        @Percentage
+        public float opacity = 0.9F;
+        public float size = 8F;
+
         public int maxSpawnHeight = 64;
         public int minSpawnHeight = 60;
-        public float size = 8F;
-    }
-    public PuddleOptions puddle = new PuddleOptions();
-    public static class PuddleOptions {
-        public int updateDelay = 100;
-        public int updateStep = 5;
-        public int rainLevel = 90;
-        public int stormLevel = 130;
     }
 
     static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -201,8 +230,9 @@ public class ModConfig {
                 throw new RuntimeException("Particle Rain config failed to load: ", e);
             }
         }
-        if (ModConfig.CONFIG == null) {
-            ModConfig.CONFIG = new ModConfig();
+        // config file doesnt need to be written until the user changes an option
+        if (ModConfig.CONFIG == null || ModConfig.CONFIG.configVersion < ModConfig.DEFAULT.configVersion) {
+            ModConfig.CONFIG = ModConfig.DEFAULT;
         }
     }
 

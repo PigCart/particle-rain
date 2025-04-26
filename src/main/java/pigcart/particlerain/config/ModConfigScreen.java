@@ -24,7 +24,6 @@ public class ModConfigScreen {
                         .group(getGroup(ModConfig.DEFAULT.perf, ModConfig.CONFIG.perf))
                         .group(getGroup(ModConfig.DEFAULT.effect, ModConfig.CONFIG.effect))
                         .group(getGroup(ModConfig.DEFAULT.sound, ModConfig.CONFIG.sound))
-                        .group(getGroup(ModConfig.DEFAULT.puddle, ModConfig.CONFIG.puddle))
                         .group(getGroup(ModConfig.DEFAULT.compat, ModConfig.CONFIG.compat))
                         .build())
                 .category(ConfigCategory.createBuilder()
@@ -34,8 +33,9 @@ public class ModConfigScreen {
                         .group(getGroup(ModConfig.DEFAULT.dust, ModConfig.CONFIG.dust))
                         .group(getGroup(ModConfig.DEFAULT.shrub, ModConfig.CONFIG.shrub))
                         .group(getGroup(ModConfig.DEFAULT.ripple, ModConfig.CONFIG.ripple))
+                        .group(getGroup(ModConfig.DEFAULT.streak, ModConfig.CONFIG.streak))
                         .group(getGroup(ModConfig.DEFAULT.fog, ModConfig.CONFIG.fog))
-                        .group(getGroup(ModConfig.DEFAULT.groundFog, ModConfig.CONFIG.groundFog))
+                        .group(getGroup(ModConfig.DEFAULT.mist, ModConfig.CONFIG.mist))
                         .build())
                 .category(getCategory("category.SpawnOptions", ModConfig.DEFAULT.spawn, ModConfig.CONFIG.spawn))
                 .save(ModConfig::saveConfig)
@@ -63,7 +63,7 @@ public class ModConfigScreen {
 
     private static List<Option<?>> getOptions(Object defaultGroup, Object group) {
         List<Option<?>> options = new ArrayList<>();
-        Field[] fields = group.getClass().getDeclaredFields();
+        Field[] fields = group.getClass().getFields();
         for (Field field : fields) {
             field.setAccessible(true);
             final Class<?> type = field.getType();
@@ -185,7 +185,7 @@ public class ModConfigScreen {
     private static <T> Binding<T> getBinding(Object defaultGroup, Object group, Field field) {
         T defaultValue;
         try {
-            Field defaultField = defaultGroup.getClass().getDeclaredField(field.getName());
+            Field defaultField = defaultGroup.getClass().getField(field.getName());
             defaultField.setAccessible(true);
             defaultValue = (T) defaultField.get(defaultGroup);
         } catch (NoSuchFieldException | IllegalAccessException e) {

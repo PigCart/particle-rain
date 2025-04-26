@@ -22,7 +22,6 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
         super(clientLevel, d, e, f);
     }
 
-    //TODO: whoa hey i should probably not be using override for this!
     @Override
     public void pickSprite(SpriteSet spriteSet, CallbackInfo ci) {
         if (ModConfig.CONFIG.compat.biomeTint) {

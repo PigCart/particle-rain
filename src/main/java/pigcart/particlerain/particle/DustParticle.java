@@ -5,7 +5,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -14,20 +13,18 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import pigcart.particlerain.config.ModConfig;
 
 import java.awt.*;
 
+import static pigcart.particlerain.config.ModConfig.CONFIG;
+
 public class DustParticle extends WeatherParticle {
 
     protected DustParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet provider) {
-        super(clientWorld, x, y, z);
+        super(clientWorld, x, y, z, CONFIG.dust.gravity, CONFIG.dust.opacity, CONFIG.dust.size, CONFIG.dust.windStrength, CONFIG.dust.stormWindStrength);
+
         this.setSprite(provider.get(this.random));
-        this.quadSize = ModConfig.CONFIG.dust.size;
-        this.xd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
-        this.zd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
-        this.gravity = ModConfig.CONFIG.dust.gravity;
         if (ModConfig.CONFIG.dust.spawnOnGround) this.yd = 0.1F;
 
         //? if >=1.21.4 {
@@ -50,19 +47,10 @@ public class DustParticle extends WeatherParticle {
         if (this.onGround) {
             this.yd = 0.01F;
         }
-        this.removeIfObstructed();
-        if (!this.level.getFluidState(this.pos).isEmpty()) {
-            this.shouldFadeOut = true;
-            this.gravity = 0;
-        } else {
-            this.xd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
-            this.zd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
-        }
+        this.xd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
+        this.zd = level.isThundering() ? ModConfig.CONFIG.dust.stormWindStrength : ModConfig.CONFIG.dust.windStrength;
     }
-    @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-    }
+
     @Override
     public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
@@ -71,7 +59,7 @@ public class DustParticle extends WeatherParticle {
         float z = (float) (Mth.lerp(tickPercent, this.zo, this.z) - camPos.z());
 
         Quaternionf quaternion = camera.rotation();
-        y = y + Mth.sin((Mth.lerp(tickPercent, this.age - 1.0F, this.age)) / 20) + 1.5F;
+        y = y + Mth.sin((Mth.lerp(tickPercent, this.age - 1.0F, this.age)) / 20);
         //? if >1.20.1 {
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, tickPercent);
         //?} else {
