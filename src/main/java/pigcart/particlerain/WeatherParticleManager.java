@@ -62,7 +62,7 @@ public final class WeatherParticleManager {
                 }
             }
             if (CONFIG.effect.doShrubParticles) {
-                if (level.random.nextFloat() < CONFIG.shrub.density) {
+                if (level.random.nextFloat() < CONFIG.shrub.density / 10) {
                     level.addParticle(ParticleRainClient.SHRUB, x, y, z, 0, 0, 0);
                 }
             }
