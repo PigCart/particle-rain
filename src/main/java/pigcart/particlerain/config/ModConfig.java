@@ -64,14 +64,14 @@ public class ModConfig {
     public static class EffectOptions {
         public boolean doRainParticles = true;
         //TODO
-        //public boolean doSplashParticles = true;
+        public boolean doSplashParticles = true;
         //public boolean doSmokeParticles = true;
-        //public boolean doRippleParticles = true;
+        public boolean doRippleParticles = true;
         public boolean doStreakParticles = true;
         public boolean doSnowParticles = true;
         public boolean doDustParticles = true;
         public boolean doShrubParticles = true;
-        public boolean doFogParticles = true;
+        public boolean doFogParticles = false;
         public boolean doMistParticles = true;
         //TODO
         //public boolean doHailParticles = true;
@@ -80,21 +80,22 @@ public class ModConfig {
 
     public SoundOptions sound = new SoundOptions();
     public static class SoundOptions {
-        //public boolean doMaterialSounds = true;
-        //public boolean doDripSounds = true;
         public boolean doRainSounds = true;
         public boolean doSnowSounds = true;
-        public boolean doSandSounds = true;
+        public boolean doWindSounds = true;
+        //public boolean doSleetSounds = true;
+        //public boolean doHailSounds = true;
     }
 
     public CompatibilityOptions compat = new CompatibilityOptions();
     public static class CompatibilityOptions {
         public boolean renderVanillaWeather = false;
-        public boolean tickVanillaWeather = false;
+        public boolean doDefaultSplashing = true;
         @ReloadsResources
         public boolean biomeTint = true;
         @Percentage
         public float tintMix = 0.4F;
+        public boolean shaderpackTint = true; //TODO
         public boolean yLevelWindAdjustment = true;
         public boolean syncRegistry = true;
         public boolean crossBiomeBorder = false;
@@ -117,14 +118,12 @@ public class ModConfig {
     public static class RainOptions {
         @Percentage
         public float density = 1.0F;
-        public float gravity = 1.0F;
+        public float gravity = 0.9F;
         public float windStrength = 0.3F;
         public float stormWindStrength = 0.7F;
         @Percentage
         public float opacity = 0.9F;
         public float size = 1.5F;
-
-        public int impactEffectAmount = 5;
     }
     public SnowOptions snow = new SnowOptions();
     @OverrideName(newName = "ParticleOptions")
@@ -150,7 +149,7 @@ public class ModConfig {
         public float windStrength = 0.2F;
         public float stormWindStrength = 0.3F;
         @Percentage
-        public float opacity = 1F;
+        public float opacity = 0.99F;
         public float size = 1.5F;
 
         public boolean spawnOnGround = true;
@@ -193,17 +192,17 @@ public class ModConfig {
     @OverrideName(newName = "ParticleOptions")
     public static class FogOptions {
         @Percentage
-        public float density = 0.1F;
+        public float density = 0.16F;
         public float gravity = 0.2F;
         public float windStrength = 0.2F;
         public float stormWindStrength = 0.3F;
         @Percentage
         public float opacity = 0.45F;
-        public float size = 0.4F;
+        public float size = 3.5F;
     }
-    public GroundFogOptions mist = new GroundFogOptions();
+    public MistOptions mist = new MistOptions();
     @OverrideName(newName = "ParticleOptions")
-    public static class GroundFogOptions {
+    public static class MistOptions {
         @Percentage
         public float density = 20;
         public float windStrength = 0;

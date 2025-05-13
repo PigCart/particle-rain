@@ -1,7 +1,7 @@
 package pigcart.particlerain.particle.render;
 
 //? if >=1.21.5 {
-import com.mojang.blaze3d.pipeline.BlendFunction;
+/*import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
@@ -20,9 +20,9 @@ public class FogRenderType {
     public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
     public static final RenderPipeline FOG_PIPELINE =
             //? if neoforge {
-            /*// cant be bothered to figure out neo impl lmao. might just need an access transformer?
+            /^// cant be bothered to figure out neo impl lmao. might just need an access transformer?
             RenderPipelines.TRANSLUCENT_PARTICLE;
-            *///?} else {
+            ^///?} else {
             RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
@@ -45,8 +45,8 @@ public class FogRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType("particlerain:fog", FOG);
 }
 
-//?} else if 1.21.4 {
-/*import com.mojang.blaze3d.platform.GlStateManager;
+*///?} else if 1.21.4 {
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -95,7 +95,7 @@ public class FogRenderType {
             FOG
     );
 }
-*///?} else if 1.21.1 {
+//?} else if 1.21.1 {
 /*import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;

@@ -25,10 +25,10 @@ import pigcart.particlerain.config.ModConfig;
 import java.awt.*;
 
 //? if >=1.21.5 {
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-//?} else {
-/*import net.minecraft.client.resources.model.BakedModel;
-*///?}
+/*import net.minecraft.client.renderer.block.model.BlockStateModel;
+*///?} else {
+import net.minecraft.client.resources.model.BakedModel;
+//?}
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
 public class ShrubParticle extends WeatherParticle {
@@ -41,7 +41,7 @@ public class ShrubParticle extends WeatherParticle {
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
         // no foliage convention tag? :(
         //? if >=1.21.5 {
-        if (blockState.is(BlockTags.REPLACEABLE) && !blockState.isAir() && blockState.getFluidState().isEmpty() && !blockState.is(BlockTags.CROPS) && !blockState.is(BlockTags.SNOW)) {
+        /*if (blockState.is(BlockTags.REPLACEABLE) && !blockState.isAir() && blockState.getFluidState().isEmpty() && !blockState.is(BlockTags.CROPS) && !blockState.is(BlockTags.SNOW)) {
             final BlockStateModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
             this.setSprite(model.particleIcon());
             final BakedQuad quad = model.collectParts(this.random).getFirst().getQuads(null).getFirst();
@@ -53,8 +53,8 @@ public class ShrubParticle extends WeatherParticle {
             blockState = Blocks.DEAD_BUSH.defaultBlockState();
         }
         this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).particleIcon());
-        //?} else {
-        /*if (blockState.is(BlockTags.REPLACEABLE) && !blockState.isAir() && blockState.getFluidState().isEmpty() && !blockState.is(BlockTags.CROPS) && !blockState.is(BlockTags.SNOW)) {
+        *///?} else {
+        if (blockState.is(BlockTags.REPLACEABLE) && !blockState.isAir() && blockState.getFluidState().isEmpty() && !blockState.is(BlockTags.CROPS) && !blockState.is(BlockTags.SNOW)) {
             final BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
             this.setSprite(model.getParticleIcon());
             final BakedQuad quad = model.getQuads(blockState, null, this.random).getFirst();
@@ -66,7 +66,7 @@ public class ShrubParticle extends WeatherParticle {
             blockState = Blocks.DEAD_BUSH.defaultBlockState();
         }
         this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).getParticleIcon());
-        *///?}
+        //?}
     }
 
     @Override
@@ -101,8 +101,8 @@ public class ShrubParticle extends WeatherParticle {
         Quaternionf quat2 = new Quaternionf(new AxisAngle4f(Mth.HALF_PI, 0, 1, 0));
         quat1.mul(quaternion).rotateX(Mth.lerp(tickPercentage, this.oRoll, this.roll));
         quat2.mul(quaternion).rotateZ(Mth.lerp(tickPercentage, this.oRoll, this.roll));
-        quat1 = this.flipItTurnwaysIfBackfaced(quat1, new Vector3f(x, y, z));
-        quat2 = this.flipItTurnwaysIfBackfaced(quat2, new Vector3f(x, y, z));
+        quat1 = this.turnBackfaceFlipways(quat1, new Vector3f(x, y, z));
+        quat2 = this.turnBackfaceFlipways(quat2, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quat1, x, y, z, tickPercentage);
         this.renderRotatedQuad(vertexConsumer, quat2, x, y, z, tickPercentage);
     }

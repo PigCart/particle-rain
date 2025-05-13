@@ -6,11 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
@@ -36,14 +34,14 @@ public final class WeatherParticleManager {
         if (CONFIG.effect.doFogParticles && level.random.nextFloat() < CONFIG.fog.density) {
             level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
         }
-        final BlockPos getPrecipitationFromBlockPos = CONFIG.spawn.useHeightmapTemp ? level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos) : pos ;
-        Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : StonecutterUtil.getPrecipitationAt(level, biome.value(), getPrecipitationFromBlockPos);
+        final BlockPos precipitationSamplePos = CONFIG.spawn.useHeightmapTemp ? level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos) : pos ;
+        Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : StonecutterUtil.getPrecipitationAt(level, biome.value(), precipitationSamplePos);
         //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
         if (precipitation == Precipitation.RAIN) {
             if (CONFIG.effect.doMistParticles && fogCount < CONFIG.mist.density) {
                 int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
                 int distance = (int) new Vec3(x, height, z).distanceToSqr(Minecraft.getInstance().cameraEntity.position());
-                if (distance > CONFIG.perf.particleDistance - 1 && height <= CONFIG.mist.maxSpawnHeight && height >= CONFIG.mist.minSpawnHeight && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
+                if (distance > Mth.square(CONFIG.perf.particleDistance) - 2 && height <= CONFIG.mist.maxSpawnHeight && height >= CONFIG.mist.minSpawnHeight && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
                     level.addParticle(ParticleRainClient.MIST, x, height + level.random.nextFloat(), z, 0, 0, 0);
                 }
             }
@@ -54,9 +52,10 @@ public final class WeatherParticleManager {
             if (level.random.nextFloat() < CONFIG.snow.density) {
                 level.addParticle(ParticleRainClient.SNOW, x, y, z, 0, 0, 0);
             }
-        } else if (doesThisBlockHaveDustBlowing(precipitation, level, BlockPos.containing(x, y, z), biome)) {
-            if (CONFIG.dust.spawnOnGround) y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
+        } else if (doesThisBlockHaveDustBlowing(precipitation, level, pos, biome)) {
             if (CONFIG.effect.doDustParticles) {
+                level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
+                if (CONFIG.dust.spawnOnGround) y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
                 if (level.random.nextFloat() < CONFIG.dust.density) {
                     level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
                 }
@@ -69,45 +68,41 @@ public final class WeatherParticleManager {
         }
     }
 
-    public static void tick(ClientLevel level, Entity entity) {
+    public static void tick(ClientLevel level, Entity cameraEntity) {
         //TODO: twilight fog and skittering sand when not raining
         if (level.isRaining()) {
-            int density = (int) ((level.isThundering() ? CONFIG.perf.particleStormDensity : CONFIG.perf.particleDensity) * level.getRainLevel(0));
+            int density = (int) (Mth.lerpInt(level.getThunderLevel(1.0F), CONFIG.perf.particleDensity, CONFIG.perf.particleStormDensity) * level.getRainLevel(1.0F));
             final float speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().length();
             density = (int) (density * ((speed * 2) + 1));
 
-            RandomSource rand = RandomSource.create();
+            for (int i = 0; i < density; i++) {
 
-            for (int pass = 0; pass < density; pass++) {
-
-                float theta = (float) (2 * Math.PI * rand.nextFloat());
-                float phi = (float) Math.acos(2 * rand.nextFloat() - 1);
+                float theta = Mth.TWO_PI * level.random.nextFloat();
+                float h = level.random.nextFloat();
+                if (h < level.random.nextFloat()) continue; // bias spawning to top of sphere
+                float phi = (float) Math.acos((2 * h) - 1);
                 double x = CONFIG.perf.particleDistance * Mth.sin(phi) * Math.cos(theta);
-                double y = CONFIG.perf.particleDistance * Mth.sin(phi) * Math.sin(theta);
-                double z = CONFIG.perf.particleDistance * Mth.cos(phi);
+                double y = CONFIG.perf.particleDistance * Mth.cos(phi);
+                double z = CONFIG.perf.particleDistance * Mth.sin(phi) * Math.sin(theta);
 
-                pos.set(x + entity.getX(), y + entity.getY(), z + entity.getZ());
+                pos.set(x + cameraEntity.getX(), y + cameraEntity.getY(), z + cameraEntity.getZ());
                 if (level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) > pos.getY())
                     continue;
 
-                spawnParticle(level, level.getBiome(pos), pos.getX() + rand.nextFloat(), pos.getY() + rand.nextFloat(), pos.getZ() + rand.nextFloat());
+                spawnParticle(level, level.getBiome(pos), pos.getX() + level.random.nextFloat(), pos.getY() + level.random.nextFloat(), pos.getZ() + level.random.nextFloat());
+
             }
         }
     }
 
-    //TODO: better weather sounds
     @Nullable
-    public static SoundEvent getBiomeSound(BlockPos blockPos, boolean above) {
-        //TODO: this should be a more precise mixin instead of a whole reimplementation
-        ClientLevel level = Minecraft.getInstance().level;
+    public static SoundEvent getAdditionalWeatherSounds(ClientLevel level, BlockPos blockPos, boolean above) {
         Holder<Biome> biome = level.getBiome(blockPos);
         Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : StonecutterUtil.getPrecipitationAt(level, biome.value(), blockPos);
-        if (precipitation == Precipitation.RAIN && CONFIG.sound.doRainSounds) {
-            return above ? SoundEvents.WEATHER_RAIN_ABOVE : SoundEvents.WEATHER_RAIN;
-        } else if (precipitation == Precipitation.SNOW && CONFIG.sound.doSnowSounds) {
+        if (precipitation == Precipitation.SNOW && CONFIG.sound.doSnowSounds) {
             return above ? ParticleRainClient.WEATHER_SNOW_ABOVE : ParticleRainClient.WEATHER_SNOW;
-        } else if (doesThisBlockHaveDustBlowing(precipitation, level, blockPos, biome) && CONFIG.sound.doSandSounds) {
-        return above ? ParticleRainClient.WEATHER_SANDSTORM_ABOVE : ParticleRainClient.WEATHER_SANDSTORM;
+        } else if (doesThisBlockHaveDustBlowing(precipitation, level, blockPos, biome) && CONFIG.sound.doWindSounds) {
+            return above ? ParticleRainClient.WEATHER_SANDSTORM_ABOVE : ParticleRainClient.WEATHER_SANDSTORM;
         }
         return null;
     }

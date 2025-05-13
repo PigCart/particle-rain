@@ -1,9 +1,7 @@
 package pigcart.particlerain;
 
-import com.llamalad7.mixinextras.platform.fabric.MixinExtrasConfigPlugin;
 import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.IntUnaryOperator;
-import net.caffeinemc.mods.sodium.client.data.config.MixinConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TextureSheetParticle;
@@ -13,7 +11,6 @@ import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.util.Mth;
 import org.joml.Math;
 import org.lwjgl.system.MemoryUtil;

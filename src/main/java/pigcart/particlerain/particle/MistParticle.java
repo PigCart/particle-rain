@@ -77,7 +77,7 @@ public class MistParticle extends WeatherParticle {
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(Mth.HALF_PI, -1, 0, 0));
 
         quaternion.rotateZ(Mth.lerp(f, this.oRoll, this.roll));
-        flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
+        turnBackfaceFlipways(quaternion, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
     }
 

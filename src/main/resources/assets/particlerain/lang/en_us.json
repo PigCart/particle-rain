@@ -12,6 +12,8 @@
   "particlerain.PerformanceOptions.particleStormDensity.description": "The number of times weather particles will try to spawn per tick during storms.",
   "particlerain.PerformanceOptions.particleDistance": "Particle render distance",
   "particlerain.PerformanceOptions.particleDistance.description": "How many blocks away particles will appear.",
+  "particlerain.PerformanceOptions.impactParticleDistance": "Impact particle render distance",
+  "particlerain.PerformanceOptions.impactParticleDistance.description": "How many blocks away impact particles will appear.",
 
   "particlerain.EffectOptions": "Effect Toggles",
   "particlerain.EffectOptions.description": "Turn individual effects on or off.",

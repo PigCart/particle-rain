@@ -48,7 +48,7 @@ public class RippleParticle extends WeatherParticle {
         float z = (float) (Mth.lerp(f, this.zo, this.z) - camPos.z());
 
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(Mth.HALF_PI, -1, 0, 0));
-        this.flipItTurnwaysIfBackfaced(quaternion, new Vector3f(x, y, z));
+        this.turnBackfaceFlipways(quaternion, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
     }
 

@@ -1,5 +1,6 @@
 package pigcart.particlerain.particle;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,9 +25,10 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     protected BlockPos.MutableBlockPos oPos;
     boolean doCollisionAnim = false;
     BlockHitResult collision = null;
-    float temperature;
+    float baseTemp;
     float targetOpacity;
     float oQuadSize;
+    float distanceSquared;
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, float opacity, float size, float windStrength, float stormWindStrength) {
         super(level, x, y, z);
@@ -46,7 +48,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         this.lifetime = CONFIG.perf.particleDistance * 100;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
-        this.temperature = level.getBiome(this.pos).value().getBaseTemperature();
+        this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
 
         WeatherParticleManager.particleCount++;
     }
@@ -55,8 +57,9 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         oQuadSize = quadSize;
+        distanceSquared = (float) Minecraft.getInstance().getCameraEntity().distanceToSqr(x, y, z);
         pos.set(x, y, z);
-        if (!this.pos.equals(oPos)) {
+        if (!pos.equals(oPos)) {
             onPositionUpdate();
             oPos.set(pos);
         }
@@ -67,8 +70,8 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     }
 
     public void onPositionUpdate() {
-        if (!CONFIG.compat.crossBiomeBorder && Mth.abs(level.getBiome(this.pos).value().getBaseTemperature() - this.temperature) > 0.4 ||
-                !level.getFluidState(this.pos).isEmpty()) {
+        if (!CONFIG.compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4 ||
+                !level.getFluidState(pos).isEmpty()) {
             doCollisionAnim = true;
         }
         testForCollisions();
@@ -90,15 +93,13 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     }
 
     public void fadeByDistance() {
-        final float dist = (float) Minecraft.getInstance().getCameraEntity().distanceToSqr(x, y, z);
-        final float renderDist = Mth.square(CONFIG.perf.particleDistance);
-        if (dist > renderDist) {
+        final float renderDistance = Mth.square(CONFIG.perf.particleDistance);
+        if (distanceSquared > renderDistance) {
             remove();
-        } else if (dist < 2) {
-            //this.alpha = 0;
+        } else if (distanceSquared < 2) {
             //TODO: configurable distance to fade out near camera
         } else {
-            this.alpha = Mth.lerp(dist / renderDist, targetOpacity, 0);
+            alpha = Mth.lerp(distanceSquared / renderDistance, targetOpacity, 0);
         }
     }
 
@@ -120,7 +121,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         super.remove();
     }
 
-    public Quaternionf flipItTurnwaysIfBackfaced(Quaternionf quaternion, Vector3f toCamera) {
+    public Quaternionf turnBackfaceFlipways(Quaternionf quaternion, Vector3f toCamera) {
         Vector3f normal = new Vector3f(0, 0, 1);
         normal.rotate(quaternion).normalize();
         float dot = normal.dot(toCamera);
@@ -129,8 +130,10 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         }
         else return quaternion;
     }
+
+    //FIXME: particle invisible when wind is 0
     public static double yLevelWindAdjustment(double y) {
-        return Math.clamp(0, 1, (y - 64) / 40);
+        return Math.clamp(0.01, 1, (y - 64) / 40);
     }
 
     @Override

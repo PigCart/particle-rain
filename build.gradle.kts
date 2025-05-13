@@ -1,5 +1,6 @@
 plugins {
-    id("dev.isxander.modstitch.base") version "0.5.14-unstable"
+    id("dev.isxander.modstitch.base") version "0.5.15-unstable"
+    id("dev.kikugie.stonecutter")
 }
 
 fun prop(name: String, consumer: (prop: String) -> Unit) {
@@ -33,7 +34,7 @@ modstitch {
     metadata {
         modId = "particlerain"
         modName = "Particle Rain"
-        modVersion = "3.3.4"
+        modVersion = "4.0.0-alpha"
         modGroup = "pigcart"
         modAuthor = "PigCart"
 
@@ -79,6 +80,15 @@ modstitch {
         // If you do, simply make the mixin file and add it like so for the respective loader:
         if (isLoom) configs.register("particlerain-fabric")
         //if (isModDevGradleRegular) configs.register("particlerain-neoforge")
+    }
+}
+
+tasks.named("generateModMetadata") {
+    dependsOn("stonecutterGenerate")
+}
+modstitch.moddevgradle {
+    tasks.named("createMinecraftArtifacts") {
+        dependsOn("stonecutterGenerate")
     }
 }
 

@@ -26,9 +26,9 @@ import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
-public class RainParticle extends WeatherParticle {
+public class SleetParticle extends WeatherParticle {
 
-    public RainParticle(ClientLevel level, double x, double y, double z) {
+    public SleetParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z, CONFIG.rain.gravity, CONFIG.rain.opacity, CONFIG.rain.size, CONFIG.rain.windStrength, CONFIG.rain.stormWindStrength);
 
         if (CONFIG.compat.biomeTint) TextureUtil.applyWaterTint(this, level, this.pos);
@@ -51,7 +51,7 @@ public class RainParticle extends WeatherParticle {
             BlockPos blockPos = BlockPos.containing(spawnPos).below();
             boolean collisionBelowExists =
                     !level.getBlockState(blockPos).getCollisionShape(level, blockPos).isEmpty()
-                    || !level.getFluidState(pos).isEmpty();
+                            || !level.getFluidState(pos).isEmpty();
             BlockHitResult hit = level.clip(StonecutterUtil.getClipContext(collisionPos, spawnPos));
             if (hit.getType().equals(HitResult.Type.MISS) && collisionBelowExists) {
                 BlockState state = level.getBlockState(BlockPos.containing(spawnPos.x, spawnPos.y, spawnPos.z).below());

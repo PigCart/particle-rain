@@ -86,6 +86,7 @@ public class ParticleRainClient {
                             Biome.Precipitation precipitation = StonecutterUtil.getPrecipitationAt(level, holder.value(), blockPos);
                             addChatMsg("Precipitation: " + precipitation);
                             addChatMsg("Base Temp: " + holder.value().getBaseTemperature());
+                            addChatMsg("Scheduled tasks: " + TaskScheduler.tasks.size());
                             return 0;
                         })
                 );

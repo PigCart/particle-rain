@@ -44,7 +44,7 @@ public class StonecutterUtil {
         //? if <=1.20.1 {
         /*return new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, Minecraft.getInstance().player);
         *///?} else {
-        return new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty());
+        return new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty());
         //?}
     }
     //? if <=1.20.1 {
