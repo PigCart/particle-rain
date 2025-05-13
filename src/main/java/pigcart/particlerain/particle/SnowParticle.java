@@ -49,7 +49,7 @@ public class SnowParticle extends WeatherParticle {
         super.tick();
         this.oRoll = this.roll;
         this.roll = this.oRoll + (level.isThundering() ? CONFIG.snow.stormRotationAmount : CONFIG.snow.rotationAmount) * this.rotationAmount;
-        if (this.onGround || this.removeIfObstructed()) {
+        if (this.onGround || this.removeIfObstructed() || !level.getFluidState(pos).isEmpty()) {
             this.remove();
         }
     }
