@@ -38,6 +38,7 @@
   "particlerain.EffectOptions.doSleetParticles": "Spawn Sleet Particles",
   "particlerain.EffectOptions.doSleetParticles.description": "Replaces rain at the border of snowy biomes.",
   "particlerain.EffectOptions.doPuddles": "Puddles",
+  "particlerain.EffectOptions.doPuddles.description": "Experimental!!!",
 
   "particlerain.SoundOptions": "Sound Toggles",
   "particlerain.SoundOptions.doMaterialSounds": "Play material specific sounds",

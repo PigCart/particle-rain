@@ -39,7 +39,10 @@ public class ParticleRainClient implements ClientModInitializer {
     public static SimpleParticleType RIPPLE;
     public static SimpleParticleType STREAK;
     //TODO: hail particles
-    //TODO: puddle blocks
+    //TODO: sleet particles
+    //TODO: enhance dripping effects from dripstone and permeable blocks that intensify in storms
+    //TODO: finish implementing weather override
+    //TODO: finish implementing biome overrides
     //TODO: vertical fog
     //TODO: light rays???? under the ocean surface
 

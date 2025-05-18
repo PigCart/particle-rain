@@ -12,14 +12,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceMetadata;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.joml.Math;
+import org.lwjgl.system.MemoryUtil;
 import pigcart.particlerain.config.ModConfig;
+import pigcart.particlerain.mixin.access.NativeImageAccessor;
 
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.IntBuffer;
 import java.util.List;
+import java.util.Locale;
 
 public class TextureUtil {
 
@@ -31,6 +36,24 @@ public class TextureUtil {
                 ((gray & 0xFF) << 8)  |
                 ((gray & 0xFF));
     };
+
+    // method removed from NativeImage in 1.21.5
+    public static void applyToAllPixels(java.util.function.IntUnaryOperator function, NativeImage image) {
+        if (image.format() != NativeImage.Format.RGBA) {
+            throw new IllegalArgumentException(String.format(Locale.ROOT, "function application only works on RGBA images; have %s", image.format()));
+        } else {
+            ((NativeImageAccessor)(Object)image).callCheckAllocated();
+            int i = image.getWidth() * image.getHeight();
+            IntBuffer intBuffer = MemoryUtil.memIntBuffer(((NativeImageAccessor)(Object)image).getPixels(), i);
+
+            for(int j = 0; j < i; ++j) {
+                int k = ARGB.fromABGR(intBuffer.get(j));
+                int l = function.applyAsInt(k);
+                intBuffer.put(j, ARGB.toABGR(l));
+            }
+
+        }
+    }
 
     public static void applyWaterTint(TextureSheetParticle particle, ClientLevel clientLevel, BlockPos blockPos) {
         final Color waterColor = new Color(BiomeColors.getAverageWaterColor(clientLevel, blockPos));

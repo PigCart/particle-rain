@@ -16,6 +16,8 @@ import java.awt.Color;
 public class DustMoteParticle extends WeatherParticle {
     // currently unused
 
+    //TODO: completely redo sand/dust effects
+
     protected DustMoteParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
         super(level, x, y, z);
         this.setSprite(provider.get(level.getRandom()));

@@ -12,6 +12,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.config.ModConfig;
+import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
@@ -24,7 +25,8 @@ public class SnowParticle extends WeatherParticle {
         this.quadSize = CONFIG.snow.size;
         this.gravity = CONFIG.snow.gravity;
         this.yd = -gravity;
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "snow" + random.nextInt(4))));
+        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
+        this.setSprite(particleEngine.getTextureAtlas().getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "snow" + random.nextInt(4))));
 
         if (level.isThundering()) {
             this.xd = gravity * CONFIG.snow.stormWindStrength;
@@ -47,7 +49,7 @@ public class SnowParticle extends WeatherParticle {
         super.tick();
         this.oRoll = this.roll;
         this.roll = this.oRoll + (level.isThundering() ? CONFIG.snow.stormRotationAmount : CONFIG.snow.rotationAmount) * this.rotationAmount;
-        if (this.onGround || this.removeIfObstructed()) {
+        if (this.onGround || this.removeIfObstructed() || !level.getFluidState(pos).isEmpty()) {
             this.remove();
         }
     }

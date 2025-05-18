@@ -11,16 +11,12 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.joml.AxisAngle4f;
@@ -30,8 +26,6 @@ import org.joml.Vector3f;
 import pigcart.particlerain.config.ModConfig;
 
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class ShrubParticle extends WeatherParticle {
 
@@ -43,49 +37,20 @@ public class ShrubParticle extends WeatherParticle {
         this.zd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
         if (ModConfig.CONFIG.dust.spawnOnGround) this.yd = 0.1F; //otherwise they get stuck and despawn for some reason >:?
 
-        ItemStack itemStack = new ItemStack(Items.DEAD_BUSH);
-        ItemStackRenderState renderState = new ItemStackRenderState();
-
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
-        if (blockState.is(BlockTags.SWORD_EFFICIENT)) {
-            if (!blockState.is(BlockTags.CROPS)) {
-                itemStack = blockState.getBlock().asItem().getDefaultInstance();
-                Minecraft.getInstance().getItemModelResolver().updateForTopItem(
-                        renderState,
-                        itemStack,
-                        ItemDisplayContext.NONE,
-                        false,
-                        level,
-                        null,
-                        0
-                );
-                TextureAtlasSprite particleIcon = renderState.layers[0].model.getParticleIcon();
-                try {
-                    //bakedQuad.hasTint is always true and i cant find anything else so i guess were gonna do some bullshit >:[
-                    //TODO: reinvestigate the recent model changes
-                    ResourceLocation resourceLocation = ResourceLocation.parse(particleIcon.contents().name().getNamespace() + ":models/" + particleIcon.contents().name().toString().substring(particleIcon.contents().name().getNamespace().toString().length() + 1) + ".json");
-                    Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(resourceLocation);
-                    String string;
-                    try (InputStream inputStream = resource.open()) {
-                        string = new String(inputStream.readAllBytes());
-                    }
-                    // works for most items
-                    if (string.contains("tint")) {
-                        final int colorInt = BiomeColors.getAverageFoliageColor(level, this.pos);
-                        Color color = new Color(colorInt);
-                        this.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
-                    }
-                } catch (IOException e) {
-                    // just dont crash. smiley face.
-                    itemStack = new ItemStack(Items.DEAD_BUSH);
-                }
+        // no foliage convention tag? :(
+        if (blockState.is(BlockTags.REPLACEABLE) && !blockState.isAir() && blockState.getFluidState().isEmpty() && !blockState.is(BlockTags.CROPS) && !blockState.is(BlockTags.SNOW)) {
+            final BlockStateModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
+            this.setSprite(model.particleIcon());
+            final BakedQuad quad = model.collectParts(this.random).getFirst().getQuads(null).getFirst();
+            if (quad.isTinted()) {
+                Color color = new Color(BiomeColors.getAverageFoliageColor(level, this.pos));
+                this.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             }
         } else {
-            if (level.random.nextFloat() < 0.9) this.remove();
+            blockState = Blocks.DEAD_BUSH.defaultBlockState();
         }
-
-        Minecraft.getInstance().getItemModelResolver().updateForTopItem(renderState, itemStack, ItemDisplayContext.NONE, false, level, null, 0);
-        this.setSprite(renderState.layers[0].model.getParticleIcon());
+        this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).particleIcon());
     }
 
     @Override

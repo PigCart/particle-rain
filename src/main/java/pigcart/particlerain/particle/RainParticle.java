@@ -30,6 +30,7 @@ import org.joml.Math;
 import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.WeatherParticleManager;
+import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
@@ -43,7 +44,8 @@ public class RainParticle extends WeatherParticle {
         this.quadSize = CONFIG.rain.size;
         this.gravity = CONFIG.rain.gravity;
         this.yd = -gravity;
-        this.setSprite(Minecraft.getInstance().particleEngine.textureAtlas.getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "rain" + random.nextInt(4))));
+        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
+        this.setSprite((particleEngine.getTextureAtlas().getSprite(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "rain" + random.nextInt(4)))));
 
         if (level.isThundering()) {
             this.xd = gravity * CONFIG.rain.stormWindStrength;
