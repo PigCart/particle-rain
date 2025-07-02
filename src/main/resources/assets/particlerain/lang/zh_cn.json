@@ -38,19 +38,20 @@
   "particlerain.EffectOptions.doSleetParticles": "生成雨夹雪粒子",
   "particlerain.EffectOptions.doSleetParticles.description": "在积雪生物群系边界将取代降雨粒子生成",
   "particlerain.EffectOptions.doPuddles": "水坑",
-
-  "particlerain.PuddleOptions": "水坑选项",
-  "particlerain.PuddleOptions.updateDelay": "水坑刷新延迟",
-  "particlerain.PuddleOptions.updateStep": "水坑覆盖范围更新量",
-  "particlerain.PuddleOptions.rainLevel": "在降雨时覆盖",
-  "particlerain.PuddleOptions.stormLevel": "在雷暴时覆盖",
-
+  "particlerain.EffectOptions.doPuddles.description": "实验性内容！",
+  
   "particlerain.SoundOptions": "声音选项",
   "particlerain.SoundOptions.doMaterialSounds": "播放对应材质声",
   "particlerain.SoundOptions.doMaterialSounds.description": "使雨落下的声音与落在方块上的材质相匹配。",
   "particlerain.SoundOptions.doRainSounds": "播放雨声",
   "particlerain.SoundOptions.doSnowSounds": "播放雪声",
   "particlerain.SoundOptions.doSandSounds": "播放风吹沙声",
+  
+  "particlerain.PuddleOptions": "水坑选项",
+  "particlerain.PuddleOptions.updateDelay": "水坑刷新延迟",
+  "particlerain.PuddleOptions.updateStep": "水坑覆盖范围更新量",
+  "particlerain.PuddleOptions.rainLevel": "在降雨时覆盖",
+  "particlerain.PuddleOptions.stormLevel": "在雷暴时覆盖",
 
   "particlerain.CompatibilityOptions": "兼容选项",
   "particlerain.CompatibilityOptions.description": "",
