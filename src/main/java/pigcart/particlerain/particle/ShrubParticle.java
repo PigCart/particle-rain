@@ -48,7 +48,11 @@ public class ShrubParticle extends WeatherParticle {
                 this.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             }
         } else {
-            blockState = Blocks.DEAD_BUSH.defaultBlockState();
+            blockState = switch (level.random.nextInt(3)) {
+                case 0 -> Blocks.SHORT_DRY_GRASS.defaultBlockState();
+                case 1 -> Blocks.TALL_DRY_GRASS.defaultBlockState();
+                default -> Blocks.DEAD_BUSH.defaultBlockState();
+            };
         }
         this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).particleIcon());
     }
