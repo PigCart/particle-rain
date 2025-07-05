@@ -5,8 +5,15 @@ on:
     types: [published]
 
 jobs:
-  upload_asset:
+  release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [1.20.1-fabric, 1.20.1-forge,
+                  1.21.1-fabric, 1.21.1-neoforge,
+                  1.21.4-fabric, 1.21.4-neoforge,
+                  1.21.5-fabric, 1.21.5-neoforge,
+                  1.21.6-fabric, 1.21.6-neoforge]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -23,15 +30,16 @@ jobs:
           java-version: 21
       - run: chmod +x gradlew
       - name: Build
-        run: ./gradlew build --no-daemon
-      - uses: Kir-Antipov/mc-publish@v3.3
+        run: ./gradlew ${{ matrix.version }}:build --no-daemon
+      - name: Publish
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: nrikgvxm
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-id: 421897
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          files: build/libs/!(*-sources)*.jar
+          files: ${{ matrix.version }}/build/libs/*.jar
           dependencies: |
             fabric(required){modrinth:P7dR8mSH}{curseforge:306612}#(ignore:github)
             modmenu(recommended){modrinth:mOgUt4GM}{curseforge:308702}#(ignore:github)

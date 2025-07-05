@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "pigcart.particlerain.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "particlerain.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "access.NativeImageAccessor",
+    "access.ParticleEngineAccessor",
+    "access.SingleQuadParticleAccessor",
+    "render.ParticleEngineMixin",
+    "render.SpriteLoaderMixin",
+    "render.WeatherEffectRendererMixin",
+    "tint.DripParticleMixin",
+    "tint.TextureSheetParticleMixin",
+    "tint.WaterDropParticleMixin",
+    "yacl.YACLScreenMixin",
+    "yacl.YetAnotherConfigLibImplMixin"
+  ]
+}

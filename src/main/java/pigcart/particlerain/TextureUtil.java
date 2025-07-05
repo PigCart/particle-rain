@@ -11,8 +11,6 @@ import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceMetadata;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.joml.Math;
 import org.lwjgl.system.MemoryUtil;
@@ -47,15 +45,19 @@ public class TextureUtil {
             IntBuffer intBuffer = MemoryUtil.memIntBuffer(((NativeImageAccessor)(Object)image).getPixels(), i);
 
             for(int j = 0; j < i; ++j) {
-                int k = ARGB.fromABGR(intBuffer.get(j));
+                int k = argbToABGR(intBuffer.get(j));
                 int l = function.applyAsInt(k);
-                intBuffer.put(j, ARGB.toABGR(l));
+                intBuffer.put(j, argbToABGR(l));
             }
 
         }
     }
+    public static int argbToABGR(int i) {
+        return i & -16711936 | (i & 16711680) >> 16 | (i & 255) << 16;
+    }
 
     public static void applyWaterTint(TextureSheetParticle particle, ClientLevel clientLevel, BlockPos blockPos) {
+        // IrisApi.isShaderPackInUse()
         final Color waterColor = new Color(BiomeColors.getAverageWaterColor(clientLevel, blockPos));
         final Color fogColor = new Color(clientLevel.getBiome(blockPos).value().getFogColor());
         float rCol = (Mth.lerp(ModConfig.CONFIG.compat.tintMix, waterColor.getRed(), fogColor.getRed()) / 255F);
@@ -86,12 +88,12 @@ public class TextureUtil {
         int size = image.getWidth();
         NativeImage sprite = new NativeImage(size, size, false);
         image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
-        return(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, id + segment), new FrameSize(size, size), sprite, new ResourceMetadata.Builder().build()));
+        return(new SpriteContents(StonecutterUtil.getResourceLocation(ParticleRain.MOD_ID, id + segment), new FrameSize(size, size), sprite, StonecutterUtil.getSpriteMetadata()));
     }
 
     public static int getRippleResolution(List<SpriteContents> contents) {
         if (ModConfig.CONFIG.ripple.useResourcepackResolution) {
-            ResourceLocation resourceLocation = ResourceLocation.withDefaultNamespace("big_smoke_0");
+            ResourceLocation resourceLocation = StonecutterUtil.getResourceLocation("big_smoke_0");
             for (SpriteContents spriteContents : contents) {
                 if (spriteContents.name().equals(resourceLocation)) {
                     //return Math.min(spriteContents.width(), 256); ...why does this not work?
@@ -117,7 +119,7 @@ public class TextureUtil {
                 ((color.getGreen() & 0xFF) << 8)  |
                 ((color.getBlue() & 0xFF));
         generateBresenhamCircle(image, size, (int) Math.clamp(1, (size / 2F) - 1, radius), colorint);
-        return(new SpriteContents(ResourceLocation.fromNamespaceAndPath(ParticleRainClient.MOD_ID, "ripple" + i), new FrameSize(size, size), image, new ResourceMetadata.Builder().build()));
+        return(new SpriteContents(StonecutterUtil.getResourceLocation(ParticleRain.MOD_ID, "ripple_" + i), new FrameSize(size, size), image, StonecutterUtil.getSpriteMetadata()));
     }
 
     public static void generateBresenhamCircle(NativeImage image, int imgSize, int radius, int colorint) {
@@ -139,6 +141,7 @@ public class TextureUtil {
     }
 
     static void drawCirclePixel(int xc, int yc, int x, int y, NativeImage img, int col){
+        //? if >1.21.1 {
         img.setPixel(xc+x, yc+y, col);
         img.setPixel(xc-x, yc+y, col);
         img.setPixel(xc+x, yc-y, col);
@@ -147,5 +150,15 @@ public class TextureUtil {
         img.setPixel(xc-y, yc+x, col);
         img.setPixel(xc+y, yc-x, col);
         img.setPixel(xc-y, yc-x, col);
+        //?} else {
+        /*img.setPixelRGBA(xc+x, yc+y, col);
+        img.setPixelRGBA(xc-x, yc+y, col);
+        img.setPixelRGBA(xc+x, yc-y, col);
+        img.setPixelRGBA(xc-x, yc-y, col);
+        img.setPixelRGBA(xc+y, yc+x, col);
+        img.setPixelRGBA(xc-y, yc+x, col);
+        img.setPixelRGBA(xc+y, yc-x, col);
+        img.setPixelRGBA(xc-y, yc-x, col);
+        *///?}
     }
 }

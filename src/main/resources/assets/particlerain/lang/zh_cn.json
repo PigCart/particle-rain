@@ -10,8 +10,8 @@
   "particlerain.PerformanceOptions.particleDensity.description": "降雨时每游戏刻尝试生成天气粒子的次数。",
   "particlerain.PerformanceOptions.particleStormDensity": "雷暴时的粒子密度",
   "particlerain.PerformanceOptions.particleStormDensity.description": "雷暴时每游戏刻尝试生成天气粒子的次数。",
-  "particlerain.PerformanceOptions.particleRadius": "粒子半径",
-  "particlerain.PerformanceOptions.particleRadius.description": "粒子将在距离玩家视角多少格方块外生成。",
+  "particlerain.PerformanceOptions.particleDistance": "粒子半径",
+  "particlerain.PerformanceOptions.particleDistance.description": "粒子将在距离玩家视角多少格方块外生成。",
   "particlerain.PerformanceOptions.fogParticleRadius": "雾气粒子渲染半径",
 
   "particlerain.EffectOptions": "效果选项",

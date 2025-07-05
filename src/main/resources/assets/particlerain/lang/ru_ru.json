@@ -10,8 +10,8 @@
   "particlerain.PerformanceOptions.particleDensity.description": "Количество попыток появления погодных частиц за один такт во время обычного дождя",
   "particlerain.PerformanceOptions.particleStormDensity": "Плотность штормовых частиц",
   "particlerain.PerformanceOptions.particleStormDensity.description": "Количество попыток появления погодных частиц за один такт во время штормов",
-  "particlerain.PerformanceOptions.particleRadius": "Радиус частиц",
-  "particlerain.PerformanceOptions.particleRadius.description": "За сколько блоков от камеры будут появляться частицы",
+  "particlerain.PerformanceOptions.particleDistance": "Радиус частиц",
+  "particlerain.PerformanceOptions.particleDistance.description": "За сколько блоков от камеры будут появляться частицы",
   "particlerain.PerformanceOptions.fogParticleRadius": "Дальность отрисовки частиц тумана",
 
   "particlerain.EffectOptions": "Включение или отключение отдельных эффектов",

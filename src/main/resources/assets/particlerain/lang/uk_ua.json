@@ -9,8 +9,8 @@
   "particlerain.PerformanceOptions.particleDensity.description": "Кількість спроб появи погодних частинок за один такт під час звичайного дощу",
   "particlerain.PerformanceOptions.particleStormDensity": "Щільність частинок під час шторму",
   "particlerain.PerformanceOptions.particleStormDensity.description": "Кількість спроб появи погодних частинок за один такт під час штормів",
-  "particlerain.PerformanceOptions.particleRadius": "Радіус частинок",
-  "particlerain.PerformanceOptions.particleRadius.description": "На якій відстані від камери з'являтимуться частинки",
+  "particlerain.PerformanceOptions.particleDistance": "Радіус частинок",
+  "particlerain.PerformanceOptions.particleDistance.description": "На якій відстані від камери з'являтимуться частинки",
 
   "particlerain.EffectOptions": "Увімкнення або вимкнення окремих ефектів",
   "particlerain.EffectOptions.doRainParticles": "Створення частинок дощу",

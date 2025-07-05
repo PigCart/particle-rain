@@ -1,24 +1,30 @@
 package pigcart.particlerain;
 
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import pigcart.particlerain.config.ModConfig;
+import pigcart.particlerain.particle.CustomParticle;
+
+import java.util.List;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
@@ -27,110 +33,116 @@ public final class WeatherParticleManager {
     public static int particleCount;
     public static int fogCount;
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+    private static final BlockPos.MutableBlockPos heightmapPos = new BlockPos.MutableBlockPos();
 
-    private static void spawnParticle(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
-        if (particleCount > CONFIG.perf.maxParticleAmount) {
-            return;
-        } else if (!CONFIG.spawn.canSpawnAboveClouds && y > CONFIG.spawn.cloudHeight) {
-            y = CONFIG.spawn.cloudHeight;
-        }
-        if (CONFIG.effect.doFogParticles && level.random.nextFloat() < CONFIG.fog.density) {
-            level.addParticle(ParticleRainClient.FOG, x, y, z, 0, 0, 0);
-        }
-        final BlockPos getPrecipitationFromBlockPos = CONFIG.spawn.useHeightmapTemp ? level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos) : pos ;
-        Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : biome.value().getPrecipitationAt(getPrecipitationFromBlockPos,level.getSeaLevel());
-        //biome.value().hasPrecipitation() isn't reliable for modded biomes and seasons
-        if (precipitation == Precipitation.RAIN) {
-            if (CONFIG.effect.doGroundFogParticles && fogCount < CONFIG.groundFog.density) {
-                int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
-                if (height <= CONFIG.groundFog.maxSpawnHeight && height >= CONFIG.groundFog.minSpawnHeight && level.getFluidState(BlockPos.containing(x, height - 1, z)).isEmpty()) {
-                    level.addParticle(ParticleRainClient.GROUND_FOG, x, height + level.random.nextFloat(), z, 0, 0, 0);
+    private static void spawnParticles(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
+        Precipitation precipitation = StonecutterUtil.getPrecipitationAt(level, biome.value(), CONFIG.compat.useHeightmapTemp ? heightmapPos : pos);
+        for (ModConfig.ParticleOptions opts : CONFIG.customParticles) {
+            if (opts.enabled
+                && opts.precipitation.contains(precipitation)
+                && opts.density > level.random.nextFloat()
+                && meetsRequirements(opts.biomeList, opts.biomeWhitelist, Registries.BIOME, biome)
+                && meetsRequirements(opts.blockList, opts.blockWhitelist, Registries.BLOCK, level.getBlockState(heightmapPos).getBlockHolder())
+            ) {
+                if (opts.onGround) {
+                    double localBlockX = x - pos.getX();
+                    double localBlockZ = z - pos.getZ();
+                    BlockState blockState = level.getBlockState(heightmapPos);
+                    FluidState fluidState = level.getFluidState(heightmapPos);
+                    VoxelShape voxelShape = blockState.getCollisionShape(level, heightmapPos);
+                    double blockHeight = voxelShape.max(Direction.Axis.Y, localBlockX, localBlockZ);
+                    double fluidHeight = fluidState.getHeight(level, heightmapPos);
+                    y = heightmapPos.getY() + Math.max(blockHeight, fluidHeight);
                 }
-            }
-            if (CONFIG.effect.doRainParticles && level.random.nextFloat() < CONFIG.rain.density) {
-                level.addParticle(ParticleRainClient.RAIN, x, y, z, 0, 0, 0);
-            }
-        } else if (precipitation == Precipitation.SNOW && CONFIG.effect.doSnowParticles) {
-            if (level.random.nextFloat() < CONFIG.snow.density) {
-                level.addParticle(ParticleRainClient.SNOW, x, y, z, 0, 0, 0);
-            }
-        } else if (doesThisBlockHaveDustBlowing(precipitation, level, BlockPos.containing(x, y, z), biome)) {
-            if (CONFIG.dust.spawnOnGround) y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
-            if (CONFIG.effect.doDustParticles) {
-                if (level.random.nextFloat() < CONFIG.dust.density) {
-                    level.addParticle(ParticleRainClient.DUST, x, y, z, 0, 0, 0);
-                }
-            }
-            if (CONFIG.effect.doShrubParticles) {
-                if (level.random.nextFloat() < CONFIG.shrub.density / 10) {
-                    level.addParticle(ParticleRainClient.SHRUB, x, y, z, 0, 0, 0);
+                //TODO
+                switch (opts.id) {
+                    case "rain_splashing" -> level.addParticle(ParticleTypes.RAIN, x, y, z, 0, 0, 0);
+                    case "rain_ripples" -> level.addParticle(ParticleRain.RIPPLE, x, y, z, 0, 0, 0);
+                    case "rain_smoke" -> level.addParticle(ParticleTypes.SMOKE, x, y, z, 0, 0, 0);
+                    case "shrubs" -> level.addParticle(ParticleRain.SHRUB, x, y, z, 0, 0, 0);
+                    default -> Minecraft.getInstance().particleEngine.add(new CustomParticle(level, x, y, z, opts));
                 }
             }
         }
     }
 
-    public static void tick(ClientLevel level, Entity entity) {
+    public static <T> boolean meetsRequirements(List<String> list, boolean isWhitelist, ResourceKey<? extends Registry<T>> registry, Holder<T> holder) {
+        if (!list.isEmpty()) {
+            for (String string : list) {
+                ResourceLocation location = StonecutterUtil.parseResourceLocation(string);
+                if (location != null) {
+                    TagKey<T> tag = TagKey.create(registry, location);
+                    boolean hasMatch = (holder.is(location) || holder.is(tag));
+                    if (isWhitelist && hasMatch) {
+                        return true;
+                    } else if (hasMatch) {
+                        return false;
+                    }
+                }
+            }
+            return !isWhitelist;
+        }
+        return true;
+    }
+
+    public static void tick(ClientLevel level, Vec3 cameraPos) {
         //TODO: twilight fog and skittering sand when not raining
-        if (level.isRaining() || CONFIG.compat.alwaysRaining) {
-            int density;
-            if (level.isThundering())
-                if (CONFIG.compat.alwaysRaining) {
-                    density = CONFIG.perf.particleStormDensity;
+        if (level.isRaining() && particleCount < CONFIG.perf.maxParticleAmount) {
+            int density = (int) (Mth.lerpInt(level.getThunderLevel(1), CONFIG.perf.particleDensity, CONFIG.perf.particleStormDensity) * level.getRainLevel(1));
+            final float speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().lengthSqr();
+            // mul density by speed to maintain visual density
+            density *= (int) (speed * 2 + 1);
+
+            for (int i = 0; i < density; i++) {
+                float height;
+                float x;
+                float y;
+                float z;
+                if (speed < 0.8) {
+                    // use a center-weighted spawn pattern if moving slowly and limit it to top half of sphere
+                    height = Mth.abs(Mth.square(level.random.nextFloat()) - Mth.square(level.random.nextFloat())) * -1 + 1;
+                    height *= 0.4F + 0.6F;
                 } else {
-                    density = (int) (CONFIG.perf.particleStormDensity * level.getRainLevel(0));
+                    // use the whole sphere if moving quickly (falling, flying)
+                    height = level.random.nextFloat();
                 }
-            else if (CONFIG.compat.alwaysRaining) {
-                density = CONFIG.perf.particleDensity;
-            } else {
-                density = (int) (CONFIG.perf.particleDensity * level.getRainLevel(0));
-            }
-
-            //TODO: calculate vertical velocity and use it to switch which hemisphere is spawning particles
-            // half of particle spawn calculations are wasted on checking blocks below ground
-            // or blocks where the particle would immediately fall out of the particle render distance
-            RandomSource rand = RandomSource.create();
-
-            for (int pass = 0; pass < density; pass++) {
-
-                //TODO: bias particle spawn weighting to center of current spawning hemisphere
-                // current solution ends up being biased towards the edges since the particles fall vertically
-                // in many scenes particles that dont spawn almost above the player end up out of view
-                // having more particles closer to the player helps the texture planes be less noticable
-                // and make the effect look less patchy.
-                float theta = (float) (2 * Math.PI * rand.nextFloat());
-                float phi = (float) Math.acos(2 * rand.nextFloat() - 1);
-                double x = CONFIG.perf.particleRadius * Mth.sin(phi) * Math.cos(theta);
-                double y = CONFIG.perf.particleRadius * Mth.sin(phi) * Math.sin(theta);
-                double z = CONFIG.perf.particleRadius * Mth.cos(phi);
-
-                pos.set(x + entity.getX(), y + entity.getY(), z + entity.getZ());
-                if (level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) > pos.getY())
-                    continue;
-
-                spawnParticle(level, level.getBiome(pos), pos.getX() + rand.nextFloat(), pos.getY() + rand.nextFloat(), pos.getZ() + rand.nextFloat());
+                float theta = Mth.TWO_PI * level.random.nextFloat();
+                float phi = (float) Math.acos((2 * height) - 1);
+                x = CONFIG.perf.particleDistance * Mth.sin(phi) * Mth.cos(theta) + (float) cameraPos.x;
+                y = CONFIG.perf.particleDistance * Mth.cos(phi)                  + (float) cameraPos.y;
+                z = CONFIG.perf.particleDistance * Mth.sin(phi) * Mth.sin(theta) + (float) cameraPos.z;
+                if (!CONFIG.compat.canSpawnAboveClouds) {
+                    int cloudHeight = StonecutterUtil.getCloudHeight(level);
+                    if (cloudHeight != 0 && y > cloudHeight) {
+                        y = cloudHeight;
+                    }
+                }
+                pos.set(x, y, z);
+                heightmapPos.set(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ()) - 1, z);
+                if (heightmapPos.getY() > pos.getY()) continue;
+                spawnParticles(level, level.getBiome(pos), x, y, z);
             }
         }
     }
 
-    //TODO: better weather sounds
-    @Nullable
-    public static SoundEvent getBiomeSound(BlockPos blockPos, boolean above) {
-        Holder<Biome> biome = Minecraft.getInstance().level.getBiome(blockPos);
-        Precipitation precipitation = CONFIG.spawn.doOverrideWeather ? CONFIG.spawn.overrideWeather : biome.value().getPrecipitationAt(blockPos,Minecraft.getInstance().level.getSeaLevel());
-        if (precipitation == Precipitation.RAIN && CONFIG.sound.doRainSounds) {
-            return above ? SoundEvents.WEATHER_RAIN_ABOVE : SoundEvents.WEATHER_RAIN;
-        } else if (precipitation == Precipitation.SNOW && CONFIG.sound.doSnowSounds) {
-            return above ? ParticleRainClient.WEATHER_SNOW_ABOVE : ParticleRainClient.WEATHER_SNOW;
-        } else if (doesThisBlockHaveDustBlowing(precipitation, Minecraft.getInstance().level, blockPos, biome) && CONFIG.sound.doSandSounds) {
-        return above ? ParticleRainClient.WEATHER_SANDSTORM_ABOVE : ParticleRainClient.WEATHER_SANDSTORM;
+    //TODO
+    public static SoundEvent getAdditionalWeatherSounds(ClientLevel level, BlockPos blockPos, boolean above) {
+        Holder<Biome> biome = level.getBiome(blockPos);
+        Precipitation precipitation = StonecutterUtil.getPrecipitationAt(level, biome.value(), blockPos);
+        if (precipitation == Precipitation.SNOW && CONFIG.sound.doSnowSounds) {
+            return above ? ParticleRain.WEATHER_SNOW_ABOVE : ParticleRain.WEATHER_SNOW;
+        } else if (doesThisBlockHaveDustBlowing(precipitation, level, blockPos, biome) && CONFIG.sound.doWindSounds) {
+            return above ? ParticleRain.WEATHER_SANDSTORM_ABOVE : ParticleRain.WEATHER_SANDSTORM;
         }
         return null;
     }
 
+    //TODO
     public static boolean doesThisBlockHaveDustBlowing(Precipitation precipitation, ClientLevel level, BlockPos blockPos, Holder<Biome> biome) {
         boolean matchesTag = false;
-        for (int i = 0; i < CONFIG.spawn.dustyBlockTags.size(); i++) {
-            if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).is(TagKey.create(Registries.BLOCK, ResourceLocation.parse(CONFIG.spawn.dustyBlockTags.get(i))))) {
+        List<String> dustyBlockTags = List.of("minecraft:camel_sand_step_sound_blocks", "minecraft:sand");
+        for (int i = 0; i < dustyBlockTags.size(); i++) {
+            if (level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).is(TagKey.create(Registries.BLOCK, StonecutterUtil.parseResourceLocation(dustyBlockTags.get(i))))) {
                 matchesTag = true;
                 break;
             }
@@ -138,8 +150,9 @@ public final class WeatherParticleManager {
         return precipitation == Precipitation.NONE && matchesTag && biome.value().getBaseTemperature() > 0.25;
     }
 
+    //TODO
     public static boolean canHostStreaks(BlockState state) {
-        return state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(ConventionalBlockTags.GLASS_PANES);
+        return state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(ParticleRain.GLASS_PANES);
     }
 
     public static void resetParticleCount() {

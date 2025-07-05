@@ -17,11 +17,11 @@ public abstract class DripParticleMixin {
 
     @Inject(method = "createWaterHangParticle", at = @At("TAIL"))
     private static void createWaterHangParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i, CallbackInfoReturnable<TextureSheetParticle> cir) {
-        if (ModConfig.CONFIG.compat.biomeTint) TextureUtil.applyWaterTint(cir.getReturnValue(), clientLevel, BlockPos.containing(d, e, f));
+        if (ModConfig.CONFIG.compat.waterTint) TextureUtil.applyWaterTint(cir.getReturnValue(), clientLevel, BlockPos.containing(d, e, f));
     }
 
     @Inject(method = "createWaterFallParticle", at = @At("TAIL"))
     private static void createWaterFallParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i, CallbackInfoReturnable<TextureSheetParticle> cir) {
-        if (ModConfig.CONFIG.compat.biomeTint) TextureUtil.applyWaterTint(cir.getReturnValue(), clientLevel, BlockPos.containing(d, e, f));
+        if (ModConfig.CONFIG.compat.waterTint) TextureUtil.applyWaterTint(cir.getReturnValue(), clientLevel, BlockPos.containing(d, e, f));
     }
 }

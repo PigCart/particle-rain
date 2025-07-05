@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "name": "${mod_name}",
+  "version": "${mod_version}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "sources": "https://github.com/PigCart/particle-rain",
+    "issues": "${mod_issue_tracker}",
+    "homepage": "https://modrinth.com/mod/particle-rain"
+  },
+  "license": "{mod_license}",
+  "icon": "${mod_icon}",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "pigcart.particlerain.loaders.fabric.FabricEntrypoint"
+    ],
+    "modmenu": [
+      "pigcart.particlerain.loaders.fabric.ModMenuEntrypoint"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.12.8",
+    "fabric-api": "*",
+    "yet_another_config_lib_v3": "*",
+    "minecraft": "${version_range}"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://pigc.art/discord"
+      }
+    }
+  }
+}
