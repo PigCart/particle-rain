@@ -11,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -19,6 +20,7 @@ import pigcart.particlerain.WeatherParticleManager;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
+//TODO
 public abstract class WeatherParticle extends TextureSheetParticle {
 
     protected BlockPos.MutableBlockPos pos;
@@ -50,6 +52,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
         this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
 
+        testForCollisions();
         WeatherParticleManager.particleCount++;
     }
 
@@ -57,7 +60,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         oQuadSize = quadSize;
-        distanceSquared = (float) Minecraft.getInstance().getCameraEntity().distanceToSqr(x, y, z);
+        distanceSquared = (float) Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().distanceToSqr(x, y, z);
         pos.set(x, y, z);
         if (!pos.equals(oPos)) {
             onPositionUpdate();
@@ -70,11 +73,14 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     }
 
     public void onPositionUpdate() {
-        if (!CONFIG.compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4 ||
-                !level.getFluidState(pos).isEmpty()) {
+        if (!CONFIG.compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
             doCollisionAnim = true;
         }
-        testForCollisions();
+        if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos) || !level.getFluidState(pos).isEmpty()) {
+            this.remove();
+        } else {
+            testForCollisions();
+        }
     }
 
     public void testForCollisions() {
@@ -88,18 +94,12 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
     }
 
-    public void doCollisionEffects(BlockHitResult hitResult) {
-        // implemented by rain and hail, or custom particles
-    }
-
     public void fadeByDistance() {
-        final float renderDistance = Mth.square(CONFIG.perf.particleDistance);
-        if (distanceSquared > renderDistance) {
+        final float renderDistanceSquared = Mth.square(CONFIG.perf.particleDistance);
+        if (distanceSquared > renderDistanceSquared + 2) {
             remove();
-        } else if (distanceSquared < 2) {
-            //TODO: configurable distance to fade out near camera
         } else {
-            alpha = Mth.lerp(distanceSquared / renderDistance, targetOpacity, 0);
+            alpha = Mth.lerp(distanceSquared / renderDistanceSquared, targetOpacity, 0);
         }
     }
 
@@ -109,7 +109,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     }
 
     public void collisionAnim() {
-        if (collision != null) doCollisionEffects(collision);
         float deltaMovement = (float) new Vec3(xd, yd, zd).length();
         quadSize = quadSize - deltaMovement;
         if (quadSize <= 0) remove();
@@ -121,19 +120,19 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         super.remove();
     }
 
-    public Quaternionf turnBackfaceFlipways(Quaternionf quaternion, Vector3f toCamera) {
+    public Quaternionf turnBackfaceFlipways(Quaternionf quaternion, Vector3f cameraOffset) {
         Vector3f normal = new Vector3f(0, 0, 1);
         normal.rotate(quaternion).normalize();
-        float dot = normal.dot(toCamera);
+        float dot = normal.dot(cameraOffset);
         if (dot > 0) {
             return quaternion.mul(Axis.YP.rotation(Mth.PI));
         }
         else return quaternion;
     }
 
-    //FIXME: particle invisible when wind is 0
+    //TODO
     public static double yLevelWindAdjustment(double y) {
-        return Math.clamp(0.01, 1, (y - 64) / 40);
+        return Math.clamp(0.01, 0.5, (y - 64) / 40);
     }
 
     @Override

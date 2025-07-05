@@ -1,8 +1,6 @@
 modLoader = "javafml"
-loaderVersion = "[2,)"
-issueTrackerURL = "${mod_issue_tracker}"
+loaderVersion = "[43,)"
 license = "${mod_license}"
-logoFile = "${mod_icon}"
 
 [[mods]]
 modId = "${mod_id}"
@@ -12,12 +10,15 @@ description = '''${mod_description}'''
 authors = "${mod_author}"
 
 [[dependencies.${mod_id}]]
-modId = "neoforge"
-type = "required"
+modId = "forge"
+mandatory = true
+versionRange = "[43,50)"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
-type = "required"
+mandatory = true
 versionRange="${version_range}"
+ordering = "NONE"
+side = "CLIENT"

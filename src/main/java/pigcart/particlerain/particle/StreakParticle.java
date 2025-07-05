@@ -32,7 +32,7 @@ public class StreakParticle extends WeatherParticle {
     private StreakParticle(ClientLevel level, double x, double y, double z, int direction2D, SpriteSet provider) {
         super(level, x, y, z, level.random.nextFloat()/10, CONFIG.streak.opacity, CONFIG.streak.size, 0, 0);
 
-        if (CONFIG.compat.biomeTint) {
+        if (CONFIG.compat.waterTint) {
             TextureUtil.applyWaterTint(this, level, this.pos);
         } else {
             this.setColor(0.2f, 0.3f, 1.0f);

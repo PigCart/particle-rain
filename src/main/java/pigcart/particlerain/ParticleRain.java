@@ -16,21 +16,22 @@ import net.minecraft.world.level.block.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pigcart.particlerain.config.ModConfig;
-import pigcart.particlerain.config.ModConfigScreen;
+import pigcart.particlerain.config.ConfigScreens;
 
-public class ParticleRainClient {
+import java.text.DecimalFormat;
+
+public class ParticleRain {
+    public static int clientTicks = 0;
     public static final String MOD_ID = "particlerain";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    // conventional tag
-    public static final TagKey<Block> GLASS_PANES = tagOf("glass_panes");
-    public static TagKey<Block> tagOf(String tagId) {
+
+    //TODO
+    public static final TagKey<Block> GLASS_PANES = commonBlockTag("glass_panes");
+    public static TagKey<Block> commonBlockTag(String tagId) {
         return TagKey.create(Registries.BLOCK, StonecutterUtil.getResourceLocation("c", tagId));
     }
 
-    public static SimpleParticleType RAIN;
-    public static SimpleParticleType SNOW;
-    public static SimpleParticleType DUST;
-    public static SimpleParticleType FOG;
+    //TODO
     public static SimpleParticleType MIST;
     public static SimpleParticleType SHRUB;
     public static SimpleParticleType RIPPLE;
@@ -40,6 +41,7 @@ public class ParticleRainClient {
     public static SoundEvent WEATHER_SNOW_ABOVE;
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
+
     public static void onInitializeClient() {
         ModConfig.loadConfig();
 
@@ -50,8 +52,9 @@ public class ParticleRainClient {
     }
 
     public static void onTick(Minecraft client) {
-        if (!client.isPaused() && client.level != null && client.getCameraEntity() != null) {
-            WeatherParticleManager.tick(client.level, client.getCameraEntity());
+        if (!client.isPaused() && client.level != null && client.gameRenderer.getMainCamera().isInitialized()) {
+            clientTicks++;
+            WeatherParticleManager.tick(client.level, client.gameRenderer.getMainCamera().getPosition());
             TaskScheduler.tick();
         }
     }
@@ -66,7 +69,7 @@ public class ParticleRainClient {
                 .executes(ctx -> {
                     // give minecraft a tick to close the chat screen
                     TaskScheduler.scheduleDelayed(1, () ->
-                            Minecraft.getInstance().setScreen(ModConfigScreen.generateConfigScreen(null))
+                            Minecraft.getInstance().setScreen(ConfigScreens.generateMainConfigScreen(null))
                     );
                     return 0;
                 })
@@ -86,12 +89,18 @@ public class ParticleRainClient {
                             Biome.Precipitation precipitation = StonecutterUtil.getPrecipitationAt(level, holder.value(), blockPos);
                             addChatMsg("Precipitation: " + precipitation);
                             addChatMsg("Base Temp: " + holder.value().getBaseTemperature());
-                            addChatMsg("Scheduled tasks: " + TaskScheduler.tasks.size());
+                            addChatMsg("Cloud height: " + StonecutterUtil.getCloudHeight(level));
                             return 0;
                         })
                 );
     }
     private static void addChatMsg(String message) {
         Minecraft.getInstance().gui.getChat().addMessage(Component.literal(message));
+    }
+
+    public static void debugValue(float value) {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        Minecraft.getInstance().gui.setOverlayMessage(Component.literal(df.format(value)), true);
     }
 }

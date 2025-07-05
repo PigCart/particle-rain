@@ -1,51 +1,57 @@
 //? if fabric {
-package pigcart.particlerain.loaders.fabric;
+/*package pigcart.particlerain.loaders.fabric;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.StonecutterUtil;
+import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.particle.*;
 
-import static pigcart.particlerain.ParticleRainClient.MOD_ID;
+import static pigcart.particlerain.ParticleRain.MOD_ID;
 
 public class FabricEntrypoint implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ParticleRainClient.onInitializeClient();
+        //TODO
+        ParticleRain.SHRUB = registerParticle("shrub");
+        ParticleRain.MIST = registerParticle("mist");
+        ParticleRain.RIPPLE = registerParticle("ripple");
+        ParticleRain.STREAK = registerParticle("streak");
 
-        ParticleRainClient.RAIN = registerParticle("rain");
-        ParticleRainClient.SNOW = registerParticle("snow");
-        ParticleRainClient.DUST = registerParticle("dust");
-        ParticleRainClient.SHRUB = registerParticle("shrub");
-        ParticleRainClient.FOG = registerParticle("fog");
-        ParticleRainClient.MIST = registerParticle("mist");
-        ParticleRainClient.RIPPLE = registerParticle("ripple");
-        ParticleRainClient.STREAK = registerParticle("streak");
+        ParticleRain.onInitializeClient();
 
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.RAIN, RainParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.SNOW, SnowParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.DUST, DustParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.SHRUB, ShrubParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.FOG, FogParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.MIST, MistParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.RIPPLE, RippleParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRainClient.STREAK, StreakParticle.DefaultFactory::new);
+        if (ModConfig.CONFIG.compat.registerParticles) {
+            for (ModConfig.ParticleOptions opts : ModConfig.CONFIG.customParticles) {
+                try {
+                    SimpleParticleType particle = registerParticle(opts.id.toLowerCase().replace(" ", "_"));
+                    ParticleFactoryRegistry.getInstance().register(particle, new CustomParticle.DefaultFactory(opts));
+                } catch (ResourceLocationException | IllegalStateException e) {
+                    ParticleRain.LOGGER.error(e.getMessage());
+                }
+            }
+        }
 
-        ClientTickEvents.END_CLIENT_TICK.register(ParticleRainClient::onTick);
+        ParticleFactoryRegistry.getInstance().register(ParticleRain.SHRUB, ShrubParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRain.MIST, MistParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRain.RIPPLE, RippleParticle.DefaultFactory::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRain.STREAK, StreakParticle.DefaultFactory::new);
+
+        ClientTickEvents.END_CLIENT_TICK.register(ParticleRain::onTick);
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            dispatcher.register(ParticleRainClient.getCommands());
+            dispatcher.register(ParticleRain.getCommands());
         });
     }
     private SimpleParticleType registerParticle(String name) {
         return Registry.register(BuiltInRegistries.PARTICLE_TYPE, StonecutterUtil.getResourceLocation(MOD_ID, name), FabricParticleTypes.simple(true));
     }
 }
-//?}
+*///?}

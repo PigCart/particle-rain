@@ -14,7 +14,7 @@ import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Math;
-import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 
@@ -26,9 +26,14 @@ public class RippleParticle extends WeatherParticle {
         super(level, x, y, z, 0, CONFIG.ripple.opacity, CONFIG.ripple.size, 0, 0);
 
         ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        this.setSprite(particleEngine.getTextureAtlas().getSprite(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "ripple0")));
+        this.setSprite(particleEngine.getTextureAtlas().getSprite(StonecutterUtil.getResourceLocation(ParticleRain.MOD_ID, "ripple_0")));
         this.x = Math.round(this.x / (1F / 16F)) * (1F / 16F);
         this.z = Math.round(this.z / (1F / 16F)) * (1F / 16F);
+    }
+
+    @Override
+    public void fadeByDistance() {
+        //dont
     }
 
     @Override
@@ -37,7 +42,7 @@ public class RippleParticle extends WeatherParticle {
         this.alpha = Mth.lerp(this.age / 9F, 0.3F, 0F);
         if (this.age > 8) this.remove();
         ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        this.setSprite(particleEngine.getTextureAtlas().getSprite(StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "ripple" + (this.age - 1))));
+        this.setSprite(particleEngine.getTextureAtlas().getSprite(StonecutterUtil.getResourceLocation(ParticleRain.MOD_ID, "ripple_" + (this.age - 1))));
     }
 
     @Override

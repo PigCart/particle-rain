@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ModConfig;
@@ -62,27 +62,15 @@ public abstract class WeatherEffectRendererMixin {
     // particle status MINIMAL disables splash particles
     @Inject(method = "tickRainParticles", at = @At("HEAD"))
     public void tickRainParticles(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus, CallbackInfo ci, @Local(argsOnly = true) LocalRef<ParticleStatus> particleStatusLocalRef) {
-        if (!ModConfig.CONFIG.compat.doDefaultSplashing || !ModConfig.CONFIG.effect.doSplashParticles) {
+        if (!ModConfig.CONFIG.compat.doDefaultSplashing) {
             particleStatusLocalRef.set(ParticleStatus.MINIMAL);
-        }
-    }
-
-    @WrapOperation(method = "tickRainParticles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
-    public void addParticle(ClientLevel level, ParticleOptions particleOptions, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Operation<Void> original, @Local FluidState fluidState, @Local(ordinal = 1) BlockPos blockPos2) {
-        if (ModConfig.CONFIG.effect.doRippleParticles && fluidState.is(Fluids.WATER)) {
-            level.addParticle(ParticleRainClient.RIPPLE, x, y, z, 0, 0, 0);
-            if (level.isThundering()) original.call(level, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
-        } else if (this.getPrecipitationAt(level, blockPos2).equals(Biome.Precipitation.RAIN)) {
-            //TODO if ParticleRainClient.isHailingAt
-            //TODO if ParticleRainClient.isSleetingAt
-            original.call(level, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
         }
     }
 
     // prevent rendering weather column instances
     @Inject(method = "render(Lnet/minecraft/world/level/Level;Lnet/minecraft/client/renderer/MultiBufferSource;IFLnet/minecraft/world/phys/Vec3;)V", at = @At("HEAD"), cancellable = true)
     public void render(Level level, MultiBufferSource bufferSource, int ticks, float partialTick, Vec3 cameraPosition, CallbackInfo ci) {
-        if (!ModConfig.CONFIG.compat.renderVanillaWeather) {
+        if (!ModConfig.CONFIG.compat.renderDefaultWeather) {
             ci.cancel();
         }
     }
@@ -101,7 +89,6 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -110,14 +97,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pigcart.particlerain.ParticleRainClient;
 import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ModConfig;
@@ -128,7 +112,7 @@ public class WeatherEffectRendererMixin {
     // bypass precipitation check so we can share the sound placement calculations with non-rain sounds
     @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelReader;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"))
     public Holder<Biome> getBiomeValue(LevelReader instance, BlockPos pos, Operation<Holder<Biome>> original) {
-        // can't target getPrecipitationAt so i'll just replace the gotten biome with a rainy one instead
+        // mixin somehow can't resolve target getPrecipitationAt so lets just replace the gotten biome with a rainy one instead
         return Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS);
     }
 
@@ -152,28 +136,30 @@ public class WeatherEffectRendererMixin {
     // particle status MINIMAL disables splash particles
     @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"))
     public Object optionsParticlesGet(OptionInstance instance, Operation<ParticleStatus> original) {
-        if (!ModConfig.CONFIG.compat.doDefaultSplashing || !ModConfig.CONFIG.effect.doSplashParticles) {
+        if (!ModConfig.CONFIG.compat.doDefaultSplashing) {
             return ParticleStatus.MINIMAL;
         }
         return original.call(instance);
     }
 
-    @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
-    public void addParticle(ClientLevel level, ParticleOptions particleOptions, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Operation<Void> original, @Local FluidState fluidState, @Local(ordinal = 1) BlockPos blockPos2, @Local Biome biome) {
-        if (ModConfig.CONFIG.effect.doRippleParticles && fluidState.is(Fluids.WATER)) {
-            level.addParticle(ParticleRainClient.RIPPLE, x, y, z, 0, 0, 0);
-            if (level.isThundering()) original.call(level, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
-        } else if (level.getBiome(blockPos2).value().getPrecipitationAt(blockPos2).equals(Biome.Precipitation.RAIN)) {
-            //TODO if ParticleRainClient.isHailingAt
-            //TODO if ParticleRainClient.isSleetingAt
-            original.call(level, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
+    /^@WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
+    public void addParticle(ClientLevel level, ParticleOptions particleOptions, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Operation<Void> original, @Local FluidState fluidState, @Local(ordinal = 0) BlockPos blockPos, @Local(ordinal = 1) BlockPos blockPos2, @Local Biome biome) {
+        if (blockPos.distToCenterSqr(x, y, z) / 100 < level.random.nextFloat()) {
+            if (ModConfig.CONFIG.effect.doRippleParticles && fluidState.is(Fluids.WATER)) {
+                level.addParticle(ParticleRain.RIPPLE, x, y, z, 0, 0, 0);
+                if (level.isThundering()) original.call(level, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
+            } else if (level.getBiome(blockPos2).value().getPrecipitationAt(blockPos2).equals(Biome.Precipitation.RAIN)) {
+                //TODO if ParticleRain.isHailingAt
+                //TODO if ParticleRain.isSleetingAt
+                original.call(level, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
+            }
         }
-    }
+    }^/
 
     // prevent rendering weather column instances
     @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
     public void render(LightTexture lightTexture, float partialTick, double camX, double camY, double camZ, CallbackInfo ci) {
-        if (!ModConfig.CONFIG.compat.renderVanillaWeather) {
+        if (!ModConfig.CONFIG.compat.renderDefaultWeather) {
             ci.cancel();
         }
     }

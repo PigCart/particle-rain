@@ -5,10 +5,8 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.Stitcher;
-import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceMetadata;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import pigcart.particlerain.ParticleRainClient;
+import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.ModConfig;
@@ -52,17 +50,17 @@ public abstract class SpriteLoaderMixin {
             try {
                 rainImage = TextureUtil.loadTexture(StonecutterUtil.getResourceLocation("textures/environment/rain.png"));
                 snowImage = TextureUtil.loadTexture(StonecutterUtil.getResourceLocation("textures/environment/snow.png"));
-                if (ModConfig.CONFIG.compat.biomeTint) TextureUtil.applyToAllPixels(TextureUtil.desaturateOperation, rainImage);
+                if (ModConfig.CONFIG.compat.waterTint) TextureUtil.applyToAllPixels(TextureUtil.desaturateOperation, rainImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             // split both weather textures into four sprites
             for (int i = 0; i < 4; i++) {
-                stitcher.registerSprite(TextureUtil.splitImage(rainImage, i, "rain"));
+                stitcher.registerSprite(TextureUtil.splitImage(rainImage, i, "rain_"));
             }
             for (int i = 0; i < 4; i++) {
-                stitcher.registerSprite(TextureUtil.splitImage(snowImage, i, "snow"));
+                stitcher.registerSprite(TextureUtil.splitImage(snowImage, i, "snow_"));
             }
             // generate ripple sprites
             int rippleResolution = TextureUtil.getRippleResolution(this.spriteContentsList);
@@ -70,7 +68,7 @@ public abstract class SpriteLoaderMixin {
                 stitcher.registerSprite(TextureUtil.generateRipple(i, rippleResolution));
             }
             // create gray versions of the default splashes so tint can be applied
-            if (ModConfig.CONFIG.compat.biomeTint) {
+            if (ModConfig.CONFIG.compat.waterTint) {
                 for (int i = 0; i < 4; i++) {
                     NativeImage splashImage = null;
                     try {
@@ -80,14 +78,9 @@ public abstract class SpriteLoaderMixin {
                         e.printStackTrace();
                     }
                     stitcher.registerSprite(new SpriteContents(
-                            StonecutterUtil.getResourceLocation(ParticleRainClient.MOD_ID, "splash" + i),
+                            StonecutterUtil.getResourceLocation(ParticleRain.MOD_ID, "splash_" + i),
                             new FrameSize(splashImage.getWidth(), splashImage.getHeight()),
-                            splashImage,
-                            //? if >1.20.1 {
-                            new ResourceMetadata.Builder().build()));
-                            //?} else {
-                            /*AnimationMetadataSection.EMPTY));
-                            *///?}
+                            splashImage, StonecutterUtil.getSpriteMetadata()));
                 }
             }
         }

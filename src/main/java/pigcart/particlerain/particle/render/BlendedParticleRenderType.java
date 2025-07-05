@@ -1,7 +1,7 @@
 package pigcart.particlerain.particle.render;
 
 //? if >=1.21.5 {
-/*import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
@@ -16,20 +16,20 @@ import static net.minecraft.client.renderer.RenderStateShard.*;
 import net.minecraft.client.particle.ParticleRenderType;
 
 // there doesnt seem to be an iris-compatible way to do this in >=1.21.5 ?
-public class FogRenderType {
+public class BlendedParticleRenderType {
     public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
     public static final RenderPipeline FOG_PIPELINE =
             //? if neoforge {
-            /^// cant be bothered to figure out neo impl lmao. might just need an access transformer?
+            // cant be bothered to figure out neo impl lmao. might just need an access transformer?
             RenderPipelines.TRANSLUCENT_PARTICLE;
-            ^///?} else {
-            RenderPipelines.register(
+            //?} else {
+            /*RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
                     .withBlend(FOG_BLEND)
                     .withDepthWrite(false).build()
             );
-            //?}
+            *///?}
     private static final RenderType FOG = RenderType.create(
             "particlerain_fog",
             1536,
@@ -37,7 +37,11 @@ public class FogRenderType {
             false,
             FOG_PIPELINE,
             RenderType.CompositeState.builder()
-                    .setTextureState(new TextureStateShard(TextureAtlas.LOCATION_PARTICLES, TriState.FALSE, false))
+                    .setTextureState(new TextureStateShard(TextureAtlas.LOCATION_PARTICLES,
+                            //? if <1.21.6 {
+                                /*TriState.FALSE,
+                            *///?}
+                            false))
                     .setOutputState(PARTICLES_TARGET)
                     .setLightmapState(LIGHTMAP)
                     .createCompositeState(false)
@@ -45,22 +49,18 @@ public class FogRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType("particlerain:fog", FOG);
 }
 
-*///?} else if 1.21.4 {
-import com.mojang.blaze3d.platform.GlStateManager;
+//?} else if 1.21.4 {
+/*import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.TriState;
-import org.jetbrains.annotations.Nullable;
 
-public class FogRenderType {
+public class BlendedParticleRenderType {
     private static final RenderType FOG = RenderType.create(
             "particlerain:fog",
             DefaultVertexFormat.PARTICLE,
@@ -95,7 +95,7 @@ public class FogRenderType {
             FOG
     );
 }
-//?} else if 1.21.1 {
+*///?} else if 1.21.1 {
 /*import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -106,7 +106,7 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.jetbrains.annotations.Nullable;
 
-public class FogRenderType {
+public class BlendedParticleRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType() {
         @Override
         public @Nullable BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
@@ -127,7 +127,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureManager;
 
-public class FogRenderType {
+public class BlendedParticleRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder bufferBuilder, TextureManager textureManager) {

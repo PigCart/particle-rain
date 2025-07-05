@@ -14,7 +14,7 @@ import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.WeatherParticleManager;
-import pigcart.particlerain.particle.render.FogRenderType;
+import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 
 import java.awt.*;
 
@@ -63,22 +63,22 @@ public class MistParticle extends WeatherParticle {
             return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
         } else {
             // if IrisApi.isShaderPackInUse() return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-            return FogRenderType.INSTANCE;
+            return BlendedParticleRenderType.INSTANCE;
         }
     }
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float f) {
+    public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
-        float x = (float) (Mth.lerp(f, this.xo, this.x) - camPos.x());
-        float y = (float) (Mth.lerp(f, this.yo, this.y) - camPos.y());
-        float z = (float) (Mth.lerp(f, this.zo, this.z) - camPos.z());
+        float x = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
+        float y = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
+        float z = (float) (Mth.lerp(tickPercent, this.zo, this.z) - camPos.z());
 
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(Mth.HALF_PI, -1, 0, 0));
 
-        quaternion.rotateZ(Mth.lerp(f, this.oRoll, this.roll));
+        quaternion.rotateZ(Mth.lerp(tickPercent, this.oRoll, this.roll));
         turnBackfaceFlipways(quaternion, new Vector3f(x, y, z));
-        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
+        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, tickPercent);
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {

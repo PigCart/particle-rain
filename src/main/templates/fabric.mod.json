@@ -5,15 +5,15 @@
   "version": "${mod_version}",
   "description": "${mod_description}",
   "authors": [
-    "PigCart"
+    "${mod_author}"
   ],
   "contact": {
     "sources": "https://github.com/PigCart/particle-rain",
-    "issues": "https://github.com/PigCart/particle-rain/issues",
+    "issues": "${mod_issue_tracker}",
     "homepage": "https://modrinth.com/mod/particle-rain"
   },
-  "license": "MIT",
-  "icon": "assets/particlerain/icon.png",
+  "license": "{mod_license}",
+  "icon": "${mod_icon}",
   "environment": "client",
   "entrypoints": {
     "client": [
@@ -27,7 +27,7 @@
     "fabricloader": ">=0.12.8",
     "fabric-api": "*",
     "yet_another_config_lib_v3": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "${version_range}"
   },
   "custom": {
     "modmenu": {
