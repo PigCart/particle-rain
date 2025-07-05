@@ -4,13 +4,6 @@ on: [pull_request, push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: [ 1.20.1-fabric, 1.20.1-forge,
-                   1.21.1-fabric, 1.21.1-neoforge,
-                   1.21.4-fabric, 1.21.4-neoforge,
-                   1.21.5-fabric, 1.21.5-neoforge,
-                   1.21.6-fabric, 1.21.6-neoforge ]
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -25,9 +18,10 @@ jobs:
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
-        run: ./gradlew ${{ matrix.version }}:build --no-daemon
+        run: ./gradlew build --no-daemon
       - name: capture build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Artifacts
-          path: ${{ matrix.version }}/build/libs/*.jar
+          path: |
+            **/build/libs/*.jar
