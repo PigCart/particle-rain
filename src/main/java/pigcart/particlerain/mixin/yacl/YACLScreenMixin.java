@@ -20,9 +20,8 @@ public abstract class YACLScreenMixin {
 
     @Shadow(remap = false) @Final public YetAnotherConfigLib config;
 
-    @Shadow @Final private Screen parent;
+    @Shadow(remap = false) @Final private Screen parent;
 
-    // workaround for screen that technically doesn't have any options to reset
     @Inject(method = "cancelOrReset", at = @At("TAIL"), remap = false)
     public void resetParticlesList(CallbackInfo ci) {
         if (this.config.title().getContents().getClass().equals(TranslatableContents.class)) {
@@ -40,13 +39,12 @@ public abstract class YACLScreenMixin {
     }
 
     // workaround for https://github.com/isXander/YetAnotherConfigLib/issues/187
-    @Inject(
+    @Inject( //yacl's mappings are borked
             //? if forge {
-            /*method = "m_7379_",
+            /*method = "m_7379_", at = @At("HEAD"), remap = false)
             *///?} else {
-            method = "onClose",
+            method = "onClose", at = @At("HEAD"))
             //?}
-            at = @At("TAIL"), remap = false)
     public void runSaveFunction(CallbackInfo ci) {
         if (this.config.title().getContents().getClass().equals(TranslatableContents.class)) {
             if (((TranslatableContents) this.config.title().getContents()).getKey().startsWith(ParticleRain.MOD_ID)) {

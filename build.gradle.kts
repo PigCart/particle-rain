@@ -38,12 +38,19 @@ modstitch {
         modVersion = "4.0.0-alpha-2+$name"
         modGroup = "pigcart"
         modAuthor = "PigCart"
+        modLicense = "MIT"
 
         fun <K, V> MapProperty<K, V>.populate(block: MapProperty<K, V>.() -> Unit) {
             block()
         }
 
         replacementProperties.populate {
+            if (isModDevGradleLegacy) {
+                put("refmap", ",\"refmap\": \"particlerain.refmap.json\"")
+            } else {
+                // uses a dash: "particlerain-refmap", and is added automatically anyway
+                put("refmap", "")
+            }
             put("mod_issue_tracker", "https://github.com/pigcart/particlerain/issues")
             put("mod_icon", "assets/particlerain/icon.png")
             put("version_range", property("version_range") as String)
