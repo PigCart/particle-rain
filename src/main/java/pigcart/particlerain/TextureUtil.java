@@ -142,7 +142,7 @@ public class TextureUtil {
 
     static void drawCirclePixel(int xc, int yc, int x, int y, NativeImage img, int col){
         //? if >1.21.1 {
-        img.setPixel(xc+x, yc+y, col);
+        /*img.setPixel(xc+x, yc+y, col);
         img.setPixel(xc-x, yc+y, col);
         img.setPixel(xc+x, yc-y, col);
         img.setPixel(xc-x, yc-y, col);
@@ -150,8 +150,8 @@ public class TextureUtil {
         img.setPixel(xc-y, yc+x, col);
         img.setPixel(xc+y, yc-x, col);
         img.setPixel(xc-y, yc-x, col);
-        //?} else {
-        /*img.setPixelRGBA(xc+x, yc+y, col);
+        *///?} else {
+        img.setPixelRGBA(xc+x, yc+y, col);
         img.setPixelRGBA(xc-x, yc+y, col);
         img.setPixelRGBA(xc+x, yc-y, col);
         img.setPixelRGBA(xc-x, yc-y, col);
@@ -159,6 +159,6 @@ public class TextureUtil {
         img.setPixelRGBA(xc-y, yc+x, col);
         img.setPixelRGBA(xc+y, yc-x, col);
         img.setPixelRGBA(xc-y, yc-x, col);
-        *///?}
+        //?}
     }
 }

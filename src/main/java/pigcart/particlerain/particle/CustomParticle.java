@@ -95,8 +95,8 @@ public class CustomParticle extends WeatherParticle {
 
                 if (roll != 0) quaternion.rotateZ(Mth.lerp(tickPercent, oRoll, roll));
                 //? if <= 1.20.1 {
-                /*quaternion.mul(Axis.YP.rotation(Mth.PI));
-                *///?}
+                quaternion.mul(Axis.YP.rotation(Mth.PI));
+                //?}
                 this.renderRotatedQuad(vertexConsumer, quaternion, offsetX, offsetY, offsetZ, tickPercent);
             }
             case RELATIVE_VELOCITY -> { //FIXME: particle invisible when wind is 0
@@ -156,12 +156,12 @@ public class CustomParticle extends WeatherParticle {
 
     private void renderVertex(VertexConsumer buffer, Quaternionf quaternion, float x, float y, float z, float xOffset, float yOffset, float quadSize, float u, float v, int packedLight) {
         //? if <= 1.20.1 {
-        /*Vector3f vector3f = (new Vector3f(xOffset, yOffset, 0.0F)).rotate(quaternion).mul(quadSize).add(x, y, z);
+        Vector3f vector3f = (new Vector3f(xOffset, yOffset, 0.0F)).rotate(quaternion).mul(quadSize).add(x, y, z);
         buffer.vertex(vector3f.x(), vector3f.y(), vector3f.z()).uv(u, v).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(packedLight).endVertex();
-        *///?} else {
-        SingleQuadParticleAccessor p = (SingleQuadParticleAccessor) this;
+        //?} else {
+        /*SingleQuadParticleAccessor p = (SingleQuadParticleAccessor) this;
         p.callRenderVertex(buffer, quaternion, x, y, z, xOffset, yOffset, quadSize, u, v, packedLight);
-        //?}
+        *///?}
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {

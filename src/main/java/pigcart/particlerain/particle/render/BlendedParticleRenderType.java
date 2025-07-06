@@ -1,7 +1,7 @@
 package pigcart.particlerain.particle.render;
 
 //? if >=1.21.5 {
-import com.mojang.blaze3d.pipeline.BlendFunction;
+/*import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
@@ -20,16 +20,16 @@ public class BlendedParticleRenderType {
     public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
     public static final RenderPipeline FOG_PIPELINE =
             //? if neoforge {
-            // cant be bothered to figure out neo impl lmao. might just need an access transformer?
+            /^// cant be bothered to figure out neo impl lmao. might just need an access transformer?
             RenderPipelines.TRANSLUCENT_PARTICLE;
-            //?} else {
-            /*RenderPipelines.register(
+            ^///?} else {
+            RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
                     .withBlend(FOG_BLEND)
                     .withDepthWrite(false).build()
             );
-            *///?}
+            //?}
     private static final RenderType FOG = RenderType.create(
             "particlerain_fog",
             1536,
@@ -39,8 +39,8 @@ public class BlendedParticleRenderType {
             RenderType.CompositeState.builder()
                     .setTextureState(new TextureStateShard(TextureAtlas.LOCATION_PARTICLES,
                             //? if <1.21.6 {
-                                /*TriState.FALSE,
-                            *///?}
+                                TriState.FALSE,
+                            //?}
                             false))
                     .setOutputState(PARTICLES_TARGET)
                     .setLightmapState(LIGHTMAP)
@@ -49,7 +49,7 @@ public class BlendedParticleRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType("particlerain:fog", FOG);
 }
 
-//?} else if 1.21.4 {
+*///?} else if 1.21.4 {
 /*import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -118,7 +118,7 @@ public class BlendedParticleRenderType {
     };
 }
 *///?} else if 1.20.1 {
-/*import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -142,7 +142,7 @@ public class BlendedParticleRenderType {
         }
     };
 }
-*///?}
+//?}
 
 // mr dinnerbone... pleagse.. no more RenderType implementations.. killm it.,,,.,....
 

@@ -1,5 +1,5 @@
 //? if fabric {
-/*package pigcart.particlerain.loaders.fabric;
+package pigcart.particlerain.loaders.fabric;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -54,4 +54,4 @@ public class FabricEntrypoint implements ClientModInitializer {
         return Registry.register(BuiltInRegistries.PARTICLE_TYPE, StonecutterUtil.getResourceLocation(MOD_ID, name), FabricParticleTypes.simple(true));
     }
 }
-*///?}
+//?}

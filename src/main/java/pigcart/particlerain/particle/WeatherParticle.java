@@ -145,7 +145,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     }
 
     //? if <=1.20.1 {
-    /*protected void renderRotatedQuad(VertexConsumer vertexConsumer, Quaternionf quaternionf, float x, float y, float z, float tickPercent) {
+    protected void renderRotatedQuad(VertexConsumer vertexConsumer, Quaternionf quaternionf, float x, float y, float z, float tickPercent) {
         quaternionf.rotateY(Mth.PI);
         float size = this.getQuadSize(tickPercent);
         float u0 = this.getU0();
@@ -173,5 +173,5 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(u0, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(lightColor).endVertex();
 
     }
-    *///?}
+    //?}
 }

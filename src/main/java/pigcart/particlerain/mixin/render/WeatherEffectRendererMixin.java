@@ -1,7 +1,7 @@
 package pigcart.particlerain.mixin.render;
 
 //? if >1.21.1 {
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+/*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
@@ -75,9 +75,9 @@ public abstract class WeatherEffectRendererMixin {
         }
     }
 }
-//?}
+*///?}
 //? if <=1.21.1 {
-/*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Camera;
@@ -142,7 +142,7 @@ public class WeatherEffectRendererMixin {
         return original.call(instance);
     }
 
-    /^@WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
+    /*@WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
     public void addParticle(ClientLevel level, ParticleOptions particleOptions, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Operation<Void> original, @Local FluidState fluidState, @Local(ordinal = 0) BlockPos blockPos, @Local(ordinal = 1) BlockPos blockPos2, @Local Biome biome) {
         if (blockPos.distToCenterSqr(x, y, z) / 100 < level.random.nextFloat()) {
             if (ModConfig.CONFIG.effect.doRippleParticles && fluidState.is(Fluids.WATER)) {
@@ -154,7 +154,7 @@ public class WeatherEffectRendererMixin {
                 original.call(level, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
             }
         }
-    }^/
+    }*/
 
     // prevent rendering weather column instances
     @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
@@ -164,4 +164,4 @@ public class WeatherEffectRendererMixin {
         }
     }
 }
-*///?}
+//?}

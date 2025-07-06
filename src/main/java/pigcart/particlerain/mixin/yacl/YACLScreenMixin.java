@@ -40,7 +40,13 @@ public abstract class YACLScreenMixin {
     }
 
     // workaround for https://github.com/isXander/YetAnotherConfigLib/issues/187
-    @Inject(method = "onClose", at = @At("TAIL"), remap = false)
+    @Inject(
+            //? if forge {
+            /*method = "m_7379_",
+            *///?} else {
+            method = "onClose",
+            //?}
+            at = @At("TAIL"), remap = false)
     public void runSaveFunction(CallbackInfo ci) {
         if (this.config.title().getContents().getClass().equals(TranslatableContents.class)) {
             if (((TranslatableContents) this.config.title().getContents()).getKey().startsWith(ParticleRain.MOD_ID)) {

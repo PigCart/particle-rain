@@ -27,10 +27,10 @@ import pigcart.particlerain.config.ModConfig;
 import java.awt.*;
 
 //? if >=1.21.5 {
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-//?} else {
-/*import net.minecraft.client.resources.model.BakedModel;
-*///?}
+/*import net.minecraft.client.renderer.block.model.BlockStateModel;
+*///?} else {
+import net.minecraft.client.resources.model.BakedModel;
+//?}
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
 public class ShrubParticle extends WeatherParticle {
@@ -46,14 +46,14 @@ public class ShrubParticle extends WeatherParticle {
         // no foliage convention tag? :(
         if (blockState.is(BlockTags.REPLACEABLE) && !blockState.isAir() && blockState.getFluidState().isEmpty() && !blockState.is(BlockTags.CROPS) && !blockState.is(BlockTags.SNOW)) {
             //? if >=1.21.5 {
-            final BlockStateModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
+            /*final BlockStateModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
             this.setSprite(model.particleIcon());
             final BakedQuad quad = model.collectParts(this.random).getFirst().getQuads(null).getFirst();
-            //?} else {
-            /*final BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
+            *///?} else {
+            final BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState);
             this.setSprite(model.getParticleIcon());
             final BakedQuad quad = model.getQuads(blockState, null, this.random).get(0);
-            *///?}
+            //?}
             if (quad.isTinted()) {
                 Color color = new Color(BiomeColors.getAverageFoliageColor(level, this.pos));
                 this.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
@@ -62,10 +62,10 @@ public class ShrubParticle extends WeatherParticle {
             blockState = Blocks.DEAD_BUSH.defaultBlockState();
         }
         //? if >=1.21.5 {
-        this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).particleIcon());
-        //?} else {
-        /*this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).getParticleIcon());
-        *///?}
+        /*this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).particleIcon());
+        *///?} else {
+        this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModel(blockState).getParticleIcon());
+        //?}
     }
 
     @Override

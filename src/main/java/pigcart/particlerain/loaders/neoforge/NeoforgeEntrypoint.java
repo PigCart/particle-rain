@@ -1,5 +1,5 @@
 //? if neoforge {
-package pigcart.particlerain.loaders.neoforge;
+/*package pigcart.particlerain.loaders.neoforge;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.client.Minecraft;
@@ -60,4 +60,4 @@ public class NeoforgeEntrypoint {
         ParticleRain.onInitializeClient();
     }
 }
-//?}
+*///?}
