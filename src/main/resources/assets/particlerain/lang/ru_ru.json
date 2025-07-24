@@ -42,7 +42,7 @@
   "particlerain.SoundOptions.doWindSounds": "Воспроизводить звуки ветра",
 
   "particlerain.WindOptions": "Настройки ветра",
-  "particlerain.WindOptions.strengthMultiplier": "Множитель силы",
+  "particlerain.WindOptions.strength": "Множитель силы",
   "particlerain.WindOptions.strengthVariance": "Изменчивость силы",
   "particlerain.WindOptions.gustFrequency": "Частота порывов",
   "particlerain.WindOptions.gustFrequency.description": "Более низкая частота увеличивает продолжительность каждого порыва ветра.",
@@ -61,8 +61,8 @@
   "particlerain.CompatibilityOptions.shaderpackTint": "Использовать только цвет неба при включённых шейдерах",
   "particlerain.CompatibilityOptions.yLevelWindAdjustment": "Корректировка ветра по высоте",
   "particlerain.CompatibilityOptions.yLevelWindAdjustment.description": "Делает ветер сильнее на большей высоте и отключает его под уровнем земли.",
-  "particlerain.CompatibilityOptions.registerParticles": "Синхронизация реестра",
-  "particlerain.CompatibilityOptions.registerParticles.description": "Отключите, если Particle Rain мешает игрокам подключаться к вашему LAN-серверу.",
+  "particlerain.CompatibilityOptions.syncRegistries": "Синхронизация реестра",
+  "particlerain.CompatibilityOptions.syncRegistries.description": "Отключите, если Particle Rain мешает игрокам подключаться к вашему LAN-серверу.",
   "particlerain.CompatibilityOptions.crossBiomeBorder": "Пересекать климатические границы",
   "particlerain.CompatibilityOptions.crossBiomeBorder.description": "Позволяет частицам проникать в биомы с другой температурой.",
   "particlerain.CompatibilityOptions.useHeightmapTemp": "Использовать температурную карту высот",
@@ -109,8 +109,6 @@
 
   "particlerain.ParticleOptions.rotationAmount": "Скорость вращения",
   "particlerain.ParticleOptions.rotationAmount.description": "Насколько частица будет вращаться за игровой такт.",
-  "particlerain.ParticleOptions.stormRotationAmount": "Скорость вращения во время грозы",
-  "particlerain.ParticleOptions.stormRotationAmount.description": "Насколько частица будет вращаться за игровой такт во время грозы.",
   "particlerain.ParticleOptions.useResourcepackResolution": "Использовать разрешение набора ресурсов",
   "particlerain.ParticleOptions.useResourcepackResolution.description": "Использует разрешение частицы дыма костра.",
   "particlerain.ParticleOptions.resolution": "Разрешение",
