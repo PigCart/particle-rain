@@ -1,8 +1,10 @@
 package pigcart.particlerain.config;
 
 import com.google.gson.*;
+import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.world.level.biome.Biome;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.WeatherParticleManager;
 
 import java.awt.*;
 import java.io.*;
@@ -21,7 +23,7 @@ public class ModConfig {
     @NoGUI public static final Path CONFIG_FILE = Path.of("config").resolve(ParticleRain.MOD_ID + ".json");
     @NoGUI public static ModConfig CONFIG = new ModConfig();
     @NoGUI public static ModConfig DEFAULT = new ModConfig();
-    @NoGUI public int configVersion = 2;
+    @NoGUI public byte configVersion = 3;
 
     @Group
     public PerformanceOptions perf = new PerformanceOptions();
@@ -62,7 +64,7 @@ public class ModConfig {
         public float tintMix = 0.6F;
         @NoGUI public boolean shaderpackTint = true; //TODO
         public boolean yLevelWindAdjustment = true;
-        public boolean registerParticles = true;
+        public boolean syncRegistries = true;
         public boolean crossBiomeBorder = false;
         public boolean useHeightmapTemp = true;
         public boolean canSpawnAboveClouds = true;
@@ -107,6 +109,7 @@ public class ModConfig {
                     0.9F,
                     0.5F,
                     1.0F,
+                    0.0F,
                     1.0F,
                     1.5F,
                     false,
@@ -127,6 +130,7 @@ public class ModConfig {
                     0.05F,
                     0.1F,
                     0.2F,
+                    0.4F,
                     1.0F,
                     1.5F,
                     false,
@@ -147,6 +151,7 @@ public class ModConfig {
                     0.2F,
                     2.0F,
                     3.0F,
+                    0.0F,
                     1.0F,
                     1.5F,
                     false,
@@ -167,8 +172,9 @@ public class ModConfig {
                     0.15F,
                     0.01F,
                     0.1F,
+                    0.0F,
                     0.45F,
-                    3F,
+                    0.3F,
                     true,
                     RenderType.TRANSLUCENT,
                     List.of("particlerain:fog_dithered"),
@@ -187,8 +193,9 @@ public class ModConfig {
                     0.05F,
                     0.01F,
                     0.1F,
+                    0.0F,
                     0.45F,
-                    3F,
+                    0.3F,
                     true,
                     RenderType.TRANSLUCENT,
                     List.of("particlerain:fog_dithered"),
@@ -207,8 +214,9 @@ public class ModConfig {
                     0.1F,
                     1.0F,
                     2.0F,
+                    0.0F,
                     0.45F,
-                    3F,
+                    0.3F,
                     true,
                     RenderType.TRANSLUCENT,
                     List.of("particlerain:fog_dithered"),
@@ -224,6 +232,7 @@ public class ModConfig {
                     false,
                     new ArrayList<>(List.of("minecraft:lava")),
                     true,
+                    0.0F,
                     0.0F,
                     0.0F,
                     0.0F,
@@ -247,6 +256,7 @@ public class ModConfig {
                     0.0F,
                     0.0F,
                     0.0F,
+                    0.0F,
                     0.45F,
                     0.25F,
                     false,
@@ -267,6 +277,7 @@ public class ModConfig {
                     0.0F,
                     0.0F,
                     0.0F,
+                    0.1F,
                     0.45F,
                     0.25F,
                     false,
@@ -287,6 +298,7 @@ public class ModConfig {
                     0.0F,
                     0.0F,
                     0.0F,
+                    0.1F,
                     0.45F,
                     0.25F,
                     false,
@@ -307,7 +319,7 @@ public class ModConfig {
 
     public static class ParticleOptions {
         ParticleOptions() {}
-            ParticleOptions(String id, boolean enabled, float density, List<Biome.Precipitation> precipitation, boolean biomeWhitelist, List<String> biomeList, boolean blockWhitelist, List<String> blockList, boolean onGround, float gravity, float windStrength, float stormWindStrength, float opacity, float size, boolean constantScreenSize, RenderType renderType, List<String> spriteLocations, TintType tintType, RotationType rotationType) {
+            ParticleOptions(String id, boolean enabled, float density, List<Biome.Precipitation> precipitation, boolean biomeWhitelist, List<String> biomeList, boolean blockWhitelist, List<String> blockList, boolean onGround, float gravity, float windStrength, float stormWindStrength, float rotationAmount, float opacity, float size, boolean constantScreenSize, RenderType renderType, List<String> spriteLocations, TintType tintType, RotationType rotationType) {
             this.id = id;
             this.enabled = enabled;
 
@@ -322,6 +334,7 @@ public class ModConfig {
             this.gravity = gravity;
             this.windStrength = windStrength;
             this.stormWindStrength = stormWindStrength;
+            this.rotationAmount = rotationAmount;
 
             this.opacity = opacity;
             this.size = size;
@@ -350,6 +363,7 @@ public class ModConfig {
         public float gravity = 0.9F;
         public float windStrength = 0.5F;
         public float stormWindStrength = 1.0F;
+        public float rotationAmount = 0F;
         public int lifetime = 3000;
         @Label(key="appearance")
         @Percentage
@@ -443,22 +457,25 @@ public class ModConfig {
                 ModConfig.CONFIG = GSON.fromJson(fileReader, ModConfig.class);
             } catch (Exception e) {
                 ParticleRain.LOGGER.error("Failed to load config - " + e.getMessage());
-                ModConfig.CONFIG = ModConfig.DEFAULT;
+                ModConfig.CONFIG = null;
             }
+        } else {
+            saveConfig();
         }
-        // config file doesnt need to be written until the user changes an option
         if (ModConfig.CONFIG == null || ModConfig.CONFIG.configVersion < ModConfig.DEFAULT.configVersion) {
             ModConfig.CONFIG = ModConfig.DEFAULT;
+            saveConfig();
         }
     }
 
     public static void saveConfig() {
+        WeatherParticleManager.particleGroup = new ParticleGroup(CONFIG.perf.maxParticleAmount);
         //TODO: deserialize string values for use on save or see if yacl has something for this
         File file = CONFIG_FILE.toFile();
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             GSON.toJson(ModConfig.CONFIG, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            ParticleRain.LOGGER.error(e.getMessage());
         }
     }
 

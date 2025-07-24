@@ -4,19 +4,18 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.WeatherParticleManager;
+
+import java.util.Optional;
 
 import static pigcart.particlerain.config.ModConfig.CONFIG;
 
@@ -30,7 +29,7 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     float baseTemp;
     float targetOpacity;
     float oQuadSize;
-    float distanceSquared;
+    float distance;
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z, float gravity, float opacity, float size, float windStrength, float stormWindStrength) {
         super(level, x, y, z);
@@ -46,30 +45,27 @@ public abstract class WeatherParticle extends TextureSheetParticle {
 
         this.targetOpacity = opacity;
 
-        this.setSize(0.01F, 0.01F);
+        this.setSize(quadSize, quadSize);
         this.lifetime = CONFIG.perf.particleDistance * 100;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
         this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
-
-        testForCollisions();
-        WeatherParticleManager.particleCount++;
     }
 
     @Override
     public void tick() {
         super.tick();
         oQuadSize = quadSize;
-        distanceSquared = (float) Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().distanceToSqr(x, y, z);
+        distance = (float) Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().distanceTo(new Vec3(x, y, z));
         pos.set(x, y, z);
         if (!pos.equals(oPos)) {
             onPositionUpdate();
             oPos.set(pos);
         }
         if (doCollisionAnim) {
-            collisionAnim();
+            tickCollisionAnim();
         }
-        fadeByDistance();
+        tickDistanceFade();
     }
 
     public void onPositionUpdate() {
@@ -78,28 +74,15 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         }
         if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos) || !level.getFluidState(pos).isEmpty()) {
             this.remove();
-        } else {
-            testForCollisions();
         }
     }
 
-    public void testForCollisions() {
-        Vec3 quadCenterPos = new Vec3(x, y, z);
-        Vec3 quadEdgePos = new Vec3(xd, yd, zd).normalize().multiply(quadSize, quadSize, quadSize).add(x, y, z);
-        final BlockHitResult hitResult = level.clip(StonecutterUtil.getClipContext(quadCenterPos, quadEdgePos));
-        if (!hitResult.getType().equals(HitResult.Type.MISS) && !doCollisionAnim) {
-            collision = hitResult;
-            doCollisionAnim = true;
-        }
-
-    }
-
-    public void fadeByDistance() {
-        final float renderDistanceSquared = Mth.square(CONFIG.perf.particleDistance);
-        if (distanceSquared > renderDistanceSquared + 2) {
+    public void tickDistanceFade() {
+        final float renderDistance = CONFIG.perf.particleDistance;
+        if (distance > renderDistance) {
             remove();
         } else {
-            alpha = Mth.lerp(distanceSquared / renderDistanceSquared, targetOpacity, 0);
+            alpha = Mth.lerp(distance / renderDistance, targetOpacity, 0);
         }
     }
 
@@ -108,16 +91,15 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         return Mth.lerp(scaleFactor, oQuadSize, quadSize);
     }
 
-    public void collisionAnim() {
+    public void tickCollisionAnim() {
         float deltaMovement = (float) new Vec3(xd, yd, zd).length();
         quadSize = quadSize - deltaMovement;
         if (quadSize <= 0) remove();
     }
 
     @Override
-    public void remove() {
-        if (this.isAlive()) WeatherParticleManager.particleCount--;
-        super.remove();
+    public Optional<ParticleGroup> getParticleGroup() {
+        return Optional.of(WeatherParticleManager.particleGroup);
     }
 
     public Quaternionf turnBackfaceFlipways(Quaternionf quaternion, Vector3f cameraOffset) {
@@ -133,15 +115,6 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     //TODO
     public static double yLevelWindAdjustment(double y) {
         return Math.clamp(0.01, 0.5, (y - 64) / 40);
-    }
-
-    @Override
-    public ParticleRenderType getRenderType() {
-        if (targetOpacity == 1F) {
-            return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
-        } else {
-            return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-        }
     }
 
     //? if <=1.20.1 {

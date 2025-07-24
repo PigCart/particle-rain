@@ -8,14 +8,17 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.config.ConfigScreens;
 import pigcart.particlerain.particle.*;
 
 @Mod(ParticleRain.MOD_ID)
@@ -58,6 +61,10 @@ public class NeoforgeEntrypoint {
         PARTICLE_TYPES.register(eventBus);
         eventBus.addListener(NeoforgeEntrypoint::onRegisterParticleProviders);
         ParticleRain.onInitializeClient();
+        ModLoadingContext.get().registerExtensionPoint(
+                IConfigScreenFactory.class,
+                () -> (modContainer, parent) -> ConfigScreens.generateMainConfigScreen(parent)
+        );
     }
 }
 *///?}

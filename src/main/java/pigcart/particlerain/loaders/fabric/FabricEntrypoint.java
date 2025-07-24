@@ -29,14 +29,13 @@ public class FabricEntrypoint implements ClientModInitializer {
 
         ParticleRain.onInitializeClient();
 
-        if (ModConfig.CONFIG.compat.registerParticles) {
-            for (ModConfig.ParticleOptions opts : ModConfig.CONFIG.customParticles) {
-                try {
-                    SimpleParticleType particle = registerParticle(opts.id.toLowerCase().replace(" ", "_"));
-                    ParticleFactoryRegistry.getInstance().register(particle, new CustomParticle.DefaultFactory(opts));
-                } catch (ResourceLocationException | IllegalStateException e) {
-                    ParticleRain.LOGGER.error(e.getMessage());
-                }
+        for (ModConfig.ParticleOptions opts : ModConfig.CONFIG.customParticles) {
+            try {
+                SimpleParticleType particle = registerParticle(opts.id.toLowerCase().replace(" ", "_"));
+                ParticleFactoryRegistry.getInstance().register(particle, new CustomParticle.DefaultFactory(opts));
+            } catch (ResourceLocationException | IllegalStateException e) {
+                ModConfig.CONFIG.customParticles = ModConfig.DEFAULT.customParticles;
+                ParticleRain.LOGGER.error(e.getMessage());
             }
         }
 

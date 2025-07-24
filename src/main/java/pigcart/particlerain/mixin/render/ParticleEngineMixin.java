@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 
 import java.util.List;
@@ -31,10 +30,5 @@ public class ParticleEngineMixin {
         RENDER_ORDER = ImmutableList.<ParticleRenderType>builder().addAll(RENDER_ORDER)
                 .add(BlendedParticleRenderType.INSTANCE)
                 .build();
-    }
-
-    @Inject(at = @At("HEAD"), method = "clearParticles")
-    private void clearParticles(CallbackInfo ci) {
-        WeatherParticleManager.resetParticleCount();
     }
 }

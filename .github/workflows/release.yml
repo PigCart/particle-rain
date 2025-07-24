@@ -40,7 +40,5 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           files: versions/${{ matrix.version }}/build/libs/*.jar
-          dependencies: |
-            fabric(required){modrinth:P7dR8mSH}{curseforge:306612}#(ignore:github)
-            modmenu(recommended){modrinth:mOgUt4GM}{curseforge:308702}#(ignore:github)
-            yacl(required){modrinth:1eAoo2KR}{curseforge:667299}#(ignore:github)
+          name: ${{ github.event.release.tag_name }} for ${{ matrix.version }}
+          version: ${{ github.event.release.tag_name }}+${{ matrix.version }}

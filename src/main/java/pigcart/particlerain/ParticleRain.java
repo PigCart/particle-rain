@@ -31,7 +31,6 @@ public class ParticleRain {
         return TagKey.create(Registries.BLOCK, StonecutterUtil.getResourceLocation("c", tagId));
     }
 
-    //TODO
     public static SimpleParticleType MIST;
     public static SimpleParticleType SHRUB;
     public static SimpleParticleType RIPPLE;
@@ -76,7 +75,7 @@ public class ParticleRain {
                 .then(LiteralArgumentBuilder.literal("debug")
                         .executes(ctx -> {
                             ClientLevel level = Minecraft.getInstance().level;
-                            addChatMsg(String.format("Particle count: %d/%d", WeatherParticleManager.particleCount, ModConfig.CONFIG.perf.maxParticleAmount));
+                            addChatMsg(String.format("Particle count: %d/%d", WeatherParticleManager.getParticleCount(), WeatherParticleManager.particleGroup.getLimit()));
                             addChatMsg(String.format("Fog density: %d/%f", WeatherParticleManager.fogCount, ModConfig.CONFIG.mist.density));
                             BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
                             final Holder<Biome> holder = level.getBiome(blockPos);

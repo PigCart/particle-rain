@@ -69,11 +69,6 @@ public class ShrubParticle extends WeatherParticle {
     }
 
     @Override
-    public void testForCollisions() {
-        //dont
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if (this.xd == 0 || this.zd == 0) this.remove();

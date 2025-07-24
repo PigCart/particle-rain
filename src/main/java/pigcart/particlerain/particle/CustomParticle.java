@@ -10,6 +10,8 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.*;
 import org.joml.Math;
@@ -18,7 +20,9 @@ import pigcart.particlerain.StonecutterUtil;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.ModConfig;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
-import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
+//? if > 1.20.1 {
+/*import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
+*///?}
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 
 import java.awt.*;
@@ -27,7 +31,28 @@ import static pigcart.particlerain.config.ModConfig.CONFIG;
 
 public class CustomParticle extends WeatherParticle {
 
+    //TODO reminders to check on mod compatibility
+    // iris
+    // cool rain (sounds)
+    // culling mods
+    // asyncparticles
+    // create (asyncparticles?)
+    // valkyrian skies (asyncparticles?)
+    // generic biome mods (bop, natures spirit, ad astra)
+    // WEATHER REPLACEMENTS
+    // terrafirmacraft
+    // simple clouds
+    // storms & tornadoes
+    // WIND
+    // wilder wilds
+    // immersive winds
+    // physics mod maybe
+
     ModConfig.ParticleOptions opts;
+    private float oCollisionAnimProgress = 1;
+    private float collisionAnimProgress = 1;
+    private float speed = 0;
+    private final float rotationVariation;
 
     public CustomParticle(ClientLevel level, double x, double y, double z, ModConfig.ParticleOptions opts) {
         super(level, x, y, z, opts.gravity, opts.opacity, opts.size, opts.windStrength, opts.stormWindStrength);
@@ -35,6 +60,12 @@ public class CustomParticle extends WeatherParticle {
         this.lifetime = opts.lifetime;
         ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
         this.setSprite(particleEngine.getTextureAtlas().getSprite(StonecutterUtil.parseResourceLocation(opts.spriteLocations.get(level.random.nextInt(opts.spriteLocations.size())))));
+        this.rotationVariation = opts.rotationAmount * ((random.nextFloat() - 0.5F) * 2.0F);
+        if (opts.constantScreenSize) {
+            this.quadSize = getDistanceSize();
+        } else {
+            this.quadSize = opts.size;
+        }
         switch (opts.tintType) {
             case CUSTOM ->
                     setColor(opts.customTint.getRed() / 255F, opts.customTint.getGreen() / 255F, opts.customTint.getBlue() / 255F);
@@ -54,8 +85,12 @@ public class CustomParticle extends WeatherParticle {
 
     public void tick() {
         super.tick();
-        //if (this.distanceSquared < 1) {this.remove();return;}
+        speed = (float) new Vec3(xd, yd, zd).length();
         if (opts.constantScreenSize && !doCollisionAnim) quadSize = getDistanceSize();
+        if (opts.rotationAmount != 0) {
+            oRoll = roll;
+            roll += rotationVariation * speed;
+        }
         tickWind();
     }
 
@@ -69,8 +104,41 @@ public class CustomParticle extends WeatherParticle {
         this.zd = (((Mth.sin((float)z * frequency + shift) * variance) + variance + strength) * multiplier) * yLevelWindAdjustment(y);
     }
 
+    @Override
+    public void onPositionUpdate() {
+        super.onPositionUpdate();
+        testForCollisions();
+    }
+
+    public void testForCollisions() {
+        float length = quadSize;
+        if (opts.rotationType.equals(ModConfig.RotationType.RELATIVE_VELOCITY)) {
+            final Vec3 camD = Minecraft.getInstance().cameraEntity.getDeltaMovement();
+            Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
+            length *= Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
+        }
+        Vec3 quadCenterPos = new Vec3(x, y, z);
+        Vec3 quadEdgePos = new Vec3(xd, yd, zd).normalize().multiply(length, length, length).add(x, y, z);
+        final BlockHitResult hitResult = level.clip(StonecutterUtil.getClipContext(quadCenterPos, quadEdgePos));
+        if (!hitResult.getType().equals(HitResult.Type.MISS) && !doCollisionAnim) {
+            collision = hitResult;
+            doCollisionAnim = true;
+        }
+    }
+
+    @Override
+    public void tickCollisionAnim() {
+        //TODO 
+        oCollisionAnimProgress = collisionAnimProgress;
+        collisionAnimProgress -= speed;
+        if (!opts.rotationType.equals(ModConfig.RotationType.RELATIVE_VELOCITY)) {
+            quadSize -= speed;
+        }
+        if (oCollisionAnimProgress <= 0) remove();
+    }
+
     public float getDistanceSize() {
-        return distanceSquared * (opts.size / 100);
+        return distance * opts.size;
     }
 
     @Override
@@ -89,10 +157,10 @@ public class CustomParticle extends WeatherParticle {
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float offsetY = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
         float offsetZ = (float) (Mth.lerp(tickPercent, this.zo, this.z) - camPos.z());
+        // idk if it would be better to use a BiConsumer<vertexConsumer, tickPercent> for each case set on init instead of switch here
         switch (opts.rotationType) {
             case COPY_CAMERA -> {
                 Quaternionf quaternion = new Quaternionf(camera.rotation());
-
                 if (roll != 0) quaternion.rotateZ(Mth.lerp(tickPercent, oRoll, roll));
                 //? if <= 1.20.1 {
                 quaternion.mul(Axis.YP.rotation(Mth.PI));
@@ -101,8 +169,8 @@ public class CustomParticle extends WeatherParticle {
             }
             case RELATIVE_VELOCITY -> { //FIXME: particle invisible when wind is 0
                 // get velocity
-                final Vector3f camD = Minecraft.getInstance().cameraEntity.getDeltaMovement().toVector3f();
-                Vector3f deltaMotion = new Vector3f((float) this.xd - (camD.x), (float) this.yd - (camD.y), (float) this.zd - (camD.z));
+                final Vec3 camD = Minecraft.getInstance().cameraEntity.getDeltaMovement();
+                Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
                 // calculate velocity angle
                 final float angle = Math.acos(new Vector3f(deltaMotion).normalize().y);
                 Vector3f axis = new Vector3f(-deltaMotion.z(), 0, deltaMotion.x()).normalize();
@@ -111,20 +179,23 @@ public class CustomParticle extends WeatherParticle {
                 Vector3f transformedOffset = new Vector3f(offsetX, offsetY, offsetZ);
                 transformedOffset.rotateAxis(angle, axis.x, axis.y, axis.z);
                 quaternion.mul(Axis.YP.rotation(Math.atan2(transformedOffset.x, transformedOffset.z) + Mth.PI));
-                // get sensible stretch factor from speed
-                float speed = Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
+                // decide particle length from speed or collision progress
+                float stretchFactor = Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
+                if (doCollisionAnim) {
+                    float collisionProg = Mth.lerp(tickPercent, oCollisionAnimProgress, collisionAnimProgress);
+                    if (collisionProg < stretchFactor) stretchFactor = collisionProg;
+                }
                 // bung it in the oven
-                turnBackfaceFlipways(quaternion, new Vector3f(offsetX, offsetY, offsetZ));
-                renderSquishyRotatedQuad(vertexConsumer, quaternion, offsetX, offsetY, offsetZ, tickPercent, speed);
+                renderSquishyRotatedQuad(vertexConsumer, quaternion, offsetX, offsetY, offsetZ, tickPercent, stretchFactor);
             }
             case LOOKAT_PLAYER -> {
                 Vector3f localPos = new Vector3f(offsetX, offsetY, offsetZ);
                 // rotate particle around y axis to face player
-                Quaternionf quaternion = Axis.YP.rotation((float) java.lang.Math.atan2(offsetX, offsetZ) + Mth.PI);
+                Quaternionf quaternion = Axis.YP.rotation(Math.atan2(offsetX, offsetZ) + Mth.PI);
                 // rotate particle by angle between y axis and camera location
-                float yAngle = (float) java.lang.Math.asin(offsetY / localPos.length());
+                float yAngle = Math.asin(offsetY / localPos.length());
                 quaternion.rotateX(yAngle);
-                quaternion.rotateZ((float) java.lang.Math.atan2(offsetX, offsetZ));
+                quaternion.rotateZ(Math.atan2(offsetX, offsetZ));
                 // the z rotation doubles up on the -y axis instead of negating it like the positive axis. idk how to fix
                 // for now we remove them before it gets to look too weird
                 if (yAngle < -1) doCollisionAnim = true;

@@ -12,7 +12,7 @@
     "issues": "${mod_issue_tracker}",
     "homepage": "https://modrinth.com/mod/particle-rain"
   },
-  "license": "{mod_license}",
+  "license": "${mod_license}",
   "icon": "${mod_icon}",
   "environment": "client",
   "entrypoints": {
@@ -34,6 +34,13 @@
       "links": {
         "modmenu.discord": "https://pigc.art/discord"
       }
+    },
+    "mc-publish": {
+      "dependencies": [
+        "fabric(required){modrinth:P7dR8mSH}{curseforge:306612}#(ignore:github)",
+        "modmenu(recommended){modrinth:mOgUt4GM}{curseforge:308702}#(ignore:github)",
+        "yacl(required){modrinth:1eAoo2KR}{curseforge:667299}#(ignore:github)"
+      ]
     }
   }
 }

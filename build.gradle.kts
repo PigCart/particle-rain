@@ -1,5 +1,5 @@
 plugins {
-    id("dev.isxander.modstitch.base") version "0.5.12"
+    id("dev.isxander.modstitch.base") version "0.5.14-unstable" // modstitch 0.6 currently bugged with legacy forge
     id("dev.kikugie.stonecutter")
 }
 
@@ -9,6 +9,13 @@ fun prop(name: String, consumer: (prop: String) -> Unit) {
 }
 
 val minecraft = property("deps.minecraft") as String;
+
+tasks {
+    processResources {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        outputs.upToDateWhen { false } // work around modstitch mixin cache issue.
+    }
+}
 
 modstitch {
     minecraftVersion = minecraft
@@ -24,18 +31,14 @@ modstitch {
         else -> throw IllegalArgumentException("Please store the java version for ${property("deps.minecraft")} in build.gradle.kts!")
     }
 
-    // If parchment doesnt exist for a version yet you can safely
-    // omit the "deps.parchment" property from your versioned gradle.properties
     parchment {
         prop("deps.parchment") { mappingsVersion = it }
     }
 
-    // This metadata is used to fill out the information inside
-    // the metadata files found in the templates folder.
     metadata {
         modId = "particlerain"
         modName = "Particle Rain"
-        modVersion = "4.0.0-alpha-2+$name"
+        modVersion = "4.0.0-alpha.3+$name"
         modGroup = "pigcart"
         modAuthor = "PigCart"
         modLicense = "MIT"
@@ -45,13 +48,21 @@ modstitch {
         }
 
         replacementProperties.populate {
+            if (isLoom && minecraft != "1.20.1") {
+                put("fabric_mixins", "\"fabric.RegistrySyncManagerMixin\",")
+            } else {
+                put("fabric_mixins", "")
+            }
             if (isModDevGradleLegacy) {
                 put("refmap", ",\"refmap\": \"particlerain.refmap.json\"")
+                put("forge_or_neoforge", "forge")
             } else {
                 // uses a dash: "particlerain-refmap", and is added automatically anyway
                 put("refmap", "")
+                // workaround for modstitch including both mods.toml files screwing up mc-publish
+                put("forge_or_neoforge", "neoforge")
             }
-            put("mod_issue_tracker", "https://github.com/pigcart/particlerain/issues")
+            put("mod_issue_tracker", "https://github.com/pigcart/particle-rain/issues")
             put("mod_icon", "assets/particlerain/icon.png")
             put("version_range", property("version_range") as String)
         }
@@ -83,9 +94,7 @@ modstitch {
 
     mixin {
         addMixinsToModManifest = true
-
         configs.register("particlerain")
-
     }
 }
 

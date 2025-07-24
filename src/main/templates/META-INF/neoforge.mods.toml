@@ -22,3 +22,7 @@ side = "BOTH"
 modId = "minecraft"
 type = "required"
 versionRange="${version_range}"
+
+[mc-publish]
+loaders = ["${forge_or_neoforge}"]
+dependencies = ["yacl(required){modrinth:1eAoo2KR}{curseforge:667299}#(ignore:github)"]

@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import pigcart.particlerain.config.ModConfig;
+import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import pigcart.particlerain.particle.CustomParticle;
 
 import java.util.List;
@@ -30,10 +32,16 @@ import static pigcart.particlerain.config.ModConfig.CONFIG;
 
 public final class WeatherParticleManager {
 
-    public static int particleCount;
+    public static ParticleGroup particleGroup = new ParticleGroup(CONFIG.perf.maxParticleAmount);
+
     public static int fogCount;
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
     private static final BlockPos.MutableBlockPos heightmapPos = new BlockPos.MutableBlockPos();
+
+    public static int getParticleCount() {
+        final ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
+        return particleEngine.getTrackedParticleCounts().getInt(particleGroup);
+    }
 
     private static void spawnParticles(ClientLevel level, Holder<Biome> biome, double x, double y, double z) {
         Precipitation precipitation = StonecutterUtil.getPrecipitationAt(level, biome.value(), CONFIG.compat.useHeightmapTemp ? heightmapPos : pos);
@@ -87,7 +95,8 @@ public final class WeatherParticleManager {
 
     public static void tick(ClientLevel level, Vec3 cameraPos) {
         //TODO: twilight fog and skittering sand when not raining
-        if (level.isRaining() && particleCount < CONFIG.perf.maxParticleAmount) {
+        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
+        if (level.isRaining() && particleEngine.callHasSpaceInParticleLimit(particleGroup)) {
             int density = (int) (Mth.lerpInt(level.getThunderLevel(1), CONFIG.perf.particleDensity, CONFIG.perf.particleStormDensity) * level.getRainLevel(1));
             final float speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().lengthSqr();
             // mul density by speed to maintain visual density
@@ -153,10 +162,5 @@ public final class WeatherParticleManager {
     //TODO
     public static boolean canHostStreaks(BlockState state) {
         return state.is(BlockTags.IMPERMEABLE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(ParticleRain.GLASS_PANES);
-    }
-
-    public static void resetParticleCount() {
-        particleCount = 0;
-        fogCount = 0;
     }
 }

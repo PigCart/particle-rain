@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -75,7 +76,7 @@ public class StreakParticle extends WeatherParticle {
     }
 
     @Override
-    public void collisionAnim() {
+    public void tickCollisionAnim() {
         gravity = 0;
         yd = 0;
         this.alpha = alpha - 0.1F;
@@ -83,8 +84,8 @@ public class StreakParticle extends WeatherParticle {
     }
 
     @Override
-    public void fadeByDistance() {
-        if (!doCollisionAnim) super.fadeByDistance();
+    public void tickDistanceFade() {
+        if (!doCollisionAnim) super.tickDistanceFade();
     }
 
     @Override
@@ -98,6 +99,12 @@ public class StreakParticle extends WeatherParticle {
         this.turnBackfaceFlipways(quaternion, new Vector3f(x, y, z));
         this.renderRotatedQuad(vertexConsumer, quaternion, x, y + quadSize, z, f);
     }
+
+    @Override
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    }
+
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
 
         private final SpriteSet provider;
