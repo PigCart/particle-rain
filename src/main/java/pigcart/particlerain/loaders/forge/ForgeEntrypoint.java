@@ -41,8 +41,7 @@ public class ForgeEntrypoint {
     }
 
     public static void onRegisterCommands(RegisterClientCommandsEvent event) {
-        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        dispatcher.register(ParticleRain.getCommands());
+        event.getDispatcher().register(ParticleRain.getCommands());
     }
 
     public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
@@ -54,6 +53,8 @@ public class ForgeEntrypoint {
         ParticleRain.MIST = MIST.get();
         ParticleRain.RIPPLE = RIPPLE.get();
         ParticleRain.STREAK = STREAK.get();
+
+        ParticleRain.onInitializeClient();
     }
 
     @SuppressWarnings("removal")
@@ -63,7 +64,6 @@ public class ForgeEntrypoint {
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onRegisterCommands);
         PARTICLE_TYPES.register(eventBus);
         eventBus.addListener(ForgeEntrypoint::onRegisterParticleProviders);
-        ParticleRain.onInitializeClient();
         ModLoadingContext.get().registerExtensionPoint(
                 ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory(

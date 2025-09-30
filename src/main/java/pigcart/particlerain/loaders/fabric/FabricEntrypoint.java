@@ -11,8 +11,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import pigcart.particlerain.ParticleRain;
-import pigcart.particlerain.StonecutterUtil;
-import pigcart.particlerain.config.ModConfig;
+import pigcart.particlerain.VersionUtil;
+import pigcart.particlerain.config.ConfigData;
+import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.particle.*;
 
 import static pigcart.particlerain.ParticleRain.MOD_ID;
@@ -26,23 +27,30 @@ public class FabricEntrypoint implements ClientModInitializer {
         ParticleRain.MIST = registerParticle("mist");
         ParticleRain.RIPPLE = registerParticle("ripple");
         ParticleRain.STREAK = registerParticle("streak");
-
-        ParticleRain.onInitializeClient();
-
-        for (ModConfig.ParticleOptions opts : ModConfig.CONFIG.customParticles) {
-            try {
-                SimpleParticleType particle = registerParticle(opts.id.toLowerCase().replace(" ", "_"));
-                ParticleFactoryRegistry.getInstance().register(particle, new CustomParticle.DefaultFactory(opts));
-            } catch (ResourceLocationException | IllegalStateException e) {
-                ModConfig.CONFIG.customParticles = ModConfig.DEFAULT.customParticles;
-                ParticleRain.LOGGER.error(e.getMessage());
-            }
-        }
-
         ParticleFactoryRegistry.getInstance().register(ParticleRain.SHRUB, ShrubParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(ParticleRain.MIST, MistParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(ParticleRain.RIPPLE, RippleParticle.DefaultFactory::new);
         ParticleFactoryRegistry.getInstance().register(ParticleRain.STREAK, StreakParticle.DefaultFactory::new);
+
+        ParticleRain.onInitializeClient();
+
+        for (ConfigData.ParticleData data : ConfigManager.config.particles) {
+            if (!data.usePresetParticle) {
+                String particleId = data.id.toLowerCase().replace(" ", "_");
+                if (BuiltInRegistries.PARTICLE_TYPE.containsKey(VersionUtil.getId(MOD_ID, particleId))) {
+                    ParticleRain.LOGGER.warn("{} is already registered! please choose a different id for this particle", particleId);
+                } else {
+                    try {
+                        SimpleParticleType particle = registerParticle(particleId);
+                        ParticleFactoryRegistry.getInstance().register(particle, new CustomParticle.DefaultFactory(data));
+                    } catch (ResourceLocationException | IllegalStateException e) {
+                        ConfigManager.config.particles = ConfigManager.defaultConfig.particles;
+                        ParticleRain.LOGGER.error(e.getMessage());
+                    }
+                }
+            }
+        }
+
 
         ClientTickEvents.END_CLIENT_TICK.register(ParticleRain::onTick);
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
@@ -50,7 +58,7 @@ public class FabricEntrypoint implements ClientModInitializer {
         });
     }
     private SimpleParticleType registerParticle(String name) {
-        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, StonecutterUtil.getResourceLocation(MOD_ID, name), FabricParticleTypes.simple(true));
+        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, VersionUtil.getId(MOD_ID, name), FabricParticleTypes.simple(true));
     }
 }
 //?}

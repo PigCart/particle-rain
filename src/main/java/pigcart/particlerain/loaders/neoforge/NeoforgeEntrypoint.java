@@ -53,6 +53,8 @@ public class NeoforgeEntrypoint {
         ParticleRain.MIST = MIST.get();
         ParticleRain.RIPPLE = RIPPLE.get();
         ParticleRain.STREAK = STREAK.get();
+        // config has to load after particles so it can use them
+        ParticleRain.onInitializeClient();
     }
 
     public NeoforgeEntrypoint(IEventBus eventBus) {
@@ -60,7 +62,6 @@ public class NeoforgeEntrypoint {
         NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onRegisterCommands);
         PARTICLE_TYPES.register(eventBus);
         eventBus.addListener(NeoforgeEntrypoint::onRegisterParticleProviders);
-        ParticleRain.onInitializeClient();
         ModLoadingContext.get().registerExtensionPoint(
                 IConfigScreenFactory.class,
                 () -> (modContainer, parent) -> ConfigScreens.generateMainConfigScreen(parent)

@@ -20,9 +20,7 @@ import org.joml.AxisAngle4f;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.ParticleRain;
-import pigcart.particlerain.StonecutterUtil;
-import pigcart.particlerain.config.ModConfig;
+import pigcart.particlerain.config.ConfigManager;
 
 import java.awt.*;
 
@@ -31,16 +29,12 @@ import java.awt.*;
 *///?} else {
 import net.minecraft.client.resources.model.BakedModel;
 //?}
-import static pigcart.particlerain.config.ModConfig.CONFIG;
+
 
 public class ShrubParticle extends WeatherParticle {
 
     protected ShrubParticle(ClientLevel level, double x, double y, double z) {
-        super(level, x, y, z, CONFIG.shrub.gravity, CONFIG.shrub.opacity, CONFIG.shrub.size, CONFIG.shrub.windStrength, CONFIG.shrub.stormWindStrength);
-
-        this.hasPhysics = true;
-
-        this.yd = 0.2F;
+        super(level, x, y, z);
 
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
         // no foliage convention tag? :(
@@ -72,12 +66,12 @@ public class ShrubParticle extends WeatherParticle {
     public void tick() {
         super.tick();
         if (this.xd == 0 || this.zd == 0) this.remove();
-        this.xd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
-        this.zd = level.isThundering() ? ModConfig.CONFIG.shrub.stormWindStrength : ModConfig.CONFIG.shrub.windStrength;
+        this.xd = level.isThundering() ? ConfigManager.config.shrub.stormWindStrength : ConfigManager.config.shrub.windStrength;
+        this.zd = level.isThundering() ? ConfigManager.config.shrub.stormWindStrength : ConfigManager.config.shrub.windStrength;
         this.oRoll = this.roll;
-        this.roll = this.roll + ModConfig.CONFIG.shrub.rotationAmount;
+        this.roll = this.roll + ConfigManager.config.shrub.rotationAmount;
         if (this.onGround) {
-            this.yd = ModConfig.CONFIG.shrub.bounciness;
+            this.yd = ConfigManager.config.shrub.bounciness;
         }
     }
 

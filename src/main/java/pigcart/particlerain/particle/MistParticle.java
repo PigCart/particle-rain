@@ -7,30 +7,33 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.WeatherParticleManager;
-import pigcart.particlerain.particle.render.BlendedParticleRenderType;
+import pigcart.particlerain.config.ConfigData;
 
 import java.awt.*;
+import java.util.Optional;
 
-import static pigcart.particlerain.config.ModConfig.CONFIG;
+import static pigcart.particlerain.config.ConfigManager.config;
 
 public class MistParticle extends WeatherParticle {
 
-    float xdxd;
-    float zdzd;
-
     private MistParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, 0, CONFIG.mist.opacity, CONFIG.mist.size, CONFIG.mist.windStrength, CONFIG.mist.stormWindStrength);
+        super(level, x, y, z);
 
-        WeatherParticleManager.fogCount++;
-        this.setSprite(provider.get(level.getRandom()));
-        this.setSize(CONFIG.mist.size + 1, CONFIG.mist.size + 1);
+        this.y = ((int) y) + random.nextFloat();
+
+        this.setSprite(config.mist.renderStyle.getSprite());
+        this.quadSize = config.mist.size;
+        this.setSize(quadSize, 0.2F);
+        this.targetOpacity = config.mist.opacity;
+        this.lifetime = config.mist.lifetime;
+        this.alpha = 0;
 
         Color color = new Color(this.level.getBiome(this.pos).value().getFogColor());
         this.rCol = color.getRed() / 255F;
@@ -39,32 +42,31 @@ public class MistParticle extends WeatherParticle {
 
         this.roll = Mth.HALF_PI * level.random.nextInt(4);
         this.oRoll = this.roll;
-
-        this.xdxd = (this.random.nextFloat() - 0.5F) / 100;
-        this.zdzd = (this.random.nextFloat() - 0.5F) / 100;
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (level.getBlockState(pos).isSolid()) this.remove();
-        this.xd = this.xdxd;
-        this.zd = this.zdzd;
+        int halfLife = lifetime / 2;
+        this.alpha = (age < halfLife ? (float) age / (halfLife) : (float) (-age + lifetime) / halfLife) * config.mist.opacity;
+        if (config.mist.renderStyle == ConfigData.MistOptions.RenderStyle.DITHERED) quadSize = (distance * 0.1F) * config.mist.size;
+        if (distance > config.perf.surfaceRange) remove();
     }
 
-    public void remove() {
-        if (this.isAlive()) WeatherParticleManager.fogCount--;
-        super.remove();
+    @Override
+    public void tickDistanceFade() {
+        //dont
+    }
+
+    @Override
+    public Optional<ParticleGroup> getParticleGroup() {
+        return Optional.empty();
     }
 
     @Override
     public ParticleRenderType getRenderType() {
-        if (targetOpacity == 1F) {
-            return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
-        } else {
-            // if IrisApi.isShaderPackInUse() return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-            return BlendedParticleRenderType.INSTANCE;
-        }
+        // if IrisApi.isShaderPackInUse() return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return config.mist.renderStyle.getRenderType();
     }
 
     @Override

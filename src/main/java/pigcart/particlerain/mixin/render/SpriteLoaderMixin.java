@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import pigcart.particlerain.ParticleRain;
-import pigcart.particlerain.StonecutterUtil;
+import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.TextureUtil;
-import pigcart.particlerain.config.ModConfig;
+import pigcart.particlerain.config.ConfigManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +33,7 @@ public abstract class SpriteLoaderMixin {
 
     @Inject(method = "stitch", at = @At("HEAD"))
     public void stitch(List<SpriteContents> list, int i, Executor executor, CallbackInfoReturnable<SpriteLoader.Preparations> cir) {
-        if (this.location.equals(StonecutterUtil.getResourceLocation("textures/atlas/particles.png"))) {
+        if (this.location.equals(VersionUtil.getId("textures/atlas/particles.png"))) {
             this.spriteContentsList = list;
         }
     }
@@ -43,16 +43,18 @@ public abstract class SpriteLoaderMixin {
             at = @At(value = "NEW", args = "class=net/minecraft/client/renderer/texture/Stitcher")
     )
     private Stitcher<SpriteContents> registerWeatherParticleSprites(Stitcher<SpriteContents> stitcher) {
-        if (this.location.equals(StonecutterUtil.getResourceLocation("textures/atlas/particles.png"))) {
+        if (this.location.equals(VersionUtil.getId("textures/atlas/particles.png"))) {
             // load weather textures
             NativeImage rainImage = null;
             NativeImage snowImage = null;
             try {
-                rainImage = TextureUtil.loadTexture(StonecutterUtil.getResourceLocation("textures/environment/rain.png"));
-                snowImage = TextureUtil.loadTexture(StonecutterUtil.getResourceLocation("textures/environment/snow.png"));
-                if (ModConfig.CONFIG.compat.waterTint) TextureUtil.applyToAllPixels(TextureUtil.desaturateOperation, rainImage);
+                rainImage = TextureUtil.loadTexture(VersionUtil.getId("textures/environment/rain.png"));
+                snowImage = TextureUtil.loadTexture(VersionUtil.getId("textures/environment/snow.png"));
+                TextureUtil.boostAlpha(rainImage, "rain");
+                TextureUtil.boostAlpha(snowImage, "snow");
+                if (ConfigManager.config.compat.waterTint) TextureUtil.desaturate(rainImage);
             } catch (IOException e) {
-                e.printStackTrace();
+                ParticleRain.LOGGER.error(e.getMessage());
             }
 
             // split both weather textures into four sprites
@@ -68,19 +70,19 @@ public abstract class SpriteLoaderMixin {
                 stitcher.registerSprite(TextureUtil.generateRipple(i, rippleResolution));
             }
             // create gray versions of the default splashes so tint can be applied
-            if (ModConfig.CONFIG.compat.waterTint) {
+            if (ConfigManager.config.compat.waterTint) {
                 for (int i = 0; i < 4; i++) {
                     NativeImage splashImage = null;
                     try {
-                        splashImage = TextureUtil.loadTexture(StonecutterUtil.getResourceLocation("textures/particle/splash_" + i + ".png"));
-                        TextureUtil.applyToAllPixels(TextureUtil.desaturateOperation, splashImage);
+                        splashImage = TextureUtil.loadTexture(VersionUtil.getId("textures/particle/splash_" + i + ".png"));
+                        TextureUtil.desaturate(splashImage);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ParticleRain.LOGGER.error(e.getMessage());
                     }
                     stitcher.registerSprite(new SpriteContents(
-                            StonecutterUtil.getResourceLocation(ParticleRain.MOD_ID, "splash_" + i),
+                            VersionUtil.getId(ParticleRain.MOD_ID, "splash_" + i),
                             new FrameSize(splashImage.getWidth(), splashImage.getHeight()),
-                            splashImage, StonecutterUtil.getSpriteMetadata()));
+                            splashImage, VersionUtil.getSpriteMetadata()));
                 }
             }
         }

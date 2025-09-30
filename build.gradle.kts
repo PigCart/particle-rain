@@ -38,7 +38,7 @@ modstitch {
     metadata {
         modId = "particlerain"
         modName = "Particle Rain"
-        modVersion = "4.0.0-alpha.3+$name"
+        modVersion = "4.0.0-beta.1+$name"
         modGroup = "pigcart"
         modAuthor = "PigCart"
         modLicense = "MIT"

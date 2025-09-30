@@ -19,4 +19,7 @@ public interface ParticleEngineAccessor {
 
     @Invoker
     boolean callHasSpaceInParticleLimit(ParticleGroup group);
+
+    @Invoker
+    void callClearParticles();
 }

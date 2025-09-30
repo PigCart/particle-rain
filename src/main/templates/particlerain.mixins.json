@@ -8,15 +8,18 @@
   },
   "client": [
     ${ fabric_mixins }
+    "ClientLevelDataMixin",
     "access.NativeImageAccessor",
     "access.ParticleEngineAccessor",
     "access.SingleQuadParticleAccessor",
+    "render.ClientLevelMixin",
     "render.ParticleEngineMixin",
     "render.SpriteLoaderMixin",
     "render.WeatherEffectRendererMixin",
     "tint.DripParticleMixin",
     "tint.TextureSheetParticleMixin",
     "tint.WaterDropParticleMixin",
+    "yacl.YACLScreenAccessor",
     "yacl.YACLScreenMixin",
     "yacl.YetAnotherConfigLibImplMixin"
   ]

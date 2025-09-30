@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.config.ConfigScreens;
-import pigcart.particlerain.config.ModConfig;
 
 @Mixin(YACLScreen.class)
 public abstract class YACLScreenMixin {
@@ -23,11 +23,16 @@ public abstract class YACLScreenMixin {
     @Shadow(remap = false) @Final private Screen parent;
 
     @Inject(method = "cancelOrReset", at = @At("TAIL"), remap = false)
-    public void resetParticlesList(CallbackInfo ci) {
+    public void cancelOrReset(CallbackInfo ci) {
         if (this.config.title().getContents().getClass().equals(TranslatableContents.class)) {
             final String key = ((TranslatableContents) this.config.title().getContents()).getKey();
             if (key.equals("particlerain.editParticles") || key.equals("particlerain.title")) {
-                ModConfig.CONFIG.customParticles = ModConfig.DEFAULT.customParticles;
+                ConfigManager.config.mist = ConfigManager.defaultConfig.mist;
+                ConfigManager.config.streak = ConfigManager.defaultConfig.streak;
+                ConfigManager.config.shrub = ConfigManager.defaultConfig.shrub;
+                ConfigManager.config.ripple = ConfigManager.defaultConfig.ripple;
+                ConfigManager.config.particles = ConfigManager.defaultConfig.particles;
+                ParticleRain.LOGGER.info("Particles reset");
                 if (key.equals("particlerain.editParticles")) {
                     Minecraft.getInstance().setScreen(ConfigScreens.generateParticleListScreen(this.parent));
                 } else {
@@ -35,7 +40,6 @@ public abstract class YACLScreenMixin {
                 }
             }
         }
-        ParticleRain.LOGGER.info("Particles reset");
     }
 
     // workaround for https://github.com/isXander/YetAnotherConfigLib/issues/187
