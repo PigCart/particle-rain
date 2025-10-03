@@ -1,7 +1,14 @@
-# v4-beta.1
-###### Sept 30, 2024
+# v4-beta.2
+###### Oct 03, 2025
+- fixed crash when loading resource packs with invisible weather textures
+- fixed custom tints saving incorrectly and invalidating the config
+- fixed resource pack animated splash particles not loading correctly
+- fixed ripples not respecting config options
+- removed spam log line
 
-- Features:
+# v4-beta.1
+###### Sep 30, 2025
+- New features:
   - added subtle block hit noises when blocks have rain falling on them
   - added subtle random note sounds to note blocks when rain falls on them
   - re-added streak particles

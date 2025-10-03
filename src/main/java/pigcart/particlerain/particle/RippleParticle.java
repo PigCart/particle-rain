@@ -17,7 +17,10 @@ import org.joml.Vector3f;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
+import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
+
+import static pigcart.particlerain.config.ConfigManager.config;
 
 public class RippleParticle extends WeatherParticle {
 
@@ -28,6 +31,8 @@ public class RippleParticle extends WeatherParticle {
         this.setSprite(particleEngine.getTextureAtlas().getSprite(VersionUtil.getId(ParticleRain.MOD_ID, "ripple_0")));
         this.x = Math.round(this.x / (1F / 16F)) * (1F / 16F);
         this.z = Math.round(this.z / (1F / 16F)) * (1F / 16F);
+        this.quadSize = config.ripple.size;
+        this.alpha = config.ripple.opacity;
     }
 
     @Override
@@ -38,7 +43,7 @@ public class RippleParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        this.alpha = Mth.lerp(this.age / 9F, 0.3F, 0F);
+        this.alpha = Mth.lerp(this.age / 9F, config.ripple.opacity, 0F);
         if (this.age > 8) this.remove();
         ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
         this.setSprite(particleEngine.getTextureAtlas().getSprite(VersionUtil.getId(ParticleRain.MOD_ID, "ripple_" + (this.age - 1))));

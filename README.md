@@ -2,5 +2,5 @@
 
 Replaces Minecraft's weather effects with prettier particle effects.
 
-- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/particle-rain)
-- [Modrinth](https://modrinth.com/mod/particle-rain)
+- [Mod description and download](https://modrinth.com/mod/particle-rain)
+- [Update notes / changelog](https://https://github.com/PigCart/particle-rain/blob/main/CHANGELOG.md)

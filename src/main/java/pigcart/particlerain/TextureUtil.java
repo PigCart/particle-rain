@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +35,7 @@ public class TextureUtil {
             highestAlpha = Math.max(col.getAlpha(), highestAlpha);
             return rgba;
         });
-        if (highestAlpha == 255) return;
+        if (highestAlpha == 255 || highestAlpha == 0) return;
         final int multiplier = 255 / highestAlpha;
         if (multiplier == 1) return;
         ParticleRain.LOGGER.info("Multiplying {} texture alpha by {}", debugName, multiplier);
@@ -89,8 +90,11 @@ public class TextureUtil {
         }
     }
 
-    public static NativeImage loadTexture(ResourceLocation resourceLocation) throws IOException {
-        Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(resourceLocation);
+    public static NativeImage loadTexture(ResourceLocation location) throws IOException {
+        return loadTexture(Minecraft.getInstance().getResourceManager().getResourceOrThrow(location));
+    }
+
+    public static NativeImage loadTexture(Resource resource) throws IOException {
         InputStream inputStream = resource.open();
         NativeImage nativeImage;
         try {
@@ -111,7 +115,7 @@ public class TextureUtil {
         int size = image.getWidth();
         NativeImage sprite = new NativeImage(size, size, false);
         image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
-        return(new SpriteContents(VersionUtil.getId(ParticleRain.MOD_ID, id + segment), new FrameSize(size, size), sprite, VersionUtil.getSpriteMetadata()));
+        return(new SpriteContents(VersionUtil.getId(ParticleRain.MOD_ID, id + segment), new FrameSize(size, size), sprite, VersionUtil.getEmptySpriteMetadata()));
     }
 
     public static int getRippleResolution(List<SpriteContents> contents) {
@@ -142,7 +146,7 @@ public class TextureUtil {
                 ((color.getGreen() & 0xFF) << 8)  |
                 ((color.getBlue() & 0xFF));
         generateBresenhamCircle(image, size, (int) Math.clamp(1, (size / 2F) - 1, radius), colorint);
-        return(new SpriteContents(VersionUtil.getId(ParticleRain.MOD_ID, "ripple_" + i), new FrameSize(size, size), image, VersionUtil.getSpriteMetadata()));
+        return(new SpriteContents(VersionUtil.getId(ParticleRain.MOD_ID, "ripple_" + i), new FrameSize(size, size), image, VersionUtil.getEmptySpriteMetadata()));
     }
 
     public static void generateBresenhamCircle(NativeImage image, int imgSize, int radius, int colorint) {

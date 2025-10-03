@@ -1,27 +1,31 @@
 package pigcart.particlerain;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
+import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
 import java.awt.*;
+import java.io.IOException;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class VersionUtil {
@@ -61,12 +65,50 @@ public class VersionUtil {
         *///?}
     }
     //? if <=1.20.1 {
-    public static AnimationMetadataSection getSpriteMetadata() {
+    public static AnimationMetadataSection getEmptySpriteMetadata() {
         return AnimationMetadataSection.EMPTY;
     }
     //?} else {
-    /*public static ResourceMetadata getSpriteMetadata() {
+    /*public static ResourceMetadata getEmptySpriteMetadata() {
         return new ResourceMetadata.Builder().build();
+    }
+    *///?}
+
+    //? if <=1.20.1 {
+    public static SpriteContents loadSplashSprite(int i) throws IOException {
+        final ResourceLocation location = getId("textures/particle/splash_" + i + ".png");
+        Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(location);
+        AnimationMetadataSection metadata = resource.metadata().getSection(AnimationMetadataSection.SERIALIZER).orElse(AnimationMetadataSection.EMPTY);
+        NativeImage splashImage = TextureUtil.loadTexture(resource);
+        TextureUtil.desaturate(splashImage);
+        return new SpriteContents(
+                getId(ParticleRain.MOD_ID, "splash_" + i),
+                metadata.calculateFrameSize(splashImage.getWidth(), splashImage.getHeight()),
+                splashImage, metadata);
+    }
+    //?} else {
+    /*public static SpriteContents loadSplashSprite(int i) throws IOException {
+        final ResourceLocation location = getId("textures/particle/splash_" + i + ".png");
+        Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(location);
+        ResourceMetadata metadata = resource.metadata();
+        NativeImage splashImage = TextureUtil.loadTexture(resource);
+        TextureUtil.desaturate(splashImage);
+        Optional<AnimationMetadataSection> optional = metadata.getSection(
+                //? if >=1.21.4 {
+                /^AnimationMetadataSection.TYPE
+                 ^///?} else {
+                AnimationMetadataSection.SERIALIZER
+                //?}
+        );
+        FrameSize frameSize;
+        if (optional.isPresent()) {
+            frameSize = optional.get().calculateFrameSize(splashImage.getWidth(), splashImage.getHeight());
+        } else {
+            frameSize = new FrameSize(splashImage.getWidth(), splashImage.getHeight());
+        }
+        return new SpriteContents(
+                getId(ParticleRain.MOD_ID, "splash_" + i),
+                frameSize, splashImage, metadata);
     }
     *///?}
 

@@ -530,7 +530,7 @@ public class ConfigData {
     @OverrideName("ParticleData")
     public static class RippleOptions {
         @Slider @Format(Percent.class)
-        public float opacity = 0.9F;
+        public float opacity = 0.8F;
         public float size = 0.25F;
 
         @OnChange(ReloadResources.class)

@@ -2,11 +2,13 @@ package pigcart.particlerain.mixin.render;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.Stitcher;
-import net.minecraft.client.resources.metadata.animation.FrameSize;
+import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -54,7 +56,7 @@ public abstract class SpriteLoaderMixin {
                 TextureUtil.boostAlpha(snowImage, "snow");
                 if (ConfigManager.config.compat.waterTint) TextureUtil.desaturate(rainImage);
             } catch (IOException e) {
-                ParticleRain.LOGGER.error(e.getMessage());
+                ParticleRain.LOGGER.error("Error loading weather textures: ", e);
             }
 
             // split both weather textures into four sprites
@@ -72,17 +74,11 @@ public abstract class SpriteLoaderMixin {
             // create gray versions of the default splashes so tint can be applied
             if (ConfigManager.config.compat.waterTint) {
                 for (int i = 0; i < 4; i++) {
-                    NativeImage splashImage = null;
                     try {
-                        splashImage = TextureUtil.loadTexture(VersionUtil.getId("textures/particle/splash_" + i + ".png"));
-                        TextureUtil.desaturate(splashImage);
+                        stitcher.registerSprite(VersionUtil.loadSplashSprite(i));
                     } catch (IOException e) {
-                        ParticleRain.LOGGER.error(e.getMessage());
+                        ParticleRain.LOGGER.error("Error loading splash particle {}: ", i, e);
                     }
-                    stitcher.registerSprite(new SpriteContents(
-                            VersionUtil.getId(ParticleRain.MOD_ID, "splash_" + i),
-                            new FrameSize(splashImage.getWidth(), splashImage.getHeight()),
-                            splashImage, VersionUtil.getSpriteMetadata()));
                 }
             }
         }

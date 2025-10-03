@@ -42,7 +42,7 @@ public class ConfigManager {
         try (FileReader reader = new FileReader(file)) {
             config = GSON.fromJson(reader, ConfigData.class);
         } catch (Exception e) {
-            ParticleRain.LOGGER.error(e.getMessage());
+            ParticleRain.LOGGER.error("Error loading config: {}", e.getMessage());
             config = new ConfigData();
             save();
         }
@@ -64,7 +64,6 @@ public class ConfigManager {
     }
 
     public static void updateTransientVariables() {
-        System.out.println(ParticleRain.RIPPLE);
         for (ConfigData.ParticleData opts: config.particles) {
             opts.biomeList.populateInternalLists();
             opts.blockList.populateInternalLists();
@@ -75,7 +74,11 @@ public class ConfigManager {
     public static class ColorTypeAdapter implements JsonSerializer<Color>, JsonDeserializer<Color> {
         @Override
         public JsonElement serialize(Color color, Type type, JsonSerializationContext context) {
-            return new JsonPrimitive(String.join(String.format("%02X", color.getRed()), String.format("%02X", color.getGreen()), String.format("%02X", color.getBlue())));
+            return new JsonPrimitive(String.join("",
+                    "#",
+                    String.format("%02X", color.getRed()),
+                    String.format("%02X", color.getGreen()),
+                    String.format("%02X", color.getBlue())));
         }
         @Override
         public Color deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
