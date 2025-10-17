@@ -30,8 +30,9 @@ modstitch {
         }
 
         replacementProperties.populate {
-            // insert registry sync mixin
-            put("fabric_mixins", if (isLoom && minecraft != "1.20.1") "\"fabric.RegistrySyncManagerMixin\"," else "")
+            // insert version-specific mixins
+            put("RegistrySyncManagerMixin", if (isLoom && minecraft != "1.20.1") "\"fabric.RegistrySyncManagerMixin\"," else "")
+            put("TextureSheetParticleMixin", if (minecraft < "1.21.9") "\"tint.TextureSheetParticleMixin\"," else "")
 
             // forge needs this specified, is added automatically otherwise (and uses a dash "-refmap")
             put("refmap", if (isModDevGradleLegacy) ",\"refmap\": \"particlerain.refmap.json\"" else "")
@@ -39,6 +40,7 @@ modstitch {
             // workaround for modstitch including both mods.toml files screwing up mc-publish
             put("forge_or_neoforge", if (isModDevGradleLegacy) "forge" else "neoforge")
 
+            // mod metadata
             put("mod_issue_tracker", "https://github.com/pigcart/particle-rain/issues")
             put("mod_icon", "assets/particlerain/icon.png")
             put("version_range", property("version_range") as String)
@@ -46,7 +48,7 @@ modstitch {
     }
 
     loom {
-        fabricLoaderVersion = "0.16.10"
+        fabricLoaderVersion = "0.17.2"
     }
 
     moddevgradle {
@@ -89,7 +91,6 @@ dependencies {
     modstitch.loom {
         modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabricapi")}")
         modstitchModImplementation("com.terraformersmc:modmenu:${property("modmenu")}")
-        //modstitchCompileOnly("com.terraformersmc:modmenu:${property("modmenu")}")
     }
     // forge
     if (modstitch.isModDevGradleLegacy) {

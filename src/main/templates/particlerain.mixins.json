@@ -7,7 +7,8 @@
     "defaultRequire": 1
   },
   "client": [
-    ${ fabric_mixins }
+    ${ RegistrySyncManagerMixin }
+    ${ TextureSheetParticleMixin }
     "ClientLevelDataMixin",
     "access.NativeImageAccessor",
     "access.ParticleEngineAccessor",
@@ -17,7 +18,6 @@
     "render.SpriteLoaderMixin",
     "render.WeatherEffectRendererMixin",
     "tint.DripParticleMixin",
-    "tint.TextureSheetParticleMixin",
     "tint.WaterDropParticleMixin",
     "yacl.YACLScreenAccessor",
     "yacl.YACLScreenMixin",
