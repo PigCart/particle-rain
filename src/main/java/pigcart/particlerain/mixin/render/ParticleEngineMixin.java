@@ -20,6 +20,7 @@ import java.util.List;
 
 @Mixin(ParticleEngine.class)
 public class ParticleEngineMixin {
+    //? if <1.21.9 {
     @Mutable
     @Final
     @Shadow
@@ -31,4 +32,5 @@ public class ParticleEngineMixin {
                 .add(BlendedParticleRenderType.INSTANCE)
                 .build();
     }
+    //?}
 }

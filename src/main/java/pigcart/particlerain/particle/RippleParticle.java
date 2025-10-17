@@ -1,12 +1,10 @@
 package pigcart.particlerain.particle;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
@@ -17,18 +15,20 @@ import org.joml.Vector3f;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
-import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
+//? if >=1.21.9 {
+/*import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.util.RandomSource;
+*///?} else {
+import com.mojang.blaze3d.vertex.VertexConsumer;
+//?}
 
 import static pigcart.particlerain.config.ConfigManager.config;
 
 public class RippleParticle extends WeatherParticle {
 
     private RippleParticle(ClientLevel level, double x, double y, double z) {
-        super(level, x, y, z);
-
-        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        this.setSprite(particleEngine.getTextureAtlas().getSprite(VersionUtil.getId(ParticleRain.MOD_ID, "ripple_0")));
+        super(level, x, y, z, VersionUtil.getSprite(VersionUtil.getId("ripple_0")));
         this.x = Math.round(this.x / (1F / 16F)) * (1F / 16F);
         this.z = Math.round(this.z / (1F / 16F)) * (1F / 16F);
         this.quadSize = config.ripple.size;
@@ -45,12 +45,11 @@ public class RippleParticle extends WeatherParticle {
         super.tick();
         this.alpha = Mth.lerp(this.age / 9F, config.ripple.opacity, 0F);
         if (this.age > 8) this.remove();
-        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        this.setSprite(particleEngine.getTextureAtlas().getSprite(VersionUtil.getId(ParticleRain.MOD_ID, "ripple_" + (this.age - 1))));
+        this.setSprite(VersionUtil.getSprite(VersionUtil.getId("ripple_" + (this.age - 1))));
     }
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float f) {
+    public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(VertexConsumer/*?}*/ h, Camera camera, float f) {
         Vec3 camPos = camera.getPosition();
         float x = (float) (Mth.lerp(f, this.xo, this.x) - camPos.x());
         float y = (float) (Mth.lerp(f, this.yo, this.y) - camPos.y());
@@ -58,12 +57,7 @@ public class RippleParticle extends WeatherParticle {
 
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(Mth.HALF_PI, -1, 0, 0));
         this.turnBackfaceFlipways(quaternion, new Vector3f(x, y, z));
-        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, f);
-    }
-
-    @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        this.renderRotatedQuad(h, quaternion, x, y, z, f);
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
@@ -72,7 +66,7 @@ public class RippleParticle extends WeatherParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ/*? if >=1.21.9 {*//*, RandomSource random*//*?}*/) {
             return new RippleParticle(level, x, y, z);
         }
     }

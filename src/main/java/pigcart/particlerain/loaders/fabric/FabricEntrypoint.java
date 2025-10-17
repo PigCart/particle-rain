@@ -37,7 +37,7 @@ public class FabricEntrypoint implements ClientModInitializer {
         for (ConfigData.ParticleData data : ConfigManager.config.particles) {
             if (!data.usePresetParticle) {
                 String particleId = data.id.toLowerCase().replace(" ", "_");
-                if (BuiltInRegistries.PARTICLE_TYPE.containsKey(VersionUtil.getId(MOD_ID, particleId))) {
+                if (BuiltInRegistries.PARTICLE_TYPE.containsKey(VersionUtil.getId(particleId))) {
                     ParticleRain.LOGGER.warn("{} is already registered! please choose a different id for this particle", particleId);
                 } else {
                     try {
@@ -58,7 +58,7 @@ public class FabricEntrypoint implements ClientModInitializer {
         });
     }
     private SimpleParticleType registerParticle(String name) {
-        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, VersionUtil.getId(MOD_ID, name), FabricParticleTypes.simple(true));
+        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, VersionUtil.getId(name), FabricParticleTypes.simple(true));
     }
 }
 //?}

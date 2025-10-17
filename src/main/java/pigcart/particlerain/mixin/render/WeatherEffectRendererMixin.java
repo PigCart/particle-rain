@@ -23,6 +23,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
+//? if >=1.21.9 {
+/^import net.minecraft.client.renderer.state.WeatherRenderState;
+^///?}
 
 import static pigcart.particlerain.config.ConfigManager.config;
 
@@ -58,8 +61,13 @@ public abstract class WeatherEffectRendererMixin {
     }
 
     // prevent rendering weather column instances
+    //? if >=1.21.9 {
+    /^@Inject(method = "extractRenderState", at = @At("HEAD"), cancellable = true)
+    public void render(Level level, int ticks, float partialTick, Vec3 cameraPosition, WeatherRenderState reusedState, CallbackInfo ci) {
+    ^///?} else {
     @Inject(method = "render(Lnet/minecraft/world/level/Level;Lnet/minecraft/client/renderer/MultiBufferSource;IFLnet/minecraft/world/phys/Vec3;)V", at = @At("HEAD"), cancellable = true)
     public void render(Level level, MultiBufferSource bufferSource, int ticks, float partialTick, Vec3 cameraPosition, CallbackInfo ci) {
+    //?}
         if (!config.compat.renderDefaultWeather) {
             ci.cancel();
         }

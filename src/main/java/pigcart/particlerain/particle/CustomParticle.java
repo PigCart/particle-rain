@@ -1,20 +1,19 @@
 package pigcart.particlerain.particle;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRain;
@@ -25,6 +24,15 @@ import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 //? if > 1.20.1 {
 /*import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
 *///?}
+//? if >=1.21.9 {
+/*import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.core.particles.ParticleLimit;
+*///?} else {
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.core.particles.ParticleGroup;
+import net.minecraft.client.particle.ParticleRenderType;
+//?}
 
 import java.util.Optional;
 import java.util.Set;
@@ -48,7 +56,7 @@ public class CustomParticle extends WeatherParticle {
     float distance;
 
     public CustomParticle(ClientLevel level, double x, double y, double z, ConfigData.ParticleData opts) {
-        super(level, x, y, z);
+        super(level, x, y, z, VersionUtil.getSprite(VersionUtil.parseId(opts.spriteLocations.get(level.random.nextInt(opts.spriteLocations.size())))));
 
         this.gravity = opts.gravity;
         this.yd = -gravity;
@@ -65,8 +73,6 @@ public class CustomParticle extends WeatherParticle {
 
         this.opts = opts;
         this.lifetime = opts.lifetime;
-        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        this.setSprite(particleEngine.getTextureAtlas().getSprite(VersionUtil.parseId(opts.spriteLocations.get(level.random.nextInt(opts.spriteLocations.size())))));
         this.rotationVariation = opts.rotationAmount * ((random.nextFloat() - 0.5F) * 2.0F);
         if (opts.constantScreenSize) {
             this.quadSize = getDistanceSize();
@@ -139,7 +145,7 @@ public class CustomParticle extends WeatherParticle {
     public void testForCollisions() {
         float length = quadSize;
         if (opts.rotationType.equals(ConfigData.RotationType.RELATIVE_VELOCITY)) {
-            final Vec3 camD = Minecraft.getInstance().cameraEntity.getDeltaMovement();
+            final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
             Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
             length *= Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
         }
@@ -171,21 +177,37 @@ public class CustomParticle extends WeatherParticle {
     }
 
     @Override
+    //? if >=1.21.9 {
+    /*public Optional<net.minecraft.core.particles.ParticleLimit> getParticleLimit() {
+        return Optional.of(WeatherParticleManager.particleGroup);
+    }
+    *///?} else {
     public Optional<ParticleGroup> getParticleGroup() {
         return Optional.of(WeatherParticleManager.particleGroup);
     }
+    //?}
 
     @Override
+    //? if >=1.21.9 {
+    /*public SingleQuadParticle.Layer getLayer() {
+        return opts.renderType.get();
+    }
+    *///?} else {
     public ParticleRenderType getRenderType() {
         return opts.renderType.get();
     }
+    //?}
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent) {
-        opts.rotationType.render(vertexConsumer, camera, tickPercent, this);
+    //? if >=1.21.9 {
+    /*public void extract(QuadParticleRenderState h, Camera camera, float tickPercent) {
+    *///?} else {
+    public void render(VertexConsumer h, Camera camera, float tickPercent) {
+    //?}
+        opts.rotationType.render(h, camera, tickPercent, this);
     }
 
-    public void renderLookingQuad(VertexConsumer vertexConsumer, Camera camera, float tickPercent) {
+    public void renderLookingQuad(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float offsetY = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
@@ -203,18 +225,18 @@ public class CustomParticle extends WeatherParticle {
         if (yAngle < -1) doCollisionAnim = true;
 
         quaternion.rotateZ(Mth.lerp(tickPercent, this.oRoll, this.roll));
-        this.renderRotatedQuad(vertexConsumer, quaternion, offsetX, offsetY, offsetZ, tickPercent);
+        this.renderRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent);
     }
 
     //FIXME: particle invisible when wind is 0
-    public void renderRelativeVelocityQuad(VertexConsumer vertexConsumer, Camera camera, float tickPercent) {
+    public void renderRelativeVelocityQuad(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float offsetY = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
         float offsetZ = (float) (Mth.lerp(tickPercent, this.zo, this.z) - camPos.z());
 
         // get velocity
-        final Vec3 camD = Minecraft.getInstance().cameraEntity.getDeltaMovement();
+        final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
         Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
         // calculate velocity angle
         final float angle = Math.acos(new Vector3f(deltaMotion).normalize().y);
@@ -231,10 +253,10 @@ public class CustomParticle extends WeatherParticle {
             if (collisionProg < stretchFactor) stretchFactor = collisionProg;
         }
         // bung it in the oven
-        renderSquishyRotatedQuad(vertexConsumer, quaternion, offsetX, offsetY, offsetZ, tickPercent, stretchFactor);
+        renderSquishyRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent, stretchFactor);
     }
     //FIXME: particle invisible when wind is 0
-    public void renderWorldVelocityQuad(VertexConsumer vertexConsumer, Camera camera, float tickPercent) {
+    public void renderWorldVelocityQuad(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float offsetY = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
@@ -257,10 +279,10 @@ public class CustomParticle extends WeatherParticle {
             if (collisionProg < stretchFactor) stretchFactor = collisionProg;
         }
         // bung it in the oven
-        renderSquishyRotatedQuad(vertexConsumer, quaternion, offsetX, offsetY, offsetZ, tickPercent, stretchFactor);
+        renderSquishyRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent, stretchFactor);
     }
 
-    public void renderCameraCopyQuad(VertexConsumer vertexConsumer, Camera camera, float tickPercent) {
+    public void renderCameraCopyQuad(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float offsetY = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
@@ -271,22 +293,35 @@ public class CustomParticle extends WeatherParticle {
         //? if <= 1.20.1 {
         quaternion.mul(Axis.YP.rotation(Mth.PI));
         //?}
-        this.renderRotatedQuad(vertexConsumer, quaternion, offsetX, offsetY, offsetZ, tickPercent);
+        this.renderRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent);
     }
 
-    private void renderSquishyRotatedQuad(VertexConsumer vertexConsumer, Quaternionf quaternion, float x, float y, float z, float tickPercent, float squish) {
+    //? if >=1.21.9 {
+    /*public void renderRotatedQuad(QuadParticleRenderState h, Quaternionf quaternion, float offsetX, float offsetY, float offsetZ, float tickPercent) {
+        this.extractRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent);
+    }
+    *///?}
+
+    private void renderSquishyRotatedQuad(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Quaternionf quaternion, float x, float y, float z, float tickPercent, float squish) {
+        //? if >=1.21.9 {
+        /*this.extractRotatedQuad(h, quaternion, x, y, z, tickPercent);
+        // doesnt seem to be an easy way to dig into a particles size now.
+        // im thinking of instead using the perspective trick of rotating the particle such that it looks stretched without actually being so
+        *///?} else {
         float size = this.getQuadSize(tickPercent);
         float u0 = this.getU0();
         float u1 = this.getU1();
         float v0 = this.getV0();
         float v1 = this.getV1();
         int color = this.getLightColor(tickPercent);
-        this.renderVertex(vertexConsumer, quaternion, x, y, z,  1.0F, -squish, size, u1, v1, color);
-        this.renderVertex(vertexConsumer, quaternion, x, y, z,  1.0F,  squish, size, u1, v0, color);
-        this.renderVertex(vertexConsumer, quaternion, x, y, z, -1.0F,  squish, size, u0, v0, color);
-        this.renderVertex(vertexConsumer, quaternion, x, y, z, -1.0F, -squish, size, u0, v1, color);
+        this.renderVertex(h, quaternion, x, y, z,  1.0F, -squish, size, u1, v1, color);
+        this.renderVertex(h, quaternion, x, y, z,  1.0F,  squish, size, u1, v0, color);
+        this.renderVertex(h, quaternion, x, y, z, -1.0F,  squish, size, u0, v0, color);
+        this.renderVertex(h, quaternion, x, y, z, -1.0F, -squish, size, u0, v1, color);
+        //?}
     }
 
+    //? if <1.21.9 {
     private void renderVertex(VertexConsumer buffer, Quaternionf quaternion, float x, float y, float z, float xOffset, float yOffset, float quadSize, float u, float v, int packedLight) {
         //? if <= 1.20.1 {
         Vector3f vec = (new Vector3f(xOffset, yOffset, 0.0F)).rotate(quaternion).mul(quadSize).add(x, y, z);
@@ -296,6 +331,7 @@ public class CustomParticle extends WeatherParticle {
         p.callRenderVertex(buffer, quaternion, x, y, z, xOffset, yOffset, quadSize, u, v, packedLight);
         *///?}
     }
+    //?}
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
         ConfigData.ParticleData opts;
@@ -304,8 +340,7 @@ public class CustomParticle extends WeatherParticle {
             this.opts = opts;
         }
 
-        @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ/*? if >=1.21.9 {*//*, RandomSource random*//*?}*/) {
             // grab latest particle options before spawning particle
             for (ConfigData.ParticleData options : config.particles) {
                 if (opts.id.equals(options.id)) opts = options;

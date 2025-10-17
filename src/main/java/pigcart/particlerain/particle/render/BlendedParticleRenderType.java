@@ -1,6 +1,12 @@
 package pigcart.particlerain.particle.render;
 
-//? if >=1.21.5 {
+//? if >=1.21.9 {
+/*import net.minecraft.client.particle.SingleQuadParticle;
+
+public class BlendedParticleRenderType {
+    public static final SingleQuadParticle.Layer INSTANCE = SingleQuadParticle.Layer.TRANSLUCENT;
+}
+*///?} else if >=1.21.5 {
 /*import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DestFactor;
@@ -39,8 +45,8 @@ public class BlendedParticleRenderType {
             RenderType.CompositeState.builder()
                     .setTextureState(new TextureStateShard(TextureAtlas.LOCATION_PARTICLES,
                             //? if <1.21.6 {
-                                TriState.FALSE,
-                            //?}
+                                /^TriState.FALSE,
+                            ^///?}
                             false))
                     .setOutputState(PARTICLES_TARGET)
                     .setLightmapState(LIGHTMAP)

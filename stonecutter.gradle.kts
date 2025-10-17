@@ -10,6 +10,7 @@ allprojects {
 
         // yacl moment. this must be ordered before xander's maven
         maven("https://thedarkcolour.github.io/KotlinForForge/")
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
 
         maven("https://maven.neoforged.net/releases")
         maven("https://maven.fabricmc.net/")

@@ -1,20 +1,28 @@
 package pigcart.particlerain.particle;
 
+//? if >= 1.21.9 {
+/*import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+*///?} else {
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.TextureSheetParticle;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+//?}
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import pigcart.particlerain.config.ConfigData;
 
 import static pigcart.particlerain.config.ConfigManager.config;
 
 //TODO
-public abstract class WeatherParticle extends TextureSheetParticle {
+public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadParticle *//*?} else {*/TextureSheetParticle /*?}*/ {
 
     protected BlockPos.MutableBlockPos pos;
     protected BlockPos.MutableBlockPos oPos;
@@ -24,8 +32,9 @@ public abstract class WeatherParticle extends TextureSheetParticle {
     float oQuadSize;
     float distance;
 
-    protected WeatherParticle(ClientLevel level, double x, double y, double z) {
-        super(level, x, y, z);
+    protected WeatherParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
+        super(level, x, y, z /*? if >=1.21.9 {*//*,sprite*//*?}*/);
+        this.setSprite(sprite);
 
         this.hasPhysics = false;
 
@@ -34,6 +43,15 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
         this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
+    }
+
+    @Override
+    //? if >=1.21.9 {
+    /*public SingleQuadParticle.Layer getLayer() {
+    *///?} else {
+    public ParticleRenderType getRenderType() {
+     //?}
+        return ConfigData.RenderType.TRANSLUCENT.get();
     }
 
     @Override
@@ -120,5 +138,9 @@ public abstract class WeatherParticle extends TextureSheetParticle {
         vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).uv(u0, v1).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(lightColor).endVertex();
 
     }
-    //?}
+    //?} else if >=1.21.9 {
+    /*public void renderRotatedQuad(QuadParticleRenderState h, Quaternionf quaternion, float offsetX, float offsetY, float offsetZ, float tickPercent) {
+        this.extractRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent);
+    }
+    *///?}
 }

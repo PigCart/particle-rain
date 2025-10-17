@@ -1,3 +1,4 @@
+//? if <1.21.9 {
 package pigcart.particlerain.mixin.tint;
 
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -23,3 +24,4 @@ public abstract class TextureSheetParticleMixin extends SingleQuadParticle {
     @Inject(method = "pickSprite", at = @At("TAIL"))
     public void pickSprite(SpriteSet spriteSet, CallbackInfo ci) {};
 }
+//?}

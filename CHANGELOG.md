@@ -1,3 +1,7 @@
+# v4-beta.3
+###### work in progress
+- 1.21.9/10 support (ongoing)
+
 # v4-beta.2
 ###### Oct 03, 2025
 - fixed crash when loading resource packs with invisible weather textures

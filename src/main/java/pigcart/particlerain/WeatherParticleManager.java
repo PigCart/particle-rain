@@ -5,7 +5,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
@@ -21,12 +20,21 @@ import pigcart.particlerain.config.ConfigData.SpawnPos;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.StreakParticle;
+//? if >=1.21.9 {
+/*import net.minecraft.core.particles.ParticleLimit;
+*///?} else {
+import net.minecraft.core.particles.ParticleGroup;
+//?}
 
 import static pigcart.particlerain.config.ConfigManager.config;
 
 public final class WeatherParticleManager {
     private static final RandomSource random = RandomSource.create();
+    //? if >=1.21.9 {
+    /*public static ParticleLimit particleGroup = new ParticleLimit(config.perf.maxParticleAmount);
+    *///?} else {
     public static ParticleGroup particleGroup = new ParticleGroup(config.perf.maxParticleAmount);
+    //?}
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
     private static final BlockPos.MutableBlockPos heightmapPos = new BlockPos.MutableBlockPos();
     public static int afterWeatherTicksLeft = 0;

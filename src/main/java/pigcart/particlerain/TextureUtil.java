@@ -4,9 +4,8 @@ import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.IntUnaryOperator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.texture.SpriteContents;
-import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -80,7 +79,7 @@ public class TextureUtil {
         return i & -16711936 | (i & 16711680) >> 16 | (i & 255) << 16;
     }
 
-    public static void applyWaterTint(Particle particle, ClientLevel level, BlockPos blockPos) {
+    public static void applyWaterTint(SingleQuadParticle particle, ClientLevel level, BlockPos blockPos) {
         for (ConfigData.ParticleData opts : ConfigManager.config.particles) {
             if (opts.getClass().equals(ConfigData.ParticleData.class)) {
                 if (opts.id.equals("rain")) {
@@ -115,12 +114,12 @@ public class TextureUtil {
         int size = image.getWidth();
         NativeImage sprite = new NativeImage(size, size, false);
         image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
-        return(new SpriteContents(VersionUtil.getId(ParticleRain.MOD_ID, id + segment), new FrameSize(size, size), sprite, VersionUtil.getEmptySpriteMetadata()));
+        return VersionUtil.newNonAnimatedSpriteContents(id + segment, new FrameSize(size, size), sprite);
     }
 
     public static int getRippleResolution(List<SpriteContents> contents) {
         if (ConfigManager.config.ripple.useResourcepackResolution) {
-            ResourceLocation resourceLocation = VersionUtil.getId("big_smoke_0");
+            ResourceLocation resourceLocation = VersionUtil.getMcId("big_smoke_0");
             for (SpriteContents spriteContents : contents) {
                 if (spriteContents.name().equals(resourceLocation)) {
                     //return Math.min(spriteContents.width(), 256); ...why does this not work?
@@ -146,7 +145,7 @@ public class TextureUtil {
                 ((color.getGreen() & 0xFF) << 8)  |
                 ((color.getBlue() & 0xFF));
         generateBresenhamCircle(image, size, (int) Math.clamp(1, (size / 2F) - 1, radius), colorint);
-        return(new SpriteContents(VersionUtil.getId(ParticleRain.MOD_ID, "ripple_" + i), new FrameSize(size, size), image, VersionUtil.getEmptySpriteMetadata()));
+        return VersionUtil.newNonAnimatedSpriteContents("ripple_" + i, new FrameSize(size, size), image);
     }
 
     public static void generateBresenhamCircle(NativeImage image, int imgSize, int radius, int colorint) {

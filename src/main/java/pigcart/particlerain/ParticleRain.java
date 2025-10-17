@@ -63,7 +63,7 @@ public class ParticleRain {
     }
 
     private static SoundEvent createSoundEvent(String name) {
-        ResourceLocation id = VersionUtil.getId(MOD_ID, name);
+        ResourceLocation id = VersionUtil.getId(name);
         return SoundEvent.createVariableRangeEvent(id);
     }
     @SuppressWarnings("unchecked")
@@ -77,7 +77,7 @@ public class ParticleRain {
                 .then(LiteralArgumentBuilder.literal("debug")
                         .executes(ctx -> {
                             ClientLevel level = Minecraft.getInstance().level;
-                            addChatMsg(String.format("Particle count: %d/%d",WeatherParticleManager.getParticleCount(), WeatherParticleManager.particleGroup.getLimit()));
+                            addChatMsg(String.format("Particle count: %d/%d",WeatherParticleManager.getParticleCount(), WeatherParticleManager.particleGroup./*? if >=1.21.9 {*//*limit*//*?} else {*/getLimit/*?}*/()));
                             BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
                             final Holder<Biome> holder = level.getBiome(blockPos);
                             String biomeStr = holder.unwrap().map(

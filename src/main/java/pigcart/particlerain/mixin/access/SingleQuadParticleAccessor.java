@@ -12,7 +12,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface SingleQuadParticleAccessor {
 
     //? if >1.20.1 {
-    /*@Invoker
+    /*//? if <1.21.9 {
+    @Invoker
     void callRenderVertex(VertexConsumer buffer, Quaternionf quaternion, float x, float y, float z, float xOffset, float yOffset, float quadSize, float u, float v, int packedLight);
+    //?}
     *///?}
 }

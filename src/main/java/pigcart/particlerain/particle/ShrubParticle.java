@@ -1,15 +1,12 @@
 package pigcart.particlerain.particle;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -20,21 +17,30 @@ import org.joml.AxisAngle4f;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ConfigManager;
 
 import java.awt.*;
 
 //? if >=1.21.5 {
 /*import net.minecraft.client.renderer.block.model.BlockStateModel;
+import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 *///?} else {
 import net.minecraft.client.resources.model.BakedModel;
+//?}
+//? if >=1.21.9 {
+/*import net.minecraft.util.RandomSource;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+*///?} else {
+import com.mojang.blaze3d.vertex.VertexConsumer;
 //?}
 
 
 public class ShrubParticle extends WeatherParticle {
 
     protected ShrubParticle(ClientLevel level, double x, double y, double z) {
-        super(level, x, y, z);
+        super(level, x, y, z, VersionUtil.getSprite(MissingTextureAtlasSprite.getLocation()));
 
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
         // no foliage convention tag? :(
@@ -76,12 +82,14 @@ public class ShrubParticle extends WeatherParticle {
     }
 
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.TERRAIN_SHEET;
-    }
+    //? if >=1.21.9 {
+    /*public SingleQuadParticle.Layer getLayer() { return Layer.TERRAIN; }
+    *///?} else {
+    public ParticleRenderType getRenderType() { return ParticleRenderType.TERRAIN_SHEET; }
+    //?}
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercentage) {
+    public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(VertexConsumer/*?}*/ h, Camera camera, float tickPercentage) {
         Vector3f camPos = camera.getPosition().toVector3f();
         float x = (float) (Mth.lerp(tickPercentage, this.xo, this.x) - camPos.x);
         float y = (float) (Mth.lerp(tickPercentage, this.yo, this.y) - camPos.y);
@@ -97,8 +105,8 @@ public class ShrubParticle extends WeatherParticle {
         quat2.mul(quaternion).rotateZ(Mth.lerp(tickPercentage, this.oRoll, this.roll));
         quat1 = this.turnBackfaceFlipways(quat1, new Vector3f(x, y, z));
         quat2 = this.turnBackfaceFlipways(quat2, new Vector3f(x, y, z));
-        this.renderRotatedQuad(vertexConsumer, quat1, x, y, z, tickPercentage);
-        this.renderRotatedQuad(vertexConsumer, quat2, x, y, z, tickPercentage);
+        this.renderRotatedQuad(h, quat1, x, y, z, tickPercentage);
+        this.renderRotatedQuad(h, quat2, x, y, z, tickPercentage);
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
@@ -107,7 +115,7 @@ public class ShrubParticle extends WeatherParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ/*? if >=1.21.9 {*//*, RandomSource random*//*?}*/) {
             return new ShrubParticle(level, x, y, z);
         }
     }

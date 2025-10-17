@@ -2,13 +2,10 @@ package pigcart.particlerain.mixin.render;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.Stitcher;
-import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +32,7 @@ public abstract class SpriteLoaderMixin {
 
     @Inject(method = "stitch", at = @At("HEAD"))
     public void stitch(List<SpriteContents> list, int i, Executor executor, CallbackInfoReturnable<SpriteLoader.Preparations> cir) {
-        if (this.location.equals(VersionUtil.getId("textures/atlas/particles.png"))) {
+        if (this.location.equals(VersionUtil.getMcId("textures/atlas/particles.png"))) {
             this.spriteContentsList = list;
         }
     }
@@ -45,13 +42,13 @@ public abstract class SpriteLoaderMixin {
             at = @At(value = "NEW", args = "class=net/minecraft/client/renderer/texture/Stitcher")
     )
     private Stitcher<SpriteContents> registerWeatherParticleSprites(Stitcher<SpriteContents> stitcher) {
-        if (this.location.equals(VersionUtil.getId("textures/atlas/particles.png"))) {
+        if (this.location.equals(VersionUtil.getMcId("textures/atlas/particles.png"))) {
             // load weather textures
             NativeImage rainImage = null;
             NativeImage snowImage = null;
             try {
-                rainImage = TextureUtil.loadTexture(VersionUtil.getId("textures/environment/rain.png"));
-                snowImage = TextureUtil.loadTexture(VersionUtil.getId("textures/environment/snow.png"));
+                rainImage = TextureUtil.loadTexture(VersionUtil.getMcId("textures/environment/rain.png"));
+                snowImage = TextureUtil.loadTexture(VersionUtil.getMcId("textures/environment/snow.png"));
                 TextureUtil.boostAlpha(rainImage, "rain");
                 TextureUtil.boostAlpha(snowImage, "snow");
                 if (ConfigManager.config.compat.waterTint) TextureUtil.desaturate(rainImage);

@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -25,6 +26,9 @@ import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 import pigcart.particlerain.config.ConfigManager.*;
+//? if >=1.21.9 {
+/*import net.minecraft.client.renderer.state.QuadParticleRenderState;
+*///?}
 
 
 import java.awt.*;
@@ -430,26 +434,44 @@ public class ConfigData {
     public enum RenderType {
         OPAQUE {
             @Override
+            //? if >=1.21.9 {
+            /*public SingleQuadParticle.Layer get() {
+                return SingleQuadParticle.Layer.OPAQUE;
+            }
+            *///?} else {
             public ParticleRenderType get() {
                 return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
             }
+            //?}
         },
         TRANSLUCENT {
             @Override
+                    //? if >=1.21.9 {
+            /*public SingleQuadParticle.Layer get() {
+                return SingleQuadParticle.Layer.TRANSLUCENT;
+            }
+            *///?} else {
             public ParticleRenderType get() {
                 return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
             }
+            //?}
         },
         BLENDED;
 
+        //? if >=1.21.9 {
+        /*public SingleQuadParticle.Layer get() {
+            return BlendedParticleRenderType.INSTANCE;
+        }
+        *///?} else {
         public ParticleRenderType get() {
             return BlendedParticleRenderType.INSTANCE;
         }
+        //?}
     }
 
     public enum TintType {
         WATER {
-            public void applyTint(Particle p, ClientLevel level, BlockPos pos, ParticleData opts) {
+            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
                 // TODO: IrisApi.isShaderPackInUse()
                 final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, pos));
                 final Color fogColor = new Color(level.getBiome(pos).value().getFogColor());
@@ -460,60 +482,58 @@ public class ConfigData {
             }
         },
         FOG {
-            public void applyTint(Particle p, ClientLevel level, BlockPos pos, ParticleData opts) {
+            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
                 Color color = new Color(level.getBiome(pos).value().getFogColor()).darker();
                 p.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             }
         },
         MAP {
-            public void applyTint(Particle p, ClientLevel level, BlockPos pos, ParticleData opts) {
+            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
                 Color color = VersionUtil.getMapColor(level, pos);
                 p.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             }
         },
         CUSTOM {
-            public void applyTint(Particle p, ClientLevel level, BlockPos pos, ParticleData opts) {
+            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
                 p.setColor(opts.customTint.getRed() / 255F, opts.customTint.getGreen() / 255F, opts.customTint.getBlue() / 255F);
             }
         },
         NONE;
-        public void applyTint(Particle p, ClientLevel level, BlockPos pos, ParticleData opts) {}
+        public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {}
     }
 
     public enum RotationType {
         COPY_CAMERA {
             @Override
-            public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent, CustomParticle p) {
-                p.renderCameraCopyQuad(vertexConsumer, camera, tickPercent);
+            public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {
+                p.renderCameraCopyQuad(h, camera, tickPercent);
             }
         },
         RELATIVE_VELOCITY {
             @Override
-            public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent, CustomParticle p) {
-                p.renderRelativeVelocityQuad(vertexConsumer, camera, tickPercent);
+            public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {
+                p.renderRelativeVelocityQuad(h, camera, tickPercent);
             }
         },
         WORLD_VELOCITY {
             @Override
-            public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent, CustomParticle p) {
-                p.renderWorldVelocityQuad(vertexConsumer, camera, tickPercent);
+            public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {
+                p.renderWorldVelocityQuad(h, camera, tickPercent);
             }
         },
         LOOKAT_PLAYER {
             @Override
-            public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent, CustomParticle p) {
-                p.renderLookingQuad(vertexConsumer, camera, tickPercent);
+            public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {
+                p.renderLookingQuad(h, camera, tickPercent);
             }
         };
-        public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent, CustomParticle p) {}
+        public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {}
     }
 
     @NoGUI
     public ShrubOptions shrub = new ShrubOptions();
     @OverrideName("ParticleData")
     public static class ShrubOptions {
-        @Slider @Format(Percent.class)
-        public float density = 0.02F;
         public float gravity = 0.2F;
         public float windStrength = 0.2F;
         public float stormWindStrength = 0.3F;
@@ -560,21 +580,25 @@ public class ConfigData {
         public enum RenderStyle {
             BLENDED {
                 public TextureAtlasSprite getSprite() {
-                    ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-                    return particleEngine.getTextureAtlas().getSprite(VersionUtil.getId(ParticleRain.MOD_ID, "fog_translucent"));
+                    return VersionUtil.getSprite(VersionUtil.getId("fog_translucent"));
                 }
-                public ParticleRenderType getRenderType() {
+                public /*? if >=1.21.9 {*//*SingleQuadParticle.Layer*//*?} else {*/ParticleRenderType/*?}*/ getRenderType() {
                     return BlendedParticleRenderType.INSTANCE;
                 }
             },
             DITHERED;
             public TextureAtlasSprite getSprite() {
-                ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-                return particleEngine.getTextureAtlas().getSprite(VersionUtil.getId(ParticleRain.MOD_ID, "fog_dithered"));
+                return VersionUtil.getSprite(VersionUtil.getId("fog_dithered"));
             }
+            //? if >=1.21.9 {
+            /*public SingleQuadParticle.Layer getRenderType() {
+                return SingleQuadParticle.Layer.TRANSLUCENT;
+            }
+            *///?} else {
             public ParticleRenderType getRenderType() {
                 return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
             }
+            //?}
         }
     }
 }

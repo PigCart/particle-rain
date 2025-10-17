@@ -1,20 +1,23 @@
 package pigcart.particlerain.particle;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.particles.ParticleGroup;
+import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.config.ConfigData;
+//? if >=1.21.9 {
+/*import net.minecraft.core.particles.ParticleLimit;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+*///?} else {
+import net.minecraft.core.particles.ParticleGroup;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+//?}
 
 import java.awt.*;
 import java.util.Optional;
@@ -24,11 +27,10 @@ import static pigcart.particlerain.config.ConfigManager.config;
 public class MistParticle extends WeatherParticle {
 
     private MistParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z);
+        super(level, x, y, z, config.mist.renderStyle.getSprite());
 
         this.y = ((int) y) + random.nextFloat();
 
-        this.setSprite(config.mist.renderStyle.getSprite());
         this.quadSize = config.mist.size;
         this.setSize(quadSize, 0.2F);
         this.targetOpacity = config.mist.opacity;
@@ -59,18 +61,26 @@ public class MistParticle extends WeatherParticle {
     }
 
     @Override
+    //? if >=1.21.9 {
+    /*public Optional<ParticleLimit> getParticleLimit() {
+    *///?} else {
     public Optional<ParticleGroup> getParticleGroup() {
+    //?}
         return Optional.empty();
     }
 
     @Override
+    //? if >=1.21.9 {
+    /*public SingleQuadParticle.Layer getLayer() {
+    *///?} else {
     public ParticleRenderType getRenderType() {
-        // if IrisApi.isShaderPackInUse() return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    //?}
+        // if >=1.21.5 & IrisApi.isShaderPackInUse() return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
         return config.mist.renderStyle.getRenderType();
     }
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float tickPercent) {
+    public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
         float x = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float y = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
@@ -80,7 +90,7 @@ public class MistParticle extends WeatherParticle {
 
         quaternion.rotateZ(Mth.lerp(tickPercent, this.oRoll, this.roll));
         turnBackfaceFlipways(quaternion, new Vector3f(x, y, z));
-        this.renderRotatedQuad(vertexConsumer, quaternion, x, y, z, tickPercent);
+        this.renderRotatedQuad(h, quaternion, x, y, z, tickPercent);
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
@@ -92,7 +102,7 @@ public class MistParticle extends WeatherParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ/*? if >=1.21.9 {*//*, RandomSource random*//*?}*/) {
             return new MistParticle(level, x, y, z, this.provider);
         }
     }

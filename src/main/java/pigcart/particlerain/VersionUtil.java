@@ -5,6 +5,7 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
@@ -22,23 +23,29 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+//? if >=1.21.9 {
+/*import net.minecraft.data.AtlasIds;
+*///?} else {
+import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
+//?}
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class VersionUtil {
     @SuppressWarnings("removal")
-    public static ResourceLocation getId(String namespace, String path) {
+    public static ResourceLocation getId(String path) {
         //? if <=1.20.1 {
-        return new ResourceLocation(namespace, path);
+        return new ResourceLocation(ParticleRain.MOD_ID, path);
         //?} else {
-        /*return ResourceLocation.fromNamespaceAndPath(namespace, path);
+        /*return ResourceLocation.fromNamespaceAndPath(ParticleRain.MOD_ID, path);
         *///?}
     }
     @SuppressWarnings("removal")
-    public static ResourceLocation getId(String path) {
+    public static ResourceLocation getMcId(String path) {
         //? if <=1.20.1 {
         return new ResourceLocation(ResourceLocation.DEFAULT_NAMESPACE, path);
         //?} else {
@@ -68,7 +75,7 @@ public class VersionUtil {
     public static AnimationMetadataSection getEmptySpriteMetadata() {
         return AnimationMetadataSection.EMPTY;
     }
-    //?} else {
+    //?} else if <1.21.9 {
     /*public static ResourceMetadata getEmptySpriteMetadata() {
         return new ResourceMetadata.Builder().build();
     }
@@ -82,18 +89,18 @@ public class VersionUtil {
         NativeImage splashImage = TextureUtil.loadTexture(resource);
         TextureUtil.desaturate(splashImage);
         return new SpriteContents(
-                getId(ParticleRain.MOD_ID, "splash_" + i),
+                getId("splash_" + i),
                 metadata.calculateFrameSize(splashImage.getWidth(), splashImage.getHeight()),
                 splashImage, metadata);
     }
     //?} else {
     /*public static SpriteContents loadSplashSprite(int i) throws IOException {
-        final ResourceLocation location = getId("textures/particle/splash_" + i + ".png");
+        final ResourceLocation location = getMcId("textures/particle/splash_" + i + ".png");
         Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(location);
-        ResourceMetadata metadata = resource.metadata();
+        ResourceMetadata resourceMetadata = resource.metadata();
         NativeImage splashImage = TextureUtil.loadTexture(resource);
         TextureUtil.desaturate(splashImage);
-        Optional<AnimationMetadataSection> optional = metadata.getSection(
+        Optional<AnimationMetadataSection> animationMetadata = resourceMetadata.getSection(
                 //? if >=1.21.4 {
                 /^AnimationMetadataSection.TYPE
                  ^///?} else {
@@ -101,14 +108,17 @@ public class VersionUtil {
                 //?}
         );
         FrameSize frameSize;
-        if (optional.isPresent()) {
-            frameSize = optional.get().calculateFrameSize(splashImage.getWidth(), splashImage.getHeight());
+        if (animationMetadata.isPresent()) {
+            frameSize = animationMetadata.get().calculateFrameSize(splashImage.getWidth(), splashImage.getHeight());
         } else {
             frameSize = new FrameSize(splashImage.getWidth(), splashImage.getHeight());
         }
         return new SpriteContents(
-                getId(ParticleRain.MOD_ID, "splash_" + i),
-                frameSize, splashImage, metadata);
+                getId("splash_" + i),
+                frameSize,
+                splashImage,
+                /^? if >=1.21.9 {^//^animationMetadata, List.of()^//^?} else {^/resourceMetadata/^?}^/
+        );
     }
     *///?}
 
@@ -159,6 +169,22 @@ public class VersionUtil {
         /*return level.dimensionType().cloudHeight().isPresent() ? level.dimensionType().cloudHeight().get() : 0;
         *///?} else {
         return (int) level.effects().getCloudHeight();
+        //?}
+    }
+
+    public static TextureAtlasSprite getSprite(ResourceLocation id) {
+        //? if >= 1.21.9 {
+        /*return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(id);
+         *///?} else {
+        return ((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(id);
+        //?}
+    }
+
+    public static SpriteContents newNonAnimatedSpriteContents(String id, FrameSize frameSize, NativeImage sprite) {
+        //? if >=1.21.9 {
+        /*return new SpriteContents(getId(id), frameSize, sprite);
+        *///?} else {
+        return(new SpriteContents(VersionUtil.getId(id), frameSize, sprite, getEmptySpriteMetadata()));
         //?}
     }
 }

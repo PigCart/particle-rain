@@ -6,10 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -19,9 +19,15 @@ import org.joml.*;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.TextureUtil;
-import pigcart.particlerain.config.ConfigData;
 import pigcart.particlerain.config.Whitelist;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
+//? if >=1.21.9 {
+/*import net.minecraft.core.particles.ParticleLimit;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+*///?} else {
+import net.minecraft.core.particles.ParticleGroup;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+//?}
 
 import java.util.Optional;
 
@@ -33,31 +39,29 @@ public class StreakParticle extends WeatherParticle {
     private final Whitelist.BlockList blockList;
 
     public StreakParticle(ClientLevel level, double x, double y, double z, Direction direction, Whitelist.BlockList blockList) {
-        super(level, x, y, z);
-
+        super(level, x, y, z, VersionUtil.getSprite(VersionUtil.getId("streak")));
         if (config.compat.waterTint) {
             TextureUtil.applyWaterTint(this, level, this.pos);
         } else {
             this.setColor(0.2f, 0.3f, 1.0f);
         }
-
-        //TODO?
-        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        this.setSprite(particleEngine.getTextureAtlas().getSprite(VersionUtil.getId(ParticleRain.MOD_ID, "streak")));
-
         this.alpha = config.streak.opacity;
         this.quadSize = config.streak.size;
         this.setSize(0.01F, 0.01F);
         this.hasPhysics = true;
         this.yd = -0.1;
+        this.roll = direction.get2DDataValue() * Mth.HALF_PI;
 
         this.direction = direction;
-        this.roll = direction.get2DDataValue() * Mth.HALF_PI;
         this.blockList = blockList;
     }
 
     @Override
+    //? if >=1.21.9 {
+    /*public Optional<ParticleLimit> getParticleLimit() {
+    *///?} else {
     public Optional<ParticleGroup> getParticleGroup() {
+    //?}
         return Optional.empty();
     }
 
@@ -103,7 +107,7 @@ public class StreakParticle extends WeatherParticle {
     }
 
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float f) {
+    public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(VertexConsumer/*?}*/ h, Camera camera, float f) {
         Vec3 camPos = camera.getPosition();
         float x = (float) (Mth.lerp(f, this.xo, this.x) - camPos.x());
         float y = (float) (Mth.lerp(f, this.yo, this.y) - camPos.y());
@@ -111,12 +115,7 @@ public class StreakParticle extends WeatherParticle {
 
         Quaternionf quaternion = new Quaternionf(new AxisAngle4d(this.roll, 0, 1, 0));
         this.turnBackfaceFlipways(quaternion, new Vector3f(x, y, z));
-        this.renderRotatedQuad(vertexConsumer, quaternion, x, y + quadSize, z, f);
-    }
-
-    @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        this.renderRotatedQuad(h, quaternion, x, y + quadSize, z, f);
     }
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
@@ -128,7 +127,7 @@ public class StreakParticle extends WeatherParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ/*? if >=1.21.9 {*//*, RandomSource random*//*?}*/) {
             return new StreakParticle(level, x, y, z, Direction.getRandom(level.random), new Whitelist.BlockList());
         }
     }
