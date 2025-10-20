@@ -1,5 +1,5 @@
 plugins {
-    id("dev.isxander.modstitch.base") version "0.7.0-unstable"
+    id("dev.isxander.modstitch.base") version "0.7.1-unstable"
     id("dev.kikugie.stonecutter")
 }
 
@@ -20,7 +20,7 @@ modstitch {
     metadata {
         modId = "particlerain"
         modName = "Particle Rain"
-        modVersion = "4.0.0-beta.2+$name"
+        modVersion = "4.0.0-beta.3+$name"
         modGroup = "pigcart"
         modAuthor = "PigCart"
         modLicense = "MIT"
@@ -33,9 +33,6 @@ modstitch {
             // insert version-specific mixins
             put("RegistrySyncManagerMixin", if (isLoom && minecraft != "1.20.1") "\"fabric.RegistrySyncManagerMixin\"," else "")
             put("TextureSheetParticleMixin", if (minecraft < "1.21.9") "\"tint.TextureSheetParticleMixin\"," else "")
-
-            // forge needs this specified, is added automatically otherwise (and uses a dash "-refmap")
-            put("refmap", if (isModDevGradleLegacy) ",\"refmap\": \"particlerain.refmap.json\"" else "")
 
             // workaround for modstitch including both mods.toml files screwing up mc-publish
             put("forge_or_neoforge", if (isModDevGradleLegacy) "forge" else "neoforge")

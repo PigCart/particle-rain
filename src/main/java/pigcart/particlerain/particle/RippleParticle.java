@@ -43,7 +43,7 @@ public class RippleParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        this.alpha = Mth.lerp(this.age / 9F, config.ripple.opacity, 0F);
+        this.alpha = Mth.lerp(this.age / 9F, config.ripple.opacity, 0);
         if (this.age > 8) this.remove();
         this.setSprite(VersionUtil.getSprite(VersionUtil.getId("ripple_" + (this.age - 1))));
     }

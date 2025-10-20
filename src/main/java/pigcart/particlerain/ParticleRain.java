@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.config.ConfigScreens;
+//? if >=1.21.9 {
+/*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+*///?}
 
 import java.util.Set;
 
@@ -52,6 +55,18 @@ public class ParticleRain {
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
         WEATHER_SANDSTORM = createSoundEvent("weather.sandstorm");
         WEATHER_SANDSTORM_ABOVE = createSoundEvent("weather.sandstorm.above");
+
+        //? if >=1.21.9 {
+        /*DebugScreenEntries.register(VersionUtil.getId("debug"),
+                (display, level, levelChunk, levelChunk2) -> {
+                    display.addLine("afterWeatherTicksLeft: " + WeatherParticleManager.afterWeatherTicksLeft);
+                    display.addLine("spawnAttemptsUntilBlockFXIdle: " + WeatherParticleManager.spawnAttemptsUntilBlockFXIdle);
+                    display.addLine("ticksUntilSkyFXIdle: " + WeatherParticleManager.ticksUntilSkyFXIdle);
+                    display.addLine("ticksUntilSurfaceFXIdle: " + WeatherParticleManager.ticksUntilSurfaceFXIdle);
+                    display.addLine("Tracked particles: " + WeatherParticleManager.getParticleCount());
+                    display.addLine("isRaining: " + (level == null ? "N/A" : String.valueOf(level.isRaining())));
+        });
+        *///?}
     }
 
     public static void onTick(Minecraft client) {

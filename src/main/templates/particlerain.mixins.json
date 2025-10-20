@@ -22,6 +22,6 @@
     "yacl.YACLScreenAccessor",
     "yacl.YACLScreenMixin",
     "yacl.YetAnotherConfigLibImplMixin"
-  ]
-  ${ refmap }
+  ],
+  "refmap": "particlerain.refmap.json"
 }

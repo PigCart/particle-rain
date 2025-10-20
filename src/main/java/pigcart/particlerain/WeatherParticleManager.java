@@ -5,6 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
@@ -38,9 +39,9 @@ public final class WeatherParticleManager {
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
     private static final BlockPos.MutableBlockPos heightmapPos = new BlockPos.MutableBlockPos();
     public static int afterWeatherTicksLeft = 0;
-    private static int spawnAttemptsUntilBlockFXIdle = 0;
-    private static int ticksUntilSurfaceFXIdle = 0;
-    private static int ticksUntilSkyFXIdle = 0;
+    public static int spawnAttemptsUntilBlockFXIdle = 0;
+    public static int ticksUntilSurfaceFXIdle = 0;
+    public static int ticksUntilSkyFXIdle = 0;
 
     public static int getParticleCount() {
         final ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
@@ -53,8 +54,8 @@ public final class WeatherParticleManager {
         if (afterWeatherTicksLeft > 0) afterWeatherTicksLeft--;
     }
 
-    public static void onWeatherChange(boolean isRaining, boolean wasRaining) {
-        afterWeatherTicksLeft = !isRaining && wasRaining ? 6000 : 0; // 'after weather' period lasts 5 minutes
+    public static void onWeatherChange(boolean isRaining) {
+        afterWeatherTicksLeft = isRaining ? 0 : 6000; // 'after weather' period lasts 5 minutes
     }
 
     public static void tickBlockFX(BlockPos.MutableBlockPos sourcePos, BlockState state) {

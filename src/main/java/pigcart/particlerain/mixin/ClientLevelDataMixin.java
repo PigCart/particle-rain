@@ -11,10 +11,8 @@ import pigcart.particlerain.WeatherParticleManager;
 @Mixin(ClientLevel.ClientLevelData.class)
 public abstract class ClientLevelDataMixin {
 
-    @Shadow public abstract boolean isRaining();
-
     @Inject(method = "setRaining", at = @At("HEAD"))
     public void hookSetRaining(boolean raining, CallbackInfo ci) {
-        WeatherParticleManager.onWeatherChange(raining, isRaining());
+        WeatherParticleManager.onWeatherChange(raining);
     }
 }

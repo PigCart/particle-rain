@@ -1,6 +1,6 @@
 # v4-beta.3
 ###### work in progress
-- 1.21.9/10 support (ongoing)
+- 1.21.9/10 support
 
 # v4-beta.2
 ###### Oct 03, 2025

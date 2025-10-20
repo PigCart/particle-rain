@@ -228,7 +228,7 @@ public class CustomParticle extends WeatherParticle {
         this.renderRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent);
     }
 
-    //FIXME: particle invisible when wind is 0
+    //FIXME: particle invisible when horizontal velocity is 0
     public void renderRelativeVelocityQuad(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
@@ -255,7 +255,7 @@ public class CustomParticle extends WeatherParticle {
         // bung it in the oven
         renderSquishyRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent, stretchFactor);
     }
-    //FIXME: particle invisible when wind is 0
+    //FIXME: particle invisible when horizontal velocity is 0
     public void renderWorldVelocityQuad(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
         Vec3 camPos = camera.getPosition();
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());

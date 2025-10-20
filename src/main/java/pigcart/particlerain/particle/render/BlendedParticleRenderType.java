@@ -4,6 +4,7 @@ package pigcart.particlerain.particle.render;
 /*import net.minecraft.client.particle.SingleQuadParticle;
 
 public class BlendedParticleRenderType {
+    //public static final SingleQuadParticle.Layer INSTANCE = new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, RenderPipelines.WEATHER_DEPTH_WRITE);
     public static final SingleQuadParticle.Layer INSTANCE = SingleQuadParticle.Layer.TRANSLUCENT;
 }
 *///?} else if >=1.21.5 {
