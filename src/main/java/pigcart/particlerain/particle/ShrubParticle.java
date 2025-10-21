@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4f;
 import org.joml.Math;
 import org.joml.Quaternionf;
@@ -22,6 +23,7 @@ import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ConfigManager;
 
 import java.awt.*;
+import static pigcart.particlerain.config.ConfigManager.config;
 
 //? if >=1.21.5 {
 /*import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -41,6 +43,14 @@ public class ShrubParticle extends WeatherParticle {
 
     protected ShrubParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z, VersionUtil.getSprite(MissingTextureAtlasSprite.getLocation()));
+        this.quadSize = config.shrub.size;
+        this.setSize(quadSize, quadSize);
+        this.hasPhysics = true;
+        this.gravity = config.shrub.gravity;
+        this.yd = 0.1F;
+        this.lifetime = 200;
+        this.xd = level.isThundering() ? config.shrub.stormWindStrength : config.shrub.windStrength;
+        this.zd = level.isThundering() ? config.shrub.stormWindStrength : config.shrub.windStrength;
 
         BlockState blockState = level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.pos));
         // no foliage convention tag? :(
@@ -72,13 +82,20 @@ public class ShrubParticle extends WeatherParticle {
     public void tick() {
         super.tick();
         if (this.xd == 0 || this.zd == 0) this.remove();
-        this.xd = level.isThundering() ? ConfigManager.config.shrub.stormWindStrength : ConfigManager.config.shrub.windStrength;
-        this.zd = level.isThundering() ? ConfigManager.config.shrub.stormWindStrength : ConfigManager.config.shrub.windStrength;
+        this.xd = level.isThundering() ? config.shrub.stormWindStrength : config.shrub.windStrength;
+        this.zd = level.isThundering() ? config.shrub.stormWindStrength : config.shrub.windStrength;
+
+        float speed = (float) new Vec3(xd, yd, zd).length();
         this.oRoll = this.roll;
-        this.roll = this.roll + ConfigManager.config.shrub.rotationAmount;
+        this.roll = this.roll + config.shrub.rotationAmount * speed;
         if (this.onGround) {
-            this.yd = ConfigManager.config.shrub.bounciness;
+            this.yd = config.shrub.bounciness;
         }
+    }
+
+    @Override
+    public void tickDistanceFade() {
+        // no
     }
 
     @Override

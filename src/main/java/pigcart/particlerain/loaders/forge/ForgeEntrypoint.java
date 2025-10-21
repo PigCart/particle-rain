@@ -1,9 +1,7 @@
 //? if forge {
 /*package pigcart.particlerain.loaders.forge;
 
-import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.client.Minecraft;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
@@ -19,6 +17,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.config.ConfigScreens;
 import pigcart.particlerain.particle.*;
 
@@ -53,8 +52,8 @@ public class ForgeEntrypoint {
         ParticleRain.MIST = MIST.get();
         ParticleRain.RIPPLE = RIPPLE.get();
         ParticleRain.STREAK = STREAK.get();
-
-        ParticleRain.onInitializeClient();
+        // now that particles are available we can update the custom particle settings in the config
+        ConfigManager.updateTransientVariables();
     }
 
     @SuppressWarnings("removal")
@@ -70,6 +69,7 @@ public class ForgeEntrypoint {
                         (client, parent) -> ConfigScreens.generateMainConfigScreen(parent)
                 )
         );
+        ParticleRain.onInitializeClient();
     }
 }
 *///?}

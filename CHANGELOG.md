@@ -1,6 +1,10 @@
 # v4-beta.3
-###### work in progress
+###### Oct 21, 2025
 - 1.21.9/10 support
+- potentially fixed forge load crash?
+- fixed shrubs
+- fixed wind getting too strong at high altitudes (again)
+- tweaked default config values
 
 # v4-beta.2
 ###### Oct 03, 2025

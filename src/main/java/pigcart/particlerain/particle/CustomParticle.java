@@ -127,7 +127,7 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public static float yLevelWindMultiplier(double y) {
-        int transitionStart = 60;
+        int transitionStart = 50;
         int transitionDistance = 40;
         return (float) Mth.clamp((y - transitionStart) / transitionDistance, 0, 1);
     }

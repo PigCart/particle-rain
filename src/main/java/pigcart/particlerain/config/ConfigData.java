@@ -40,7 +40,7 @@ import java.util.Optional;
 import static pigcart.particlerain.config.ConfigManager.config;
 
 public class ConfigData {
-    @NoGUI public byte configVersion = 4;
+    @NoGUI public byte configVersion = 5;
 
     @Group
     public PerformanceOptions perf = new PerformanceOptions();
@@ -145,8 +145,8 @@ public class ConfigData {
                     true,
                     SpawnPos.SKY,
                     0.2F,
-                    2.0F,
-                    3.0F,
+                    0.7F,
+                    1F,
                     0.0F,
                     1.0F,
                     1.5F,
@@ -208,8 +208,8 @@ public class ConfigData {
                     true,
                     SpawnPos.SKY,
                     0.1F,
-                    1.0F,
-                    2.0F,
+                    0.25F,
+                    0.5F,
                     0.0F,
                     0.35F,
                     0.3F,
@@ -291,7 +291,7 @@ public class ConfigData {
                     0.1F,
                     Weather.ALWAYS,
                     List.of(Biome.Precipitation.RAIN),
-                    new BiomeList(true, List.of("#c:is_dense_vegetation")),
+                    new BiomeList(true, List.of("#c:is_wet/overworld", "#c:is_spooky")),
                     new BlockList(true, List.of("#minecraft:dirt")),
                     true,
                     SpawnPos.WORLD_SURFACE)
@@ -538,11 +538,9 @@ public class ConfigData {
         public float gravity = 0.2F;
         public float windStrength = 0.2F;
         public float stormWindStrength = 0.3F;
-        @Slider @Format(Percent.class)
-        public float opacity = 1F;
         public float size = 0.5F;
 
-        public float rotationAmount = 0.2F;
+        public float rotationAmount = 0.6F;
         public float bounciness = 0.2F;
     }
 

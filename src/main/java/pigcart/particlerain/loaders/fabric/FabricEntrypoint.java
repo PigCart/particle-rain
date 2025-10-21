@@ -50,6 +50,7 @@ public class FabricEntrypoint implements ClientModInitializer {
                 }
             }
         }
+        ConfigManager.updateTransientVariables();
 
 
         ClientTickEvents.END_CLIENT_TICK.register(ParticleRain::onTick);

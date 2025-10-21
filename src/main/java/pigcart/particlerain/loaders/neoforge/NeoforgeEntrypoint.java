@@ -18,6 +18,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.config.ConfigScreens;
 import pigcart.particlerain.particle.*;
 
@@ -53,8 +54,8 @@ public class NeoforgeEntrypoint {
         ParticleRain.MIST = MIST.get();
         ParticleRain.RIPPLE = RIPPLE.get();
         ParticleRain.STREAK = STREAK.get();
-        // config has to load after particles so it can use them
-        ParticleRain.onInitializeClient();
+        // now that particles are available we can update the custom particle settings in the config
+        ConfigManager.updateTransientVariables();
     }
 
     public NeoforgeEntrypoint(IEventBus eventBus) {
@@ -66,6 +67,7 @@ public class NeoforgeEntrypoint {
                 IConfigScreenFactory.class,
                 () -> (modContainer, parent) -> ConfigScreens.generateMainConfigScreen(parent)
         );
+        ParticleRain.onInitializeClient();
     }
 }
 *///?}

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.config.ConfigScreens;
+import pigcart.particlerain.particle.CustomParticle;
 //? if >=1.21.9 {
 /*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 *///?}
@@ -63,7 +64,8 @@ public class ParticleRain {
                 "ticks Until Sky FX Idle: " + WeatherParticleManager.ticksUntilSkyFXIdle,
                 "ticks Until Surface FX Idle: " + WeatherParticleManager.ticksUntilSurfaceFXIdle,
                 "is Raining: " + level.isRaining(),
-                "Biome Precipitation: " + precipitation
+                "Biome Precipitation: " + precipitation,
+                "Wind multiplier: " + CustomParticle.yLevelWindMultiplier(blockPos.getY())
         );
     }
 

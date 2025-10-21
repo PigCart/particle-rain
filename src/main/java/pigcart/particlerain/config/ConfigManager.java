@@ -39,10 +39,16 @@ public class ConfigManager {
 
     public static void load() {
         File file = new File(CONFIG_PATH);
-        try (FileReader reader = new FileReader(file)) {
-            config = GSON.fromJson(reader, ConfigData.class);
-        } catch (Exception e) {
-            ParticleRain.LOGGER.error("Error loading config: {}", e.getMessage());
+        if (file.exists()) {
+            try (FileReader reader = new FileReader(file)) {
+                config = GSON.fromJson(reader, ConfigData.class);
+            } catch (Exception e) {
+                ParticleRain.LOGGER.error("Error loading config: {}", e.getMessage());
+                config = new ConfigData();
+                save();
+            }
+        } else {
+            ParticleRain.LOGGER.info("Creating config file at " + CONFIG_PATH);
             config = new ConfigData();
             save();
         }
@@ -51,7 +57,6 @@ public class ConfigManager {
             config = new ConfigData();
             save();
         }
-        updateTransientVariables();
     }
 
     public static void save() {
