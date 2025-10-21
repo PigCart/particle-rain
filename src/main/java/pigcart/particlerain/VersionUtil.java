@@ -83,7 +83,7 @@ public class VersionUtil {
 
     //? if <=1.20.1 {
     public static SpriteContents loadSplashSprite(int i) throws IOException {
-        final ResourceLocation location = getId("textures/particle/splash_" + i + ".png");
+        final ResourceLocation location = getMcId("textures/particle/splash_" + i + ".png");
         Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(location);
         AnimationMetadataSection metadata = resource.metadata().getSection(AnimationMetadataSection.SERIALIZER).orElse(AnimationMetadataSection.EMPTY);
         NativeImage splashImage = TextureUtil.loadTexture(resource);

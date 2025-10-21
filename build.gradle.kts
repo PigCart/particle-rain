@@ -33,6 +33,9 @@ modstitch {
             // insert version-specific mixins
             put("RegistrySyncManagerMixin", if (isLoom && minecraft != "1.20.1") "\"fabric.RegistrySyncManagerMixin\"," else "")
             put("TextureSheetParticleMixin", if (minecraft < "1.21.9") "\"tint.TextureSheetParticleMixin\"," else "")
+            put("DripParticleMixin", if (minecraft < "1.21.9") "\"tint.DripParticleMixin\"," else "")
+            put("WaterFallProviderMixin", if (minecraft >= "1.21.9") "\"tint.WaterFallProviderMixin\"," else "")
+            put("WaterHangProviderMixin", if (minecraft >= "1.21.9") "\"tint.WaterHangProviderMixin\"," else "")
 
             // workaround for modstitch including both mods.toml files screwing up mc-publish
             put("forge_or_neoforge", if (isModDevGradleLegacy) "forge" else "neoforge")

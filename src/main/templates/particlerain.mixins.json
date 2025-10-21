@@ -9,6 +9,9 @@
   "client": [
     ${ RegistrySyncManagerMixin }
     ${ TextureSheetParticleMixin }
+    ${ DripParticleMixin }
+    ${ WaterFallProviderMixin }
+    ${ WaterHangProviderMixin }
     "ClientLevelDataMixin",
     "access.NativeImageAccessor",
     "access.ParticleEngineAccessor",
@@ -17,7 +20,6 @@
     "render.ParticleEngineMixin",
     "render.SpriteLoaderMixin",
     "render.WeatherEffectRendererMixin",
-    "tint.DripParticleMixin",
     "tint.WaterDropParticleMixin",
     "yacl.YACLScreenAccessor",
     "yacl.YACLScreenMixin",

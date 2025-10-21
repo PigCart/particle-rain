@@ -5,7 +5,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
@@ -49,13 +48,15 @@ public final class WeatherParticleManager {
     }
 
     public static void tick(ClientLevel level, Vec3 cameraPos) {
+        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
+        if (!particleEngine.callHasSpaceInParticleLimit(particleGroup)) return;
         tickSkyFX(level, cameraPos);
         tickSurfaceFX(level, cameraPos);
         if (afterWeatherTicksLeft > 0) afterWeatherTicksLeft--;
     }
 
     public static void onWeatherChange(boolean isRaining) {
-        afterWeatherTicksLeft = isRaining ? 0 : 6000; // 'after weather' period lasts 5 minutes
+        afterWeatherTicksLeft = isRaining ? 0 : random.nextInt(6000); // 'after weather' period lasts up to 5 minutes
     }
 
     public static void tickBlockFX(BlockPos.MutableBlockPos sourcePos, BlockState state) {
@@ -130,8 +131,6 @@ public final class WeatherParticleManager {
     }
     public static void tickSkyFX(ClientLevel level, Vec3 cameraPos) {
         //TODO: twilight fog and skittering sand when not raining
-        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        if (!particleEngine.callHasSpaceInParticleLimit(particleGroup)) return;
         int density;
         float speed;
         if (ticksUntilSkyFXIdle <= 0) {

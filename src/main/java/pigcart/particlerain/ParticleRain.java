@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NoteBlock;
@@ -27,6 +28,7 @@ import pigcart.particlerain.config.ConfigScreens;
 /*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 *///?}
 
+import java.util.List;
 import java.util.Set;
 
 import static pigcart.particlerain.config.ConfigManager.config;
@@ -48,6 +50,23 @@ public class ParticleRain {
     public static SoundEvent WEATHER_SANDSTORM;
     public static SoundEvent WEATHER_SANDSTORM_ABOVE;
 
+    private static List<String> getDebugLines() {
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) return List.of();
+        BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
+        final Holder<Biome> biome = level.getBiome(blockPos);
+        Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, blockPos);
+        return List.of(
+                String.format("Tracked particles: %d/%d",WeatherParticleManager.getParticleCount(), WeatherParticleManager.particleGroup./*? if >=1.21.9 {*//*limit*//*?} else {*/getLimit/*?}*/()),
+                "after Weather Ticks Left: " + WeatherParticleManager.afterWeatherTicksLeft,
+                "spawn Attempts Until Block FX Idle: " + WeatherParticleManager.spawnAttemptsUntilBlockFXIdle,
+                "ticks Until Sky FX Idle: " + WeatherParticleManager.ticksUntilSkyFXIdle,
+                "ticks Until Surface FX Idle: " + WeatherParticleManager.ticksUntilSurfaceFXIdle,
+                "is Raining: " + level.isRaining(),
+                "Biome Precipitation: " + precipitation
+        );
+    }
+
     public static void onInitializeClient() {
         ConfigManager.load();
 
@@ -58,14 +77,9 @@ public class ParticleRain {
 
         //? if >=1.21.9 {
         /*DebugScreenEntries.register(VersionUtil.getId("debug"),
-                (display, level, levelChunk, levelChunk2) -> {
-                    display.addLine("afterWeatherTicksLeft: " + WeatherParticleManager.afterWeatherTicksLeft);
-                    display.addLine("spawnAttemptsUntilBlockFXIdle: " + WeatherParticleManager.spawnAttemptsUntilBlockFXIdle);
-                    display.addLine("ticksUntilSkyFXIdle: " + WeatherParticleManager.ticksUntilSkyFXIdle);
-                    display.addLine("ticksUntilSurfaceFXIdle: " + WeatherParticleManager.ticksUntilSurfaceFXIdle);
-                    display.addLine("Tracked particles: " + WeatherParticleManager.getParticleCount());
-                    display.addLine("isRaining: " + (level == null ? "N/A" : String.valueOf(level.isRaining())));
-        });
+                (display, level, levelChunk, levelChunk2) ->
+                        display.addToGroup(VersionUtil.getId("debuglines"), getDebugLines())
+        );
         *///?}
     }
 
@@ -91,20 +105,7 @@ public class ParticleRain {
                 })
                 .then(LiteralArgumentBuilder.literal("debug")
                         .executes(ctx -> {
-                            ClientLevel level = Minecraft.getInstance().level;
-                            addChatMsg(String.format("Particle count: %d/%d",WeatherParticleManager.getParticleCount(), WeatherParticleManager.particleGroup./*? if >=1.21.9 {*//*limit*//*?} else {*/getLimit/*?}*/()));
-                            BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
-                            final Holder<Biome> holder = level.getBiome(blockPos);
-                            String biomeStr = holder.unwrap().map(
-                                    (resourceKey) -> resourceKey.location().toString(),
-                                    (biome) -> "[unregistered " + biome + "]");
-                            addChatMsg("Biome: " + biomeStr);
-                            Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, holder, blockPos);
-                            addChatMsg("Precipitation: " + precipitation);
-                            addChatMsg("Base Temp: " + holder.value().getBaseTemperature());
-                            addChatMsg("Cloud height: " + VersionUtil.getCloudHeight(level));
-                            addChatMsg("sea level: " + Minecraft.getInstance().level.getSeaLevel());
-                            addChatMsg(ConfigManager.config.particles.toString());
+                            getDebugLines().forEach(ParticleRain::addChatMsg);
                             return 0;
                         })
                 );

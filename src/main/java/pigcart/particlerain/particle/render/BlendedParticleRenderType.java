@@ -1,11 +1,25 @@
 package pigcart.particlerain.particle.render;
 
 //? if >=1.21.9 {
-/*import net.minecraft.client.particle.SingleQuadParticle;
+/*import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DestFactor;
+import com.mojang.blaze3d.platform.SourceFactor;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+
+import static net.minecraft.client.renderer.RenderPipelines.PARTICLE_SNIPPET;
 
 public class BlendedParticleRenderType {
-    //public static final SingleQuadParticle.Layer INSTANCE = new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, RenderPipelines.WEATHER_DEPTH_WRITE);
-    public static final SingleQuadParticle.Layer INSTANCE = SingleQuadParticle.Layer.TRANSLUCENT;
+    public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+    public static final RenderPipeline FOG_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(PARTICLE_SNIPPET)
+                    .withLocation("pipeline/particlerain_fog")
+                    .withBlend(FOG_BLEND)
+                    .withDepthWrite(false).build()
+    );
+    public static final SingleQuadParticle.Layer INSTANCE = new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, FOG_PIPELINE);
 }
 *///?} else if >=1.21.5 {
 /*import com.mojang.blaze3d.pipeline.BlendFunction;
@@ -124,7 +138,7 @@ public class BlendedParticleRenderType {
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-            RenderSystem.setShaderTexture(2, VersionUtil.getId("dynamic/light_map_1"));
+            RenderSystem.setShaderTexture(2, VersionUtil.getMcId("dynamic/light_map_1"));
             return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
     };
@@ -152,7 +166,7 @@ public class BlendedParticleRenderType {
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-            RenderSystem.setShaderTexture(2, VersionUtil.getId("dynamic/light_map_1"));
+            RenderSystem.setShaderTexture(2, VersionUtil.getMcId("dynamic/light_map_1"));
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
         @Override

@@ -15,6 +15,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.biome.Biome;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
@@ -168,7 +169,7 @@ public class ConfigData {
                     0.01F,
                     0.1F,
                     0.0F,
-                    0.45F,
+                    0.35F,
                     0.3F,
                     true,
                     RenderType.TRANSLUCENT,
@@ -189,7 +190,7 @@ public class ConfigData {
                     0.01F,
                     0.1F,
                     0.0F,
-                    0.45F,
+                    0.35F,
                     0.3F,
                     true,
                     RenderType.TRANSLUCENT,
@@ -210,7 +211,7 @@ public class ConfigData {
                     1.0F,
                     2.0F,
                     0.0F,
-                    0.45F,
+                    0.35F,
                     0.3F,
                     true,
                     RenderType.TRANSLUCENT,
