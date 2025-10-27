@@ -38,7 +38,7 @@
   "particlerain.streak": "水纹",
   "particlerain.shrub": "灌木",
   "particlerain.mist": "雾",
-  "particlerain.mist_after_rain": "雨后薄雾",
+  "particlerain.mist_after_rain": "雨后雾气",
 
   "particlerain.SoundOptions": "声音选项",
   "particlerain.SoundOptions.doMaterialSounds": "播放对应材质声音",
@@ -80,7 +80,7 @@
   "particlerain.CompatibilityOptions.spawnHeightLimit.description": "粒子可在云层上方生成的高度。设置为零时，本模组将使用当前世界的云层高度。",
 
   "particlerain.category.edit": "编辑粒子选项",
-  "particlerain.ParticleData.particlePresetId": "预设粒子",
+  "particlerain.ParticleData.presetParticleId": "预设粒子",
   "particlerain.ParticleData.usePresetParticle": "使用预设粒子",
   "particlerain.ParticleData.id": "标识符（ID）",
   "particlerain.ParticleData.id.description": "用于定义粒子的命名空间ID、指令以及翻译的字符串。",
