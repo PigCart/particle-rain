@@ -80,7 +80,7 @@
   "particlerain.CompatibilityOptions.spawnHeightLimit.description": "The height at which particles are considered to be spawning above clouds. When set to a value of zero the mod will use the cloud height from the current world.",
 
   "particlerain.category.edit": "Edit Particle",
-  "particlerain.ParticleData.particlePresetId": "Preset particle",
+  "particlerain.ParticleData.presetParticleId": "Preset particle",
   "particlerain.ParticleData.usePresetParticle": "Use preset particle",
   "particlerain.ParticleData.id": "Identifier",
   "particlerain.ParticleData.id.description": "The string used to identify the particle in the registry, commands, and translations.",
