@@ -18,7 +18,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.config.ConfigManager;
-import pigcart.particlerain.config.ConfigScreens;
 import pigcart.particlerain.particle.*;
 
 @Mod(ParticleRain.MOD_ID)
@@ -66,7 +65,7 @@ public class ForgeEntrypoint {
         ModLoadingContext.get().registerExtensionPoint(
                 ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory(
-                        (client, parent) -> ConfigScreens.generateMainConfigScreen(parent)
+                        (client, parent) -> ConfigManager.screenPlease(parent)
                 )
         );
         ParticleRain.onInitializeClient();

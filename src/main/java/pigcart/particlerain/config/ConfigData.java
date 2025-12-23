@@ -1,11 +1,7 @@
 package pigcart.particlerain.config;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,24 +11,26 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.biome.Biome;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.WeatherParticleManager;
-import pigcart.particlerain.config.ConfigManager.Label;
+import pigcart.particlerain.config.gui.Annotations.Label;
 import pigcart.particlerain.config.Whitelist.BiomeList;
 import pigcart.particlerain.config.Whitelist.BlockList;
-import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
+import pigcart.particlerain.config.gui.Annotations.*;
 import pigcart.particlerain.config.ConfigManager.*;
 //? if >=1.21.9 {
 /*import net.minecraft.client.renderer.state.QuadParticleRenderState;
-*///?}
+*///?} else {
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.particle.ParticleRenderType;
+//?}
 
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +40,7 @@ import static pigcart.particlerain.config.ConfigManager.config;
 public class ConfigData {
     @NoGUI public byte configVersion = 5;
 
-    @Group
+    //TODO @NoSubMenu
     public PerformanceOptions perf = new PerformanceOptions();
     public static class PerformanceOptions {
         @OnChange(ClearParticles.class)
@@ -53,7 +51,7 @@ public class ConfigData {
         public int surfaceRange = 48;
     }
 
-    @Group
+    //TODO @NoSubMenu
     public SoundOptions sound = new SoundOptions();
     public static class SoundOptions {
         @Slider @Format(PercentOrOff.class) public float rainVolume = 0.2F;
@@ -62,7 +60,7 @@ public class ConfigData {
         @Slider @Format(PercentOrOff.class) public float blockVolume = 0.07F;
     }
 
-    @Group
+    //TODO @NoSubMenu
     public WindOptions wind = new WindOptions();
     public static class WindOptions {
         public float strength = 0.4F;
@@ -72,7 +70,7 @@ public class ConfigData {
         public boolean yLevelAdjustment = true;
     }
 
-    @Group
+    //TODO @NoSubMenu
     public CompatibilityOptions compat = new CompatibilityOptions();
     public static class CompatibilityOptions {
         public boolean renderDefaultWeather = false;
@@ -81,7 +79,8 @@ public class ConfigData {
         public boolean waterTint = true;
         @Slider @Format(Percent.class)
         public float tintMix = 0.6F;
-        @NoGUI public boolean shaderpackTint = true; //TODO
+        @NoGUI
+        public boolean shaderpackTint = true; //TODO
         public boolean syncRegistries = true;
         public boolean crossBiomeBorder = false;
         public boolean useHeightmapTemp = true;
@@ -90,14 +89,13 @@ public class ConfigData {
         public int spawnHeightLimit = 0;
     }
 
-    @NoGUI
-    public List<ParticleData> particles = new ArrayList<>(List.of(
+    public ArrayList<ParticleData> particles = new ArrayList<>(List.of(
             new ParticleData(
                     "rain",
                     true,
                     1.0F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.RAIN),
+                    new ArrayList<>(List.of(Biome.Precipitation.RAIN)),
                     new BiomeList(),
                     new BlockList(),
                     true,
@@ -110,7 +108,7 @@ public class ConfigData {
                     1.5F,
                     false,
                     RenderType.TRANSLUCENT,
-                    List.of("particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3"),
+                    new ArrayList<>(List.of("particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3")),
                     TintType.WATER,
                     RotationType.RELATIVE_VELOCITY),
             new ParticleData(
@@ -118,7 +116,7 @@ public class ConfigData {
                     true,
                     0.4F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.SNOW),
+                    new ArrayList<>(List.of(Biome.Precipitation.SNOW)),
                     new BiomeList(),
                     new BlockList(),
                     true,
@@ -131,7 +129,7 @@ public class ConfigData {
                     1.5F,
                     false,
                     RenderType.TRANSLUCENT,
-                    List.of("particlerain:snow_0", "particlerain:snow_1", "particlerain:snow_2", "particlerain:snow_3"),
+                    new ArrayList<>(List.of("particlerain:snow_0", "particlerain:snow_1", "particlerain:snow_2", "particlerain:snow_3")),
                     TintType.NONE,
                     RotationType.COPY_CAMERA),
             new ParticleData(
@@ -139,9 +137,9 @@ public class ConfigData {
                     true,
                     0.8F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.NONE),
+                    new ArrayList<>(List.of(Biome.Precipitation.NONE)),
                     new BiomeList(),
-                    new BlockList(true, List.of("#minecraft:camel_sand_step_sound_blocks", "#minecraft:sand", "#minecraft:terracotta", "#c:sandstone_blocks")),
+                    new BlockList(true, new ArrayList<>(List.of("#minecraft:camel_sand_step_sound_blocks", "#minecraft:sand", "#minecraft:terracotta", "#c:sandstone_blocks"))),
                     true,
                     SpawnPos.SKY,
                     0.2F,
@@ -152,7 +150,7 @@ public class ConfigData {
                     1.5F,
                     false,
                     RenderType.TRANSLUCENT,
-                    List.of("particlerain:dust"),
+                    new ArrayList<>(List.of("particlerain:dust")),
                     TintType.MAP,
                     RotationType.COPY_CAMERA),
             new ParticleData(
@@ -160,7 +158,7 @@ public class ConfigData {
                     true,
                     0.1F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.RAIN),
+                    new ArrayList<>(List.of(Biome.Precipitation.RAIN)),
                     new BiomeList(),
                     new BlockList(),
                     true,
@@ -173,7 +171,7 @@ public class ConfigData {
                     0.3F,
                     true,
                     RenderType.TRANSLUCENT,
-                    List.of("particlerain:fog_dithered"),
+                    new ArrayList<>(List.of("particlerain:fog_dithered")),
                     TintType.FOG,
                     RotationType.COPY_CAMERA),
             new ParticleData(
@@ -181,7 +179,7 @@ public class ConfigData {
                     true,
                     0.2F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.SNOW),
+                    new ArrayList<>(List.of(Biome.Precipitation.SNOW)),
                     new BiomeList(),
                     new BlockList(),
                     true,
@@ -194,7 +192,7 @@ public class ConfigData {
                     0.3F,
                     true,
                     RenderType.TRANSLUCENT,
-                    List.of("particlerain:fog_dithered"),
+                    new ArrayList<>(List.of("particlerain:fog_dithered")),
                     TintType.FOG,
                     RotationType.COPY_CAMERA),
             new ParticleData(
@@ -202,9 +200,9 @@ public class ConfigData {
                     true,
                     0.1F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.NONE),
+                    new ArrayList<>(List.of(Biome.Precipitation.NONE)),
                     new BiomeList(),
-                    new BlockList(true, List.of("#minecraft:camel_sand_step_sound_blocks", "#minecraft:sand", "#minecraft:terracotta", "#c:sandstone_blocks")),
+                    new BlockList(true, new ArrayList<>(List.of("#minecraft:camel_sand_step_sound_blocks", "#minecraft:sand", "#minecraft:terracotta", "#c:sandstone_blocks"))),
                     true,
                     SpawnPos.SKY,
                     0.1F,
@@ -215,7 +213,7 @@ public class ConfigData {
                     0.3F,
                     true,
                     RenderType.TRANSLUCENT,
-                    List.of("particlerain:fog_dithered"),
+                    new ArrayList<>(List.of("particlerain:fog_dithered")),
                     TintType.MAP,
                     RotationType.COPY_CAMERA),
             new ParticleData(
@@ -224,9 +222,9 @@ public class ConfigData {
                     true,
                     1.0F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.RAIN),
+                    new ArrayList<>(List.of(Biome.Precipitation.RAIN)),
                     new BiomeList(),
-                    new BlockList(false, List.of("minecraft:lava")),
+                    new BlockList(false, new ArrayList<>(List.of("minecraft:lava"))),
                     true,
                     SpawnPos.BLOCK_TOP),
             new ParticleData(
@@ -235,9 +233,9 @@ public class ConfigData {
                     true,
                     1.0F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.RAIN),
+                    new ArrayList<>(List.of(Biome.Precipitation.RAIN)),
                     new BiomeList(),
-                    new BlockList(true, List.of("minecraft:water")),
+                    new BlockList(true, new ArrayList<>(List.of("minecraft:water"))),
                     true,
                     SpawnPos.BLOCK_TOP),
             new ParticleData(
@@ -246,9 +244,9 @@ public class ConfigData {
                     true,
                     1.0F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.RAIN),
+                    new ArrayList<>(List.of(Biome.Precipitation.RAIN)),
                     new BiomeList(),
-                    new BlockList(true, List.of("#minecraft:strider_warm_blocks", "#minecraft:infiniburn_overworld")),
+                    new BlockList(true, new ArrayList<>(List.of("#minecraft:strider_warm_blocks", "#minecraft:infiniburn_overworld"))),
                     true,
                     SpawnPos.BLOCK_TOP),
             new ParticleData(
@@ -257,9 +255,9 @@ public class ConfigData {
                     true,
                     0.2F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.RAIN),
+                    new ArrayList<>(List.of(Biome.Precipitation.RAIN)),
                     new BiomeList(),
-                    new BlockList(true, List.of("#minecraft:impermeable", "#c:glass_panes", "#minecraft:mineable/pickaxe")),
+                    new BlockList(true, new ArrayList<>(List.of("#minecraft:impermeable", "#c:glass_panes", "#minecraft:mineable/pickaxe"))),
                     true,
                     SpawnPos.BLOCK_SIDES),
             new ParticleData(
@@ -268,9 +266,9 @@ public class ConfigData {
                     true,
                     0.002F,
                     Weather.DURING_WEATHER,
-                    List.of(Biome.Precipitation.NONE),
+                    new ArrayList<>(List.of(Biome.Precipitation.NONE)),
                     new BiomeList(),
-                    new BlockList(true, List.of("#minecraft:camel_sand_step_sound_blocks", "#minecraft:sand", "#minecraft:terracotta", "#c:sandstone_blocks")),
+                    new BlockList(true, new ArrayList<>(List.of("#minecraft:camel_sand_step_sound_blocks", "#minecraft:sand", "#minecraft:terracotta", "#c:sandstone_blocks"))),
                     true,
                     SpawnPos.WORLD_SURFACE),
             new ParticleData(
@@ -279,9 +277,9 @@ public class ConfigData {
                     true,
                     0.1F,
                     Weather.AFTER_WEATHER,
-                    List.of(Biome.Precipitation.RAIN),
+                    new ArrayList<>(List.of(Biome.Precipitation.RAIN)),
                     new BiomeList(),
-                    new BlockList(true, List.of("#minecraft:dirt")),
+                    new BlockList(true, new ArrayList<>(List.of("#minecraft:dirt"))),
                     true,
                     SpawnPos.WORLD_SURFACE),
             new ParticleData(
@@ -290,13 +288,15 @@ public class ConfigData {
                     true,
                     0.1F,
                     Weather.ALWAYS,
-                    List.of(Biome.Precipitation.RAIN),
-                    new BiomeList(true, List.of("#c:is_wet/overworld", "#c:is_spooky")),
-                    new BlockList(true, List.of("#minecraft:dirt")),
+                    new ArrayList<>(List.of(Biome.Precipitation.RAIN)),
+                    new BiomeList(true, new ArrayList<>(List.of("#c:is_wet/overworld", "#c:is_spooky"))),
+                    new BlockList(true, new ArrayList<>(List.of("#minecraft:dirt"))),
                     true,
                     SpawnPos.WORLD_SURFACE)
     ));
-    //TODO
+
+    //TODO:
+    // haboob
     // heavy rain
     // heavy snow
     // sleet
@@ -307,8 +307,8 @@ public class ConfigData {
     // new streaks
 
     public static class ParticleData {
-        ParticleData() {}
-        ParticleData(String particle, String id, boolean enabled, float density, Weather weather, List<Biome.Precipitation> precipitation, BiomeList biomeList, BlockList blockList, boolean needsSkyAccess, SpawnPos spawnPos) {
+        public ParticleData() {}
+        ParticleData(String particle, String id, boolean enabled, float density, Weather weather, ArrayList<Biome.Precipitation> precipitation, BiomeList biomeList, BlockList blockList, boolean needsSkyAccess, SpawnPos spawnPos) {
             this.presetParticleId = particle;
             this.usePresetParticle = true;
             this.id = id;
@@ -322,7 +322,7 @@ public class ConfigData {
             this.needsSkyAccess = needsSkyAccess;
             this.spawnPos = spawnPos;
         }
-        public ParticleData(String id, boolean enabled, float density, Weather weather, List<Biome.Precipitation> precipitation, BiomeList biomeList, BlockList blockList, boolean needsSkyAccess, SpawnPos spawnPos, float gravity, float windStrength, float stormWindStrength, float rotationAmount, float opacity, float size, boolean constantScreenSize, RenderType renderType, List<String> spriteLocations, TintType tintType, RotationType rotationType) {
+        public ParticleData(String id, boolean enabled, float density, Weather weather, ArrayList<Biome.Precipitation> precipitation, BiomeList biomeList, BlockList blockList, boolean needsSkyAccess, SpawnPos spawnPos, float gravity, float windStrength, float stormWindStrength, float rotationAmount, float opacity, float size, boolean constantScreenSize, RenderType renderType, ArrayList<String> spriteLocations, TintType tintType, RotationType rotationType) {
             this.id = id;
 
             this.enabled = enabled;
@@ -355,12 +355,12 @@ public class ConfigData {
                 presetParticle = (ParticleOptions) optional.get();
             }
         }
-        @Dropdown(SupplyParticleTypes.class)
+        //TODO @Dropdown(SupplyParticleTypes.class)
         @OnlyEditableIf(ParticleNotCustom.class)
         public String presetParticleId = "minecraft:flame";
         @NoGUI
         public transient ParticleOptions presetParticle = ParticleTypes.CLOUD;
-        @RegenScreen
+        @OnChange(RefreshScreen.class)
         public boolean usePresetParticle = false;
         @OnlyEditableIf(ParticleIsNotDefault.class)
         public String id = "new_particle";
@@ -369,9 +369,9 @@ public class ConfigData {
         @Slider(step = 0.001F) @Format(Percent.class)
         public float density = 1.0F;
         public Weather weather = Weather.DURING_WEATHER;
-        public List<Biome.Precipitation> precipitation = List.of(Biome.Precipitation.RAIN);
-        public BiomeList biomeList = new BiomeList(true, new ArrayList<>());
-        public BlockList blockList = new BlockList(true, new ArrayList<>());
+        public ArrayList<Biome.Precipitation> precipitation = new ArrayList<>(List.of(Biome.Precipitation.RAIN));
+        public BiomeList biomeList = new BiomeList(true, new ArrayList<>(1));
+        public BlockList blockList = new BlockList(true, new ArrayList<>(1));
         public boolean needsSkyAccess = false;
         public SpawnPos spawnPos = SpawnPos.SKY;
         @Label(key="motion")
@@ -386,7 +386,7 @@ public class ConfigData {
         @OnlyVisibleIf(ParticleIsCustom.class) public float size = 0.5F;
         @OnlyVisibleIf(ParticleIsCustom.class) public boolean constantScreenSize = false;
         @OnlyVisibleIf(ParticleIsCustom.class) public RenderType renderType = RenderType.TRANSLUCENT;
-        @OnlyVisibleIf(ParticleIsCustom.class) public List<String> spriteLocations = List.of("particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3");
+        @OnlyVisibleIf(ParticleIsCustom.class) public ArrayList<String> spriteLocations = new ArrayList<>(List.of("particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3"));
         @OnlyVisibleIf(ParticleIsCustom.class) public TintType tintType = TintType.NONE;
         @OnlyVisibleIf(ParticleIsCustom.class) public Color customTint = Color.BLACK;
         @OnlyVisibleIf(ParticleIsCustom.class) public RotationType rotationType = RotationType.COPY_CAMERA;
@@ -533,7 +533,7 @@ public class ConfigData {
 
     @NoGUI
     public ShrubOptions shrub = new ShrubOptions();
-    @OverrideName("ParticleData")
+    //TODO @OverrideName("ParticleData")
     public static class ShrubOptions {
         public float gravity = 0.2F;
         public float windStrength = 0.2F;
@@ -546,7 +546,7 @@ public class ConfigData {
 
     @NoGUI
     public RippleOptions ripple = new RippleOptions();
-    @OverrideName("ParticleData")
+    //TODO @OverrideName("ParticleData")
     public static class RippleOptions {
         @Slider @Format(Percent.class)
         public float opacity = 0.8F;
@@ -560,7 +560,7 @@ public class ConfigData {
 
     @NoGUI
     public StreakOptions streak = new StreakOptions();
-    @OverrideName("ParticleData")
+    //TODO @OverrideName("ParticleData")
     public static class StreakOptions {
         @Slider @Format(Percent.class)
         public float opacity = 0.9F;
@@ -569,7 +569,7 @@ public class ConfigData {
 
     @NoGUI
     public MistOptions mist = new MistOptions();
-    @OverrideName("ParticleData")
+    //TODO @OverrideName("ParticleData")
     public static class MistOptions {
         public int lifetime = 200;
         @Slider @Format(Percent.class)

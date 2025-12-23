@@ -1,6 +1,6 @@
 modLoader = "javafml"
-loaderVersion = "[2,)"
-issueTrackerURL = "${mod_issue_tracker}"
+loaderVersion = "[43,)"
+issueTrackerURL = "${mod_issues}"
 license = "${mod_license}"
 logoFile = "${mod_icon}"
 
@@ -12,17 +12,18 @@ description = '''${mod_description}'''
 authors = "${mod_author}"
 
 [[dependencies.${mod_id}]]
-modId = "neoforge"
-type = "required"
+modId = "forge"
+mandatory = true
+versionRange = "[43,50)"
 ordering = "NONE"
-side = "BOTH"
-
+side = "CLIENT"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
-type = "required"
+mandatory = true
 versionRange="${version_range}"
+ordering = "NONE"
+side = "CLIENT"
 
-[mc-publish]
-loaders = ["${forge_or_neoforge}"]
-dependencies = ["yacl(required){modrinth:1eAoo2KR}{curseforge:667299}#(ignore:github)"]
+[[mixins]]
+config = "${mod_id}.mixins.json"

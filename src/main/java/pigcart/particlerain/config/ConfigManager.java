@@ -3,6 +3,7 @@ package pigcart.particlerain.config;
 import com.google.gson.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -13,14 +14,11 @@ import net.minecraft.resources.ResourceKey;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.WeatherParticleManager;
+import pigcart.particlerain.config.gui.ConfigScreen;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 
 import java.awt.*;
 import java.io.*;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Type;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -35,7 +33,14 @@ public class ConfigManager {
             .create();
     static final String CONFIG_PATH = "config/" + ParticleRain.MOD_ID + ".json";
     public static ConfigData config;
-    public static ConfigData defaultConfig = new ConfigData();
+
+    public static Screen screenPlease(Screen lastScreen) {
+        return new ConfigScreen(lastScreen, config, getDefaultConfig(), Component.translatable("particlerain.title"));
+    }
+
+    public static ConfigData getDefaultConfig() {
+        return new ConfigData();
+    }
 
     public static void load() {
         File file = new File(CONFIG_PATH);
@@ -44,17 +49,17 @@ public class ConfigManager {
                 config = GSON.fromJson(reader, ConfigData.class);
             } catch (Exception e) {
                 ParticleRain.LOGGER.error("Error loading config: {}", e.getMessage());
-                config = new ConfigData();
+                config = getDefaultConfig();
                 save();
             }
         } else {
             ParticleRain.LOGGER.info("Creating config file at " + CONFIG_PATH);
-            config = new ConfigData();
+            config = getDefaultConfig();
             save();
         }
-        if (config.configVersion < defaultConfig.configVersion) {
+        if (config.configVersion < getDefaultConfig().configVersion) {
             ParticleRain.LOGGER.info("Overwriting old config file");
-            config = new ConfigData();
+            config = getDefaultConfig();
             save();
         }
     }
@@ -91,18 +96,6 @@ public class ConfigManager {
         }
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface Slider {
-        float min() default 0F;
-        float max() default 1F;
-        float step() default 0.01F;
-    }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface Format {Class<? extends Function<Object, Component>> value();}
-
     public static class Percent implements Function<Object, Component> {
         public Component apply(Object value) {
             return Component.literal(NumberFormat.getPercentInstance().format(value));
@@ -111,43 +104,16 @@ public class ConfigManager {
 
     public static class PercentOrOff implements Function<Object, Component> {
         public Component apply(Object value) {
-            return ((Number)value).doubleValue() == 0 ? CommonComponents.OPTION_OFF.copy().withStyle(ChatFormatting.RED) : Component.literal(NumberFormat.getPercentInstance().format(value));
+            return ((Number)value).floatValue() == 0 ? CommonComponents.OPTION_OFF.copy().withStyle(ChatFormatting.RED) : Component.literal(NumberFormat.getPercentInstance().format(value));
         }
     }
 
     public static class ZeroIsAutomatic implements Function<Object, Component> {
-        public Component apply(Object value) {
-            return ((Number)value).doubleValue() == 0 ? Component.translatable("particlerain.auto") : Component.literal(value.toString());
+        public Component apply(Object stringValue) {
+            final int value = Integer.parseInt((String) stringValue);
+            return value == 0 ? Component.translatable("particlerain.auto") : Component.literal((String) stringValue);
         }
     }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.TYPE})
-    public @interface OverrideName { String value(); }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface Label {String key();}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface BooleanFormat {String t(); String f();}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface Group {}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface NoGUI {}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface RegenScreen {}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface OnChange {Class<? extends Runnable> value();}
 
     public static class ReloadResources implements Runnable {
         public void run() {
@@ -161,10 +127,11 @@ public class ConfigManager {
             //MistParticle.group = new ParticleGroup(config.mist.amount);
         }
     }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface Dropdown {Class<? extends Supplier<List<String>>> value();}
+    public static class RefreshScreen implements Runnable {
+        public void run() {
+            ((ConfigScreen)Minecraft.getInstance().screen).refresh();
+        }
+    }
 
     public static class SupplyParticleTypes implements Supplier<List<String>> {
         public List<String> get() {
@@ -196,14 +163,6 @@ public class ConfigManager {
         return list;
     }
 
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface OnlyVisibleIf {Class<? extends Function<Object, Boolean>> value();}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface OnlyEditableIf {Class<? extends Function<Object, Boolean>> value();}
-
     public static class ParticleIsCustom implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ConfigData.ParticleData ctx = (ConfigData.ParticleData) context;
@@ -219,7 +178,7 @@ public class ConfigManager {
     public static class ParticleIsNotDefault implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ConfigData.ParticleData ctx = (ConfigData.ParticleData) context;
-            return ConfigManager.defaultConfig.particles.stream().noneMatch(
+            return getDefaultConfig().particles.stream().noneMatch(
                         defaultData -> ctx.id.equals(defaultData.id)
                 );
         }

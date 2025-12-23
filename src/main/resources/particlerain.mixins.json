@@ -12,6 +12,7 @@
     ${ DripParticleMixin }
     ${ WaterFallProviderMixin }
     ${ WaterHangProviderMixin }
+    "AbstractWidgetMixin",
     "ClientLevelDataMixin",
     "access.NativeImageAccessor",
     "access.ParticleEngineAccessor",
@@ -20,10 +21,7 @@
     "render.ParticleEngineMixin",
     "render.SpriteLoaderMixin",
     "render.WeatherEffectRendererMixin",
-    "tint.WaterDropParticleMixin",
-    "yacl.YACLScreenAccessor",
-    "yacl.YACLScreenMixin",
-    "yacl.YetAnotherConfigLibImplMixin"
+    "tint.WaterDropParticleMixin"
   ],
   "refmap": "particlerain.refmap.json"
 }

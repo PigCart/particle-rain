@@ -8,25 +8,30 @@
     "${mod_author}"
   ],
   "contact": {
-    "sources": "https://github.com/PigCart/particle-rain",
-    "issues": "${mod_issue_tracker}",
-    "homepage": "https://modrinth.com/mod/particle-rain"
+    "sources": "${mod_sources}",
+    "issues": "${mod_issues}",
+    "homepage": "${mod_homepage}"
   },
   "license": "${mod_license}",
   "icon": "${mod_icon}",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "pigcart.particlerain.loaders.fabric.FabricEntrypoint"
+      "pigcart.${mod_id}.loaders.fabric.FabricEntrypoint"
     ],
     "modmenu": [
-      "pigcart.particlerain.loaders.fabric.ModMenuEntrypoint"
+      "pigcart.${mod_id}.loaders.fabric.ModMenuEntrypoint"
     ]
   },
+  "mixins": [
+    {
+      "config": "${mod_id}.mixins.json",
+      "environment": "client"
+    }
+  ],
   "depends": {
     "fabricloader": ">=0.12.8",
     "fabric-api": "*",
-    "yet_another_config_lib_v3": "*",
     "minecraft": "${version_range}"
   },
   "custom": {
@@ -38,8 +43,7 @@
     "mc-publish": {
       "dependencies": [
         "fabric(required){modrinth:P7dR8mSH}{curseforge:306612}#(ignore:github)",
-        "modmenu(recommended){modrinth:mOgUt4GM}{curseforge:308702}#(ignore:github)",
-        "yacl(required){modrinth:1eAoo2KR}{curseforge:667299}#(ignore:github)"
+        "modmenu(recommended){modrinth:mOgUt4GM}{curseforge:308702}#(ignore:github)"
       ]
     }
   }

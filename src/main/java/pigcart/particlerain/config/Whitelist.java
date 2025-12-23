@@ -12,15 +12,15 @@ import pigcart.particlerain.VersionUtil;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.List;
 
+import static pigcart.particlerain.config.gui.Annotations.*;
 import static pigcart.particlerain.config.ConfigManager.*;
 
 public abstract class Whitelist<T> {
 
     @NoGUI private transient final ResourceKey<Registry<T>> registry;
-    @NoGUI public transient List<TagKey<T>> tags = new ArrayList<>();
-    @NoGUI public transient List<ResourceLocation> ids = new ArrayList<>();
+    @NoGUI public transient ArrayList<TagKey<T>> tags = new ArrayList<>();
+    @NoGUI public transient ArrayList<ResourceLocation> ids = new ArrayList<>();
     @BooleanFormat(t="whitelist", f="blacklist")
     public boolean isWhitelist;
     Whitelist(ResourceKey<Registry<T>> registry, boolean isWhitelist) {
@@ -32,7 +32,7 @@ public abstract class Whitelist<T> {
     }
 
     // just to use different suppliers in the dropdown annotation
-    public abstract List<String> getEntries();
+    public abstract ArrayList<String> getEntries();
 
     @Override
     public String toString() {
@@ -78,9 +78,10 @@ public abstract class Whitelist<T> {
     @OverrideName("Whitelist")
     public static class BlockList extends Whitelist<Block> {
         public transient final URI wikiLink = URI.create("https://wiki.fabricmc.net/community:common_tags#block_tags");
-        @Group @Dropdown(SupplyBlocks.class)
-        public List<String> entries;
-        BlockList(boolean isWhitelist, List<String> list) {
+        @NoSubMenu
+        @Dropdown(SupplyBlocks.class)
+        public ArrayList<String> entries;
+        BlockList(boolean isWhitelist, ArrayList<String> list) {
             super(Registries.BLOCK, isWhitelist);
             this.entries = list;
         }
@@ -89,16 +90,17 @@ public abstract class Whitelist<T> {
             this.entries = new ArrayList<>();
         }
         @Override
-        public List<String> getEntries() {
+        public ArrayList<String> getEntries() {
             return entries;
         }
     }
     @OverrideName("Whitelist")
     public static class BiomeList extends Whitelist<Biome> {
         public transient final URI wikiLink = URI.create("https://wiki.fabricmc.net/community:common_tags#biome_tags");
-        @Group @Dropdown(SupplyBiomes.class)
-        public List<String> entries;
-        BiomeList(boolean isWhitelist, List<String> list) {
+        @NoSubMenu
+        @Dropdown(SupplyBiomes.class)
+        public ArrayList<String> entries;
+        BiomeList(boolean isWhitelist, ArrayList<String> list) {
             super(Registries.BIOME, isWhitelist);
             this.entries = list;
         }
@@ -107,7 +109,7 @@ public abstract class Whitelist<T> {
             this.entries = new ArrayList<>();
         }
         @Override
-        public List<String> getEntries() {
+        public ArrayList<String> getEntries() {
             return entries;
         }
     }

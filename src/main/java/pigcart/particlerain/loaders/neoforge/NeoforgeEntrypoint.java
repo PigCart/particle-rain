@@ -19,7 +19,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.config.ConfigManager;
-import pigcart.particlerain.config.ConfigScreens;
 import pigcart.particlerain.particle.*;
 
 @Mod(ParticleRain.MOD_ID)
@@ -65,7 +64,7 @@ public class NeoforgeEntrypoint {
         eventBus.addListener(NeoforgeEntrypoint::onRegisterParticleProviders);
         ModLoadingContext.get().registerExtensionPoint(
                 IConfigScreenFactory.class,
-                () -> (modContainer, parent) -> ConfigScreens.generateMainConfigScreen(parent)
+                () -> (modContainer, parent) -> ConfigManager.screenPlease(parent)
         );
         ParticleRain.onInitializeClient();
     }

@@ -1,22 +1,11 @@
 plugins {
     id("dev.kikugie.stonecutter")
+    id("co.uzzu.dotenv.gradle") version "4.0.0"
+    id("fabric-loom") version "1.13-SNAPSHOT" apply false
+    id("net.neoforged.moddev") version "2.0.120" apply false
 }
 stonecutter active "1.20.1-fabric"
 
-allprojects {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-
-        // yacl moment. this must be ordered before xander's maven
-        maven("https://thedarkcolour.github.io/KotlinForForge/")
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
-
-        maven("https://maven.neoforged.net/releases")
-        maven("https://maven.fabricmc.net/")
-        maven("https://maven.terraformersmc.com/")
-        maven("https://maven.parchmentmc.org")
-        maven("https://maven.isxander.dev/releases")
-        maven("https://api.modrinth.com/maven")
-    }
+stonecutter parameters {
+    constants.match(node.metadata.project.substringAfterLast('-'), "fabric", "neoforge", "forge")
 }

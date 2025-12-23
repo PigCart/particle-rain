@@ -1,4 +1,16 @@
-# v4-beta.3
+# v4 beta 4
+###### in progress
+- TODO: 1.21.11 support
+- translations:
+  - updated simplified chinese translation (ty Sasaki-Akari)
+  - fixed an incorrect translation key
+  - added translation keys for enum values
+- refactors and code changes:
+  - replaced modstitch with split build scripts
+  - replaced yacl screens with config screen functionality already present in base game
+  - TODO: revert implementation of `ParticleGroup`/`ParticleLimit` due to changes in mc 21.9 making it impossible to create multiple groups with the same limit value, leading to confusing config behaviour and potential mod conflicts
+
+# v4 beta 3
 ###### Oct 21, 2025
 - 1.21.9/10 support
 - potentially fixed forge load crash?
@@ -6,7 +18,7 @@
 - fixed wind getting too strong at high altitudes (again)
 - tweaked default config values
 
-# v4-beta.2
+# v4 beta 2
 ###### Oct 03, 2025
 - fixed crash when loading resource packs with invisible weather textures
 - fixed custom tints saving incorrectly and invalidating the config
@@ -14,7 +26,7 @@
 - fixed ripples not respecting config options
 - removed spam log line
 
-# v4-beta.1
+# v4 beta 1
 ###### Sep 30, 2025
 - New features:
   - added subtle block hit noises when blocks have rain falling on them
@@ -40,7 +52,7 @@
 - Mod Compatibility:
   - added workaround for a bug where RNG stops working near valkyrian skies ships with a eureka helm
 
-# v4-alpha.3
+# v4 alpha 3
 ###### Jul 24, 2025
 This release fixes various issues with alpha 2
 - fixed haze/fog effects scaling incorrectly
@@ -53,7 +65,7 @@ This release fixes various issues with alpha 2
 - added config button to mod list on neo/forge
 - updated russian translation (ty mpustovoi)
 
-# v4-alpha.2
+# v4 alpha 2
 ###### Jul 7, 2025
 - New command:
   - /particlerain to quickly get to the config screen
@@ -82,7 +94,7 @@ This release fixes various issues with alpha 2
   - cloud height particle spawn limit is fetched automatically
   - splash particles now use the particle render distance
 
-# v4-alpha.1
+# v4 alpha 1
 ###### May 14, 2025
 - multiloader setup for
   - 1.20.1, 1.21.1, 1.21.4, 1.21.5 fabric & neoforge
@@ -325,3 +337,36 @@ It is recommended to reset your config via modmenu for this update.
 # v1.4.0-1.17
 ###### Jul 28, 2021
 - fixed rain appearing in the end
+
+# v1.3.1
+###### Jun 10, 2021
+- Reverted to vanilla rain splashing - restores missing sound effects
+
+# v1.3.0
+###### Jun 7, 2021
+- Updated to 1.17
+- Altered rain splashing. Splashes only appear when a rain drop hits the ground.
+- Added config options for density during storms, per particle gravity, per particle visibility, and vanilla weather visibility.
+
+# v1.2.1
+###### Apr 8, 2021
+- fixed snow appearing where there should be rain
+- fixed config crash
+- cloth config now needs to be downloaded seperately
+
+# v1.2.0
+###### Dec 21, 2020
+- added mesa sandstorms
+- fixed crash on 1.16.1
+
+# v1.1.1
+###### Nov 28, 2020
+- Sodium compatibility! (replaced bad code with less-bad code)
+
+# v1.1
+###### Nov 27, 2020
+- more version compatibility
+- rain falls faster
+
+# v1.0-mc1.16.x
+###### Nov 23, 2020

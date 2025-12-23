@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NoteBlock;
@@ -23,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.config.ConfigManager;
-import pigcart.particlerain.config.ConfigScreens;
 import pigcart.particlerain.particle.CustomParticle;
 //? if >=1.21.9 {
 /*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
@@ -102,7 +100,8 @@ public class ParticleRain {
         return (LiteralArgumentBuilder<S>) LiteralArgumentBuilder.literal(MOD_ID)
                 .executes(ctx -> {
                     // give minecraft a tick to close the chat screen
-                    VersionUtil.schedule(() -> Minecraft.getInstance().setScreen(ConfigScreens.generateMainConfigScreen(null)));
+                    VersionUtil.schedule(() -> Minecraft.getInstance().setScreen(ConfigManager.screenPlease(null)));
+                    //VersionUtil.schedule(() -> Minecraft.getInstance().setScreen(ConfigManager.screenPlease(null)));
                     return 0;
                 })
                 .then(LiteralArgumentBuilder.literal("debug")

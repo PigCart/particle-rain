@@ -178,7 +178,7 @@ public class CustomParticle extends WeatherParticle {
 
     @Override
     //? if >=1.21.9 {
-    /*public Optional<net.minecraft.core.particles.ParticleLimit> getParticleLimit() {
+    /*public Optional<ParticleLimit> getParticleLimit() {
         return Optional.of(WeatherParticleManager.particleGroup);
     }
     *///?} else {

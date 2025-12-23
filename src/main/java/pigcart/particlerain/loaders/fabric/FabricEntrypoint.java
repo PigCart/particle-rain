@@ -44,7 +44,7 @@ public class FabricEntrypoint implements ClientModInitializer {
                         SimpleParticleType particle = registerParticle(particleId);
                         ParticleFactoryRegistry.getInstance().register(particle, new CustomParticle.DefaultFactory(data));
                     } catch (ResourceLocationException | IllegalStateException e) {
-                        ConfigManager.config.particles = ConfigManager.defaultConfig.particles;
+                        ConfigManager.config.particles = ConfigManager.getDefaultConfig().particles;
                         ParticleRain.LOGGER.error(e.getMessage());
                     }
                 }
