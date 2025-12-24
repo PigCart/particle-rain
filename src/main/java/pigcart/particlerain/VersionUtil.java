@@ -2,6 +2,7 @@ package pigcart.particlerain;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.SpriteContents;
@@ -23,7 +24,10 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-//? if >=1.21.9 {
+//? >=1.21.11 {
+/*import net.minecraft.world.attribute.EnvironmentAttributes;
+*///?}
+//? >=1.21.9 {
 /*import net.minecraft.data.AtlasIds;
 *///?} else {
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
@@ -31,7 +35,7 @@ import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.List;
+import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -116,8 +120,11 @@ public class VersionUtil {
         return new SpriteContents(
                 getId("splash_" + i),
                 frameSize,
-                splashImage,
+                splashImage
+                //? <1.21.11 {
+                ,
                 /^? if >=1.21.9 {^//^animationMetadata, List.of()^//^?} else {^/resourceMetadata/^?}^/
+                //?}
         );
     }
     *///?}
@@ -164,8 +171,10 @@ public class VersionUtil {
         //?}
     }
 
-    public static int getCloudHeight(ClientLevel level) {
-        //? if >=1.21.6 {
+    public static int getCloudHeight(ClientLevel level, BlockPos pos) {
+        //? if >=1.21.11 {
+        /*return level.environmentAttributes().getValue(EnvironmentAttributes.CLOUD_HEIGHT, pos).intValue();
+        *///?} else if >=1.21.6 {
         /*return level.dimensionType().cloudHeight().isPresent() ? level.dimensionType().cloudHeight().get() : 0;
         *///?} else {
         return (int) level.effects().getCloudHeight();
@@ -186,5 +195,39 @@ public class VersionUtil {
         *///?} else {
         return(new SpriteContents(VersionUtil.getId(id), frameSize, sprite, getEmptySpriteMetadata()));
         //?}
+    }
+
+    public static void openUri(URI uri) {
+        //? >=1.21.11 {
+        /*net.minecraft.util.Util.getPlatform().openUri(uri);
+        *///?} else {
+        net.minecraft.Util.getPlatform().openUri(uri);
+        //?}
+    }
+
+    public static Vec3 camPos(Camera cam) {
+        //? >=1.21.11 {
+        /*return cam.position();
+        *///?} else {
+        return cam.getPosition();
+        //?}
+    }
+
+    public static ResourceLocation getKeyId(ResourceKey key) {
+        //? >=1.21.11 {
+        /*return key.identifier();
+        *///?} else {
+        return key.location();
+         //?}
+    }
+
+    public static Color getFogColor(Level level, BlockPos pos) {
+        //? >=1.21.11 {
+        /*return new Color(12112639);
+        // environment values change dramatically at night. looks weird on particles. idk how to target only the day value.
+        //return new Color(level.environmentAttributes().getValue(EnvironmentAttributes.FOG_COLOR, pos));
+        *///?} else {
+        return new Color(level.getBiome(pos).value().getFogColor());
+         //?}
     }
 }

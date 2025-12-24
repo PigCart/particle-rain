@@ -50,7 +50,7 @@ public class RippleParticle extends WeatherParticle {
 
     @Override
     public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(VertexConsumer/*?}*/ h, Camera camera, float f) {
-        Vec3 camPos = camera.getPosition();
+        Vec3 camPos = VersionUtil.camPos(camera);
         float x = (float) (Mth.lerp(f, this.xo, this.x) - camPos.x());
         float y = (float) (Mth.lerp(f, this.yo, this.y) - camPos.y());
         float z = (float) (Mth.lerp(f, this.zo, this.z) - camPos.z());

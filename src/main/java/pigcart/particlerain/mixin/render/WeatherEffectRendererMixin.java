@@ -42,7 +42,7 @@ public abstract class WeatherEffectRendererMixin {
 
     // insert additional sounds without replacing vanilla code block where rain sounds are played
     @Inject(method = "tickRainParticles", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER, ordinal = 1, target = "Lnet/minecraft/client/renderer/WeatherEffectRenderer;rainSoundTime:I"), cancellable = true)
-    public void hookWeatherSounds(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus, CallbackInfo ci, @Local(ordinal = 0) BlockPos blockPos, @Local(ordinal = 1) BlockPos blockPos2) {
+    public void hookWeatherSounds(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus,/^?>=1.21.11{^//^int weatherRadius,^//^?}^/ CallbackInfo ci, @Local(ordinal = 0) BlockPos blockPos, @Local(ordinal = 1) BlockPos blockPos2) {
         ParticleRain.doAdditionalWeatherSounds(level, blockPos, blockPos2, ci);
     }
 
@@ -54,7 +54,7 @@ public abstract class WeatherEffectRendererMixin {
 
     // particle status MINIMAL disables splash particles
     @Inject(method = "tickRainParticles", at = @At("HEAD"))
-    public void tickRainParticles(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus, CallbackInfo ci, @Local(argsOnly = true) LocalRef<ParticleStatus> particleStatusLocalRef) {
+    public void tickRainParticles(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus,/^?>=1.21.11{^//^int weatherRadius,^//^?}^/ CallbackInfo ci, @Local(argsOnly = true) LocalRef<ParticleStatus> particleStatusLocalRef) {
         if (!config.compat.doDefaultSplashing) {
             particleStatusLocalRef.set(ParticleStatus.MINIMAL);
         }

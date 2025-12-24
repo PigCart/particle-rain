@@ -1,7 +1,6 @@
 package pigcart.particlerain.config.gui;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -10,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ConfigData;
 import pigcart.particlerain.config.gui.Annotations.*;
 
@@ -73,7 +73,7 @@ public class Widgets {
                 //?}
                 .withValues(values);
         if (displayOnlyValue) {
-            builder.displayOnlyValue(/*? >=1.21.9 {*//*true*//*?}*/);
+            builder.displayOnlyValue(/*? >=1.21.9 <1.21.11 {*//*true*//*?}*/);
         }
         return builder.create(0, 0, BIG_BUTTON_WIDTH, BUTTON_HEIGHT,
                 Component.translatable(name),
@@ -260,7 +260,7 @@ public class Widgets {
             return new AbstractWidget[]{
                     Widgets.getButton(Component.translatable(name), (bttn)-> Minecraft.getInstance().setScreen(new ConfirmLinkScreen(
                             (result) -> {
-                                if (result) Util.getPlatform().openUri((URI) currentValue);
+                                if (result) VersionUtil.openUri((URI) currentValue);
                                 Minecraft.getInstance().setScreen(screen);
                                 },
                             currentValue.toString(),

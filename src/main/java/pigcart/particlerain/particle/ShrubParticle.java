@@ -107,7 +107,7 @@ public class ShrubParticle extends WeatherParticle {
 
     @Override
     public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(VertexConsumer/*?}*/ h, Camera camera, float tickPercentage) {
-        Vector3f camPos = camera.getPosition().toVector3f();
+        Vector3f camPos = VersionUtil.camPos(camera).toVector3f();
         float x = (float) (Mth.lerp(tickPercentage, this.xo, this.x) - camPos.x);
         float y = (float) (Mth.lerp(tickPercentage, this.yo, this.y) - camPos.y);
         float z = (float) (Mth.lerp(tickPercentage, this.zo, this.z) - camPos.z);

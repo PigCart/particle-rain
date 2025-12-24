@@ -138,7 +138,7 @@ public class ConfigManager {
             List<String> list = new ArrayList<>();
             for (Map.Entry<ResourceKey<ParticleType<?>>, ParticleType<?>> entry : BuiltInRegistries.PARTICLE_TYPE.entrySet()) {
                 if (entry.getValue() instanceof SimpleParticleType) {
-                    list.add(entry.getKey().location().toString());
+                    list.add(VersionUtil.getKeyId(entry.getKey()).toString());
                 }
             }
             return list;

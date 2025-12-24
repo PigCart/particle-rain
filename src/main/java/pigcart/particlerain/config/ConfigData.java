@@ -475,7 +475,7 @@ public class ConfigData {
             public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
                 // TODO: IrisApi.isShaderPackInUse()
                 final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, pos));
-                final Color fogColor = new Color(level.getBiome(pos).value().getFogColor());
+                final Color fogColor = VersionUtil.getFogColor(level, pos);
                 float rCol = Mth.lerp(config.compat.tintMix, waterColor.getRed(), fogColor.getRed());
                 float gCol = Mth.lerp(config.compat.tintMix, waterColor.getGreen(), fogColor.getGreen());
                 float bCol = Mth.lerp(config.compat.tintMix, waterColor.getBlue(), fogColor.getBlue());
@@ -484,7 +484,7 @@ public class ConfigData {
         },
         FOG {
             public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
-                Color color = new Color(level.getBiome(pos).value().getFogColor()).darker();
+                Color color = VersionUtil.getFogColor(level, pos).darker();
                 p.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             }
         },

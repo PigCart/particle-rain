@@ -161,13 +161,13 @@ public final class WeatherParticleManager {
             x = config.perf.particleDistance * Mth.sin(phi) * Mth.cos(theta) + (float) cameraPos.x;
             y = config.perf.particleDistance * Mth.cos(phi)                  + (float) cameraPos.y;
             z = config.perf.particleDistance * Mth.sin(phi) * Mth.sin(theta) + (float) cameraPos.z;
+            pos.set(x, y, z);
             if (config.compat.doSpawnHeightLimit) {
-                int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level) : config.compat.spawnHeightLimit;
+                int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, pos) : config.compat.spawnHeightLimit;
                 if (cloudHeight != 0 && y > cloudHeight) {
                     y = cloudHeight;
                 }
             }
-            pos.set(x, y, z);
             int heightmapY = level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ());
             heightmapPos.set(x, heightmapY - 1, z);
             if (heightmapY > pos.getY()) continue;

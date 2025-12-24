@@ -22,10 +22,10 @@ tasks.named<ProcessResources>("processResources") {
 
         // insert version-specific mixins
         this["RegistrySyncManagerMixin" ] = ""
-        this["TextureSheetParticleMixin"] = if (minecraft  < "1.21.9") "\"tint.TextureSheetParticleMixin\"," else ""
-        this["DripParticleMixin"        ] = if (minecraft  < "1.21.9") "\"tint.DripParticleMixin\"," else ""
-        this["WaterFallProviderMixin"   ] = if (minecraft >= "1.21.9") "\"tint.WaterFallProviderMixin\"," else ""
-        this["WaterHangProviderMixin"   ] = if (minecraft >= "1.21.9") "\"tint.WaterHangProviderMixin\"," else ""
+        this["TextureSheetParticleMixin"] = "\"tint.TextureSheetParticleMixin\","
+        this["DripParticleMixin"        ] = "\"tint.DripParticleMixin\","
+        this["WaterFallProviderMixin"   ] = ""
+        this["WaterHangProviderMixin"   ] = ""
     }
 
     filesMatching(listOf("META-INF/mods.toml", "${prop("mod.id")}.mixins.json")) {
@@ -47,7 +47,7 @@ legacyForge {
 
     val accessTransformer = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     if (accessTransformer.exists()) {
-        accessTransformers.from(accessTransformer.absolutePath)
+        accessTransformers.from(accessTransformer)
     }
 
     if (hasProperty("deps.parchment")) parchment {

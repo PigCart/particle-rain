@@ -17,6 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ConfigData;
 
 import static pigcart.particlerain.config.ConfigManager.config;
@@ -58,7 +59,7 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
     public void tick() {
         super.tick();
         oQuadSize = quadSize;
-        distance = (float) Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().distanceTo(new Vec3(x, y, z));
+        distance = (float) VersionUtil.camPos(Minecraft.getInstance().gameRenderer.getMainCamera()).distanceTo(new Vec3(x, y, z));
         pos.set(x, y, z);
         if (!pos.equals(oPos)) {
             onPositionUpdate();

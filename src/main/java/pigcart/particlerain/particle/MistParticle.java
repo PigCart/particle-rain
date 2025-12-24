@@ -10,6 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ConfigData;
 //? if >=1.21.9 {
 /*import net.minecraft.core.particles.ParticleLimit;
@@ -37,7 +38,7 @@ public class MistParticle extends WeatherParticle {
         this.lifetime = config.mist.lifetime;
         this.alpha = 0;
 
-        Color color = new Color(this.level.getBiome(this.pos).value().getFogColor());
+        Color color = VersionUtil.getFogColor(level, pos);
         this.rCol = color.getRed() / 255F;
         this.gCol = color.getGreen() / 255F;
         this.bCol = color.getBlue() / 255F;
@@ -81,7 +82,7 @@ public class MistParticle extends WeatherParticle {
 
     @Override
     public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
-        Vec3 camPos = camera.getPosition();
+        Vec3 camPos = VersionUtil.camPos(camera);
         float x = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float y = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
         float z = (float) (Mth.lerp(tickPercent, this.zo, this.z) - camPos.z());

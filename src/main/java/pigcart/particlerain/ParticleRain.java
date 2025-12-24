@@ -87,7 +87,7 @@ public class ParticleRain {
         final Camera camera = client.gameRenderer.getMainCamera();
         if (!client.isPaused() && client.level != null && camera.isInitialized()) {
             clientTicks++;
-            WeatherParticleManager.tick(client.level, camera.getPosition());
+            WeatherParticleManager.tick(client.level, /*?>=1.21.11{*//*camera.position()*//*?}else{*/camera.getPosition()/*?}*/);
         }
     }
 
@@ -116,7 +116,7 @@ public class ParticleRain {
     }
     public static void doAdditionalWeatherSounds(ClientLevel level, BlockPos cameraPos, BlockPos rainPos, CallbackInfo ci) {
         if (config.compat.doSpawnHeightLimit) {
-            int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level) : config.compat.spawnHeightLimit;
+            int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, rainPos) : config.compat.spawnHeightLimit;
             if (rainPos.getY() > cloudHeight) {
                 ci.cancel();
                 return;
