@@ -9,7 +9,7 @@
   "particlerain.auto": "Automatic",
 
   "particlerain.perf": "Performance Options",
-  "particlerain.description": "Lowering these will reduce the amount of particles on screen, making the game run faster at the cost of more sparse looking effects",
+  "particlerain.perf.description": "Lowering these will reduce the amount of particles on screen, making the game run faster at the cost of more sparse looking effects",
   "particlerain.maxParticleAmount": "Maximum particle amount",
   "particlerain.maxParticleAmount.description": "New weather particles will not be spawned if there are this many already in the world.",
   "particlerain.particleDensity": "Particle density",

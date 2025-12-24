@@ -1,14 +1,14 @@
 # v4 beta 4
 ###### in progress
-- TODO: 1.21.11 support
+- added 1.21.11 support
 - translations:
   - updated simplified chinese translation (ty Sasaki-Akari)
-  - fixed an incorrect translation key
   - added translation keys for enum values
+- bug fixes:
+  - fixed particle limits falsely evaluating as equivalent
 - refactors and code changes:
   - replaced modstitch with split build scripts
   - replaced yacl screens with config screen functionality already present in base game
-  - TODO: revert implementation of `ParticleGroup`/`ParticleLimit` due to changes in mc 21.9 making it impossible to create multiple groups with the same limit value, leading to confusing config behaviour and potential mod conflicts
 
 # v4 beta 3
 ###### Oct 21, 2025
