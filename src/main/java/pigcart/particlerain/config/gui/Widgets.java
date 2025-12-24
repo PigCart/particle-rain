@@ -3,6 +3,7 @@ package pigcart.particlerain.config.gui;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -11,8 +12,11 @@ import net.minecraft.util.Mth;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ConfigData;
+import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.config.gui.Annotations.*;
+import pigcart.particlerain.config.gui.Annotations.Label;
 
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
@@ -133,6 +137,20 @@ public class Widgets {
         };
     }
 
+    public static AbstractWidget[] getHexColor(int width, int x, String name, Object initialValue, Consumer<Object> onValueChange, Function<Object, Component> valueFormatter) {
+        String value = ConfigManager.ColorTypeAdapter.getString((Color) initialValue);
+        Consumer<String> onChange = (string) -> {
+            Color color = ConfigManager.ColorTypeAdapter.getColor(string);
+            onValueChange.accept(color);
+        };
+        InputWidget input = (InputWidget) getString(width, x, name, value, onChange, valueFormatter);
+        input.setFilter(InputWidget.NON_HEX);
+        return new AbstractWidget[]{
+                Widgets.getOptionLabel(Component.translatable(name).append(":")),
+                input
+        };
+    }
+
     @SuppressWarnings("unchecked")
     public static void addOptionWidgets(ConfigScreen screen) {
         if (screen.config instanceof List<?>) {
@@ -223,7 +241,7 @@ public class Widgets {
                 screen.add(widgets);
             }
         }
-
+        appendBespokeParticleOptions(screen);
     }
     @SuppressWarnings("unchecked")
     private static AbstractWidget[] getOptionWidget(ConfigScreen screen, Field field, String name, Object currentValue, Object defaultValue, Consumer onValueChange, Function<Object, Component> valueFormatter, Class<?> type) {
@@ -266,6 +284,8 @@ public class Widgets {
                             currentValue.toString(),
                             true
             )))};
+        } else if (type.equals(Color.class)) {
+            return getHexColor(BIG_BUTTON_WIDTH, 0, name, currentValue, onValueChange, valueFormatter);
         } else if (type.getFields().length > 0) {
             return new AbstractWidget[]{
                     Widgets.getButton(Component.translatable(name).append("..."), (bttn)->
@@ -275,7 +295,7 @@ public class Widgets {
                                     defaultValue,
                                     Component.translatable(name)
                             ))
-            )};
+                    )};
         } else {
             ParticleRain.LOGGER.error("Unable to create option for field {}", field.getName());
             return new AbstractWidget[]{Widgets.getLabel(Component.literal("Unable to create option for field " + field.getName()))};
@@ -351,6 +371,32 @@ public class Widgets {
                 ParticleRain.LOGGER.error("Couldn't get new value for: {}", type.getSimpleName());
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private static void appendBespokeParticleOptions(ConfigScreen screen) {
+        try {
+            if (screen.config instanceof ConfigData.ParticleData particleData) {
+                if (particleData.usePresetParticle) {
+                    String configId = VersionUtil.parseId(particleData.presetParticleId).getPath();
+                    if (ParticleRain.particleConfigIds.contains(configId)) {
+                        final Field f = ConfigData.class.getField(configId);
+                        f.setAccessible(true);
+                        final Object bespokeParticleConfig = f.get(ConfigManager.config);
+                        final Object defaultConfig = f.get(ConfigManager.getDefaultConfig());
+                        AbstractWidget button = getButton(Component.translatable("particlerain.appearance"),
+                                (bttn) -> Minecraft.getInstance().setScreen(new ConfigScreen(
+                                        screen,
+                                        bespokeParticleConfig,
+                                        defaultConfig,
+                                        Component.translatable("particlerain.appearance")
+                                )));
+                        screen.list.add(button);
+                    }
+                }
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -40,7 +40,6 @@ import static pigcart.particlerain.config.ConfigManager.config;
 public class ConfigData {
     @NoGUI public byte configVersion = 5;
 
-    //TODO @NoSubMenu
     public PerformanceOptions perf = new PerformanceOptions();
     public static class PerformanceOptions {
         @OnChange(ClearParticles.class)
@@ -48,10 +47,9 @@ public class ConfigData {
         public int particleDensity = 100;
         public int particleStormDensity = 200;
         public int particleDistance = 16;
-        public int surfaceRange = 48;
+        public int surfaceRange = 64;
     }
 
-    //TODO @NoSubMenu
     public SoundOptions sound = new SoundOptions();
     public static class SoundOptions {
         @Slider @Format(PercentOrOff.class) public float rainVolume = 0.2F;
@@ -60,7 +58,6 @@ public class ConfigData {
         @Slider @Format(PercentOrOff.class) public float blockVolume = 0.07F;
     }
 
-    //TODO @NoSubMenu
     public WindOptions wind = new WindOptions();
     public static class WindOptions {
         public float strength = 0.4F;
@@ -70,7 +67,6 @@ public class ConfigData {
         public boolean yLevelAdjustment = true;
     }
 
-    //TODO @NoSubMenu
     public CompatibilityOptions compat = new CompatibilityOptions();
     public static class CompatibilityOptions {
         public boolean renderDefaultWeather = false;
@@ -356,13 +352,13 @@ public class ConfigData {
             }
         }
         //TODO @Dropdown(SupplyParticleTypes.class)
-        @OnlyEditableIf(ParticleNotCustom.class)
+        @OnlyVisibleIf(ParticleNotCustom.class)
         public String presetParticleId = "minecraft:flame";
         @NoGUI
         public transient ParticleOptions presetParticle = ParticleTypes.CLOUD;
         @OnChange(RefreshScreen.class)
         public boolean usePresetParticle = false;
-        @OnlyEditableIf(ParticleIsNotDefault.class)
+        @OnlyVisibleIf(ParticleIsNotDefault.class)
         public String id = "new_particle";
         @Label(key="spawning")
         public boolean enabled = true;
@@ -387,8 +383,8 @@ public class ConfigData {
         @OnlyVisibleIf(ParticleIsCustom.class) public boolean constantScreenSize = false;
         @OnlyVisibleIf(ParticleIsCustom.class) public RenderType renderType = RenderType.TRANSLUCENT;
         @OnlyVisibleIf(ParticleIsCustom.class) public ArrayList<String> spriteLocations = new ArrayList<>(List.of("particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3"));
-        @OnlyVisibleIf(ParticleIsCustom.class) public TintType tintType = TintType.NONE;
-        @OnlyVisibleIf(ParticleIsCustom.class) public Color customTint = Color.BLACK;
+        @OnlyVisibleIf(ParticleIsCustom.class) @OnChange(RefreshScreen.class) public TintType tintType = TintType.NONE;
+        @OnlyVisibleIf(ParticleIsCustomAndAlsoUsesCustomTint.class) public Color customTint = Color.BLACK;
         @OnlyVisibleIf(ParticleIsCustom.class) public RotationType rotationType = RotationType.COPY_CAMERA;
     }
 

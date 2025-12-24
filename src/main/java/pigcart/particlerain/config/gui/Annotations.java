@@ -56,8 +56,4 @@ public class Annotations {
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.FIELD})
     public @interface OnlyVisibleIf {Class<? extends Function<Object, Boolean>> value();}
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.FIELD})
-    public @interface OnlyEditableIf {Class<? extends Function<Object, Boolean>> value();}
 }

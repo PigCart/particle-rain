@@ -141,7 +141,7 @@
   "particlerain.SpawnPos.BLOCK_TOP": "Block top",
   "particlerain.SpawnPos.WORLD_SURFACE": "World surface",
 
-  "particlerain.RenderType.OPAQUE": "Qpaque",
+  "particlerain.RenderType.OPAQUE": "Opaque",
   "particlerain.RenderType.TRANSLUCENT": "Translucent",
   "particlerain.RenderType.BLENDED": "Blended",
 

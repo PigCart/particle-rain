@@ -104,7 +104,6 @@ public class ParticleRain {
                 .executes(ctx -> {
                     // give minecraft a tick to close the chat screen
                     VersionUtil.schedule(() -> Minecraft.getInstance().setScreen(ConfigManager.screenPlease(null)));
-                    //VersionUtil.schedule(() -> Minecraft.getInstance().setScreen(ConfigManager.screenPlease(null)));
                     return 0;
                 })
                 .then(LiteralArgumentBuilder.literal("debug")

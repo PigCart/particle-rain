@@ -82,17 +82,24 @@ public class ConfigManager {
     }
 
     public static class ColorTypeAdapter implements JsonSerializer<Color>, JsonDeserializer<Color> {
-        @Override
-        public JsonElement serialize(Color color, Type type, JsonSerializationContext context) {
-            return new JsonPrimitive(String.join("",
+        public static Color getColor(String string) {
+            return Color.decode(string);
+        }
+        public static String getString(Color color) {
+            return String.join("",
                     "#",
                     String.format("%02X", color.getRed()),
                     String.format("%02X", color.getGreen()),
-                    String.format("%02X", color.getBlue())));
+                    String.format("%02X", color.getBlue()));
+        }
+
+        @Override
+        public JsonElement serialize(Color color, Type type, JsonSerializationContext context) {
+            return new JsonPrimitive(getString(color));
         }
         @Override
         public Color deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return Color.decode(json.getAsString());
+            return getColor(json.getAsString());
         }
     }
 
@@ -163,6 +170,12 @@ public class ConfigManager {
         return list;
     }
 
+    public static class ParticleIsCustomAndAlsoUsesCustomTint implements Function<Object, Boolean> {
+        public Boolean apply(Object context) {
+            ConfigData.ParticleData ctx = (ConfigData.ParticleData) context;
+            return ctx.tintType.equals(ConfigData.TintType.CUSTOM) && new ParticleIsCustom().apply(context);
+        }
+    }
     public static class ParticleIsCustom implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ConfigData.ParticleData ctx = (ConfigData.ParticleData) context;
