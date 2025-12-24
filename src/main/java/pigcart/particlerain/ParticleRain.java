@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.config.ConfigManager;
+import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import pigcart.particlerain.particle.CustomParticle;
 //? if >=1.21.9 {
 /*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
@@ -55,7 +56,9 @@ public class ParticleRain {
         BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
         final Holder<Biome> biome = level.getBiome(blockPos);
         Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, blockPos);
+        final ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
         return List.of(
+                "Particle Limits: " + particleEngine.getTrackedParticleCounts().toString(),
                 String.format("Tracked particles: %d/%d",WeatherParticleManager.getParticleCount(), WeatherParticleManager.particleGroup./*? if >=1.21.9 {*//*limit*//*?} else {*/getLimit/*?}*/()),
                 "after Weather Ticks Left: " + WeatherParticleManager.afterWeatherTicksLeft,
                 "spawn Attempts Until Block FX Idle: " + WeatherParticleManager.spawnAttemptsUntilBlockFXIdle,

@@ -20,21 +20,13 @@ import pigcart.particlerain.config.ConfigData.SpawnPos;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.StreakParticle;
-//? if >=1.21.9 {
-/*import net.minecraft.core.particles.ParticleLimit;
-*///?} else {
 import net.minecraft.core.particles.ParticleGroup;
-//?}
 
 import static pigcart.particlerain.config.ConfigManager.config;
 
 public final class WeatherParticleManager {
     private static final RandomSource random = RandomSource.create();
-    //? if >=1.21.9 {
-    /*public static ParticleLimit particleGroup = new ParticleLimit(config.perf.maxParticleAmount);
-    *///?} else {
     public static ParticleGroup particleGroup = new ParticleGroup(config.perf.maxParticleAmount);
-    //?}
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
     private static final BlockPos.MutableBlockPos heightmapPos = new BlockPos.MutableBlockPos();
     public static int afterWeatherTicksLeft = 0;
@@ -49,7 +41,7 @@ public final class WeatherParticleManager {
 
     public static void tick(ClientLevel level, Vec3 cameraPos) {
         ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        if (!particleEngine.callHasSpaceInParticleLimit(particleGroup)) return;
+        if (!particleEngine.callHasSpaceInParticleGroup(particleGroup)) return;
         tickSkyFX(level, cameraPos);
         tickSurfaceFX(level, cameraPos);
         if (afterWeatherTicksLeft > 0) afterWeatherTicksLeft--;

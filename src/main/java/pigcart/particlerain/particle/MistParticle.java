@@ -3,6 +3,7 @@ package pigcart.particlerain.particle;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -13,10 +14,8 @@ import org.joml.Vector3f;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ConfigData;
 //? if >=1.21.9 {
-/*import net.minecraft.core.particles.ParticleLimit;
-import net.minecraft.client.renderer.state.QuadParticleRenderState;
+/*import net.minecraft.client.renderer.state.QuadParticleRenderState;
 *///?} else {
-import net.minecraft.core.particles.ParticleGroup;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 //?}
 
@@ -62,11 +61,7 @@ public class MistParticle extends WeatherParticle {
     }
 
     @Override
-    //? if >=1.21.9 {
-    /*public Optional<ParticleLimit> getParticleLimit() {
-    *///?} else {
     public Optional<ParticleGroup> getParticleGroup() {
-    //?}
         return Optional.empty();
     }
 

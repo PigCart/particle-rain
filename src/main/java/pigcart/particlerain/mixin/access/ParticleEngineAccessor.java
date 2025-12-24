@@ -24,7 +24,7 @@ public interface ParticleEngineAccessor {
     Object2IntOpenHashMap</*? if >=1.21.9 {*//*ParticleLimit*//*?} else {*/ParticleGroup/*?}*/> getTrackedParticleCounts();
 
     @Invoker
-    boolean callHasSpaceInParticleLimit(/*? if >=1.21.9 {*//*ParticleLimit*//*?} else {*/ParticleGroup/*?}*/ group);
+    boolean callHasSpaceInParticleGroup(/*? if >=1.21.9 {*//*ParticleLimit*//*?} else {*/ParticleGroup/*?}*/ group);
 
     @Invoker
     void callClearParticles();

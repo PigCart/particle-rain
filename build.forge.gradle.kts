@@ -26,6 +26,7 @@ tasks.named<ProcessResources>("processResources") {
         this["DripParticleMixin"        ] = "\"tint.DripParticleMixin\","
         this["WaterFallProviderMixin"   ] = ""
         this["WaterHangProviderMixin"   ] = ""
+        this["ParticleLimitMixin"       ] = ""
     }
 
     filesMatching(listOf("META-INF/mods.toml", "${prop("mod.id")}.mixins.json")) {

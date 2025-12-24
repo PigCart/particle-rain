@@ -12,4 +12,7 @@ stonecutter parameters {
     replacements.string(current.parsed >= "1.21.11") {
         replace("ResourceLocation", "Identifier")
     }
+    replacements.string(current.parsed >= "1.21.9") {
+        replace("ParticleGroup", "ParticleLimit")
+    }
 }

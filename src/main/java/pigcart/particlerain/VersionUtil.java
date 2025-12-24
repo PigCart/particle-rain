@@ -36,6 +36,7 @@ import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -45,7 +46,7 @@ public class VersionUtil {
         //? if <=1.20.1 {
         return new ResourceLocation(ParticleRain.MOD_ID, path);
         //?} else {
-        /*return ResourceLocation.fromNamespaceAndPath(ParticleRain.MOD_ID, path);
+        /*return Identifier.fromNamespaceAndPath(ParticleRain.MOD_ID, path);
         *///?}
     }
     @SuppressWarnings("removal")
@@ -53,7 +54,7 @@ public class VersionUtil {
         //? if <=1.20.1 {
         return new ResourceLocation(ResourceLocation.DEFAULT_NAMESPACE, path);
         //?} else {
-        /*return ResourceLocation.withDefaultNamespace(path);
+        /*return Identifier.withDefaultNamespace(path);
         *///?}
     }
 
@@ -62,7 +63,7 @@ public class VersionUtil {
             //? if <=1.20.1 {
             return ResourceLocation.tryParse(string);
              //?} else {
-            /*return ResourceLocation.parse(string);
+            /*return Identifier.parse(string);
             *///?}
         } catch (ResourceLocationException e) {
             return null;
@@ -99,7 +100,7 @@ public class VersionUtil {
     }
     //?} else {
     /*public static SpriteContents loadSplashSprite(int i) throws IOException {
-        final ResourceLocation location = getMcId("textures/particle/splash_" + i + ".png");
+        final Identifier location = getMcId("textures/particle/splash_" + i + ".png");
         Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(location);
         ResourceMetadata resourceMetadata = resource.metadata();
         NativeImage splashImage = TextureUtil.loadTexture(resource);

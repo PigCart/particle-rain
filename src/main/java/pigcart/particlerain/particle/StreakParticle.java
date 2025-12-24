@@ -21,11 +21,10 @@ import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.Whitelist;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
-//? if >=1.21.9 {
-/*import net.minecraft.core.particles.ParticleLimit;
-import net.minecraft.client.renderer.state.QuadParticleRenderState;
-*///?} else {
 import net.minecraft.core.particles.ParticleGroup;
+//? if >=1.21.9 {
+/*import net.minecraft.client.renderer.state.QuadParticleRenderState;
+*///?} else {
 import com.mojang.blaze3d.vertex.VertexConsumer;
 //?}
 
@@ -57,11 +56,7 @@ public class StreakParticle extends WeatherParticle {
     }
 
     @Override
-    //? if >=1.21.9 {
-    /*public Optional<ParticleLimit> getParticleLimit() {
-    *///?} else {
     public Optional<ParticleGroup> getParticleGroup() {
-    //?}
         return Optional.empty();
     }
 

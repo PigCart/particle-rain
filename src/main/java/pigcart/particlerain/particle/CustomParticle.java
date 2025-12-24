@@ -13,13 +13,13 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ConfigData;
+import net.minecraft.core.particles.ParticleGroup;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 //? if > 1.20.1 {
 /*import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
@@ -27,10 +27,8 @@ import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 //? if >=1.21.9 {
 /*import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.state.QuadParticleRenderState;
-import net.minecraft.core.particles.ParticleLimit;
 *///?} else {
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.client.particle.ParticleRenderType;
 //?}
 
@@ -177,15 +175,10 @@ public class CustomParticle extends WeatherParticle {
     }
 
     @Override
-    //? if >=1.21.9 {
-    /*public Optional<ParticleLimit> getParticleLimit() {
-        return Optional.of(WeatherParticleManager.particleGroup);
-    }
-    *///?} else {
     public Optional<ParticleGroup> getParticleGroup() {
         return Optional.of(WeatherParticleManager.particleGroup);
     }
-    //?}
+
 
     @Override
     //? if >=1.21.9 {
