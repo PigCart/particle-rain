@@ -3,7 +3,6 @@ package pigcart.particlerain.particle;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.particles.ParticleGroup;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -58,11 +57,6 @@ public class MistParticle extends WeatherParticle {
     @Override
     public void tickDistanceFade() {
         //dont
-    }
-
-    @Override
-    public Optional<ParticleGroup> getParticleGroup() {
-        return Optional.empty();
     }
 
     @Override

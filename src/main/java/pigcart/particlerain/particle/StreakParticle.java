@@ -21,7 +21,6 @@ import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.Whitelist;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
-import net.minecraft.core.particles.ParticleGroup;
 //? if >=1.21.9 {
 /*import net.minecraft.client.renderer.state.QuadParticleRenderState;
 *///?} else {
@@ -53,11 +52,6 @@ public class StreakParticle extends WeatherParticle {
 
         this.direction = direction;
         this.blockList = blockList;
-    }
-
-    @Override
-    public Optional<ParticleGroup> getParticleGroup() {
-        return Optional.empty();
     }
 
     @Override

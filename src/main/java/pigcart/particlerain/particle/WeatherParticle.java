@@ -18,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.VersionUtil;
+import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ConfigData;
 
 import static pigcart.particlerain.config.ConfigManager.config;
@@ -44,6 +45,14 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
         this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
+
+        WeatherParticleManager.particleCount++;
+    }
+
+    @Override
+    public void remove() {
+        if (this.isAlive()) WeatherParticleManager.particleCount--;
+        super.remove();
     }
 
     @Override

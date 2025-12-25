@@ -17,31 +17,27 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import pigcart.particlerain.config.ConfigData;
 import pigcart.particlerain.config.ConfigData.SpawnPos;
-import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.StreakParticle;
-import net.minecraft.core.particles.ParticleGroup;
 
 import static pigcart.particlerain.config.ConfigManager.config;
 
 public final class WeatherParticleManager {
     private static final RandomSource random = RandomSource.create();
-    public static ParticleGroup particleGroup = new ParticleGroup(config.perf.maxParticleAmount);
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
     private static final BlockPos.MutableBlockPos heightmapPos = new BlockPos.MutableBlockPos();
     public static int afterWeatherTicksLeft = 0;
     public static int spawnAttemptsUntilBlockFXIdle = 0;
     public static int ticksUntilSurfaceFXIdle = 0;
     public static int ticksUntilSkyFXIdle = 0;
+    public static int particleCount = 0;
 
     public static int getParticleCount() {
-        final ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        return particleEngine.getTrackedParticleCounts().getInt(particleGroup);
+        return particleCount;
     }
 
     public static void tick(ClientLevel level, Vec3 cameraPos) {
-        ParticleEngineAccessor particleEngine = (ParticleEngineAccessor) Minecraft.getInstance().particleEngine;
-        if (!particleEngine.callHasSpaceInParticleGroup(particleGroup)) return;
+        if (particleCount >= config.perf.maxParticleAmount) return;
         tickSkyFX(level, cameraPos);
         tickSurfaceFX(level, cameraPos);
         if (afterWeatherTicksLeft > 0) afterWeatherTicksLeft--;

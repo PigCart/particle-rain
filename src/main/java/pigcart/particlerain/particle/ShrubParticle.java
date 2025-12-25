@@ -18,9 +18,7 @@ import org.joml.AxisAngle4f;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
-import pigcart.particlerain.config.ConfigManager;
 
 import java.awt.*;
 import static pigcart.particlerain.config.ConfigManager.config;

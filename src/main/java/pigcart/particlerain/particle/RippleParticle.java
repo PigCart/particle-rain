@@ -1,7 +1,6 @@
 package pigcart.particlerain.particle;
 
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -13,9 +12,7 @@ import org.joml.AxisAngle4d;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Math;
-import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
-import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 //? if >=1.21.9 {
 /*import net.minecraft.client.renderer.state.QuadParticleRenderState;
 import net.minecraft.util.RandomSource;

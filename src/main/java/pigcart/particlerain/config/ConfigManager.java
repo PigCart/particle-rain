@@ -130,8 +130,6 @@ public class ConfigManager {
     public static class ClearParticles implements Runnable {
         public void run() {
             ((ParticleEngineAccessor)Minecraft.getInstance().particleEngine).callClearParticles();
-            WeatherParticleManager.particleGroup = new /*? if >=1.21.9 {*//*ParticleLimit*//*?} else {*/ParticleGroup/*?}*/(config.perf.maxParticleAmount);
-            //MistParticle.group = new ParticleGroup(config.mist.amount);
         }
     }
     public static class RefreshScreen implements Runnable {

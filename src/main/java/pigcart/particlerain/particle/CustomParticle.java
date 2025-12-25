@@ -17,10 +17,7 @@ import org.joml.*;
 import org.joml.Math;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
-import pigcart.particlerain.WeatherParticleManager;
 import pigcart.particlerain.config.ConfigData;
-import net.minecraft.core.particles.ParticleGroup;
-import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 //? if > 1.20.1 {
 /*import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
 *///?}
@@ -173,12 +170,6 @@ public class CustomParticle extends WeatherParticle {
             return distance * opts.size;
         }
     }
-
-    @Override
-    public Optional<ParticleGroup> getParticleGroup() {
-        return Optional.of(WeatherParticleManager.particleGroup);
-    }
-
 
     @Override
     //? if >=1.21.9 {
