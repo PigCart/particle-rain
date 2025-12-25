@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [ 1.20.1-fabric, 1.20.1-forge,
+        version: [ 1.20.1-fabric, #1.20.1-forge,
                    1.21.1-fabric, 1.21.1-neoforge,
                    1.21.4-fabric, 1.21.4-neoforge,
                    1.21.5-fabric, 1.21.5-neoforge,

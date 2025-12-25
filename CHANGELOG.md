@@ -8,6 +8,9 @@
   - replaced modstitch with split build scripts
   - replaced yacl screens with config screen functionality already present in base game
   - reverted implementation of ParticleGroup/ParticleLimit due to changes in mc 21.9 making it impossible to create multiple groups with the same limit value, leading to confusing config behaviour and potential mod conflicts
+- dropped forge support
+  - forge is currently crashing in prod on part of the code that hasnt even changed.
+  - will bring it back if the issue gets resolved.
 
 # v4 beta 3
 ###### Oct 21, 2025

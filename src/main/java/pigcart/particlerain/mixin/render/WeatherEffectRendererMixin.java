@@ -90,22 +90,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.NoteBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
-import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ConfigManager;
 
 import static pigcart.particlerain.config.ConfigManager.config;
@@ -114,6 +107,7 @@ import static pigcart.particlerain.config.ConfigManager.config;
 public class WeatherEffectRendererMixin {
 
     // bypass precipitation check so we can share the sound placement calculations with non-rain sounds
+    // forge is crashing here but i havent even changed anything here???? wild modloader. dropping support for now.
     @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelReader;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"))
     public Holder<Biome> getBiomeValue(LevelReader instance, BlockPos pos, Operation<Holder<Biome>> original) {
         // mixin somehow can't resolve target getPrecipitationAt so lets just replace the gotten biome with a rainy one instead
