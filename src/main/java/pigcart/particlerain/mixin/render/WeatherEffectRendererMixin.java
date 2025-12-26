@@ -107,7 +107,6 @@ import static pigcart.particlerain.config.ConfigManager.config;
 public class WeatherEffectRendererMixin {
 
     // bypass precipitation check so we can share the sound placement calculations with non-rain sounds
-    // forge is crashing here but i havent even changed anything here???? wild modloader. dropping support for now.
     @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelReader;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"))
     public Holder<Biome> getBiomeValue(LevelReader instance, BlockPos pos, Operation<Holder<Biome>> original) {
         // mixin somehow can't resolve target getPrecipitationAt so lets just replace the gotten biome with a rainy one instead

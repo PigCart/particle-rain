@@ -1,3 +1,8 @@
+# v4 beta 5
+###### Dec 26, 2025
+- Fixed crash using config gui on fabric due to missing accesswidener metadata
+- Fixed crash loading on forge due to misconfigured mixinextras dependency
+
 # v4 beta 4
 ###### Dec 25, 2025
 - added 1.21.11 support
