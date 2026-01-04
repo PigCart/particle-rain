@@ -80,7 +80,7 @@ public class ConfigData {
         public boolean syncRegistries = true;
         public boolean crossBiomeBorder = false;
         public boolean useHeightmapTemp = true;
-        public boolean doSpawnHeightLimit = true;
+        public boolean doSpawnHeightLimit = false;
         @Format(ZeroIsAutomatic.class)
         public int spawnHeightLimit = 0;
     }

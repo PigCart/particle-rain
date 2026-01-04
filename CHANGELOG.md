@@ -1,3 +1,8 @@
+# v4 beta 6
+###### in progress
+- Fixed weather appearing inside structures at cloud height
+- reset doHeightLimit default to false
+
 # v4 beta 5
 ###### Dec 26, 2025
 - Fixed crash using config gui on fabric due to missing accesswidener metadata

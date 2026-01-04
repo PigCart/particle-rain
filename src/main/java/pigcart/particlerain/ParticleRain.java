@@ -53,9 +53,9 @@ public class ParticleRain {
     private static List<String> getDebugLines() {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) return List.of();
-        BlockPos blockPos = BlockPos.containing(Minecraft.getInstance().player.position());
-        final Holder<Biome> biome = level.getBiome(blockPos);
-        Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, blockPos);
+        BlockPos playerBlockPos = BlockPos.containing(Minecraft.getInstance().player.position());
+        final Holder<Biome> biome = level.getBiome(playerBlockPos);
+        Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, playerBlockPos);
         return List.of(
                 String.format("Tracked particles: %d/%d",WeatherParticleManager.getParticleCount(), config.perf.maxParticleAmount),
                 "after Weather Ticks Left: " + WeatherParticleManager.afterWeatherTicksLeft,
@@ -64,7 +64,8 @@ public class ParticleRain {
                 "ticks Until Surface FX Idle: " + WeatherParticleManager.ticksUntilSurfaceFXIdle,
                 "is Raining: " + level.isRaining(),
                 "Biome Precipitation: " + precipitation,
-                "Wind multiplier: " + CustomParticle.yLevelWindMultiplier(blockPos.getY())
+                "Wind multiplier: " + CustomParticle.yLevelWindMultiplier(playerBlockPos.getY()),
+                "cloud height: " + VersionUtil.getCloudHeight(level, playerBlockPos)
         );
     }
 

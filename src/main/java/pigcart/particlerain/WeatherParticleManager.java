@@ -118,7 +118,6 @@ public final class WeatherParticleManager {
         }
     }
     public static void tickSkyFX(ClientLevel level, Vec3 cameraPos) {
-        //TODO: twilight fog and skittering sand when not raining
         int density;
         float speed;
         if (ticksUntilSkyFXIdle <= 0) {
@@ -154,6 +153,7 @@ public final class WeatherParticleManager {
                 int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, pos) : config.compat.spawnHeightLimit;
                 if (cloudHeight != 0 && y > cloudHeight) {
                     y = cloudHeight;
+                    pos.setY(cloudHeight);
                 }
             }
             int heightmapY = level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ());
