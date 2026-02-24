@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.config.ConfigManager;
-import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 import pigcart.particlerain.particle.CustomParticle;
 //? if >=1.21.9 {
 /*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
@@ -43,7 +42,7 @@ public class ParticleRain {
     public static SimpleParticleType RIPPLE;
     public static SimpleParticleType STREAK;
 
-    public static Set<String> particleConfigIds = Set.of("shrub", "ripple", "streak", "mist");
+    public static Set<String> legacyParticleIds = Set.of("shrub", "ripple", "streak", "mist");
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;
@@ -57,11 +56,11 @@ public class ParticleRain {
         final Holder<Biome> biome = level.getBiome(playerBlockPos);
         Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, playerBlockPos);
         return List.of(
-                String.format("Tracked particles: %d/%d",WeatherParticleManager.getParticleCount(), config.perf.maxParticleAmount),
-                "after Weather Ticks Left: " + WeatherParticleManager.afterWeatherTicksLeft,
-                "spawn Attempts Until Block FX Idle: " + WeatherParticleManager.spawnAttemptsUntilBlockFXIdle,
-                "ticks Until Sky FX Idle: " + WeatherParticleManager.ticksUntilSkyFXIdle,
-                "ticks Until Surface FX Idle: " + WeatherParticleManager.ticksUntilSurfaceFXIdle,
+                String.format("Tracked particles: %d/%d", ParticleSpawner.particleCount, config.perf.maxParticleAmount),
+                "after Weather Ticks Left: " + ParticleSpawner.afterWeatherTicksLeft,
+                "spawn Attempts Until Block FX Idle: " + ParticleSpawner.spawnAttemptsUntilBlockFXIdle,
+                "ticks Until Sky FX Idle: " + ParticleSpawner.ticksUntilSkyFXIdle,
+                "ticks Until Surface FX Idle: " + ParticleSpawner.ticksUntilSurfaceFXIdle,
                 "is Raining: " + level.isRaining(),
                 "Biome Precipitation: " + precipitation,
                 "Wind multiplier: " + CustomParticle.yLevelWindMultiplier(playerBlockPos.getY()),
@@ -89,7 +88,7 @@ public class ParticleRain {
         final Camera camera = client.gameRenderer.getMainCamera();
         if (!client.isPaused() && client.level != null && camera.isInitialized()) {
             clientTicks++;
-            WeatherParticleManager.tick(client.level, /*?>=1.21.11{*//*camera.position()*//*?}else{*/camera.getPosition()/*?}*/);
+            ParticleSpawner.tick(client.level, /*?>=1.21.11{*//*camera.position()*//*?}else{*/camera.getPosition()/*?}*/);
         }
     }
 

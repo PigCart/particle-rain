@@ -12,7 +12,6 @@
     ${ DripParticleMixin }
     ${ WaterFallProviderMixin }
     ${ WaterHangProviderMixin }
-    ${ ParticleLimitMixin },
     "AbstractWidgetMixin",
     "ClientLevelDataMixin",
     "access.NativeImageAccessor",

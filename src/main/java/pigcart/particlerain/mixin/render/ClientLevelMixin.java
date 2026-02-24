@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pigcart.particlerain.WeatherParticleManager;
+import pigcart.particlerain.ParticleSpawner;
 
 @Mixin(ClientLevel.class)
 public class ClientLevelMixin {
@@ -25,6 +25,6 @@ public class ClientLevelMixin {
             CallbackInfo ci,
             @Local BlockState state
     ) {
-        WeatherParticleManager.tickBlockFX(blockPos, state);
+        ParticleSpawner.tickBlockFX(blockPos, state);
     }
 }

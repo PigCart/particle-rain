@@ -9,27 +9,28 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.*;
 import org.joml.Math;
-import pigcart.particlerain.ParticleRain;
-import pigcart.particlerain.VersionUtil;
-import pigcart.particlerain.config.ConfigData;
 //? if > 1.20.1 {
 /*import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
 *///?}
 //? if >=1.21.9 {
 /*import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.util.RandomSource;
 *///?} else {
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.particle.ParticleRenderType;
 //?}
 
-import java.util.Optional;
+import pigcart.particlerain.ParticleLoader;
+import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.VersionUtil;
+import pigcart.particlerain.config.ParticleData;
+
 import java.util.Set;
 
 import static pigcart.particlerain.config.ConfigManager.config;
@@ -37,7 +38,7 @@ import static pigcart.particlerain.config.ConfigManager.config;
 public class CustomParticle extends WeatherParticle {
 
     private static final Set<String> usuallyUntintableSprites = Set.of("particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3");
-    public ConfigData.ParticleData opts;
+    public ParticleData opts;
     private float oCollisionAnimProgress = 1;
     private float collisionAnimProgress = 1;
     private float speed = 0;
@@ -50,7 +51,7 @@ public class CustomParticle extends WeatherParticle {
     float oQuadSize;
     float distance;
 
-    public CustomParticle(ClientLevel level, double x, double y, double z, ConfigData.ParticleData opts) {
+    public CustomParticle(ClientLevel level, double x, double y, double z, ParticleData opts) {
         super(level, x, y, z, VersionUtil.getSprite(VersionUtil.parseId(opts.spriteLocations.get(level.random.nextInt(opts.spriteLocations.size())))));
 
         this.gravity = opts.gravity;
@@ -139,7 +140,7 @@ public class CustomParticle extends WeatherParticle {
 
     public void testForCollisions() {
         float length = quadSize;
-        if (opts.rotationType.equals(ConfigData.RotationType.RELATIVE_VELOCITY)) {
+        if (opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
             final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
             Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
             length *= Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
@@ -157,7 +158,7 @@ public class CustomParticle extends WeatherParticle {
         //TODO 
         oCollisionAnimProgress = collisionAnimProgress;
         collisionAnimProgress -= speed;
-        if (!opts.rotationType.equals(ConfigData.RotationType.RELATIVE_VELOCITY)) {
+        if (!opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
             quadSize -= speed;
         }
         if (oCollisionAnimProgress <= 0) remove();
@@ -318,17 +319,15 @@ public class CustomParticle extends WeatherParticle {
     //?}
 
     public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
-        ConfigData.ParticleData opts;
+        ParticleData opts;
 
-        public DefaultFactory(ConfigData.ParticleData opts) {
+        public DefaultFactory(ParticleData opts) {
             this.opts = opts;
         }
 
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ/*? if >=1.21.9 {*//*, RandomSource random*//*?}*/) {
             // grab latest particle options before spawning particle
-            for (ConfigData.ParticleData options : config.particles) {
-                if (opts.id.equals(options.id)) opts = options;
-            }
+            opts = ParticleLoader.particles.get(opts.id);
             return new CustomParticle(level, x, y, z, opts);
         }
     }

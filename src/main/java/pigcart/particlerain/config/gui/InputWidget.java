@@ -16,16 +16,16 @@ public class InputWidget extends EditBox {
 
     Pattern filteredChars;
     /// matches characters that aren't digits
-    public static final Pattern NON_INTEGER = Pattern.compile("[^0-9]");
+    public static final Pattern NON_INTEGER = Pattern.compile("[^0-9-]");
     /// matches characters that aren't digits or points
-    public static final Pattern NON_FLOAT = Pattern.compile("[^0-9.]");
+    public static final Pattern NON_FLOAT = Pattern.compile("[^0-9.-]");
     /// matches characters that aren't valid in an identifier
     public static final Pattern NON_PATH = Pattern.compile("[^a-z0-9:/._-]");
     /// matches characters that aren't valid in a hex string
     public static final Pattern NON_HEX = Pattern.compile("[^a-fA-F0-9#]");
 
     public InputWidget(int width, int x, String initialValue, Consumer<String> onValueChange, Function<Object, Component> valueFormatter) {
-        super(Minecraft.getInstance().font, 0, 0, width, Widgets.BUTTON_HEIGHT, Component.empty());
+        super(Minecraft.getInstance().font, 0, 0, width, WidgetUtil.BUTTON_HEIGHT, Component.empty());
         ((AbstractWidgetAccess)this).particle_rain$setOffset(x);
         unformattedValue = initialValue;
         this.valueFormatter = valueFormatter;

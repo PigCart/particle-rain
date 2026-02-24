@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pigcart.particlerain.WeatherParticleManager;
+import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class ParticleEngineMixin {
 
     @Inject(method = "clearParticles", at = @At("HEAD"))
     public void clearParticles(CallbackInfo ci) {
-        WeatherParticleManager.particleCount = 0;
+        ParticleSpawner.particleCount = 0;
     }
 
     //? if <1.21.9 {

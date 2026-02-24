@@ -14,7 +14,6 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import static pigcart.particlerain.config.gui.Annotations.*;
-import static pigcart.particlerain.config.ConfigManager.*;
 
 public abstract class Whitelist<T> {
 
@@ -79,7 +78,7 @@ public abstract class Whitelist<T> {
     public static class BlockList extends Whitelist<Block> {
         public transient final URI wikiLink = URI.create("https://wiki.fabricmc.net/community:common_tags#block_tags");
         @NoSubMenu
-        @Dropdown(SupplyBlocks.class)
+        @Dropdown(ConfigResponders.SupplyBlocks.class)
         public ArrayList<String> entries;
         BlockList(boolean isWhitelist, ArrayList<String> list) {
             super(Registries.BLOCK, isWhitelist);
@@ -98,7 +97,7 @@ public abstract class Whitelist<T> {
     public static class BiomeList extends Whitelist<Biome> {
         public transient final URI wikiLink = URI.create("https://wiki.fabricmc.net/community:common_tags#biome_tags");
         @NoSubMenu
-        @Dropdown(SupplyBiomes.class)
+        @Dropdown(ConfigResponders.SupplyBiomes.class)
         public ArrayList<String> entries;
         BiomeList(boolean isWhitelist, ArrayList<String> list) {
             super(Registries.BIOME, isWhitelist);

@@ -15,14 +15,13 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pigcart.particlerain.config.ConfigData;
-import pigcart.particlerain.config.ConfigData.SpawnPos;
+import pigcart.particlerain.config.ParticleData;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.StreakParticle;
 
 import static pigcart.particlerain.config.ConfigManager.config;
 
-public final class WeatherParticleManager {
+public final class ParticleSpawner {
     private static final RandomSource random = RandomSource.create();
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
     private static final BlockPos.MutableBlockPos heightmapPos = new BlockPos.MutableBlockPos();
@@ -31,10 +30,6 @@ public final class WeatherParticleManager {
     public static int ticksUntilSurfaceFXIdle = 0;
     public static int ticksUntilSkyFXIdle = 0;
     public static int particleCount = 0;
-
-    public static int getParticleCount() {
-        return particleCount;
-    }
 
     public static void tick(ClientLevel level, Vec3 cameraPos) {
         if (particleCount >= config.perf.maxParticleAmount) return;
@@ -54,7 +49,7 @@ public final class WeatherParticleManager {
         }
         spawnAttemptsUntilBlockFXIdle--;
         if (!state.getCollisionShape(level, sourcePos).isEmpty()) return;
-        for (ConfigData.ParticleData opts : config.particles) {
+        for (ParticleData opts : ParticleLoader.particles.values()) {
             if (!opts.enabled || !opts.weather.isCurrent(level)) continue;
             final Holder<Biome> biome = level.getBiome(sourcePos);
             final Direction direction = switch (opts.spawnPos) {
@@ -69,7 +64,7 @@ public final class WeatherParticleManager {
             final BlockState blockState = level.getBlockState(pos);
             final FluidState fluidState = blockState.getFluidState();
             if (blockState.getCollisionShape(level, pos).isEmpty() && fluidState.isEmpty()) continue;
-            if ((opts.spawnPos == SpawnPos.BLOCK_BOTTOM || opts.spawnPos == SpawnPos.BLOCK_SIDES || opts.spawnPos == SpawnPos.BLOCK_TOP)
+            if ((opts.spawnPos == ParticleData.SpawnPos.BLOCK_BOTTOM || opts.spawnPos == ParticleData.SpawnPos.BLOCK_SIDES || opts.spawnPos == ParticleData.SpawnPos.BLOCK_TOP)
                     && opts.precipitation.contains(VersionUtil.getPrecipitationAt(level, biome, sourcePos))
                     && opts.density > random.nextFloat()
                     && opts.biomeList.contains(biome)
@@ -161,9 +156,9 @@ public final class WeatherParticleManager {
             if (heightmapY > pos.getY()) continue;
             Holder<Biome> biome = level.getBiome(pos);
             Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, config.compat.useHeightmapTemp ? heightmapPos : pos);
-            for (ConfigData.ParticleData data : config.particles) {
+            for (ParticleData data : ParticleLoader.particles.values()) {
                 if (data.enabled
-                    && data.spawnPos.equals(SpawnPos.SKY)
+                    && data.spawnPos.equals(ParticleData.SpawnPos.SKY)
                     && data.weather.isCurrent(level)
                     && data.precipitation.contains(precipitation)
                     && data.density > random.nextFloat()
@@ -197,9 +192,9 @@ public final class WeatherParticleManager {
             BlockState blockState = level.getBlockState(pos);
             Holder<Biome> biome = level.getBiome(pos);
             Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, pos);
-            for (ConfigData.ParticleData data : config.particles) {
+            for (ParticleData data : ParticleLoader.particles.values()) {
                 if (data.enabled
-                        && data.spawnPos.equals(SpawnPos.WORLD_SURFACE)
+                        && data.spawnPos.equals(ParticleData.SpawnPos.WORLD_SURFACE)
                         && data.weather.isCurrent(level)
                         && data.precipitation.contains(precipitation)
                         && data.density > random.nextFloat()
@@ -216,4 +211,5 @@ public final class WeatherParticleManager {
             }
         }
     }
+
 }

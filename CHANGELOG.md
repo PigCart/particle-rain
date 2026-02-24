@@ -1,7 +1,25 @@
+### to-do list before v4 release:
+- haboob
+- heavy rain
+- heavy snow
+- sleet
+- hail
+- new shrub / block model particles
+- new mist
+- splash replacement - splatter
+- new streaks
+
 # v4 beta 6
 ###### in progress
-- Fixed weather appearing inside structures at cloud height
-- reset doHeightLimit default to false
+- Fixed weather appearing inside structures at the weather height limit
+- Fixed resource packs failing to load when a weather texture is shorter than 1:4
+- Fixed config number inputs not accepting negative values
+- tweaked particle loading and configuration
+  - split config into `particles.json` and `config.json`
+  - config files are now found at `config/particlerain/`
+  - particle loading now uses the resource pack system. resource packs can add new particles or customize existing ones by providing a file at `assets/particlerain/particles.json`
+  - particle configs no longer need to contain every value. omitted values will use the default values if no other loaded resource packs specify a value. multiple resource packs can configure the same particle.
+- Added a new default texture for new custom particles
 
 # v4 beta 5
 ###### Dec 26, 2025

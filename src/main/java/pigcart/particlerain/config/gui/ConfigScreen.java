@@ -1,5 +1,6 @@
 package pigcart.particlerain.config.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
@@ -8,8 +9,11 @@ import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.ParticleLoader;
+import pigcart.particlerain.config.ConfigData;
 import pigcart.particlerain.config.ConfigManager;
+import pigcart.particlerain.config.ParticleData;
+
 //? <=1.20.1 {
 import net.minecraft.client.gui.GuiGraphics;
 //?}
@@ -61,7 +65,7 @@ public class ConfigScreen extends Screen {
         list = new WidgetList(minecraft, width,
                 /*? >=1.21.1 {*//*layout.getContentHeight()*//*?} else {*/height/*?}*/,
                 32, height - 32, 25);
-        Widgets.addOptionWidgets(this);
+        WidgetUtil.addOptionWidgets(this);
 
         //? <=1.20.1 {
         addWidget(list);
@@ -76,7 +80,6 @@ public class ConfigScreen extends Screen {
         final Button resetButton = Button.builder(
                 Component.translatable("controls.reset").append(" ").append(this.title),
                 (button) -> {
-                    ParticleRain.LOGGER.info("Reset config");
                     for (Field field : this.config.getClass().getFields()) {
                         try {
                             field.setAccessible(true);
@@ -84,6 +87,9 @@ public class ConfigScreen extends Screen {
                         } catch (IllegalAccessException e) {
                             throw new RuntimeException(e);
                         }
+                    }
+                    if (this.config instanceof ConfigData) {
+                        ParticleLoader.particles = ParticleLoader.loadPackParticles(Minecraft.getInstance().getResourceManager());
                     }
                     refresh();
                 }
@@ -117,7 +123,15 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void removed() {
+        if (this.config == ParticleLoader.editParticles) {
+            System.out.println("adding edited particles");
+            ParticleLoader.particles.clear();
+            for (ParticleData particle : ParticleLoader.editParticles) {
+                ParticleLoader.particles.put(particle.id, particle);
+            }
+        }
         ConfigManager.save();
+        ParticleLoader.saveCustomParticles();
     }
 
     @Override

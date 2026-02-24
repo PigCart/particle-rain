@@ -12,8 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import org.joml.Math;
 import org.lwjgl.system.MemoryUtil;
-import pigcart.particlerain.config.ConfigData;
 import pigcart.particlerain.config.ConfigManager;
+import pigcart.particlerain.config.ParticleData;
 import pigcart.particlerain.mixin.access.NativeImageAccessor;
 
 import java.awt.*;
@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletionException;
 
 public class TextureUtil {
 
@@ -80,13 +81,8 @@ public class TextureUtil {
     }
 
     public static void applyWaterTint(SingleQuadParticle particle, ClientLevel level, BlockPos blockPos) {
-        for (ConfigData.ParticleData opts : ConfigManager.config.particles) {
-            if (opts.getClass().equals(ConfigData.ParticleData.class)) {
-                if (opts.id.equals("rain")) {
-                    opts.tintType.applyTint(particle, level, blockPos, opts);
-                }
-            }
-        }
+        final ParticleData rain = ParticleLoader.particles.get("rain");
+        rain.tintType.applyTint(particle, level, blockPos, rain);
     }
 
     public static NativeImage loadTexture(ResourceLocation location) throws IOException {
@@ -113,7 +109,11 @@ public class TextureUtil {
     public static SpriteContents splitImage(NativeImage image, int segment, String id) {
         int size = image.getWidth();
         NativeImage sprite = new NativeImage(size, size, false);
-        image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
+        try {
+            image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
+        } catch (Exception e) {
+            ParticleRain.LOGGER.error("Error splitting {} texture", id + segment, e);
+        }
         return VersionUtil.newNonAnimatedSpriteContents(id + segment, new FrameSize(size, size), sprite);
     }
 
