@@ -12,17 +12,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.config.ConfigManager;
-import pigcart.particlerain.particle.CustomParticle;
 //? if >=1.21.9 {
 /*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 *///?}
@@ -63,7 +65,7 @@ public class ParticleRain {
                 "ticks Until Surface FX Idle: " + ParticleSpawner.ticksUntilSurfaceFXIdle,
                 "is Raining: " + level.isRaining(),
                 "Biome Precipitation: " + precipitation,
-                "Wind multiplier: " + CustomParticle.yLevelWindMultiplier(playerBlockPos.getY()),
+                "Wind multiplier: " + yLevelWindMultiplier(playerBlockPos.getY()),
                 "cloud height: " + VersionUtil.getCloudHeight(level, playerBlockPos)
         );
     }
@@ -152,5 +154,24 @@ public class ParticleRain {
         if (config.sound.rainVolume == 0 || !precipitation.equals(Biome.Precipitation.RAIN)) {
             ci.cancel();
         }
+    }
+
+    public static Vector3f calculateWind(double x, double y, double z) {
+        float frequency = config.wind.gustFrequency;
+        float shift = clientTicks * config.wind.modulationSpeed;
+        float variance = config.wind.strengthVariance;
+        float strength = config.wind.strength;
+        float multiplier = config.wind.yLevelAdjustment? yLevelWindMultiplier(y) : 0;
+        return new Vector3f(
+                (((Mth.sin((float) (x * frequency + shift)) * variance) + variance + strength) * multiplier) + 0.001F,
+                0,
+                (((Mth.sin((float) (z * frequency + shift)) * variance) + variance + strength) * multiplier) + 0.001F
+        );
+    }
+
+    public static float yLevelWindMultiplier(double y) {
+        int transitionStart = 50;
+        int transitionDistance = 40;
+        return (float) Mth.clamp((y - transitionStart) / transitionDistance, 0, 1);
     }
 }

@@ -12,6 +12,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
+import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.VersionUtil;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigResponders.*;
 import static pigcart.particlerain.config.gui.Annotations.*;
 
 public class ParticleData {
@@ -48,56 +50,46 @@ public class ParticleData {
     }
 
     //TODO @Dropdown(SupplyParticleTypes.class)
-    @OnlyVisibleIf(ConfigResponders.ParticleNotCustom.class)
+    @OnlyVisibleIf(ParticleNotCustom.class)
     public String presetParticleId = "minecraft:flame";
     @NoGUI
     public transient ParticleOptions presetParticle = ParticleTypes.CLOUD;
-    @OnChange(ConfigResponders.RefreshScreen.class)
+    @OnChange(RefreshScreen.class)
     public Boolean usePresetParticle = false;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsNotDefault.class)
+    @OnlyVisibleIf(ParticleIsNotDefault.class)
     public transient String id = "new_particle";
     @Label(key = "spawning")
     public Boolean enabled = true;
     @Slider(step = 0.001F)
-    @Format(ConfigResponders.Percent.class)
+    @Format(Percent.class)
     public Float density = 1.0F;
     public Weather weather = Weather.DURING_WEATHER;
     public ArrayList<Biome.Precipitation> precipitation = new ArrayList<>(List.of(Biome.Precipitation.RAIN));
     public Whitelist.BiomeList biomeList = new Whitelist.BiomeList(true, new ArrayList<>(1));
     public Whitelist.BlockList blockList = new Whitelist.BlockList(true, new ArrayList<>(1));
-    public Boolean needsSkyAccess = false;
+    public Boolean needsSkyAccess = true;
     public SpawnPos spawnPos = SpawnPos.SKY;
+    //public Vector3f spawnVelocity = new Vector3f(0, 0, 0);
     @Label(key = "motion")
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public Float gravity = 0.1F;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public Float windStrength = 0.1F;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public Float stormWindStrength = 0.5F;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public Float rotationAmount = 0F;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public Integer lifetime = 3000;
+    @OnlyVisibleIf(ParticleIsCustom.class) public Float gravity = 0.1F;
+    @OnlyVisibleIf(ParticleIsCustom.class) public Float windStrength = 0.1F;
+    @OnlyVisibleIf(ParticleIsCustom.class) public Float stormWindStrength = 0.5F;
+    @OnlyVisibleIf(ParticleIsCustom.class) public Float rotationAmount = 0F;
+    @OnlyVisibleIf(ParticleIsCustom.class) public Float bounciness = 0F;
+    @OnlyVisibleIf(ParticleIsCustom.class) public Integer lifetime = 3000;
     @Label(key = "appearance")
-    @Slider
-    @Format(ConfigResponders.Percent.class)
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public Float opacity = 1.0F;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public Float size = 0.5F;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public Boolean constantScreenSize = false;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public RenderType renderType = RenderType.TRANSLUCENT;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public ArrayList<String> spriteLocations = new ArrayList<>(List.of("particlerain:new_custom_particle"));
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    @OnChange(ConfigResponders.RefreshScreen.class)
+    @Slider @Format(Percent.class)
+    @OnlyVisibleIf(ParticleIsCustom.class) public Float opacity = 1.0F;
+    @OnlyVisibleIf(ParticleIsCustom.class) public Float size = 0.5F;
+    @OnlyVisibleIf(ParticleIsCustom.class) public Boolean constantScreenSize = false;
+    @OnlyVisibleIf(ParticleIsCustom.class) public RenderType renderType = RenderType.TRANSLUCENT;
+    @OnlyVisibleIf(ParticleIsCustom.class) public ArrayList<String> spriteLocations = new ArrayList<>(List.of("particlerain:new_custom_particle"));
+    @OnlyVisibleIf(ParticleIsCustom.class)
+    @OnChange(RefreshScreen.class)
     public TintType tintType = TintType.NONE;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustomAndAlsoUsesCustomTint.class)
+    @OnlyVisibleIf(ParticleIsCustomAndAlsoUsesCustomTint.class)
     public Color customTint = Color.BLACK;
-    @OnlyVisibleIf(ConfigResponders.ParticleIsCustom.class)
-    public RotationType rotationType = RotationType.COPY_CAMERA;
+    @OnlyVisibleIf(ParticleIsCustom.class) public RotationType rotationType = RotationType.COPY_CAMERA;
 
     public enum Weather {
         DURING_WEATHER {

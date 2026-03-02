@@ -11,10 +11,6 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.ParticleRenderType;
 //?}
 
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static pigcart.particlerain.config.ConfigResponders.*;
 
 public class ConfigData {

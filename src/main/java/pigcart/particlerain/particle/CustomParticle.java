@@ -55,11 +55,13 @@ public class CustomParticle extends WeatherParticle {
         super(level, x, y, z, VersionUtil.getSprite(VersionUtil.parseId(opts.spriteLocations.get(level.random.nextInt(opts.spriteLocations.size())))));
 
         this.gravity = opts.gravity;
-        this.yd = -gravity;
+        this.yd = (opts.spawnPos.equals(ParticleData.SpawnPos.SKY)) ? -gravity : opts.bounciness;
+        Vector3f wind = ParticleRain.calculateWind(x, y, z);
+        this.xd = wind.x;
+        this.zd = wind.z;
         this.quadSize = opts.size;
         this.alpha = 0;
         this.hasPhysics = false;
-
 
         this.setSize(quadSize, quadSize);
         this.lifetime = config.perf.particleDistance * 100;
@@ -92,14 +94,15 @@ public class CustomParticle extends WeatherParticle {
         if (doCollisionAnim) {
             tickCollisionAnim();
         }
-        tickDistanceFade();
         speed = (float) new Vec3(xd, yd, zd).length();
         if (opts.constantScreenSize && !doCollisionAnim) quadSize = getDistanceSize();
         if (opts.rotationAmount != 0) {
             oRoll = roll;
             roll += rotationVariation * speed;
         }
+        tickDistanceFade();
         tickWind();
+        tickCollisions();
     }
 
     public void tickDistanceFade() {
@@ -112,20 +115,11 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void tickWind() {
-        float frequency = config.wind.gustFrequency;
-        float shift = ParticleRain.clientTicks * config.wind.modulationSpeed;
-        float variance = config.wind.strengthVariance;
-        float strength = config.wind.strength;
         float multiplier = level.isThundering() ? opts.stormWindStrength : opts.windStrength;
-        if (config.wind.yLevelAdjustment) multiplier *= yLevelWindMultiplier(y);
-        this.xd = (((Mth.sin((float)x * frequency + shift) * variance) + variance + strength) * multiplier) + 0.001F;
-        this.zd = (((Mth.sin((float)z * frequency + shift) * variance) + variance + strength) * multiplier) + 0.001F;
-    }
-
-    public static float yLevelWindMultiplier(double y) {
-        int transitionStart = 50;
-        int transitionDistance = 40;
-        return (float) Mth.clamp((y - transitionStart) / transitionDistance, 0, 1);
+        Vector3f wind = ParticleRain.calculateWind(x, y, z).mul(multiplier);
+        //TODO: accumulative wind so that bounciness can work on sides without the bounce getting canceled by the wind force
+        this.xd = wind.x;
+        this.zd = wind.z;
     }
 
     public void onPositionUpdate() {
@@ -135,10 +129,9 @@ public class CustomParticle extends WeatherParticle {
         if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos) || !level.getFluidState(pos).isEmpty()) {
             this.remove();
         }
-        testForCollisions();
     }
 
-    public void testForCollisions() {
+    public void tickCollisions() {
         float length = quadSize;
         if (opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
             final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
@@ -149,6 +142,18 @@ public class CustomParticle extends WeatherParticle {
         Vec3 quadEdgePos = new Vec3(xd, yd, zd).normalize().multiply(length, length, length).add(x, y, z);
         final BlockHitResult hitResult = level.clip(VersionUtil.getClipContext(quadCenterPos, quadEdgePos));
         if (!hitResult.getType().equals(HitResult.Type.MISS) && !doCollisionAnim) {
+            onCollision(hitResult);
+        }
+    }
+
+    public void onCollision(BlockHitResult hitResult) {
+        if (opts.bounciness != 0) {
+            final Vector3f normal = hitResult.getDirection().step();
+            final float bounciness = opts.bounciness * speed;
+            this.xd += normal.x * bounciness;
+            this.yd += normal.y * bounciness;
+            this.zd += normal.z * bounciness;
+        } else {
             collision = hitResult;
             doCollisionAnim = true;
         }
@@ -291,7 +296,6 @@ public class CustomParticle extends WeatherParticle {
         //? if >=1.21.9 {
         /*this.extractRotatedQuad(h, quaternion, x, y, z, tickPercent);
         // doesnt seem to be an easy way to dig into a particles size now.
-        // im thinking of instead using the perspective trick of rotating the particle such that it looks stretched without actually being so
         *///?} else {
         float size = this.getQuadSize(tickPercent);
         float u0 = this.getU0();

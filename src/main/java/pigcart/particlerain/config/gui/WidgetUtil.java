@@ -9,6 +9,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
+import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.ParticleLoader;
@@ -184,15 +185,9 @@ public class WidgetUtil {
                 currentValue = field.get(screen.config);
                 defaultValue = field.get(screen.configDefault);
             } catch (IllegalAccessException e) {throw new RuntimeException(e);}
-            Consumer onValueChange = (value) -> {
-                try {
-                    field.set(screen.config, value);
-                    if (field.isAnnotationPresent(OnChange.class)) {
-                        final OnChange onChange = field.getAnnotation(OnChange.class);
-                        ((Runnable) onChange.value().getConstructors()[0].newInstance()).run();
-                    }
-                } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {throw new RuntimeException(e);}
-            };
+
+            Consumer onValueChange = (value) -> setConfigField(screen.config, field, value);
+
             Function<Object, Component> valueFormatter = (value)-> Component.literal(value.toString());
             if (field.isAnnotationPresent(Format.class)) {
                 final Format format = field.getAnnotation(Format.class);
@@ -243,6 +238,16 @@ public class WidgetUtil {
         ) {
             addLegacyParticleOptions(screen, particleData);
         }
+    }
+
+    private static <T> void setConfigField(Object config, Field field, T value) {
+        try {
+            field.set(config, value);
+            if (field.isAnnotationPresent(OnChange.class)) {
+                final OnChange onChange = field.getAnnotation(OnChange.class);
+                ((Runnable) onChange.value().getConstructors()[0].newInstance()).run();
+            }
+        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {throw new RuntimeException(e);}
     }
 
     @SuppressWarnings("unchecked")
