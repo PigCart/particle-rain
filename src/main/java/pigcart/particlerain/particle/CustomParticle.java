@@ -56,7 +56,7 @@ public class CustomParticle extends WeatherParticle {
 
         this.gravity = opts.gravity;
         this.yd = (opts.spawnPos.equals(ParticleData.SpawnPos.SKY)) ? -gravity : opts.bounciness;
-        Vector3f wind = ParticleRain.calculateWind(x, y, z);
+        Vector3f wind = ParticleRain.getWind(x, y, z);
         this.xd = wind.x;
         this.zd = wind.z;
         this.quadSize = opts.size;
@@ -116,8 +116,9 @@ public class CustomParticle extends WeatherParticle {
 
     public void tickWind() {
         float multiplier = level.isThundering() ? opts.stormWindStrength : opts.windStrength;
-        Vector3f wind = ParticleRain.calculateWind(x, y, z).mul(multiplier);
+        Vector3f wind = ParticleRain.getWind(x, y, z).mul(multiplier);
         //TODO: accumulative wind so that bounciness can work on sides without the bounce getting canceled by the wind force
+        // (or briefly reduce the wind strength when a bounce happens?)
         this.xd = wind.x;
         this.zd = wind.z;
     }
@@ -160,7 +161,6 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void tickCollisionAnim() {
-        //TODO 
         oCollisionAnimProgress = collisionAnimProgress;
         collisionAnimProgress -= speed;
         if (!opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {

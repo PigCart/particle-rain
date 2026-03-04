@@ -60,8 +60,8 @@ public class BlendedParticleRenderType {
             RenderType.CompositeState.builder()
                     .setTextureState(new TextureStateShard(TextureAtlas.LOCATION_PARTICLES,
                             //? if <1.21.6 {
-                                /^TriState.FALSE,
-                            ^///?}
+                                TriState.FALSE,
+                            //?}
                             false))
                     .setOutputState(PARTICLES_TARGET)
                     .setLightmapState(LIGHTMAP)

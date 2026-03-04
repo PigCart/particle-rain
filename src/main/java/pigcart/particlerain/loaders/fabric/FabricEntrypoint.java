@@ -35,22 +35,6 @@ public class FabricEntrypoint implements ClientModInitializer {
 
         ParticleRain.onInitializeClient();
 
-        /*ParticleLoader.particles.forEach((id, data) -> {
-            if (!data.usePresetParticle) {
-                if (BuiltInRegistries.PARTICLE_TYPE.containsKey(VersionUtil.getId(id))) {
-                    ParticleRain.LOGGER.warn("{} is already registered! please choose a different id for this particle", id);
-                } else {
-                    try {
-                        SimpleParticleType particle = registerParticle(id);
-                        ParticleFactoryRegistry.getInstance().register(particle, new CustomParticle.DefaultFactory(data));
-                    } catch (ResourceLocationException | IllegalStateException e) {
-                        ParticleRain.LOGGER.error(e.getMessage());
-                    }
-                }
-            }
-        });*/
-
-
         ClientTickEvents.END_CLIENT_TICK.register(ParticleRain::onTick);
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(ParticleRain.getCommands());

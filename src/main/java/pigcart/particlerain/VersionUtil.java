@@ -46,7 +46,7 @@ public class VersionUtil {
         //? if <=1.20.1 {
         return new ResourceLocation(ParticleRain.MOD_ID, path);
         //?} else {
-        /*return Identifier.fromNamespaceAndPath(ParticleRain.MOD_ID, path);
+        /*return ResourceLocation.fromNamespaceAndPath(ParticleRain.MOD_ID, path);
         *///?}
     }
     @SuppressWarnings("removal")
@@ -54,7 +54,7 @@ public class VersionUtil {
         //? if <=1.20.1 {
         return new ResourceLocation(ResourceLocation.DEFAULT_NAMESPACE, path);
         //?} else {
-        /*return Identifier.withDefaultNamespace(path);
+        /*return ResourceLocation.withDefaultNamespace(path);
         *///?}
     }
 
@@ -63,7 +63,7 @@ public class VersionUtil {
             //? if <=1.20.1 {
             return ResourceLocation.tryParse(string);
              //?} else {
-            /*return Identifier.parse(string);
+            /*return ResourceLocation.parse(string);
             *///?}
         } catch (ResourceLocationException e) {
             return null;
@@ -100,7 +100,7 @@ public class VersionUtil {
     }
     //?} else {
     /*public static SpriteContents loadSplashSprite(int i) throws IOException {
-        final Identifier location = getMcId("textures/particle/splash_" + i + ".png");
+        final ResourceLocation location = getMcId("textures/particle/splash_" + i + ".png");
         Resource resource = Minecraft.getInstance().getResourceManager().getResourceOrThrow(location);
         ResourceMetadata resourceMetadata = resource.metadata();
         NativeImage splashImage = TextureUtil.loadTexture(resource);

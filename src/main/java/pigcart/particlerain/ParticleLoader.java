@@ -64,7 +64,7 @@ public class ParticleLoader {
         // particles needs to be a unique copy of the pack particles so customizations can be merged in
         particles = loadPackParticles(resourceManager);
         packParticles = loadPackParticles(resourceManager);
-        loadCustomParticles(); // this isnt working right
+        loadCustomParticles();
         particles.forEach((id, data) -> {
             data.updateTransientVariables();
             data.id = id;
@@ -119,20 +119,6 @@ public class ParticleLoader {
             }
         }
         return mergeTo;
-    }
-
-    public static boolean particleHasAllData(String id, ParticleData data) {
-        for (Field field : ParticleData.class.getDeclaredFields()) {
-            try {
-                if (field.get(data) == null && !Modifier.isTransient(field.getModifiers())) {
-                    ParticleRain.LOGGER.warn("Skipping '{}' particle with missing '{}' field.", id, field.getName());
-                    return false;
-                }
-            } catch (IllegalAccessException e) {
-                ParticleRain.LOGGER.error("Null check couldn't access field '{}'", field.getName(), e);
-            }
-        }
-        return true;
     }
 
     public static void saveCustomParticles() {

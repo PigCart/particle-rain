@@ -124,7 +124,6 @@ public class ConfigScreen extends Screen {
     @Override
     public void removed() {
         if (this.config == ParticleLoader.editParticles) {
-            System.out.println("adding edited particles");
             ParticleLoader.particles.clear();
             for (ParticleData particle : ParticleLoader.editParticles) {
                 ParticleLoader.particles.put(particle.id, particle);

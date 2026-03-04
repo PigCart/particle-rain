@@ -1,27 +1,39 @@
-### to-do list before v4 release:
+### v4 to-do list:
+- multiver ✔
+- custom particles ✔
+- built-in config editor ✔
+- resourcepack particles ✔
+- improved rain ✔
 - improved dust
 - heavy rain
 - heavy snow
 - sleet
 - hail
+- weather transitions
 - new shrub / block model particles
 - new mist
 - splash replacement - splatter
 - new streaks
+- blended render type shaderpack fallback
 
 # v4 beta 6
-###### Mar 2, 2026
-- Added a new default texture for custom particles
-- Added heavy dust
-- Added bounciness field to particle editor
-- Fixed weather appearing inside structures at the weather height limit
-- Fixed resource packs failing to load when a weather texture is shorter than 1:4
-- Fixed config number input fields not accepting negative values
+###### Feb 32, 2026
+- new features
+  - Added a new default texture for custom particles
+  - Added heavy dust
+  - Added bounciness field to particle editor
+- squashed bugs
+  - Fixed weather appearing inside structures at the weather height limit
+  - Fixed resource packs failing to load when a weather texture is shorter than 1:4
+  - Fixed config number input fields not accepting negative values
 - tweaked particle loading and configuration
   - split config into `particles.json` and `config.json`
   - config files are now found at `config/particlerain/`
   - particle loading now uses the resource pack system. resource packs can add new particles or customize existing ones by providing a file at `assets/particlerain/particles.json`
   - particle configs no longer need to contain every value. omitted values will use the default values if no other loaded resource packs specify a value. multiple resource packs can configure the same particle.
+- various refactors, including:
+  - moved wind calculation to `ParticleRain.getWind(x, y, z)` for easier use by other mods
+- removed block sounds (out of scope)
 
 # v4 beta 5
 ###### Dec 26, 2025

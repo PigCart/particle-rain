@@ -12,14 +12,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NoteBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,20 +132,6 @@ public class ParticleRain {
         } else if (precipitation == Biome.Precipitation.NONE && biome.value().getBaseTemperature() > 0.25 && config.sound.windVolume > 0) {
             SoundEvent sound = above ? ParticleRain.WEATHER_SANDSTORM_ABOVE : ParticleRain.WEATHER_SANDSTORM;
             level.playLocalSound(rainPos, sound, SoundSource.WEATHER, config.sound.windVolume, above ? 0.5F : 1.0F, false);
-        } else if (config.sound.blockVolume > 0) {
-            final BlockState state = level.getBlockState(rainPos);
-            final SoundType soundType = state.getSoundType();
-            if (!soundType.equals(SoundType.STONE)) {
-                // stone type sounds awful. hypixel lobby ASMR
-                if (state.is(Blocks.NOTE_BLOCK)) {
-                    final SoundEvent sound = state.getValue(NoteBlock.INSTRUMENT).getSoundEvent().value();
-                    final float pitch = NoteBlock.getPitchFromNote(level.random.nextInt(24));
-                    level.playLocalSound(rainPos, sound, SoundSource.WEATHER, config.sound.blockVolume, above ? pitch / 2 : pitch, false);
-                } else {
-                    final SoundEvent sound = soundType.getHitSound();
-                    level.playLocalSound(rainPos, sound, SoundSource.WEATHER, config.sound.blockVolume, above ? 0.5F : 1.5F, false);
-                }
-            }
         }
 
         // have to cancel rain sounds when necessary because of bypassing the initial precipitation check
@@ -156,7 +140,7 @@ public class ParticleRain {
         }
     }
 
-    public static Vector3f calculateWind(double x, double y, double z) {
+    public static Vector3f getWind(double x, double y, double z) {
         float frequency = config.wind.gustFrequency;
         float shift = clientTicks * config.wind.modulationSpeed;
         float variance = config.wind.strengthVariance;

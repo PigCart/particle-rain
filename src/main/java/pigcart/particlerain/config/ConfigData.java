@@ -23,7 +23,7 @@ public class ConfigData {
         public int particleDensity = 100;
         public int particleStormDensity = 200;
         public int particleDistance = 16;
-        public int surfaceRange = 64;
+        public int surfaceRange = 100;
     }
 
     public SoundOptions sound = new SoundOptions();
