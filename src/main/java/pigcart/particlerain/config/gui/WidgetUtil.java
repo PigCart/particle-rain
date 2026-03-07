@@ -68,12 +68,12 @@ public class WidgetUtil {
                     if (className.isEmpty()) className = value.getClass().getEnclosingClass().getSimpleName();
                     return Component.translatable(MOD_ID + "." + className + "." + value);
                 }
-                //? if >=1.21.11 {
-                /*,()-> initialValue)
+        //? if >=1.21.11 {
+                /*,()-> initialValue).withValues(values);
                  *///?} else {
-        ).withInitialValue(initialValue)
-                //?}
-                .withValues(values);
+        ).withValues(values).withInitialValue(initialValue);
+        // in 1.20.1 withValues must be called before withInitialValue otherwise it doesnt get the index correctly
+        //?}
         if (displayOnlyValue) {
             builder.displayOnlyValue(/*? >=1.21.9 <1.21.11 {*//*true*//*?}*/);
         }
@@ -142,13 +142,13 @@ public class WidgetUtil {
         };
     }
 
-    public static AbstractWidget[] getHexColor(int width, int x, String name, Object initialValue, Consumer<Object> onValueChange, Function<Object, Component> valueFormatter) {
+    public static AbstractWidget[] getHexColor(String name, Object initialValue, Consumer<Object> onValueChange, Function<Object, Component> valueFormatter) {
         String value = ParticleLoader.ColorTypeAdapter.getString((Color) initialValue);
         Consumer<String> onChange = (string) -> {
             Color color = ParticleLoader.ColorTypeAdapter.getColor(string);
             onValueChange.accept(color);
         };
-        InputWidget input = (InputWidget) getString(width, x, name, value, onChange, valueFormatter);
+        InputWidget input = (InputWidget) getString(BUTTON_WIDTH, BUTTON_WIDTH + 8, name, value, onChange, valueFormatter);
         input.setFilter(InputWidget.NON_HEX);
         return new AbstractWidget[]{
                 WidgetUtil.getOptionLabel(Component.translatable(name).append(":")),
@@ -273,7 +273,7 @@ public class WidgetUtil {
                             true
             )))};
         } else if (type.equals(Color.class)) {
-            return getHexColor(BIG_BUTTON_WIDTH, 0, name, currentValue, onValueChange, valueFormatter);
+            return getHexColor(name, currentValue, onValueChange, valueFormatter);
         } else if (type.getFields().length > 0) {
             return new AbstractWidget[]{
                     WidgetUtil.getButton(Component.translatable(name).append("..."), (bttn)->

@@ -22,7 +22,6 @@ public class ParticleLoader {
 
     public static Map<String, ParticleData> particles;
     public static Map<String, ParticleData> packParticles;
-    public static List<ParticleData> editParticles;
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(Color.class, new ColorTypeAdapter())
