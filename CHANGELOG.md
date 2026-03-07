@@ -26,6 +26,8 @@
   - Fixed weather appearing inside structures at the weather height limit
   - Fixed resource packs failing to load when a weather texture is shorter than 1:4
   - Fixed config number input fields not accepting negative values
+  - Fixed cycling buttons sometimes getting stuck
+  - Fixed crash when forge tries to load the mod on a server
 - tweaked particle loading and configuration
   - split config into `particles.json` and `config.json`
   - config files are now found at `config/particlerain/`
@@ -34,6 +36,7 @@
 - various refactors, including:
   - moved wind calculation to `ParticleRain.getWind(x, y, z)` for easier use by other mods
 - removed block sounds (out of scope)
+- removed haze effects to create a better default experience for those using shaderpacks or low-end hardware
 
 # v4 beta 5
 ###### Dec 26, 2025

@@ -13,6 +13,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
@@ -86,6 +87,8 @@ public class NeoforgeEntrypoint {
     }
 
     public NeoforgeEntrypoint(IEventBus eventBus) {
+        if (FMLEnvironment.dist.isDedicatedServer()) return;
+
         NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onTick);
         NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onRegisterCommands);
         PARTICLE_TYPES.register(eventBus);

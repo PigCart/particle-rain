@@ -18,6 +18,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import pigcart.particlerain.ParticleLoader;
@@ -75,6 +76,8 @@ public class ForgeEntrypoint {
 
     @SuppressWarnings("removal")
     public ForgeEntrypoint() {
+        if (FMLEnvironment.dist.isDedicatedServer()) return;
+
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onTick);
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onRegisterCommands);
