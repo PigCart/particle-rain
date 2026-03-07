@@ -9,17 +9,12 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
-import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.ParticleLoader;
-import pigcart.particlerain.config.ConfigData;
-import pigcart.particlerain.config.ConfigManager;
-import pigcart.particlerain.config.ParticleData;
 import pigcart.particlerain.config.gui.Annotations.*;
-import pigcart.particlerain.config.gui.Annotations.Label;
 
-import java.awt.*;
+import java.awt.Color;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
@@ -126,6 +121,13 @@ public class WidgetUtil {
         return Button.builder(name, onPress).bounds(0, 0, BIG_BUTTON_WIDTH, BUTTON_HEIGHT).build();
     }
 
+    public static AbstractWidget getRemoveButton(Button.OnPress onPress) {
+        AbstractWidget removeButton = getButton(Component.literal("❌").withStyle(ChatFormatting.RED), onPress);
+        removeButton.setWidth(BUTTON_HEIGHT);
+        ((AbstractWidgetAccess)removeButton).pigcart$setOffset(BIG_BUTTON_WIDTH - BUTTON_HEIGHT);
+        return removeButton;
+    }
+
     public static AbstractWidget getSlider(String name, float initialValue, Consumer<Float> onValueChange, float min, float max, float step, Function<Object, Component> valueFormatter) {
         return new AbstractSliderButton(0, 0, BIG_BUTTON_WIDTH, BUTTON_HEIGHT,
                 Component.translatable(name).append(": ").append(valueFormatter.apply(initialValue)),
@@ -157,7 +159,7 @@ public class WidgetUtil {
     @SuppressWarnings("unchecked")
     public static void addOptionWidgets(ConfigScreen screen) {
         if (screen.config instanceof List<?>) {
-            addListOptions(screen, (List<?>)screen.config, (List<?>)screen.configDefault, screen.configGenericType);
+            addListOptions(screen, (List<?>)screen.config, screen.configGenericType);
             return;
         }
 
@@ -174,7 +176,7 @@ public class WidgetUtil {
             }
             if (field.isAnnotationPresent(Label.class)) {
                 AbstractWidget[] widgets = new AbstractWidget[]{WidgetUtil.getLabel(Component.translatable(field.getAnnotation(Label.class).key()))};
-                screen.add(widgets);
+                screen.addRow(widgets);
             }
             String name = MOD_ID + "." + field.getName();
             field.setAccessible(true);
@@ -200,9 +202,9 @@ public class WidgetUtil {
             if (type.equals(ArrayList.class)) {
                 final Class<?> listType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
                 if (field.isAnnotationPresent(NoSubMenu.class)) {
-                    addListOptions(screen, (List<?>)currentValue, (List<?>)defaultValue, listType);
+                    addListOptions(screen, (List<?>)currentValue, listType);
                 } else {
-                    screen.add(WidgetUtil.getButton(Component.translatable(name).append("..."), (bttn) ->
+                    screen.addRow(WidgetUtil.getButton(Component.translatable(name).append("..."), (bttn) ->
                             Minecraft.getInstance().setScreen(new ConfigScreen(
                                     screen.getFreshScreen(),
                                     currentValue,
@@ -214,29 +216,8 @@ public class WidgetUtil {
                 }
             } else {
                 AbstractWidget[] widgets = getOptionWidget(screen, field, name, currentValue, defaultValue, onValueChange, valueFormatter, type);
-                screen.add(widgets);
+                screen.addRow(widgets);
             }
-        }
-        // add particle toggle buttons and edit button if this screen is the main config menu
-        if (screen.config instanceof ConfigData) {
-            addParticleToggles(screen);
-            screen.add(WidgetUtil.getButton(Component.translatable("particlerain.particles").append("..."), (bttn) -> {
-                ParticleLoader.editParticles = new ArrayList<>(ParticleLoader.particles.values());
-                Minecraft.getInstance().setScreen(new ConfigScreen(
-                        screen.getFreshScreen(),
-                        ParticleLoader.editParticles,
-                        new ArrayList<>(ParticleLoader.packParticles.values()),
-                        ParticleData.class,
-                        Component.translatable("particlerain.particles")
-                ));
-            }));
-        }
-        // add legacy options if this screen is the edit menu for a legacy particle
-        else if (screen.config instanceof ParticleData particleData
-                && particleData.usePresetParticle
-                && ParticleRain.legacyParticleIds.contains(particleData.id)
-        ) {
-            addLegacyParticleOptions(screen, particleData);
         }
     }
 
@@ -310,56 +291,39 @@ public class WidgetUtil {
     }
 
     @SuppressWarnings("unchecked")
-    private static <E> void addListOptions(ConfigScreen screen, List<E> list, List<?> defaultList, Class<?> listEntryType) {
+    private static <E> void addListOptions(ConfigScreen screen, List<E> list, Class<?> listEntryType) {
         if (list.isEmpty()) {
-            screen.add(getLabel(Component.translatable("mco.configure.world.slot.empty")));
+            screen.addRow(getLabel(Component.translatable("mco.configure.world.slot.empty")));
         }
-        //final Class<?> listEntryType = list.get(0).getClass();
         for (int i = 0; i < list.size(); i++) {
             Object entry = list.get(i);
-            Object defaultEntry = i < defaultList.size() ? defaultList.get(i) : getNewValue(listEntryType);
             final int index = i;
             final Consumer<Object> onValueChange = (value) -> list.set(index, (E) value);
-            final AbstractWidget listEntryWidget = getListEntryWidget(screen, listEntryType, String.valueOf(index + 1), entry, defaultEntry, onValueChange);
-            final AbstractWidget removeButton = getButton(Component.literal("❌").withStyle(ChatFormatting.RED), (bttn) -> {
+            final AbstractWidget listEntryWidget = getListEntryWidget(listEntryType, String.valueOf(index + 1), entry, onValueChange);
+            final AbstractWidget removeButton = getRemoveButton((bttn) -> {
                 list.remove(index);
                 screen.refresh();
             });
             listEntryWidget.setWidth(BIG_BUTTON_WIDTH - BUTTON_HEIGHT - 2);
-            removeButton.setWidth(BUTTON_HEIGHT);
-            ((AbstractWidgetAccess)removeButton).particle_rain$setOffset(BIG_BUTTON_WIDTH - BUTTON_HEIGHT);
-            screen.add(listEntryWidget, removeButton);
+            screen.addRow(listEntryWidget, removeButton);
         }
         final MutableComponent addButtonText = Component.translatable("particlerain.addNew");
         final AbstractWidget addButton = WidgetUtil.getButton(addButtonText, (bttn) -> {
-            Object newListEntry = getNewValue(listEntryType);
-            Object defaultEntry = getNewValue(listEntryType);
-            list.add((E) newListEntry);
-            if (listEntryType.equals(ParticleData.class)) {
-                Minecraft.getInstance().setScreen(new ConfigScreen(screen.getFreshScreen(), newListEntry, defaultEntry, addButtonText));
-            } else {
-                screen.refresh();
-            }
+            list.add((E) getNewValue(listEntryType));
+            screen.refresh();
         });
         if (!(list instanceof ArrayList<?>)) addButton.active = false;
-        screen.add(addButton);
+        screen.addRow(addButton);
     }
 
     @SuppressWarnings("unchecked")
-    private static AbstractWidget getListEntryWidget(ConfigScreen screen, Class<?> type, String name, Object entry, Object defaultEntry, Consumer onValueChange) {
+    private static AbstractWidget getListEntryWidget(Class<?> type, String name, Object entry, Consumer onValueChange) {
         if (type.equals(String.class)) {
             return WidgetUtil.getString(BIG_BUTTON_WIDTH, 0,
                     name,
                     (String) entry,
                     onValueChange,
                     (value)-> Component.literal(value.toString())
-            );
-        } else if (type.equals(ParticleData.class)) {
-            String particleKey = MOD_ID + "." + ((ParticleData) entry).id;
-            return WidgetUtil.getButton(Component.translatable(particleKey), (bttn) ->
-                    Minecraft.getInstance().setScreen(new ConfigScreen(
-                            screen.getFreshScreen(), entry, defaultEntry, Component.translatable(particleKey)
-                    ))
             );
         } else if (type.isEnum()) {
             return WidgetUtil.getEnum(name, true, entry, onValueChange);
@@ -377,50 +341,6 @@ public class WidgetUtil {
             } catch (InstantiationException | IllegalAccessException e) {
                 ParticleRain.LOGGER.error("Couldn't get new value for: {}", type.getSimpleName());
                 throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private static void addLegacyParticleOptions(ConfigScreen screen, ParticleData particleData) {
-        try {
-            final Field field = ConfigData.class.getField(particleData.id);
-            field.setAccessible(true);
-            final Object bespokeParticleConfig = field.get(ConfigManager.config);
-            final Object defaultConfig = field.get(ConfigManager.getDefaultConfig());
-            AbstractWidget button = getButton(Component.translatable("particlerain.appearance"),
-                    (bttn) -> Minecraft.getInstance().setScreen(new ConfigScreen(
-                            screen,
-                            bespokeParticleConfig,
-                            defaultConfig,
-                            Component.translatable("particlerain.appearance")
-                    )));
-            screen.list.add(button);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void addParticleToggles(ConfigScreen screen) {
-        ArrayList<AbstractWidget> widgets = new ArrayList<>();
-        // get a widget for each particle
-        ParticleLoader.particles.forEach((id, data) ->
-                widgets.add(WidgetUtil.getBool(MOD_ID + "." + id,
-                        data.enabled,
-                        (value) -> data.enabled = value
-                ))
-        );
-        // iterate widgets in pairs
-        for (int i = 0; i < widgets.size(); i+= 2) {
-            AbstractWidget left = widgets.get(i);
-            left.setWidth(BUTTON_WIDTH);
-            // if there is a widget after this one add it with an offset
-            if (i < widgets.size() - 1) {
-                AbstractWidget right = widgets.get(i + 1);
-                ((AbstractWidgetAccess)right).particle_rain$setOffset(left.getWidth() + 8);
-                right.setWidth(BUTTON_WIDTH);
-                screen.add(left, right);
-            } else {
-                screen.add(left);
             }
         }
     }

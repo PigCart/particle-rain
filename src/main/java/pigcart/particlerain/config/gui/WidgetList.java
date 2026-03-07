@@ -23,7 +23,7 @@ public class WidgetList extends ContainerObjectSelectionList<WidgetList.Row> {
         this.centerListVertically = false;
     }
 
-    public void add(AbstractWidget... widgets) {
+    public void addRow(AbstractWidget... widgets) {
         this.addEntry(new Row(widgets));
     }
 
@@ -58,7 +58,7 @@ public class WidgetList extends ContainerObjectSelectionList<WidgetList.Row> {
             int padding = Minecraft.getInstance().screen.width / 2 - 155;
             for (AbstractWidget widget : this.widgets) {
                 widget.setY(contentY);
-                widget.setX(((AbstractWidgetAccess)widget).particle_rain$getOffset() + padding);
+                widget.setX(((AbstractWidgetAccess)widget).pigcart$getOffset() + padding);
                 widget.render(guiGraphics, mouseX, mouseY, partialTick);
             }
         }

@@ -26,7 +26,7 @@ public class InputWidget extends EditBox {
 
     public InputWidget(int width, int x, String initialValue, Consumer<String> onValueChange, Function<Object, Component> valueFormatter) {
         super(Minecraft.getInstance().font, 0, 0, width, WidgetUtil.BUTTON_HEIGHT, Component.empty());
-        ((AbstractWidgetAccess)this).particle_rain$setOffset(x);
+        ((AbstractWidgetAccess)this).pigcart$setOffset(x);
         unformattedValue = initialValue;
         this.valueFormatter = valueFormatter;
         this.setResponder((value) -> {

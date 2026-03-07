@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.config.gui.ConfigScreen;
+import pigcart.particlerain.config.gui.MainConfigScreen;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -16,7 +17,7 @@ public class ConfigManager {
     public static ConfigData config;
 
     public static Screen screenPlease(Screen lastScreen) {
-        return new ConfigScreen(lastScreen, config, getDefaultConfig(), Component.translatable("particlerain.title"));
+        return new MainConfigScreen(lastScreen, config, getDefaultConfig(), Component.translatable("particlerain.title"));
     }
 
     public static ConfigData getDefaultConfig() {

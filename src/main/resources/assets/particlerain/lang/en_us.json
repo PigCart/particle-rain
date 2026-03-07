@@ -33,16 +33,13 @@
   "particlerain.smoke": "Rain steam",
   "particlerain.streak": "Rain streaks",
   "particlerain.shrub": "Shrub",
-  "particlerain.mist": "Biome-specific mist",
+  "particlerain.mist": "Mist in wet biomes",
   "particlerain.mist_after_rain": "Mist after rain",
 
   "particlerain.sound": "Sound Options",
-  "particlerain.doMaterialSounds": "Play material specific sounds",
-  "particlerain.doMaterialSounds.description": "Makes the rain splashing noise match the material of the block it's falling onto.",
   "particlerain.rainVolume": "Rain volume",
   "particlerain.snowVolume": "Snow volume",
   "particlerain.windVolume": "Wind volume",
-  "particlerain.blockVolume": "Block impact volume",
 
   "particlerain.wind": "Wind Options",
   "particlerain.strength": "Strength",

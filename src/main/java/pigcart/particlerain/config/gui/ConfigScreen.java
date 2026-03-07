@@ -1,6 +1,5 @@
 package pigcart.particlerain.config.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
@@ -10,9 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import pigcart.particlerain.ParticleLoader;
-import pigcart.particlerain.config.ConfigData;
 import pigcart.particlerain.config.ConfigManager;
-import pigcart.particlerain.config.ParticleData;
 
 //? <=1.20.1 {
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,6 +20,7 @@ import java.lang.reflect.Field;
 public class ConfigScreen extends Screen {
     final Object config;
     final Object configDefault;
+    /// the generic type if this config object is a list
     final Class<?> configGenericType;
     WidgetList list;
     protected final Screen lastScreen;
@@ -80,17 +78,7 @@ public class ConfigScreen extends Screen {
         final Button resetButton = Button.builder(
                 Component.translatable("controls.reset").append(" ").append(this.title),
                 (button) -> {
-                    for (Field field : this.config.getClass().getFields()) {
-                        try {
-                            field.setAccessible(true);
-                            field.set(config, field.get(configDefault));
-                        } catch (IllegalAccessException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    if (this.config instanceof ConfigData) {
-                        ParticleLoader.particles = ParticleLoader.loadPackParticles(Minecraft.getInstance().getResourceManager());
-                    }
+                    resetConfig();
                     refresh();
                 }
         ).build();
@@ -102,6 +90,17 @@ public class ConfigScreen extends Screen {
 
         row.addChild(resetButton);
         row.addChild(doneButton);
+    }
+
+    void resetConfig() {
+        for (Field field : this.config.getClass().getFields()) {
+            try {
+                field.setAccessible(true);
+                field.set(config, field.get(configDefault));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     //? >=1.21.1 {
@@ -123,12 +122,6 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void removed() {
-        if (this.config == ParticleLoader.editParticles) {
-            ParticleLoader.particles.clear();
-            for (ParticleData particle : ParticleLoader.editParticles) {
-                ParticleLoader.particles.put(particle.id, particle);
-            }
-        }
         ConfigManager.save();
         ParticleLoader.saveCustomParticles();
     }
@@ -138,12 +131,12 @@ public class ConfigScreen extends Screen {
         minecraft.setScreen(lastScreen);
     }
 
-    public Screen getFreshScreen() {
+    public ConfigScreen getFreshScreen() {
         return new ConfigScreen(this.lastScreen, this.config, this.configDefault, this.configGenericType, this.title);
     }
 
     public void refresh() {
-        final ConfigScreen freshScreen = new ConfigScreen(this.lastScreen, this.config, this.configDefault, this.configGenericType, this.title);
+        final ConfigScreen freshScreen = getFreshScreen();
         minecraft.setScreen(freshScreen);
         freshScreen.list.setScrollAmount(
                 //? >=1.21.4 {
@@ -154,10 +147,10 @@ public class ConfigScreen extends Screen {
         );
     }
 
-    public void add(AbstractWidget... widgets) {
+    public void addRow(AbstractWidget... widgets) {
         for (AbstractWidget widget : widgets) {
-            widget.setX((width / 2 - 155) + ((AbstractWidgetAccess)widget).particle_rain$getOffset());
+            widget.setX((width / 2 - 155) + ((AbstractWidgetAccess)widget).pigcart$getOffset());
         }
-        list.add(widgets);
+        list.addRow(widgets);
     }
 }

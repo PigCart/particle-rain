@@ -11,12 +11,12 @@ public class AbstractWidgetMixin implements AbstractWidgetAccess {
     @Unique public int xOffset = 0;
 
     @Override
-    public int particle_rain$getOffset() {
+    public int pigcart$getOffset() {
         return xOffset;
     }
 
     @Override
-    public void particle_rain$setOffset(int value) {
+    public void pigcart$setOffset(int value) {
         xOffset = value;
     }
 }

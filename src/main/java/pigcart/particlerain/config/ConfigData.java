@@ -31,7 +31,6 @@ public class ConfigData {
         @Slider @Format(PercentOrOff.class) public float rainVolume = 0.2F;
         @Slider @Format(PercentOrOff.class) public float snowVolume = 0.1F;
         @Slider @Format(PercentOrOff.class) public float windVolume = 0.1F;
-        @Slider @Format(PercentOrOff.class) public float blockVolume = 0.07F;
     }
 
     public WindOptions wind = new WindOptions();

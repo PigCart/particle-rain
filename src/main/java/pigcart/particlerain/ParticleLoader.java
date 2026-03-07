@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,15 +66,12 @@ public class ParticleLoader {
         particles = loadPackParticles(resourceManager);
         packParticles = loadPackParticles(resourceManager);
         loadCustomParticles();
-        particles.forEach((id, data) -> {
-            data.updateTransientVariables();
-            data.id = id;
-        });
+        particles.forEach((id, data) -> data.updateTransientVariables());
         ParticleRain.LOGGER.info("Loaded {} particles", particles.size());
     }
 
     public static Map<String, ParticleData> loadPackParticles(ResourceManager resourceManager) {
-        Map<String, ParticleData> map = new HashMap<>();
+        Map<String, ParticleData> map = new LinkedHashMap<>();
         for (Resource resource : resourceManager.getResourceStack(VersionUtil.getId("particles.json"))) {
             try (Reader reader = resource.openAsReader()) {
                 deserializeParticles(reader, map);
@@ -99,6 +97,7 @@ public class ParticleLoader {
 
     public static void deserializeParticles(Reader reader, Map<String, ParticleData> destination) {
         GSON.fromJson(reader, WEATHER_PARTICLE_TYPE).forEach((id, data) -> {
+            data.id = id;
             if (destination.containsKey(id)) {
                 destination.merge(id, data, ParticleLoader::mergeParticles);
             } else {
