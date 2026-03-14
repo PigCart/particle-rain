@@ -19,7 +19,7 @@ import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 //? if >=1.21.9 {
-/*import net.minecraft.client.renderer.state.QuadParticleRenderState;
+/*import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
  *///?} else {
 import net.minecraft.client.particle.ParticleRenderType;
 //?}

@@ -13,7 +13,7 @@
     ${ WaterFallProviderMixin }
     ${ WaterHangProviderMixin }
     "AbstractWidgetMixin",
-    "ClientLevelDataMixin",
+    "WeatherDataMixin",
     "access.NativeImageAccessor",
     "access.ParticleEngineAccessor",
     "access.SingleQuadParticleAccessor",

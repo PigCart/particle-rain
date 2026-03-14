@@ -14,7 +14,7 @@ import org.joml.Vector3f;
 import org.joml.Math;
 import pigcart.particlerain.VersionUtil;
 //? if >=1.21.9 {
-/*import net.minecraft.client.renderer.state.QuadParticleRenderState;
+/*import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
 import net.minecraft.util.RandomSource;
 *///?} else {
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -57,9 +57,9 @@ public class RippleParticle extends WeatherParticle {
         this.renderRotatedQuad(h, quaternion, x, y, z, f);
     }
 
-    public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
 
-        public DefaultFactory(SpriteSet provider) {
+        public Provider(SpriteSet provider) {
         }
 
         @Override

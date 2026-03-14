@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
 //? if >=1.21.9 {
-/^import net.minecraft.client.renderer.state.WeatherRenderState;
+/^import net.minecraft.client.renderer.state./^¹?>=26.1{¹^//^¹level.¹^//^¹?}¹^/WeatherRenderState;
 ^///?}
 
 import static pigcart.particlerain.config.ConfigManager.config;

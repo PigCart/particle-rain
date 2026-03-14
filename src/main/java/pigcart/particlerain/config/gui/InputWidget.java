@@ -80,10 +80,13 @@ public class InputWidget extends EditBox {
     /// @param pattern Regex describing characters to be omitted from input
     public void setFilter(Pattern pattern) {
         filteredChars = pattern;
+        //TODO: does not exist in this version
+        //? <26.1 {
         if (filteredChars != null) {
             this.setFilter((string) -> !filteredChars.matcher(string).find());
         } else {
             this.setFilter(Objects::nonNull);
         }
+        //?}
     }
 }

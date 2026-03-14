@@ -2,12 +2,16 @@ package pigcart.particlerain.config.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractStringWidget;
 import net.minecraft.network.chat.Component;
 //? if >=1.21.11 {
 /*import net.minecraft.client.gui.ActiveTextCollector;
 *///?}
+//? >=26.1 {
+/*import net.minecraft.client.gui.GuiGraphicsExtractor;
+*///?} else {
+import net.minecraft.client.gui.GuiGraphics;
+//?}
 
 /// Based on the 1.20.1 version of [net.minecraft.client.gui.components.StringWidget], as the alignment functionality was later removed.
 public class LabelWidget extends AbstractStringWidget {
@@ -38,11 +42,11 @@ public class LabelWidget extends AbstractStringWidget {
     }
     *///?}
 
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void /*?>=26.1{*//*extractWidgetRenderState(GuiGraphicsExtractor*//*?}else{*/renderWidget(GuiGraphics/*?}*/ guiGraphics, int mouseX, int mouseY, float partialTick) {
         Component component = this.getMessage();
         Font font = this.getFont();
         int x = this.getX() + Math.round(this.alignX * (float)(this.getWidth() - font.width(component)));
         int y = this.getY() + (getHeight() - 9) / 2;
-        guiGraphics.drawString(font, component, x, y, 0xFFFFFFFF);
+        guiGraphics./*?>=26.1{*//*text*//*?}else{*/drawString/*?}*/(font, component, x, y, 0xFFFFFFFF);
     }
 }

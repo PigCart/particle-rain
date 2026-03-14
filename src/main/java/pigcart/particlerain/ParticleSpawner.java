@@ -44,7 +44,7 @@ public final class ParticleSpawner {
 
     public static void tickBlockFX(BlockPos.MutableBlockPos sourcePos, BlockState state) {
         ClientLevel level = Minecraft.getInstance().level;
-        if (spawnAttemptsUntilBlockFXIdle <= 0 && random.nextFloat() < 0.9F) {
+        if (spawnAttemptsUntilBlockFXIdle <= 0 && level.getRandom().nextFloat() < 0.9F) {
             return;
         }
         spawnAttemptsUntilBlockFXIdle--;

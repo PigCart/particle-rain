@@ -12,6 +12,7 @@ import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -230,5 +231,13 @@ public class VersionUtil {
         *///?} else {
         return new Color(level.getBiome(pos).value().getFogColor());
          //?}
+    }
+
+    static void addChatMsg(String message) {
+        //? >=26.1 {
+        /*Minecraft.getInstance().gui.getChat().addClientSystemMessage(Component.literal(message));
+         *///?} else {
+        Minecraft.getInstance().gui.getChat().addMessage(Component.literal(message));
+        //?}
     }
 }

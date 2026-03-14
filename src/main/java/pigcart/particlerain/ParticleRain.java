@@ -7,7 +7,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -102,14 +101,12 @@ public class ParticleRain {
                 })
                 .then(LiteralArgumentBuilder.literal("debug")
                         .executes(ctx -> {
-                            getDebugLines().forEach(ParticleRain::addChatMsg);
+                            getDebugLines().forEach(VersionUtil::addChatMsg);
                             return 0;
                         })
                 );
     }
-    private static void addChatMsg(String message) {
-        Minecraft.getInstance().gui.getChat().addMessage(Component.literal(message));
-    }
+
     public static void doAdditionalWeatherSounds(ClientLevel level, BlockPos cameraPos, BlockPos rainPos, CallbackInfo ci) {
         if (config.compat.doSpawnHeightLimit) {
             int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, rainPos) : config.compat.spawnHeightLimit;

@@ -22,7 +22,7 @@ import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.Whitelist;
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 //? if >=1.21.9 {
-/*import net.minecraft.client.renderer.state.QuadParticleRenderState;
+/*import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
 *///?} else {
 import com.mojang.blaze3d.vertex.VertexConsumer;
 //?}
@@ -107,17 +107,17 @@ public class StreakParticle extends WeatherParticle {
         this.renderRotatedQuad(h, quaternion, x, y + quadSize, z, f);
     }
 
-    public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
 
         private final SpriteSet provider;
 
-        public DefaultFactory(SpriteSet provider) {
+        public Provider(SpriteSet provider) {
             this.provider = provider;
         }
 
         @Override
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ/*? if >=1.21.9 {*//*, RandomSource random*//*?}*/) {
-            return new StreakParticle(level, x, y, z, Direction.getRandom(level.random), new Whitelist.BlockList());
+            return new StreakParticle(level, x, y, z, Direction.getRandom(level.getRandom()), new Whitelist.BlockList());
         }
     }
 }

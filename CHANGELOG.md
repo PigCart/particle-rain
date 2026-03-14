@@ -16,8 +16,12 @@
 - new streaks
 - blended render type shaderpack fallback
 
+# v4 beta 7
+###### in progress
+- added mc26.1 support
+
 # v4 beta 6
-###### Feb 32, 2026
+###### Mar 7, 2026
 - new features
   - Added a new default texture for custom particles
   - Added heavy dust
@@ -66,7 +70,7 @@
 - tweaked default config values
 
 # v4 beta 2
-###### Oct 03, 2025
+###### Oct 3, 2025
 - fixed crash when loading resource packs with invisible weather textures
 - fixed custom tints saving incorrectly and invalidating the config
 - fixed resource pack animated splash particles not loading correctly

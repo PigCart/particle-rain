@@ -10,11 +10,15 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+//? >=26.1 {
+/*import net.minecraft.client.gui.GuiGraphicsExtractor;
+ *///?} else {
+import net.minecraft.client.gui.GuiGraphics;
+//?}
 
 public class WidgetList extends ContainerObjectSelectionList<WidgetList.Row> {
 
@@ -44,7 +48,12 @@ public class WidgetList extends ContainerObjectSelectionList<WidgetList.Row> {
             this.widgets = ImmutableList.copyOf(widgets);
         }
 
-        //? >=1.21.9 {
+        //? >=26.1 {
+        /*@Override
+        public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
+            renderEntryWidgets(guiGraphics, this.getContentY(), mouseX, mouseY, partialTick);
+        }
+        *///?} >=1.21.9 {
         /*public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
 			renderEntryWidgets(guiGraphics, this.getContentY(), mouseX, mouseY, partialTick);
         }
@@ -54,12 +63,12 @@ public class WidgetList extends ContainerObjectSelectionList<WidgetList.Row> {
         }
         //?}
 
-        private void renderEntryWidgets(GuiGraphics guiGraphics, int contentY, int mouseX, int mouseY, float partialTick) {
+        private void renderEntryWidgets(/*?>=26.1{*//*GuiGraphicsExtractor*//*?}else{*/GuiGraphics/*?}*/ guiGraphics, int contentY, int mouseX, int mouseY, float partialTick) {
             int padding = Minecraft.getInstance().screen.width / 2 - 155;
             for (AbstractWidget widget : this.widgets) {
                 widget.setY(contentY);
                 widget.setX(((AbstractWidgetAccess)widget).pigcart$getOffset() + padding);
-                widget.render(guiGraphics, mouseX, mouseY, partialTick);
+                widget./*?>=26.1{*//*extractRenderState*//*?}else{*/render/*?}*/(guiGraphics, mouseX, mouseY, partialTick);
             }
         }
 

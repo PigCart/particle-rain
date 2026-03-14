@@ -19,7 +19,7 @@ import org.joml.Math;
 *///?}
 //? if >=1.21.9 {
 /*import net.minecraft.client.particle.SingleQuadParticle;
-import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
 import net.minecraft.util.RandomSource;
 *///?} else {
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -52,7 +52,7 @@ public class CustomParticle extends WeatherParticle {
     float distance;
 
     public CustomParticle(ClientLevel level, double x, double y, double z, ParticleData opts) {
-        super(level, x, y, z, VersionUtil.getSprite(VersionUtil.parseId(opts.spriteLocations.get(level.random.nextInt(opts.spriteLocations.size())))));
+        super(level, x, y, z, VersionUtil.getSprite(VersionUtil.parseId(opts.spriteLocations.get(level.getRandom().nextInt(opts.spriteLocations.size())))));
 
         this.gravity = opts.gravity;
         this.yd = (opts.spawnPos.equals(ParticleData.SpawnPos.SKY)) ? -gravity : opts.bounciness;
@@ -322,10 +322,10 @@ public class CustomParticle extends WeatherParticle {
     }
     //?}
 
-    public static class DefaultFactory implements ParticleProvider<SimpleParticleType> {
+    public static class Provider implements ParticleProvider<SimpleParticleType> {
         ParticleData opts;
 
-        public DefaultFactory(ParticleData opts) {
+        public Provider(ParticleData opts) {
             this.opts = opts;
         }
 

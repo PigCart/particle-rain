@@ -4,7 +4,9 @@ package pigcart.particlerain.loaders.fabric;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+//~ if >=26.1 'ParticleFactoryRegistry' -> 'ParticleProviderRegistry' {
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+//~}
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -28,10 +30,12 @@ public class FabricEntrypoint implements ClientModInitializer {
         ParticleRain.MIST = registerParticle("mist");
         ParticleRain.RIPPLE = registerParticle("ripple");
         ParticleRain.STREAK = registerParticle("streak");
-        ParticleFactoryRegistry.getInstance().register(ParticleRain.SHRUB, ShrubParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRain.MIST, MistParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRain.RIPPLE, RippleParticle.DefaultFactory::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRain.STREAK, StreakParticle.DefaultFactory::new);
+        //~ if >=26.1 'ParticleFactoryRegistry' -> 'ParticleProviderRegistry' {
+        ParticleFactoryRegistry.getInstance().register(ParticleRain.SHRUB, ShrubParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRain.MIST, MistParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRain.RIPPLE, RippleParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRain.STREAK, StreakParticle.Provider::new);
+        //~}
 
         ParticleRain.onInitializeClient();
 

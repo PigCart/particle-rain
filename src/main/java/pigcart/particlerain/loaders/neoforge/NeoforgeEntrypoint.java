@@ -52,10 +52,10 @@ public class NeoforgeEntrypoint {
 
     public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
         //TODO
-        event.registerSpriteSet(SHRUB.get(), ShrubParticle.DefaultFactory::new);
-        event.registerSpriteSet(MIST.get(), MistParticle.DefaultFactory::new);
-        event.registerSpriteSet(RIPPLE.get(), RippleParticle.DefaultFactory::new);
-        event.registerSpriteSet(STREAK.get(), StreakParticle.DefaultFactory::new);
+        event.registerSpriteSet(SHRUB.get(), ShrubParticle.Provider::new);
+        event.registerSpriteSet(MIST.get(), MistParticle.Provider::new);
+        event.registerSpriteSet(RIPPLE.get(), RippleParticle.Provider::new);
+        event.registerSpriteSet(STREAK.get(), StreakParticle.Provider::new);
         ParticleRain.SHRUB = SHRUB.get();
         ParticleRain.MIST = MIST.get();
         ParticleRain.RIPPLE = RIPPLE.get();

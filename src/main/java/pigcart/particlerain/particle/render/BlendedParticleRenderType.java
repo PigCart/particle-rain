@@ -2,6 +2,7 @@ package pigcart.particlerain.particle.render;
 
 //? if >=1.21.9 {
 /*import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
@@ -16,8 +17,13 @@ public class BlendedParticleRenderType {
     public static final RenderPipeline FOG_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
+                    //? >=26.1 {
+                    /^.withColorTargetState(new ColorTargetState(FOG_BLEND))
+                    ^///?} else {
                     .withBlend(FOG_BLEND)
-                    .withDepthWrite(false).build()
+                    .withDepthWrite(false)
+                    //?}
+                    .build()
     );
     public static final SingleQuadParticle.Layer INSTANCE = new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, FOG_PIPELINE);
 }
