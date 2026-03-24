@@ -17,8 +17,9 @@
 - blended render type shaderpack fallback
 
 # v4 beta 7
-###### in progress
+###### Mar 24, 2026
 - added mc26.1 support
+- marked asyncparticles as explicitly incompatible
 
 # v4 beta 6
 ###### Mar 7, 2026

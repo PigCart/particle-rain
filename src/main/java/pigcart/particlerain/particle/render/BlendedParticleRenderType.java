@@ -2,7 +2,6 @@ package pigcart.particlerain.particle.render;
 
 //? if >=1.21.9 {
 /*import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
@@ -18,7 +17,7 @@ public class BlendedParticleRenderType {
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
                     //? >=26.1 {
-                    /^.withColorTargetState(new ColorTargetState(FOG_BLEND))
+                    /^.withColorTargetState(new com.mojang.blaze3d.pipeline.ColorTargetState(FOG_BLEND))
                     ^///?} else {
                     .withBlend(FOG_BLEND)
                     .withDepthWrite(false)

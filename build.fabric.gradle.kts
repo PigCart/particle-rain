@@ -26,6 +26,8 @@ tasks.named<ProcessResources>("processResources") {
         this["DripParticleMixin"        ] = if (sc.current.parsed  < "1.21.9") "\"tint.DripParticleMixin\"," else ""
         this["WaterFallProviderMixin"   ] = if (sc.current.parsed >= "1.21.9") "\"tint.WaterFallProviderMixin\"," else ""
         this["WaterHangProviderMixin"   ] = if (sc.current.parsed >= "1.21.9") "\"tint.WaterHangProviderMixin\"," else ""
+
+        this["access_widener"] = "${prop("mod.id")}.accesswidener"
     }
 
     filesMatching(listOf("fabric.mod.json", "${prop("mod.id")}.mixins.json")) {
