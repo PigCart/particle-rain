@@ -133,7 +133,7 @@ public final class ParticleSpawner {
             float z;
             if (speed < 0.8) {
                 // use a center-weighted spawn pattern if moving slowly and limit it to top half of sphere
-                height = Mth.abs(Mth.square(RANDOM.nextFloat()) - Mth.square(level.getRandom().nextFloat())) * -1 + 1;
+                height = Mth.abs(Mth.square(RANDOM.nextFloat()) - Mth.square(RANDOM.nextFloat())) * -1 + 1;
                 height *= 0.4F + 0.6F;
             } else {
                 // use the whole sphere if moving quickly (falling, flying)
