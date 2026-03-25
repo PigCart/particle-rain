@@ -22,7 +22,7 @@ import pigcart.particlerain.particle.StreakParticle;
 import static pigcart.particlerain.config.ConfigManager.config;
 
 public final class ParticleSpawner {
-    private static final RandomSource random = RandomSource.create();
+    private static final RandomSource RANDOM = RandomSource.create();
     private static final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
     private static final BlockPos.MutableBlockPos heightmapPos = new BlockPos.MutableBlockPos();
     public static int afterWeatherTicksLeft = 0;
@@ -38,11 +38,12 @@ public final class ParticleSpawner {
         if (afterWeatherTicksLeft > 0) afterWeatherTicksLeft--;
     }
 
+    //TODO: broken in 26.1
     public static void onWeatherChange(boolean isRaining) {
-        afterWeatherTicksLeft = isRaining ? 0 : random.nextInt(6000); // 'after weather' period lasts up to 5 minutes
+        afterWeatherTicksLeft = isRaining ? 0 : RandomSource.create().nextInt(6000); // 'after weather' period lasts up to 5 minutes
     }
 
-    public static void tickBlockFX(BlockPos.MutableBlockPos sourcePos, BlockState state) {
+    public static void tickBlockFX(BlockPos.MutableBlockPos sourcePos, BlockState state, RandomSource random) {
         ClientLevel level = Minecraft.getInstance().level;
         if (spawnAttemptsUntilBlockFXIdle <= 0 && level.getRandom().nextFloat() < 0.9F) {
             return;
@@ -132,13 +133,13 @@ public final class ParticleSpawner {
             float z;
             if (speed < 0.8) {
                 // use a center-weighted spawn pattern if moving slowly and limit it to top half of sphere
-                height = Mth.abs(Mth.square(random.nextFloat()) - Mth.square(random.nextFloat())) * -1 + 1;
+                height = Mth.abs(Mth.square(RANDOM.nextFloat()) - Mth.square(level.getRandom().nextFloat())) * -1 + 1;
                 height *= 0.4F + 0.6F;
             } else {
                 // use the whole sphere if moving quickly (falling, flying)
-                height = random.nextFloat();
+                height = RANDOM.nextFloat();
             }
-            float theta = Mth.TWO_PI * random.nextFloat();
+            float theta = Mth.TWO_PI * RANDOM.nextFloat();
             float phi = (float) Math.acos((2 * height) - 1);
             x = config.perf.particleDistance * Mth.sin(phi) * Mth.cos(theta) + (float) cameraPos.x;
             y = config.perf.particleDistance * Mth.cos(phi)                  + (float) cameraPos.y;
@@ -161,7 +162,7 @@ public final class ParticleSpawner {
                     && data.spawnPos.equals(ParticleData.SpawnPos.SKY)
                     && data.weather.isCurrent(level)
                     && data.precipitation.contains(precipitation)
-                    && data.density > random.nextFloat()
+                    && data.density > RANDOM.nextFloat()
                     && data.biomeList.contains(biome)
                     && data.blockList.contains(level.getBlockState(heightmapPos).getBlockHolder())
                 ) {
@@ -185,8 +186,8 @@ public final class ParticleSpawner {
             ticksUntilSurfaceFXIdle--;
         }
         for (int i = 0; i < density; i++) {
-            double x = random.triangle(cameraPos.x, config.perf.surfaceRange);
-            double z = random.triangle(cameraPos.z, config.perf.surfaceRange);
+            double x = RANDOM.triangle(cameraPos.x, config.perf.surfaceRange);
+            double z = RANDOM.triangle(cameraPos.z, config.perf.surfaceRange);
             int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
             pos.set(x, y - 1, z);
             BlockState blockState = level.getBlockState(pos);
@@ -197,7 +198,7 @@ public final class ParticleSpawner {
                         && data.spawnPos.equals(ParticleData.SpawnPos.WORLD_SURFACE)
                         && data.weather.isCurrent(level)
                         && data.precipitation.contains(precipitation)
-                        && data.density > random.nextFloat()
+                        && data.density > RANDOM.nextFloat()
                         && data.biomeList.contains(biome)
                         && data.blockList.contains(blockState.getBlockHolder())
                 ) {

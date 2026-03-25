@@ -25,10 +25,5 @@ versionRange="${version_range}"
 ordering = "NONE"
 side = "CLIENT"
 
-[[dependencies.${mod_id}]]
-modId = "asyncparticles"
-type = "incompatible"
-reason = "AsyncParticles is no longer maintained and will not recieve compatibility updates."
-
 [[mixins]]
 config = "${mod_id}.mixins.json"

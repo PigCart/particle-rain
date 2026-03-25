@@ -141,6 +141,7 @@
     "spawnPos": "BLOCK_SIDES"
   },
   "shrub": {
+    "enabled": false,
     "presetParticleId": "particlerain:shrub",
     "usePresetParticle": true,
     "density": 0.002,

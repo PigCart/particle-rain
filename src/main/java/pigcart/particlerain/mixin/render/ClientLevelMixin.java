@@ -25,6 +25,6 @@ public class ClientLevelMixin {
             CallbackInfo ci,
             @Local BlockState state
     ) {
-        ParticleSpawner.tickBlockFX(blockPos, state);
+        ParticleSpawner.tickBlockFX(blockPos, state, random);
     }
 }

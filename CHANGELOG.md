@@ -14,7 +14,17 @@
 - new mist
 - splash replacement - splatter
 - new streaks
-- blended render type shaderpack fallback
+- blended render type shaderpack fallback ✔
+
+# v4 beta 8
+###### Mar 25, 2026
+- fixed mod not loading on forge due to incorrect metadata
+- fixed heavy dust inflating at biome borders
+- fixed fog rendering incorrectly with iris
+- fixed random crash probably
+- improved water tint when shaders are used (can be disabled in config)
+- removed shrubs temporarily
+- removed support for minecraft 1.21.4, 1.21.5, 1.21.6
 
 # v4 beta 7
 ###### Mar 24, 2026

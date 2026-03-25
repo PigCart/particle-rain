@@ -40,6 +40,11 @@ repositories {
     mavenLocal()
     maven("https://maven.neoforged.net/releases/")
     maven("https://maven.parchmentmc.org")
+    maven("https://api.modrinth.com/maven")
+}
+
+dependencies {
+    compileOnly("maven.modrinth:iris:${property("deps.iris")}")
 }
 
 neoForge {

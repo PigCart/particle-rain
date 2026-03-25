@@ -42,6 +42,21 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class VersionUtil {
+
+    public static boolean shadersEnabled() {
+        return irisLoaded() && net.irisshaders.iris.api.v0.IrisApi.getInstance().isShaderPackInUse();
+
+    }
+    public static boolean irisLoaded() {
+        return  //? forge {
+                /*net.minecraftforge.fml.ModList.get().isLoaded("oculus");
+                 *///?} else if neoforge {
+                /*net.neoforged.fml.ModList.get().isLoaded("iris");
+                 *///?} else {
+                net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("iris");
+                //?}
+    }
+
     @SuppressWarnings("removal")
     public static ResourceLocation getId(String path) {
         //? if <=1.20.1 {

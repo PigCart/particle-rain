@@ -42,6 +42,7 @@ repositories {
     mavenLocal()
     maven("https://maven.parchmentmc.org")
     maven("https://maven.terraformersmc.com/")
+    maven("https://api.modrinth.com/maven")
 }
 
 loom {
@@ -61,6 +62,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric-loader")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric-api")}")
     modImplementation("com.terraformersmc:modmenu:${property("deps.modmenu")}")
+    modCompileOnly("maven.modrinth:iris:${property("deps.iris")}")
 }
 
 tasks {

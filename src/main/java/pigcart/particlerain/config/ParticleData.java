@@ -159,21 +159,22 @@ public class ParticleData {
         },
         BLENDED;
 
-        //? if >=1.21.9 {
-        /*public SingleQuadParticle.Layer get() {
-            return BlendedParticleRenderType.INSTANCE;
-        }
-        *///?} else {
+        //~ if >=1.21.9 'ParticleRenderType' -> 'SingleQuadParticle.Layer'
         public ParticleRenderType get() {
+            //? >=1.21.9 {
+            /*if (VersionUtil.shadersEnabled()) {
+                return SingleQuadParticle.Layer.TRANSLUCENT;
+            }
+            *///?}
             return BlendedParticleRenderType.INSTANCE;
         }
-        //?}
+
     }
 
     public enum TintType {
         WATER {
             public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
-                // TODO: IrisApi.isShaderPackInUse()
+                if (VersionUtil.shadersEnabled() && config.compat.shaderpackTint) return;
                 final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, pos));
                 final Color fogColor = VersionUtil.getFogColor(level, pos);
                 float rCol = Mth.lerp(config.compat.tintMix, waterColor.getRed(), fogColor.getRed());

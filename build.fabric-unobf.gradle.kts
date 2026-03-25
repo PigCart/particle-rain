@@ -41,6 +41,7 @@ base.archivesName = property("mod.id") as String
 repositories {
     mavenLocal()
     maven("https://maven.terraformersmc.com/")
+    maven("https://api.modrinth.com/maven")
 }
 
 loom {
@@ -56,6 +57,7 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:${property("deps.fabric-loader")}")
     implementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric-api")}")
     compileOnly("com.terraformersmc:modmenu:${property("deps.modmenu")}")
+    compileOnly("maven.modrinth:iris:${property("deps.iris")}")
 }
 
 tasks {

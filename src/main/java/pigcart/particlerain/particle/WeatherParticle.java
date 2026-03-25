@@ -23,7 +23,6 @@ import pigcart.particlerain.config.ParticleData;
 
 import static pigcart.particlerain.config.ConfigManager.config;
 
-//TODO
 public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadParticle *//*?} else {*/TextureSheetParticle /*?}*/ {
 
     protected BlockPos.MutableBlockPos pos;

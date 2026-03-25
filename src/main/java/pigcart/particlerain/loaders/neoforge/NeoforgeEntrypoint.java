@@ -64,16 +64,16 @@ public class NeoforgeEntrypoint {
 
     public static void onRegisterReloadListeners(
             //? >=1.21.4 {
-            /^net.neoforged.neoforge.client.event.AddClientReloadListenersEvent event
-            ^///?} else {
-            net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent event
-            //?}
+            net.neoforged.neoforge.client.event.AddClientReloadListenersEvent event
+            //?} else {
+            /^net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent event
+            ^///?}
     ) {
         //? >=1.21.4 {
-        /^event.addListener(VersionUtil.getId("reload"),
-        ^///?} else {
-        event.registerReloadListener(
-        //?}
+        event.addListener(VersionUtil.getId("reload"),
+        //?} else {
+        /^event.registerReloadListener(
+        ^///?}
             new SimplePreparableReloadListener<>() {
                 @Override
                 protected Object prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {

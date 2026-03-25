@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.config.ConfigManager;
 //? if >=1.21.9 {
 /*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 *///?}
 
 import java.util.List;
@@ -76,6 +77,12 @@ public class ParticleRain {
                 (display, level, levelChunk, levelChunk2) ->
                         display.addToGroup(VersionUtil.getId("debuglines"), getDebugLines())
         );
+        if (VersionUtil.irisLoaded()) {
+            net.irisshaders.iris.api.v0.IrisApi.getInstance().assignPipeline(
+                    BlendedParticleRenderType.FOG_PIPELINE,
+                    net.irisshaders.iris.api.v0.IrisProgram.PARTICLES_TRANSLUCENT
+            );
+        }
         *///?}
     }
 

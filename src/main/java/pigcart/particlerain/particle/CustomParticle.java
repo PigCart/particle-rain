@@ -125,7 +125,7 @@ public class CustomParticle extends WeatherParticle {
 
     public void onPositionUpdate() {
         if (!config.compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
-            doCollisionAnim = true;
+            this.remove();
         }
         if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos) || !level.getFluidState(pos).isEmpty()) {
             this.remove();

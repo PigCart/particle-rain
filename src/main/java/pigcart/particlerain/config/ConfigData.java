@@ -50,8 +50,7 @@ public class ConfigData {
         public boolean waterTint = true;
         @Slider @Format(Percent.class)
         public float tintMix = 0.6F;
-        @NoGUI
-        public boolean shaderpackTint = true; //TODO
+        public boolean shaderpackTint = true;
         public boolean syncRegistries = true;
         public boolean crossBiomeBorder = false;
         public boolean useHeightmapTemp = true;

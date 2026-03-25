@@ -60,7 +60,7 @@
   "particlerain.waterTint.description": "Applies color to rain, streaks, drops, and splashes.",
   "particlerain.tintMix": "Water sky color contribution",
   "particlerain.tintMix.description": "How much tinted water particles reflect the sky color instead of the water color.",
-  "particlerain.shaderpackTint": "Only use sky color when shaders are enabled",
+  "particlerain.shaderpackTint": "Don't tint rain when shaders are enabled",
   "particlerain.syncRegistries": "Sync registries",
   "particlerain.syncRegistries.description": "Disable this if Particle Rain is preventing players from connecting to your LAN server.",
   "particlerain.crossBiomeBorder": "Cross climate borders",
