@@ -7,10 +7,10 @@ assignees: ''
 
 ---
 
-**Issue description:**
+Issue description:
 
-**Link to game log or crash report (use https://mclo.gs/ or another service):**
+Link to game log or crash report (use https://mclo.gs/ or another service):
 
-**Link to modpack (if applicable):**
+Link to modpack (if applicable):
 
-**Screenshot / video:**
+Screenshot / video:

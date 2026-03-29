@@ -7,6 +7,8 @@
   "particlerain.ground": "Ground",
   "particlerain.sky": "Sky",
   "particlerain.auto": "Automatic",
+  "particlerain.distanceInblocks": "%s blocks",
+  "particlerain.timeInTicks": "%s ticks (%s seconds)",
 
   "particlerain.perf": "Performance Options",
   "particlerain.perf.description": "Lowering these will reduce the amount of particles on screen, making the game run faster at the cost of more sparse looking effects",
@@ -111,7 +113,7 @@
   "particlerain.constantScreenSize": "Constant screen size",
   "particlerain.constantScreenSize.description": "Scales the particle by distance so that it remains the same size on the screen.",
   "particlerain.renderType": "Render type",
-  "particlerain.renderType.description": "Defines how translucency is handled. \nBLENDED type may render incorrectly with some mods and is incompatible with shaderpacks as of Minecraft 1.21.5.",
+  "particlerain.renderType.description": "Defines how translucency is handled. \n'Blended' type allows translucent particles to overlap, but does not function with shaderpacks as of Minecraft 1.21.5.",
   "particlerain.spriteLocations": "Sprites",
   "particlerain.tintType": "Tint type",
   "particlerain.customTint": "Custom tint",

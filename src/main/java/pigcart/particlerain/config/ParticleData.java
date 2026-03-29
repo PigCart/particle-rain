@@ -12,7 +12,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
-import org.joml.Vector3f;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.VersionUtil;
@@ -69,17 +68,18 @@ public class ParticleData {
     public Whitelist.BlockList blockList = new Whitelist.BlockList(true, new ArrayList<>(1));
     public Boolean needsSkyAccess = true;
     public SpawnPos spawnPos = SpawnPos.SKY;
-    //public Vector3f spawnVelocity = new Vector3f(0, 0, 0);
     @Label(key = "motion")
     @OnlyVisibleIf(ParticleIsCustom.class) public Float gravity = 0.1F;
     @OnlyVisibleIf(ParticleIsCustom.class) public Float windStrength = 0.1F;
     @OnlyVisibleIf(ParticleIsCustom.class) public Float stormWindStrength = 0.5F;
     @OnlyVisibleIf(ParticleIsCustom.class) public Float rotationAmount = 0F;
     @OnlyVisibleIf(ParticleIsCustom.class) public Float bounciness = 0F;
+    @Format(TimeInTicks.class)
     @OnlyVisibleIf(ParticleIsCustom.class) public Integer lifetime = 3000;
     @Label(key = "appearance")
     @Slider @Format(Percent.class)
     @OnlyVisibleIf(ParticleIsCustom.class) public Float opacity = 1.0F;
+    @Format(DistanceInBlocks.class)
     @OnlyVisibleIf(ParticleIsCustom.class) public Float size = 0.5F;
     @OnlyVisibleIf(ParticleIsCustom.class) public Boolean constantScreenSize = false;
     @OnlyVisibleIf(ParticleIsCustom.class) public RenderType renderType = RenderType.TRANSLUCENT;

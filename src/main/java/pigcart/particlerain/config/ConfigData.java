@@ -22,7 +22,9 @@ public class ConfigData {
         public int maxParticleAmount = 1500;
         public int particleDensity = 100;
         public int particleStormDensity = 200;
+        @Format(DistanceInBlocks.class)
         public int particleDistance = 16;
+        @Format(DistanceInBlocks.class)
         public int surfaceRange = 100;
     }
 

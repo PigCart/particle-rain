@@ -49,6 +49,23 @@ public class ConfigResponders {
         }
     }
 
+    public static class DistanceInBlocks implements Function<Object, Component> {
+        public Component apply(Object stringValue) {
+            return Component.translatable("particlerain.distanceInblocks", stringValue);
+        }
+    }
+
+    public static class TimeInTicks implements Function<Object, Component> {
+        public Component apply(Object stringValue) {
+            try {
+                int i = Integer.parseInt((String) stringValue);
+                return Component.translatable("particlerain.timeInTicks", stringValue, i / 20F);
+            } catch (NumberFormatException e) {
+                return Component.literal((String) stringValue);
+            }
+        }
+    }
+
     public static class ReloadResources implements Runnable {
         public void run() {
             Minecraft.getInstance().reloadResourcePacks();

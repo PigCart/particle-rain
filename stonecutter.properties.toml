@@ -1,6 +1,6 @@
 mod.id = "particlerain"
 mod.name = "Particle Rain"
-mod.version = "4.0.0-beta.8"
+mod.version = "4.0.0-beta.9"
 mod.description = "Replaces weather with prettier particle effects"
 mod.author = "pigcart"
 mod.sources = "https://github.com/PigCart/particle-rain"

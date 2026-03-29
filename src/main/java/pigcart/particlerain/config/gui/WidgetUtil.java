@@ -20,8 +20,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.net.URI;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -84,7 +86,8 @@ public class WidgetUtil {
 
     public static AbstractWidget getFloat(int width, int x, String name, float initialValue, Consumer<Float> onValueChange, Function<Object, Component> valueFormatter) {
         final DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(6);
+        df.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT));
+        df.setMaximumFractionDigits(3);
         final InputWidget inputWidget = new InputWidget(width, x,
                 df.format(initialValue),
                 (string) -> onValueChange.accept(Float.valueOf(string)),
@@ -190,15 +193,8 @@ public class WidgetUtil {
 
             Consumer onValueChange = (value) -> setConfigField(screen.config, field, value);
 
-            Function<Object, Component> valueFormatter = (value)-> Component.literal(value.toString());
-            if (field.isAnnotationPresent(Format.class)) {
-                final Format format = field.getAnnotation(Format.class);
-                try {
-                    valueFormatter = (Function<Object, Component>) format.value().getConstructors()[0].newInstance();
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            Function<Object, Component> valueFormatter = getValueFormatter(field);
+
             if (type.equals(ArrayList.class)) {
                 final Class<?> listType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
                 if (field.isAnnotationPresent(NoSubMenu.class)) {
@@ -215,9 +211,25 @@ public class WidgetUtil {
                     ));
                 }
             } else {
-                AbstractWidget[] widgets = getOptionWidget(screen, field, name, currentValue, defaultValue, onValueChange, valueFormatter, type);
+                AbstractWidget[] widgets = getRowWidgets(screen, field, name, currentValue, defaultValue, onValueChange, valueFormatter, type);
+                for (AbstractWidget widget : widgets) {
+                    widget.setTooltip(Tooltip.create(Component.translatableWithFallback(name + ".description", "")));
+                }
                 screen.addRow(widgets);
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Function<Object, Component> getValueFormatter(Field field) {
+        if (!field.isAnnotationPresent(Format.class)) {
+            return (value) -> Component.literal(value.toString());
+        }
+        final Format format = field.getAnnotation(Format.class);
+        try {
+            return (Function<Object, Component>) format.value().getConstructors()[0].newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -232,7 +244,7 @@ public class WidgetUtil {
     }
 
     @SuppressWarnings("unchecked")
-    private static AbstractWidget[] getOptionWidget(ConfigScreen screen, Field field, String name, Object currentValue, Object defaultValue, Consumer onValueChange, Function<Object, Component> valueFormatter, Class<?> type) {
+    private static AbstractWidget[] getRowWidgets(ConfigScreen screen, Field field, String name, Object currentValue, Object defaultValue, Consumer onValueChange, Function<Object, Component> valueFormatter, Class<?> type) {
         if (field.isAnnotationPresent(Slider.class)) {
             final Slider slider = field.getAnnotation(Slider.class);
             return new AbstractWidget[]{

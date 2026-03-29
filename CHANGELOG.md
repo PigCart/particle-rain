@@ -16,6 +16,12 @@
 - new streaks
 - blended render type shaderpack fallback ✔
 
+# v4 beta 9
+###### in progress
+- fixed unreadable config inputs when CaramelChat is installed
+- readded tooltip descriptions to config entries
+- added display units to config entries
+
 # v4 beta 8
 ###### Mar 25, 2026
 - fixed mod not loading on forge due to incorrect metadata
