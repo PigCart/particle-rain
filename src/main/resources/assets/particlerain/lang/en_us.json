@@ -136,6 +136,7 @@
   "particlerain.Weather.ALWAYS": "Always",
 
   "particlerain.SpawnPos.SKY": "Sky",
+  "particlerain.SpawnPos.UNDERGROUND": "Underground",
   "particlerain.SpawnPos.BLOCK_SIDES": "Block sides",
   "particlerain.SpawnPos.BLOCK_BOTTOM": "Block bottom",
   "particlerain.SpawnPos.BLOCK_TOP": "Block top",
