@@ -44,6 +44,7 @@ public class ConfigManager {
             config = getDefaultConfig();
             save();
         }
+        config.updateTransientVariables();
     }
 
     public static void save() {
@@ -53,6 +54,7 @@ public class ConfigManager {
             ParticleRain.LOGGER.error("Couldn't create directory 'config/particlerain/'", e);
         }
         try (FileWriter writer = new FileWriter(CONFIG_PATH)) {
+            config.updateTransientVariables();
             GSON.toJson(config, writer);
         } catch (IOException e) {
             ParticleRain.LOGGER.error("Couldn't save config", e);

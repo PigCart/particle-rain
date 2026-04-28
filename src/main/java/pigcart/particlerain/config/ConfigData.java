@@ -4,6 +4,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 import pigcart.particlerain.config.gui.Annotations.*;
+import java.util.ArrayList;
+import java.util.List;
 //? if >=1.21.9 {
 /*import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
 import net.minecraft.client.particle.SingleQuadParticle;
@@ -15,6 +17,12 @@ import static pigcart.particlerain.config.ConfigResponders.*;
 
 public class ConfigData {
     @NoGUI public byte configVersion = 5;
+
+    public void updateTransientVariables() {
+        if (compat != null && compat.rainHeightIgnoreBlocks != null) {
+            compat.rainHeightIgnoreBlocks.populateInternalLists();
+        }
+    }
 
     public PerformanceOptions perf = new PerformanceOptions();
     public static class PerformanceOptions {
@@ -57,6 +65,9 @@ public class ConfigData {
         public boolean crossBiomeBorder = false;
         public boolean useHeightmapTemp = true;
         public boolean doSpawnHeightLimit = false;
+        public Whitelist.BlockList rainHeightIgnoreBlocks = new Whitelist.BlockList(true, new ArrayList<>(
+                List.of("#minecraft:fences", "#minecraft:all_signs", "#minecraft:leaves")
+        ));
         @Format(ZeroIsAutomatic.class)
         public int spawnHeightLimit = 0;
     }

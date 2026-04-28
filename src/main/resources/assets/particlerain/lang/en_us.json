@@ -73,6 +73,8 @@
   "particlerain.doSpawnHeightLimit.description": "Prevents weather particles from spawning above the cloud height.",
   "particlerain.spawnHeightLimit": "Spawn height limit",
   "particlerain.spawnHeightLimit.description": "The height at which particles are considered to be spawning above clouds. When set to a value of zero the mod will use the cloud height from the current world.",
+  "particlerain.rainHeightIgnoreBlocks": "Rain height ignore blocks",
+  "particlerain.rainHeightIgnoreBlocks.description": "Blocks or tags that should be ignored when finding the rain height (ex: fences, signs).",
 
   "particlerain.particles": "Edit Particles",
   "particlerain.presetParticleId": "Preset particle",
