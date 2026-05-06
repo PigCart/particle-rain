@@ -14,6 +14,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -82,6 +83,14 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
     public void onPositionUpdate() {
         if (!config.compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
             doCollisionAnim = true;
+        }
+        BlockState state = level.getBlockState(pos);
+        boolean isIgnoredByConfig = config.compat.rainHeightIgnoreBlocks != null
+                && !config.compat.rainHeightIgnoreBlocks.getEntries().isEmpty()
+                && config.compat.rainHeightIgnoreBlocks.contains(state.getBlockHolder());
+
+        if(isIgnoredByConfig && level.getFluidState(pos).isEmpty()) {
+            return;
         }
         if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos) || !level.getFluidState(pos).isEmpty()) {
             this.remove();

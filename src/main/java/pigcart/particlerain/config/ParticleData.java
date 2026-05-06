@@ -94,17 +94,17 @@ public class ParticleData {
     public enum Weather {
         DURING_WEATHER {
             public Boolean isCurrent(ClientLevel level) {
-                return level.isRaining();
+                return level.getRainLevel(1) > 0;
             }
         },
         ONLY_DURING_NORMAL_WEATHER {
             public Boolean isCurrent(ClientLevel level) {
-                return level.isRaining() && !level.isThundering();
+                return level.getRainLevel(1) > 0 && level.getThunderLevel(1) == 0;
             }
         },
         ONLY_DURING_STORMY_WEATHER {
             public Boolean isCurrent(ClientLevel level) {
-                return level.isThundering();
+                return level.getThunderLevel(1) == 0;
             }
         },
         AFTER_WEATHER {
@@ -114,7 +114,7 @@ public class ParticleData {
         },
         CLEAR {
             public Boolean isCurrent(ClientLevel level) {
-                return !level.isRaining();
+                return !(level.getRainLevel(1) > 0);
             }
         },
         ALWAYS;
