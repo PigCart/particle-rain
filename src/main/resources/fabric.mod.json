@@ -35,9 +35,6 @@
     "fabric-api": "*",
     "minecraft": "${version_range}"
   },
-  "breaks": {
-    "asyncparticles": "*"
-  },
   "custom": {
     "modmenu": {
       "links": {

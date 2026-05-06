@@ -124,12 +124,20 @@ public class ParticleData {
     }
 
     public enum SpawnPos {
+        //UNDERGROUND
         SKY,
         BLOCK_SIDES,
         BLOCK_BOTTOM,
         BLOCK_TOP,
-        WORLD_SURFACE,
-        UNDERGROUND
+        WORLD_SURFACE {
+            @Override
+            public int renderDistance() {
+                return config.perf.surfaceRange;
+            }
+        };
+        public int renderDistance() {
+            return config.perf.particleDistance;
+        }
     }
 
     public enum RenderType {
@@ -192,7 +200,10 @@ public class ParticleData {
         MAP {
             public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
                 Color color = VersionUtil.getMapColor(level, pos);
-                p.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+                float variance = level.getRandom().nextFloat() * 0.2F + 0.8F;
+                p.setColor(color.getRed() / 255F * variance,
+                        color.getGreen() / 255F * variance,
+                         color.getBlue() / 255F * variance);
             }
         },
         CUSTOM {

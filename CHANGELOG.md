@@ -1,3 +1,14 @@
+### version scheme
+`overhaul.feature.hotfix`
+- **overhaul** number is increased when significant parts of code are replaced or introduced
+- **feature** number is increased when a new feature is added, and resets after an overhaul
+- **hotfix** number is increased when something minor is tweaked or a bug is fixed, and resets after a new feature
+
+this mimics the version scheme used by minecraft between 2011 and 2024 and aims to communicate changes about the mod without making promises regarding compatibility.
+
+
+Versions marked `alpha/beta` indicate that im being too much of a perfectionist and have a todo list that i want to get through before considering the version 'finished'...
+
 ### v4 to-do list:
 - multiver ✔
 - custom particles ✔
@@ -16,9 +27,22 @@
 - new streaks
 - blended render type shaderpack fallback ✔
 
+# v4 beta 10
+###### May 6, 2026
+- updated Simplified Chinese translation (ty Sasaki-Akari)
+- removed incompatibilty warning for async particles
+- improved instructions on placeholder particle texture
+- added slight variance to map colored effects to improve effect visibility
+- re-added haze, disabled by default, improved dust haze
+- fixed non-functional underground spawn position option appearing in the config screen
+- fixed sky render distance being used for surface particles
+- fixed clipping in mc`>1.21.9` due to wrong collision size
+- fixed particles inverting/inflating during collision animation
+
 # v4 beta 9
-###### in progress
+###### Mar 29, 2026
 - fixed unreadable config inputs when CaramelChat is installed
+- fixed localization breaking decimal number inputs
 - readded tooltip descriptions to config entries
 - added display units to config entries
 

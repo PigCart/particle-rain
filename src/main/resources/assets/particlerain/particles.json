@@ -191,5 +191,69 @@
       "isWhitelist": true
     },
     "spawnPos": "WORLD_SURFACE"
+  },
+  "rain_haze": {
+    "enabled": false,
+    "density": 0.5,
+    "gravity": 0.1,
+    "windStrength": 0.1,
+    "stormWindStrength": 0.5,
+    "rotationAmount": 0.1,
+    "opacity": 0.3,
+    "size": 0.5,
+    "constantScreenSize": true,
+    "spriteLocations": [
+      "particlerain:fog_dithered"
+    ],
+    "rotationType": "COPY_CAMERA"
+  },
+  "snow_haze": {
+    "enabled": false,
+    "density": 0.5,
+    "rotationAmount": 0.1,
+    "opacity": 0.3,
+    "size": 0.5,
+    "constantScreenSize": true,
+    "spriteLocations": [
+      "particlerain:fog_dithered"
+    ],
+    "rotationType": "COPY_CAMERA",
+    "precipitation": [
+      "SNOW"
+    ],
+    "gravity": 0.05,
+    "windStrength": 0.1,
+    "stormWindStrength": 0.2
+  },
+  "dust_haze": {
+    "enabled": false,
+    "lifetime": 100,
+    "density": 0.3,
+    "gravity": 0.1,
+    "windStrength": 0.5,
+    "stormWindStrength": 0.8,
+    "rotationAmount": 0.1,
+    "opacity": 0.3,
+    "size": 0.5,
+    "constantScreenSize": true,
+    "spriteLocations": [
+      "particlerain:fog_dithered"
+    ],
+    "rotationType": "COPY_CAMERA",
+    "precipitation": [
+      "NONE"
+    ],
+    "blockList": {
+      "entries": [
+        "#minecraft:camel_sand_step_sound_blocks",
+        "#minecraft:sand",
+        "#minecraft:terracotta",
+        "#c:sandstone_blocks"
+      ],
+      "isWhitelist": true
+    },
+    "spawnPos": "WORLD_SURFACE",
+    "bounciness": "0.15",
+    "tintType": "MAP"
   }
 }

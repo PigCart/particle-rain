@@ -106,7 +106,7 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void tickDistanceFade() {
-        float renderDistance = config.perf.particleDistance;
+        float renderDistance = this.opts.spawnPos.renderDistance();
         if (distance > renderDistance + 1) {
             remove();
         } else {
@@ -133,12 +133,14 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void tickCollisions() {
-        float length = quadSize;
+        float length = quadSize * 2;
+        //? <1.21.9 {
         if (opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
             final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
             Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
             length *= Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
         }
+        //?}
         Vec3 quadCenterPos = new Vec3(x, y, z);
         Vec3 quadEdgePos = new Vec3(xd, yd, zd).normalize().multiply(length, length, length).add(x, y, z);
         final BlockHitResult hitResult = level.clip(VersionUtil.getClipContext(quadCenterPos, quadEdgePos));
@@ -164,7 +166,7 @@ public class CustomParticle extends WeatherParticle {
         oCollisionAnimProgress = collisionAnimProgress;
         collisionAnimProgress -= speed;
         if (!opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
-            quadSize -= speed;
+            quadSize = Math.max(quadSize - speed, 0);
         }
         if (oCollisionAnimProgress <= 0) remove();
     }
