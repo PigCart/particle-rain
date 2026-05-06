@@ -3,12 +3,14 @@ package pigcart.particlerain.particle;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -126,7 +128,18 @@ public class CustomParticle extends WeatherParticle {
     public void onPositionUpdate() {
         if (!config.compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
             this.remove();
+            return;
         }
+
+        BlockState state = level.getBlockState(pos);
+        boolean isIgnoredByConfig = config.compat.rainHeightIgnoreBlocks != null
+                && !config.compat.rainHeightIgnoreBlocks.getEntries().isEmpty()
+                && config.compat.rainHeightIgnoreBlocks.contains(state.getBlockHolder());
+
+        if(isIgnoredByConfig && level.getFluidState(pos).isEmpty()) {
+            return;
+        }
+
         if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos) || !level.getFluidState(pos).isEmpty()) {
             this.remove();
         }
@@ -150,6 +163,16 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void onCollision(BlockHitResult hitResult) {
+
+        BlockState state = level.getBlockState(hitResult.getBlockPos());
+        boolean isIgnoredByConfig = config.compat.rainHeightIgnoreBlocks != null
+                && !config.compat.rainHeightIgnoreBlocks.getEntries().isEmpty()
+                && config.compat.rainHeightIgnoreBlocks.contains(state.getBlockHolder());
+
+        if(isIgnoredByConfig) {
+            return;
+        }
+
         if (opts.bounciness != 0) {
             final Vector3f normal = hitResult.getDirection().step();
             final float bounciness = opts.bounciness * speed;
@@ -168,7 +191,7 @@ public class CustomParticle extends WeatherParticle {
         if (!opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
             quadSize = Math.max(quadSize - speed, 0);
         }
-        if (oCollisionAnimProgress <= 0) remove();
+        if (oCollisionAnimProgress <= 0) { remove(); }
     }
 
     public float getDistanceSize() {

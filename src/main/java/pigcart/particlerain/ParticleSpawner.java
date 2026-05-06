@@ -5,6 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
@@ -14,7 +15,10 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
+import net.minecraft.world.level.block.Blocks;
 import org.joml.Vector3f;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import pigcart.particlerain.config.ParticleData;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.StreakParticle;
@@ -43,13 +47,69 @@ public final class ParticleSpawner {
         afterWeatherTicksLeft = isRaining ? 0 : RandomSource.create().nextInt(6000); // 'after weather' period lasts up to 5 minutes
     }
 
+    public static boolean isIgnoredByConfig(BlockState state){
+    return  config.compat.rainHeightIgnoreBlocks != null
+            && !config.compat.rainHeightIgnoreBlocks.getEntries().isEmpty()
+            && config.compat.rainHeightIgnoreBlocks.contains(state.getBlockHolder());
+    }
+
+    public static int getCustomRainHeight(ClientLevel level, int x, int z) {
+        int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
+        if(y == 0) y=255; //Some servers (like wynncraft) send a map of 0 for MOTION_BLOCKING;
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(x, y, z);
+
+        //? if >=1.21.9 {
+        /*int minY = level.getMinY();
+        *///?} else {
+        int minY = -64;
+        //?}
+
+        while (y > minY) {
+            BlockState state = level.getBlockState(mutablePos);
+
+            boolean noCollision = state.getCollisionShape(level, pos).isEmpty();
+            boolean isIgnoredByConfig = isIgnoredByConfig(state);
+
+            if (noCollision || isIgnoredByConfig) {
+                y--;
+                mutablePos.setY(y);
+            } else {
+                break;
+            }
+        }
+        return y;
+    }
+
+    private static final Long2IntMap heightCache = new Long2IntOpenHashMap();
+    private static int lastTick = 0;
+
+    public static int getCachedHeight(ClientLevel level, int x, int z) {
+        if (config.compat.rainHeightIgnoreBlocks == null || config.compat.rainHeightIgnoreBlocks.getEntries().isEmpty()) {
+            return level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
+        }
+
+        if (level.getGameTime() != lastTick) {
+            if (level.getGameTime() % 80 == 0) heightCache.clear();
+            lastTick = (int) level.getGameTime();
+        }
+        long key = ((long) x << 32) | (z & 0xFFFFFFFFL);
+
+        if (heightCache.containsKey(key)) {
+            return heightCache.get(key);
+        }
+
+        int customY = getCustomRainHeight(level, x, z);
+        heightCache.put(key, customY);
+        return customY;
+    }
+
     public static void tickBlockFX(BlockPos.MutableBlockPos sourcePos, BlockState state, RandomSource random) {
         ClientLevel level = Minecraft.getInstance().level;
         if (spawnAttemptsUntilBlockFXIdle <= 0 && level.getRandom().nextFloat() < 0.9F) {
             return;
         }
         spawnAttemptsUntilBlockFXIdle--;
-        if (!state.getCollisionShape(level, sourcePos).isEmpty()) return;
+        if ( !state.getCollisionShape(level, sourcePos).isEmpty() && !isIgnoredByConfig(state) ) return;
         for (ParticleData opts : ParticleLoader.particles.values()) {
             if (!opts.enabled || !opts.weather.isCurrent(level)) continue;
             final Holder<Biome> biome = level.getBiome(sourcePos);
@@ -64,14 +124,14 @@ public final class ParticleSpawner {
             pos.set(sourcePos.getX() + opposite.getStepX(), sourcePos.getY() + opposite.getStepY(), sourcePos.getZ() + opposite.getStepZ());
             final BlockState blockState = level.getBlockState(pos);
             final FluidState fluidState = blockState.getFluidState();
-            if (blockState.getCollisionShape(level, pos).isEmpty() && fluidState.isEmpty()) continue;
+            if ((blockState.getCollisionShape(level, pos).isEmpty() && fluidState.isEmpty()) || isIgnoredByConfig(state) ) continue;
             if ((opts.spawnPos == ParticleData.SpawnPos.BLOCK_BOTTOM || opts.spawnPos == ParticleData.SpawnPos.BLOCK_SIDES || opts.spawnPos == ParticleData.SpawnPos.BLOCK_TOP)
                     && opts.precipitation.contains(VersionUtil.getPrecipitationAt(level, biome, sourcePos))
                     && opts.density > random.nextFloat()
                     && opts.biomeList.contains(biome)
                     && opts.blockList.contains(level.getBlockState(pos).getBlockHolder())
             ) {
-                if (opts.needsSkyAccess && sourcePos.getY() < level.getHeight(Heightmap.Types.MOTION_BLOCKING, sourcePos.getX(), sourcePos.getZ())) continue;
+                if (opts.needsSkyAccess && sourcePos.getY() < getCachedHeight(level, sourcePos.getX(), sourcePos.getZ())    ) continue;
                 // get position on block face
                 float p1 = random.nextFloat();
                 float p2 = random.nextFloat();
@@ -152,7 +212,7 @@ public final class ParticleSpawner {
                     pos.setY(cloudHeight);
                 }
             }
-            int heightmapY = level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ());
+            int heightmapY = getCachedHeight(level, pos.getX(), pos.getZ());
             heightmapPos.set(x, heightmapY - 1, z);
             if (heightmapY > pos.getY()) continue;
             Holder<Biome> biome = level.getBiome(pos);
@@ -188,7 +248,7 @@ public final class ParticleSpawner {
         for (int i = 0; i < density; i++) {
             double x = RANDOM.triangle(cameraPos.x, config.perf.surfaceRange);
             double z = RANDOM.triangle(cameraPos.z, config.perf.surfaceRange);
-            int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, (int) x, (int) z);
+            int y = getCachedHeight(level, (int) x, (int) z);
             pos.set(x, y - 1, z);
             BlockState blockState = level.getBlockState(pos);
             Holder<Biome> biome = level.getBiome(pos);

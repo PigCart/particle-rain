@@ -26,6 +26,7 @@ import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 import java.util.List;
 import java.util.Set;
 
+import static pigcart.particlerain.ParticleSpawner.getCachedHeight;
 import static pigcart.particlerain.config.ConfigManager.config;
 
 public class ParticleRain {
@@ -115,6 +116,8 @@ public class ParticleRain {
     }
 
     public static void doAdditionalWeatherSounds(ClientLevel level, BlockPos cameraPos, BlockPos rainPos, CallbackInfo ci) {
+        int newy = getCachedHeight(level, rainPos.getX(), rainPos.getZ());
+        rainPos = new BlockPos(rainPos.getX(), newy, rainPos.getZ());
         if (config.compat.doSpawnHeightLimit) {
             int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, rainPos) : config.compat.spawnHeightLimit;
             if (rainPos.getY() > cloudHeight) {
@@ -123,7 +126,7 @@ public class ParticleRain {
             }
         }
         boolean above = rainPos.getY() > cameraPos.getY() + 1
-                && level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, cameraPos).getY() > Mth.floor((float)cameraPos.getY());
+                && getCachedHeight(level, cameraPos.getX(), cameraPos.getZ()) > Mth.floor((float)cameraPos.getY());
         Holder<Biome> biome = level.getBiome(rainPos);
         Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, rainPos);
         if (precipitation == Biome.Precipitation.SNOW && config.sound.snowVolume > 0) {

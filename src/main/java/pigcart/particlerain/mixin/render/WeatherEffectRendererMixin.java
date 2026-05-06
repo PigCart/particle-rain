@@ -15,12 +15,15 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import org.objectweb.asm.Opcodes;
+import pigcart.particlerain.ParticleSpawner;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
 //? if >=1.21.9 {
@@ -44,6 +47,18 @@ public abstract class WeatherEffectRendererMixin {
     @Inject(method = "tickRainParticles", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER, ordinal = 1, target = "Lnet/minecraft/client/renderer/WeatherEffectRenderer;rainSoundTime:I"), cancellable = true)
     public void hookWeatherSounds(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus,/^?>=1.21.11{^//^int weatherRadius,^//^?}^/ CallbackInfo ci, @Local(ordinal = 0) BlockPos blockPos, @Local(ordinal = 1) BlockPos blockPos2) {
         ParticleRain.doAdditionalWeatherSounds(level, blockPos, blockPos2, ci);
+    }
+
+    @WrapOperation(
+            method = "tickRainParticles",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/multiplayer/ClientLevel;getHeightmapPos(Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;"
+            )
+    )
+    public BlockPos alterHeightmapPos(ClientLevel instance, Heightmap.Types types, BlockPos blockPos, Operation<BlockPos> original) {
+        int newY = ParticleSpawner.getCachedHeight(instance, blockPos.getX(), blockPos.getZ());
+        return new BlockPos(blockPos.getX(), newY, blockPos.getZ());
     }
 
     // make rain sound use the mods rain volume slider
@@ -99,6 +114,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.config.ConfigManager;
 
 import static pigcart.particlerain.config.ConfigManager.config;
@@ -111,6 +127,19 @@ public class WeatherEffectRendererMixin {
     public Holder<Biome> getBiomeValue(LevelReader instance, BlockPos pos, Operation<Holder<Biome>> original) {
         // mixin somehow can't resolve target getPrecipitationAt so lets just replace the gotten biome with a rainy one instead
         return Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS);
+    }
+
+    @WrapOperation(
+            method = "tickRain",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/LevelReader;getHeightmapPos(Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;"
+            )
+    )
+    public BlockPos alterHeightmapPos(net.minecraft.world.level.LevelReader instance, net.minecraft.world.level.levelgen.Heightmap.Types types, BlockPos blockPos, Operation<BlockPos> original) {
+        ClientLevel level = (ClientLevel) instance;
+        int newY = ParticleSpawner.getCachedHeight(level, blockPos.getX(), blockPos.getZ());
+        return new BlockPos(blockPos.getX(), newY, blockPos.getZ());
     }
 
     // insert additional sounds without replacing vanilla code block where rain sounds are played
