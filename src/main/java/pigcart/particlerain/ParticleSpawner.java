@@ -67,7 +67,6 @@ public final class ParticleSpawner {
             boolean noCollision = state.getCollisionShape(level, pos).isEmpty();
             boolean nonFluid = state.getFluidState().isEmpty();
 
-            //TODO: why is it one block lower than vanilla
             if (nonFluid && (noCollision || isIgnored(state))) {
                 y--;
                 mutablePos.setY(y);
