@@ -3,7 +3,6 @@ package pigcart.particlerain.particle;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -132,28 +131,27 @@ public class CustomParticle extends WeatherParticle {
         }
 
         BlockState state = level.getBlockState(pos);
-        boolean isIgnoredByConfig = config.compat.rainHeightIgnoreBlocks != null
-                && !config.compat.rainHeightIgnoreBlocks.getEntries().isEmpty()
-                && config.compat.rainHeightIgnoreBlocks.contains(state.getBlockHolder());
+        boolean ignoresBlock = config.compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
+        boolean isInFluid = !level.getFluidState(pos).isEmpty();
 
-        if(isIgnoredByConfig && level.getFluidState(pos).isEmpty()) {
-            return;
-        }
-
-        if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos) || !level.getFluidState(pos).isEmpty()) {
-            this.remove();
+        if (!ignoresBlock || isInFluid) {
+            if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos)) {
+                this.remove();
+            }
         }
     }
 
     public void tickCollisions() {
-        float length = quadSize * 2;
-        //? <1.21.9 {
+        float length = quadSize;
         if (opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
+            //? <1.21.9 {
             final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
             Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
             length *= Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
+            //?} else {
+            /*length *= 2;
+            *///?}
         }
-        //?}
         Vec3 quadCenterPos = new Vec3(x, y, z);
         Vec3 quadEdgePos = new Vec3(xd, yd, zd).normalize().multiply(length, length, length).add(x, y, z);
         final BlockHitResult hitResult = level.clip(VersionUtil.getClipContext(quadCenterPos, quadEdgePos));
@@ -165,11 +163,7 @@ public class CustomParticle extends WeatherParticle {
     public void onCollision(BlockHitResult hitResult) {
 
         BlockState state = level.getBlockState(hitResult.getBlockPos());
-        boolean isIgnoredByConfig = config.compat.rainHeightIgnoreBlocks != null
-                && !config.compat.rainHeightIgnoreBlocks.getEntries().isEmpty()
-                && config.compat.rainHeightIgnoreBlocks.contains(state.getBlockHolder());
-
-        if(isIgnoredByConfig) {
+        if(config.compat.weatherIgnoreBlocks.contains(state.getBlockHolder())) {
             return;
         }
 

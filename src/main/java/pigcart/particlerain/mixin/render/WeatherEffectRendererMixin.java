@@ -57,7 +57,7 @@ public abstract class WeatherEffectRendererMixin {
             )
     )
     public BlockPos alterHeightmapPos(ClientLevel instance, Heightmap.Types types, BlockPos blockPos, Operation<BlockPos> original) {
-        int newY = ParticleSpawner.getCachedHeight(instance, blockPos.getX(), blockPos.getZ());
+        int newY = ParticleSpawner.getHeight(instance, blockPos.getX(), blockPos.getZ());
         return new BlockPos(blockPos.getX(), newY, blockPos.getZ());
     }
 
@@ -138,7 +138,7 @@ public class WeatherEffectRendererMixin {
     )
     public BlockPos alterHeightmapPos(net.minecraft.world.level.LevelReader instance, net.minecraft.world.level.levelgen.Heightmap.Types types, BlockPos blockPos, Operation<BlockPos> original) {
         ClientLevel level = (ClientLevel) instance;
-        int newY = ParticleSpawner.getCachedHeight(level, blockPos.getX(), blockPos.getZ());
+        int newY = ParticleSpawner.getHeight(level, blockPos.getX(), blockPos.getZ());
         return new BlockPos(blockPos.getX(), newY, blockPos.getZ());
     }
 

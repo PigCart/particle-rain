@@ -85,9 +85,9 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
             doCollisionAnim = true;
         }
         BlockState state = level.getBlockState(pos);
-        boolean isIgnoredByConfig = config.compat.rainHeightIgnoreBlocks != null
-                && !config.compat.rainHeightIgnoreBlocks.getEntries().isEmpty()
-                && config.compat.rainHeightIgnoreBlocks.contains(state.getBlockHolder());
+        boolean isIgnoredByConfig = config.compat.weatherIgnoreBlocks != null
+                && !config.compat.weatherIgnoreBlocks.getEntries().isEmpty()
+                && config.compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
 
         if(isIgnoredByConfig && level.getFluidState(pos).isEmpty()) {
             return;

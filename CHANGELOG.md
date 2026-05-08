@@ -29,14 +29,16 @@ Versions marked `alpha/beta` indicate that im being too much of a perfectionist 
 
 # v4 beta 10
 ###### May 6, 2026
-- updated Simplified Chinese translation (ty Sasaki-Akari)
+- updated Simplified Chinese translation (thanks: Sasaki-Akari)
+- added option for weather to ignore specific blocks, passing through them instead of being obstructed (thanks: HigorFr)
+  - barriers, fences, and signs are ignored by default
 - removed incompatibilty warning for async particles
 - improved instructions on placeholder particle texture
 - added slight variance to map colored effects to improve effect visibility
 - re-added haze, disabled by default, improved dust haze
 - fixed non-functional underground spawn position option appearing in the config screen
 - fixed sky render distance being used for surface particles
-- fixed clipping in mc`>1.21.9` due to wrong collision size
+- fixed wrong collision size causing particles to clip through thin surfaces in mc`>1.21.9`
 - fixed particles inverting/inflating during collision animation
 
 # v4 beta 9

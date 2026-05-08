@@ -9,9 +9,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import pigcart.particlerain.VersionUtil;
+import pigcart.particlerain.config.ConfigResponders.*;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 
 import static pigcart.particlerain.config.gui.Annotations.*;
 
@@ -78,11 +80,11 @@ public abstract class Whitelist<T> {
     public static class BlockList extends Whitelist<Block> {
         public transient final URI wikiLink = URI.create("https://wiki.fabricmc.net/community:common_tags#block_tags");
         @NoSubMenu
-        @Dropdown(ConfigResponders.SupplyBlocks.class)
+        @Dropdown(SupplyBlocks.class)
         public ArrayList<String> entries;
-        BlockList(boolean isWhitelist, ArrayList<String> list) {
+        BlockList(boolean isWhitelist, String... blocks) {
             super(Registries.BLOCK, isWhitelist);
-            this.entries = list;
+            this.entries = new ArrayList<>(List.of(blocks));
         }
         public BlockList() {
             super(Registries.BLOCK);
@@ -97,11 +99,11 @@ public abstract class Whitelist<T> {
     public static class BiomeList extends Whitelist<Biome> {
         public transient final URI wikiLink = URI.create("https://wiki.fabricmc.net/community:common_tags#biome_tags");
         @NoSubMenu
-        @Dropdown(ConfigResponders.SupplyBiomes.class)
+        @Dropdown(SupplyBiomes.class)
         public ArrayList<String> entries;
-        BiomeList(boolean isWhitelist, ArrayList<String> list) {
+        BiomeList(boolean isWhitelist, String... biomes) {
             super(Registries.BIOME, isWhitelist);
-            this.entries = list;
+            this.entries = new ArrayList<>(List.of(biomes));
         }
         public BiomeList() {
             super(Registries.BIOME);

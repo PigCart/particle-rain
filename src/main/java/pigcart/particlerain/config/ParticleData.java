@@ -64,8 +64,8 @@ public class ParticleData {
     public Float density = 1.0F;
     public Weather weather = Weather.DURING_WEATHER;
     public ArrayList<Biome.Precipitation> precipitation = new ArrayList<>(List.of(Biome.Precipitation.RAIN));
-    public Whitelist.BiomeList biomeList = new Whitelist.BiomeList(true, new ArrayList<>(1));
-    public Whitelist.BlockList blockList = new Whitelist.BlockList(true, new ArrayList<>(1));
+    public Whitelist.BiomeList biomeList = new Whitelist.BiomeList();
+    public Whitelist.BlockList blockList = new Whitelist.BlockList();
     public Boolean needsSkyAccess = true;
     public SpawnPos spawnPos = SpawnPos.SKY;
     @Label(key = "motion")

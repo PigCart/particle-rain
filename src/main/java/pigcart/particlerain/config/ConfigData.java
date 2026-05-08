@@ -19,8 +19,8 @@ public class ConfigData {
     @NoGUI public byte configVersion = 5;
 
     public void updateTransientVariables() {
-        if (compat != null && compat.rainHeightIgnoreBlocks != null) {
-            compat.rainHeightIgnoreBlocks.populateInternalLists();
+        if (compat != null && compat.weatherIgnoreBlocks != null) {
+            compat.weatherIgnoreBlocks.populateInternalLists();
         }
     }
 
@@ -64,10 +64,10 @@ public class ConfigData {
         public boolean syncRegistries = true;
         public boolean crossBiomeBorder = false;
         public boolean useHeightmapTemp = true;
+        public Whitelist.BlockList weatherIgnoreBlocks = new Whitelist.BlockList(true,
+                "#minecraft:fences", "#minecraft:all_signs", "minecraft:barrier"
+        );
         public boolean doSpawnHeightLimit = false;
-        public Whitelist.BlockList rainHeightIgnoreBlocks = new Whitelist.BlockList(true, new ArrayList<>(
-                List.of("#minecraft:fences", "#minecraft:all_signs", "#minecraft:leaves")
-        ));
         @Format(ZeroIsAutomatic.class)
         public int spawnHeightLimit = 0;
     }

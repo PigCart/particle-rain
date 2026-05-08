@@ -26,11 +26,10 @@ import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 import java.util.List;
 import java.util.Set;
 
-import static pigcart.particlerain.ParticleSpawner.getCachedHeight;
+import static pigcart.particlerain.ParticleSpawner.getHeight;
 import static pigcart.particlerain.config.ConfigManager.config;
 
 public class ParticleRain {
-    public static int clientTicks = 0;
     public static final String MOD_ID = "particlerain";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
@@ -61,7 +60,9 @@ public class ParticleRain {
                 "is Raining: " + level.isRaining(),
                 "Biome Precipitation: " + precipitation,
                 "Wind multiplier: " + yLevelWindMultiplier(playerBlockPos.getY()),
-                "cloud height: " + VersionUtil.getCloudHeight(level, playerBlockPos)
+                "cloud height: " + VersionUtil.getCloudHeight(level, playerBlockPos),
+                "surface height: " + ParticleSpawner.getHeight(level, playerBlockPos.getX(), playerBlockPos.getZ()),
+                "default surface height: " + level.getHeight(Heightmap.Types.MOTION_BLOCKING, playerBlockPos.getX(), playerBlockPos.getZ())
         );
     }
 
@@ -90,7 +91,6 @@ public class ParticleRain {
     public static void onTick(Minecraft client) {
         final Camera camera = client.gameRenderer.getMainCamera();
         if (!client.isPaused() && client.level != null && camera.isInitialized()) {
-            clientTicks++;
             ParticleSpawner.tick(client.level, /*?>=1.21.11{*//*camera.position()*//*?}else{*/camera.getPosition()/*?}*/);
         }
     }
@@ -116,8 +116,8 @@ public class ParticleRain {
     }
 
     public static void doAdditionalWeatherSounds(ClientLevel level, BlockPos cameraPos, BlockPos rainPos, CallbackInfo ci) {
-        int newy = getCachedHeight(level, rainPos.getX(), rainPos.getZ());
-        rainPos = new BlockPos(rainPos.getX(), newy, rainPos.getZ());
+        int newY = getHeight(level, rainPos.getX(), rainPos.getZ());
+        rainPos = new BlockPos(rainPos.getX(), newY, rainPos.getZ());
         if (config.compat.doSpawnHeightLimit) {
             int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, rainPos) : config.compat.spawnHeightLimit;
             if (rainPos.getY() > cloudHeight) {
@@ -126,7 +126,7 @@ public class ParticleRain {
             }
         }
         boolean above = rainPos.getY() > cameraPos.getY() + 1
-                && getCachedHeight(level, cameraPos.getX(), cameraPos.getZ()) > Mth.floor((float)cameraPos.getY());
+                && getHeight(level, cameraPos.getX(), cameraPos.getZ()) > Mth.floor((float)cameraPos.getY());
         Holder<Biome> biome = level.getBiome(rainPos);
         Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, rainPos);
         if (precipitation == Biome.Precipitation.SNOW && config.sound.snowVolume > 0) {
@@ -144,8 +144,10 @@ public class ParticleRain {
     }
 
     public static Vector3f getWind(double x, double y, double z) {
+        final ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) return new Vector3f();
         float frequency = config.wind.gustFrequency;
-        float shift = clientTicks * config.wind.modulationSpeed;
+        float shift = level.getGameTime() * config.wind.modulationSpeed;
         float variance = config.wind.strengthVariance;
         float strength = config.wind.strength;
         float multiplier = config.wind.yLevelAdjustment? yLevelWindMultiplier(y) : 0;
