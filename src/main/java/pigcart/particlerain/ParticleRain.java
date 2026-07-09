@@ -138,7 +138,7 @@ public class ParticleRain {
         }
 
         // have to cancel rain sounds when necessary because of bypassing the initial precipitation check
-        if (config.sound.rainVolume == 0 || !precipitation.equals(Biome.Precipitation.RAIN)) {
+        if (config.sound.rainVolume == 0 || level.getRainLevel(1.0F) <= 0) {
             ci.cancel();
         }
     }

@@ -1,13 +1,12 @@
 package pigcart.particlerain.mixin.render;
 
-//? if >1.21.1 {
+//? >1.21.1 {
 /*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.WeatherEffectRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ParticleStatus;
@@ -26,7 +25,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
-//? if >=1.21.9 {
+//? <26.2 {
+import net.minecraft.client.renderer.MultiBufferSource;
+//?}
+//? >=1.21.9 {
 /^import net.minecraft.client.renderer.state./^¹?>=26.1{¹^//^¹level.¹^//^¹?}¹^/WeatherRenderState;
 ^///?}
 
@@ -35,6 +37,7 @@ import static pigcart.particlerain.config.ConfigManager.config;
 @Mixin(WeatherEffectRenderer.class)
 public abstract class WeatherEffectRendererMixin {
 
+    //? <26.2 {
     @Shadow protected abstract Biome.Precipitation getPrecipitationAt(Level level, BlockPos pos);
 
     // bypass precipitation check so we can share the sound placement calculations with non-rain sounds
@@ -74,9 +77,13 @@ public abstract class WeatherEffectRendererMixin {
             particleStatusLocalRef.set(ParticleStatus.MINIMAL);
         }
     }
+    //?}
 
     // prevent rendering weather column instances
-    //? if >=1.21.9 {
+    //? >=26.2 {
+    /^@Inject(method = "extractRenderState", at = @At("HEAD"), cancellable = true)
+    public void render(ClientLevel level, float partialTicks, Vec3 cameraPos, WeatherRenderState renderState, CallbackInfo ci) {
+    ^///?} >=1.21.9 {
     /^@Inject(method = "extractRenderState", at = @At("HEAD"), cancellable = true)
     public void render(Level level, int ticks, float partialTick, Vec3 cameraPosition, WeatherRenderState reusedState, CallbackInfo ci) {
     ^///?} else {

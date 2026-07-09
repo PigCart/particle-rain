@@ -249,7 +249,9 @@ public class VersionUtil {
     }
 
     static void addChatMsg(String message) {
-        //? >=26.1 {
+        //? >=26.2 {
+        /*Minecraft.getInstance().gui.hud.getChat().addClientSystemMessage(Component.literal(message));
+         *///?} >=26.1 {
         /*Minecraft.getInstance().gui.getChat().addClientSystemMessage(Component.literal(message));
          *///?} else {
         Minecraft.getInstance().gui.getChat().addMessage(Component.literal(message));

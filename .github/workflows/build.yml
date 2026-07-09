@@ -10,7 +10,8 @@ jobs:
                    1.21.1-fabric, 1.21.1-neoforge,
                    1.21.9-fabric,
                    1.21.11-fabric,
-                   26.1-fabric ]
+                   26.1-fabric,
+                   26.2-fabric ]
     steps:
       - name: checkout repository
         uses: actions/checkout@v4

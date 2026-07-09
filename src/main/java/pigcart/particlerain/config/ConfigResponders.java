@@ -80,6 +80,7 @@ public class ConfigResponders {
 
     public static class RefreshScreen implements Runnable {
         public void run() {
+            //~ if >=26.2 'screen' -> 'gui.screen()'
             ((ConfigScreen)Minecraft.getInstance().screen).refresh();
         }
     }

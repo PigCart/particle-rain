@@ -16,4 +16,8 @@ stonecutter parameters {
     replacements.string(current.parsed >= "26.1") {
         replace(".getBlockHolder()", ".typeHolder()")
     }
+    replacements.string(current.parsed >= "26.2") {
+        replace("setScreen", "setScreenAndShow")
+        replace("getMainCamera()", "mainCamera()")
+    }
 }

@@ -3,8 +3,12 @@ package pigcart.particlerain.particle.render;
 //? if >=1.21.9 {
 /*import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+//? >=26.2 {
+/^import com.mojang.blaze3d.platform.BlendFactor;
+^///?}else{
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
+//?}
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -12,7 +16,11 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import static net.minecraft.client.renderer.RenderPipelines.PARTICLE_SNIPPET;
 
 public class BlendedParticleRenderType {
+    //? >=26.2 {
+    /^public static final BlendFunction FOG_BLEND = new BlendFunction(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA);
+    ^///?} else {
     public static final BlendFunction FOG_BLEND = new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+    //?}
     public static final RenderPipeline FOG_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")

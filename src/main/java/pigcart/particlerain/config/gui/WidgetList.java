@@ -57,6 +57,7 @@ public class WidgetList extends ContainerObjectSelectionList<WidgetList.Row> {
         //?}
 
         private void renderEntryWidgets(/*?>=26.1{*//*GuiGraphicsExtractor*//*?}else{*/GuiGraphics/*?}*/ guiGraphics, int contentY, int mouseX, int mouseY, float partialTick) {
+            //~ if >=26.2 'screen' -> 'gui.screen()'
             int padding = Minecraft.getInstance().screen.width / 2 - 155;
             for (AbstractWidget widget : this.widgets) {
                 widget.setY(contentY);
