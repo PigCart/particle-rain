@@ -27,6 +27,15 @@ Versions marked `alpha/beta` indicate that im being too much of a perfectionist 
 - new streaks
 - blended render type shaderpack fallback ✔
 
+# v4 beta 11
+###### wip
+- added mc 26.2 support
+- added `#minecraft:substrate_overworld` to mist blocks list
+- fixed after weather period in mc 26.1 and above
+- raised config text input limit
+- updated Ukrainian and Russian translations (thanks: megatocha)
+- updated Korean translation (thanks: good7777865)
+
 # v4 beta 10
 ###### May 8, 2026
 - updated Simplified Chinese translation (thanks: Sasaki-Akari)

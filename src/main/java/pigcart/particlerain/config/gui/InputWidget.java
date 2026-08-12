@@ -34,6 +34,7 @@ public class InputWidget extends EditBox {
         ((AbstractWidgetAccess)this).pigcart$setOffset(x);
         this.valueFormatter = valueFormatter;
         this.setValue(initialValue);
+        this.setMaxLength(128);
         this.setResponder((value) -> {
             try {
                 onValueChange.accept(value);

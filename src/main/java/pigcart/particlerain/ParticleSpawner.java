@@ -41,7 +41,6 @@ public final class ParticleSpawner {
         if (afterWeatherTicksLeft > 0) afterWeatherTicksLeft--;
     }
 
-    //TODO: broken in 26.1
     public static void onWeatherChange(boolean isRaining) {
         afterWeatherTicksLeft = isRaining ? 0 : RandomSource.create().nextInt(6000); // 'after weather' period lasts up to 5 minutes
     }
