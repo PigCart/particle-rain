@@ -118,7 +118,7 @@ public class TextureUtil {
     }
 
     public static int getRippleResolution(List<SpriteContents> contents) {
-        if (ConfigManager.config.ripple.useResourcepackResolution) {
+        if (ConfigManager.getConfig().ripple.useResourcepackResolution) {
             ResourceLocation resourceLocation = VersionUtil.getMcId("big_smoke_0");
             for (SpriteContents spriteContents : contents) {
                 if (spriteContents.name().equals(resourceLocation)) {
@@ -131,9 +131,9 @@ public class TextureUtil {
                 }
             }
         }
-        if (ConfigManager.config.ripple.resolution < 4) ConfigManager.config.ripple.resolution = 4;
-        if (ConfigManager.config.ripple.resolution > 256) ConfigManager.config.ripple.resolution = 256;
-        return ConfigManager.config.ripple.resolution;
+        if (ConfigManager.getConfig().ripple.resolution < 4) ConfigManager.getConfig().ripple.resolution = 4;
+        if (ConfigManager.getConfig().ripple.resolution > 256) ConfigManager.getConfig().ripple.resolution = 256;
+        return ConfigManager.getConfig().ripple.resolution;
     }
 
     public static SpriteContents generateRipple(int i, int size) {

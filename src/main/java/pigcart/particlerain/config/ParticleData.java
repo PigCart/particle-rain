@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 import static pigcart.particlerain.config.ConfigResponders.*;
 import static pigcart.particlerain.config.gui.Annotations.*;
 
@@ -132,11 +132,11 @@ public class ParticleData {
         WORLD_SURFACE {
             @Override
             public int renderDistance() {
-                return config.perf.surfaceRange;
+                return getConfig().perf.surfaceRange;
             }
         };
         public int renderDistance() {
-            return config.perf.particleDistance;
+            return getConfig().perf.particleDistance;
         }
     }
 
@@ -182,12 +182,12 @@ public class ParticleData {
     public enum TintType {
         WATER {
             public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
-                if (VersionUtil.shadersEnabled() && config.compat.shaderpackTint) return;
+                if (VersionUtil.shadersEnabled() && getConfig().compat.shaderpackTint) return;
                 final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, pos));
                 final Color fogColor = VersionUtil.getFogColor(level, pos);
-                float rCol = Mth.lerp(config.compat.tintMix, waterColor.getRed(), fogColor.getRed());
-                float gCol = Mth.lerp(config.compat.tintMix, waterColor.getGreen(), fogColor.getGreen());
-                float bCol = Mth.lerp(config.compat.tintMix, waterColor.getBlue(), fogColor.getBlue());
+                float rCol = Mth.lerp(getConfig().compat.tintMix, waterColor.getRed(), fogColor.getRed());
+                float gCol = Mth.lerp(getConfig().compat.tintMix, waterColor.getGreen(), fogColor.getGreen());
+                float bCol = Mth.lerp(getConfig().compat.tintMix, waterColor.getBlue(), fogColor.getBlue());
                 p.setColor(rCol / 255F, gCol / 255F, bCol / 255F);
             }
         },

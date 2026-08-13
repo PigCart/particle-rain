@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import static pigcart.particlerain.ParticleSpawner.getHeight;
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public class ParticleRain {
     public static final String MOD_ID = "particlerain";
@@ -52,7 +52,7 @@ public class ParticleRain {
         final Holder<Biome> biome = level.getBiome(playerBlockPos);
         Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, playerBlockPos);
         return List.of(
-                String.format("Tracked particles: %d/%d", ParticleSpawner.particleCount, config.perf.maxParticleAmount),
+                String.format("Tracked particles: %d/%d", ParticleSpawner.particleCount, getConfig().perf.maxParticleAmount),
                 "after Weather Ticks Left: " + ParticleSpawner.afterWeatherTicksLeft,
                 "spawn Attempts Until Block FX Idle: " + ParticleSpawner.spawnAttemptsUntilBlockFXIdle,
                 "ticks Until Sky FX Idle: " + ParticleSpawner.ticksUntilSkyFXIdle,
@@ -67,7 +67,7 @@ public class ParticleRain {
     }
 
     public static void onInitializeClient() {
-        ConfigManager.load();
+        //ConfigManager.load(); cant trust forge with this, just let it load when needed. whatever.
 
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
@@ -118,8 +118,8 @@ public class ParticleRain {
     public static void doAdditionalWeatherSounds(ClientLevel level, BlockPos cameraPos, BlockPos rainPos, CallbackInfo ci) {
         int newY = getHeight(level, rainPos.getX(), rainPos.getZ());
         rainPos = new BlockPos(rainPos.getX(), newY, rainPos.getZ());
-        if (config.compat.doSpawnHeightLimit) {
-            int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, rainPos) : config.compat.spawnHeightLimit;
+        if (getConfig().compat.doSpawnHeightLimit) {
+            int cloudHeight = getConfig().compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, rainPos) : getConfig().compat.spawnHeightLimit;
             if (rainPos.getY() > cloudHeight) {
                 ci.cancel();
                 return;
@@ -129,16 +129,16 @@ public class ParticleRain {
                 && getHeight(level, cameraPos.getX(), cameraPos.getZ()) > Mth.floor((float)cameraPos.getY());
         Holder<Biome> biome = level.getBiome(rainPos);
         Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, rainPos);
-        if (precipitation == Biome.Precipitation.SNOW && config.sound.snowVolume > 0) {
+        if (precipitation == Biome.Precipitation.SNOW && getConfig().sound.snowVolume > 0) {
             SoundEvent sound = above ? ParticleRain.WEATHER_SNOW_ABOVE : ParticleRain.WEATHER_SNOW;
-            level.playLocalSound(rainPos, sound, SoundSource.WEATHER, config.sound.snowVolume, above ? 0.5F : 1.0F, false);
-        } else if (precipitation == Biome.Precipitation.NONE && biome.value().getBaseTemperature() > 0.25 && config.sound.windVolume > 0) {
+            level.playLocalSound(rainPos, sound, SoundSource.WEATHER, getConfig().sound.snowVolume, above ? 0.5F : 1.0F, false);
+        } else if (precipitation == Biome.Precipitation.NONE && biome.value().getBaseTemperature() > 0.25 && getConfig().sound.windVolume > 0) {
             SoundEvent sound = above ? ParticleRain.WEATHER_SANDSTORM_ABOVE : ParticleRain.WEATHER_SANDSTORM;
-            level.playLocalSound(rainPos, sound, SoundSource.WEATHER, config.sound.windVolume, above ? 0.5F : 1.0F, false);
+            level.playLocalSound(rainPos, sound, SoundSource.WEATHER, getConfig().sound.windVolume, above ? 0.5F : 1.0F, false);
         }
 
         // have to cancel rain sounds when necessary because of bypassing the initial precipitation check
-        if (config.sound.rainVolume == 0 || level.getRainLevel(1.0F) <= 0) {
+        if (getConfig().sound.rainVolume == 0 || !precipitation.equals(Biome.Precipitation.RAIN)) {
             ci.cancel();
         }
     }
@@ -146,11 +146,11 @@ public class ParticleRain {
     public static Vector3f getWind(double x, double y, double z) {
         final ClientLevel level = Minecraft.getInstance().level;
         if (level == null) return new Vector3f();
-        float frequency = config.wind.gustFrequency;
-        float shift = level.getGameTime() * config.wind.modulationSpeed;
-        float variance = config.wind.strengthVariance;
-        float strength = config.wind.strength;
-        float multiplier = config.wind.yLevelAdjustment? yLevelWindMultiplier(y) : 0;
+        float frequency = getConfig().wind.gustFrequency;
+        float shift = level.getGameTime() * getConfig().wind.modulationSpeed;
+        float variance = getConfig().wind.strengthVariance;
+        float strength = getConfig().wind.strength;
+        float multiplier = getConfig().wind.yLevelAdjustment? yLevelWindMultiplier(y) : 0;
         return new Vector3f(
                 (((Mth.sin((float) (x * frequency + shift)) * variance) + variance + strength) * multiplier) + 0.001F,
                 0,

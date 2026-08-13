@@ -32,6 +32,7 @@ Versions marked `alpha/beta` indicate that im being too much of a perfectionist 
 - added mc 26.2 support
 - added `#minecraft:substrate_overworld` to mist blocks list
 - fixed after weather period in mc 26.1 and above
+- added a null check before accessing config (potentially fixing a loading issue on forge platforms)
 - raised config text input limit
 - updated Ukrainian and Russian translations (thanks: megatocha)
 - updated Korean translation (thanks: good7777865)

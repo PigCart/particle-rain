@@ -51,7 +51,7 @@ public abstract class SpriteLoaderMixin {
                 snowImage = TextureUtil.loadTexture(VersionUtil.getMcId("textures/environment/snow.png"));
                 TextureUtil.boostAlpha(rainImage, "rain");
                 TextureUtil.boostAlpha(snowImage, "snow");
-                if (ConfigManager.config.compat.waterTint) TextureUtil.desaturate(rainImage);
+                if (ConfigManager.getConfig().compat.waterTint) TextureUtil.desaturate(rainImage);
             } catch (IOException e) {
                 ParticleRain.LOGGER.error("Error loading weather textures: ", e);
             }
@@ -69,7 +69,7 @@ public abstract class SpriteLoaderMixin {
                 stitcher.registerSprite(TextureUtil.generateRipple(i, rippleResolution));
             }
             // create gray versions of the default splashes so tint can be applied
-            if (ConfigManager.config.compat.waterTint) {
+            if (ConfigManager.getConfig().compat.waterTint) {
                 for (int i = 0; i < 4; i++) {
                     try {
                         stitcher.registerSprite(VersionUtil.loadSplashSprite(i));

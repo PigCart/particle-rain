@@ -7,7 +7,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import pigcart.particlerain.VersionUtil;
 
 import java.awt.*;
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 import net.minecraft.util.RandomSource;
 
@@ -16,14 +16,14 @@ public class ShrubParticle extends WeatherParticle {
 
     protected ShrubParticle(ClientLevel level, double x, double y, double z) {
         super(level, x, y, z, VersionUtil.getSprite(MissingTextureAtlasSprite.getLocation()));
-        this.quadSize = config.shrub.size;
+        this.quadSize = getConfig().shrub.size;
         this.setSize(quadSize, quadSize);
         this.hasPhysics = true;
-        this.gravity = config.shrub.gravity;
+        this.gravity = getConfig().shrub.gravity;
         this.yd = 0.1F;
         this.lifetime = 200;
-        this.xd = level.isThundering() ? config.shrub.stormWindStrength : config.shrub.windStrength;
-        this.zd = level.isThundering() ? config.shrub.stormWindStrength : config.shrub.windStrength;
+        this.xd = level.isThundering() ? getConfig().shrub.stormWindStrength : getConfig().shrub.windStrength;
+        this.zd = level.isThundering() ? getConfig().shrub.stormWindStrength : getConfig().shrub.windStrength;
     }
 
     //TODO

@@ -19,7 +19,7 @@ import pigcart.particlerain.config.ConfigManager;
 public abstract class WaterFallProviderMixin {
     @Inject(method = "createParticle(Lnet/minecraft/core/particles/SimpleParticleType;Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/util/RandomSource;)Lnet/minecraft/client/particle/Particle;", at = @At("TAIL"))
     public void createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random, CallbackInfoReturnable<Particle> cir) {
-        if (ConfigManager.config.compat.waterTint) TextureUtil.applyWaterTint((SingleQuadParticle) cir.getReturnValue(), level, BlockPos.containing(x, y, z));
+        if (ConfigManager.getConfig().compat.waterTint) TextureUtil.applyWaterTint((SingleQuadParticle) cir.getReturnValue(), level, BlockPos.containing(x, y, z));
     }
 }
 *///?}

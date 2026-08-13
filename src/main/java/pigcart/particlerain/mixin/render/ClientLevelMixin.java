@@ -23,7 +23,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import org.objectweb.asm.Opcodes;
 import pigcart.particlerain.ParticleRain;
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 *///?}
 
 @Mixin(ClientLevel.class)
@@ -72,7 +72,7 @@ public class ClientLevelMixin {
             target = "Lnet/minecraft/client/multiplayer/ClientLevel;playLocalSound(Lnet/minecraft/core/BlockPos;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"
     ))
     public void adjustRainVolume(ClientLevel instance, BlockPos blockPos, SoundEvent soundEvent, SoundSource soundSource, float volume, float pitch, boolean distanceDelay, Operation<Void> original) {
-        original.call(instance, blockPos, soundEvent, soundSource, config.sound.rainVolume, pitch, distanceDelay);
+        original.call(instance, blockPos, soundEvent, soundSource, getConfig().sound.rainVolume, pitch, distanceDelay);
     }
 
     // particle status MINIMAL disables splash particles
@@ -81,7 +81,7 @@ public class ClientLevelMixin {
             target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"
     ))
     public <T> T tickRainParticles(OptionInstance instance, Operation<T> original) {
-        if (!config.compat.doDefaultSplashing) {
+        if (!getConfig().compat.doDefaultSplashing) {
             return (T) ParticleStatus.MINIMAL;
         }
         return original.call(instance);

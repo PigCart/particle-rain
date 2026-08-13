@@ -22,7 +22,7 @@ import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ParticleData;
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadParticle *//*?} else {*/TextureSheetParticle /*?}*/ {
 
@@ -41,7 +41,7 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
         this.hasPhysics = false;
 
         this.setSize(quadSize, quadSize);
-        this.lifetime = config.perf.particleDistance * 100;
+        this.lifetime = getConfig().perf.particleDistance * 100;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
         this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
@@ -81,13 +81,13 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
     }
 
     public void onPositionUpdate() {
-        if (!config.compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
+        if (!getConfig().compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
             doCollisionAnim = true;
         }
         BlockState state = level.getBlockState(pos);
-        boolean isIgnoredByConfig = config.compat.weatherIgnoreBlocks != null
-                && !config.compat.weatherIgnoreBlocks.getEntries().isEmpty()
-                && config.compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
+        boolean isIgnoredByConfig = getConfig().compat.weatherIgnoreBlocks != null
+                && !getConfig().compat.weatherIgnoreBlocks.getEntries().isEmpty()
+                && getConfig().compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
 
         if(isIgnoredByConfig && level.getFluidState(pos).isEmpty()) {
             return;
@@ -98,7 +98,7 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
     }
 
     public void tickDistanceFade() {
-        final float renderDistance = config.perf.particleDistance;
+        final float renderDistance = getConfig().perf.particleDistance;
         if (distance > renderDistance) {
             remove();
         } else {

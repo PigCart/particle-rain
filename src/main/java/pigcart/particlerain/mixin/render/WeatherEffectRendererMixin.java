@@ -32,7 +32,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 /^import net.minecraft.client.renderer.state./^¹?>=26.1{¹^//^¹level.¹^//^¹?}¹^/WeatherRenderState;
 ^///?}
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 @Mixin(WeatherEffectRenderer.class)
 public abstract class WeatherEffectRendererMixin {
@@ -67,13 +67,13 @@ public abstract class WeatherEffectRendererMixin {
     // make rain sound use the mods rain volume slider
     @WrapOperation(method = "tickRainParticles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;playLocalSound(Lnet/minecraft/core/BlockPos;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"))
     public void adjustRainVolume(ClientLevel instance, BlockPos blockPos, SoundEvent soundEvent, SoundSource soundSource, float volume, float pitch, boolean distanceDelay, Operation<Void> original) {
-        original.call(instance, blockPos, soundEvent, soundSource, config.sound.rainVolume, pitch, distanceDelay);
+        original.call(instance, blockPos, soundEvent, soundSource, getConfig().sound.rainVolume, pitch, distanceDelay);
     }
 
     // particle status MINIMAL disables splash particles
     @Inject(method = "tickRainParticles", at = @At("HEAD"))
     public void tickRainParticles(ClientLevel level, Camera camera, int ticks, ParticleStatus particleStatus,/^?>=1.21.11{^//^int weatherRadius,^//^?}^/ CallbackInfo ci, @Local(argsOnly = true) LocalRef<ParticleStatus> particleStatusLocalRef) {
-        if (!config.compat.doDefaultSplashing) {
+        if (!getConfig().compat.doDefaultSplashing) {
             particleStatusLocalRef.set(ParticleStatus.MINIMAL);
         }
     }
@@ -90,7 +90,7 @@ public abstract class WeatherEffectRendererMixin {
     @Inject(method = "render(Lnet/minecraft/world/level/Level;Lnet/minecraft/client/renderer/MultiBufferSource;IFLnet/minecraft/world/phys/Vec3;)V", at = @At("HEAD"), cancellable = true)
     public void render(Level level, MultiBufferSource bufferSource, int ticks, float partialTick, Vec3 cameraPosition, CallbackInfo ci) {
     //?}
-        if (!config.compat.renderDefaultWeather) {
+        if (!getConfig().compat.renderDefaultWeather) {
             ci.cancel();
         }
     }
@@ -124,7 +124,7 @@ import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.config.ConfigManager;
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 @Mixin(LevelRenderer.class)
 public class WeatherEffectRendererMixin {
@@ -158,13 +158,13 @@ public class WeatherEffectRendererMixin {
     // make rain sound use the mods rain volume slider
     @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;playLocalSound(Lnet/minecraft/core/BlockPos;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"))
     public void adjustRainVolume(ClientLevel instance, BlockPos blockPos, SoundEvent soundEvent, SoundSource soundSource, float volume, float pitch, boolean distanceDelay, Operation<Void> original) {
-        original.call(instance, blockPos, soundEvent, soundSource, config.sound.rainVolume, pitch, distanceDelay);
+        original.call(instance, blockPos, soundEvent, soundSource, getConfig().sound.rainVolume, pitch, distanceDelay);
     }
 
     // particle status MINIMAL disables splash particles
     @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"))
     public Object optionsParticlesGet(OptionInstance instance, Operation<ParticleStatus> original) {
-        if (!ConfigManager.config.compat.doDefaultSplashing) {
+        if (!ConfigManager.getConfig().compat.doDefaultSplashing) {
             return ParticleStatus.MINIMAL;
         }
         return original.call(instance);
@@ -173,7 +173,7 @@ public class WeatherEffectRendererMixin {
     // prevent rendering weather column instances
     @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
     public void render(LightTexture lightTexture, float partialTick, double camX, double camY, double camZ, CallbackInfo ci) {
-        if (!ConfigManager.config.compat.renderDefaultWeather) {
+        if (!ConfigManager.getConfig().compat.renderDefaultWeather) {
             ci.cancel();
         }
     }

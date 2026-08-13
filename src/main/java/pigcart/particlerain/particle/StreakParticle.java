@@ -29,7 +29,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import java.util.Optional;
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public class StreakParticle extends WeatherParticle {
 
@@ -38,13 +38,13 @@ public class StreakParticle extends WeatherParticle {
 
     public StreakParticle(ClientLevel level, double x, double y, double z, Direction direction, Whitelist.BlockList blockList) {
         super(level, x, y, z, VersionUtil.getSprite(VersionUtil.getId("streak")));
-        if (config.compat.waterTint) {
+        if (getConfig().compat.waterTint) {
             TextureUtil.applyWaterTint(this, level, this.pos);
         } else {
             this.setColor(0.2f, 0.3f, 1.0f);
         }
-        this.alpha = config.streak.opacity;
-        this.quadSize = config.streak.size;
+        this.alpha = getConfig().streak.opacity;
+        this.quadSize = getConfig().streak.size;
         this.setSize(0.01F, 0.01F);
         this.hasPhysics = true;
         this.yd = -0.1;

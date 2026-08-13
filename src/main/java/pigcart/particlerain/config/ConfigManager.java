@@ -14,10 +14,15 @@ import java.nio.file.Path;
 public class ConfigManager {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     static final String CONFIG_PATH = "config/particlerain/config.json";
-    public static ConfigData config;
+    private static ConfigData config;
 
     public static Screen screenPlease(Screen lastScreen) {
-        return new MainConfigScreen(lastScreen, config, getDefaultConfig(), Component.translatable("particlerain.title"));
+        return new MainConfigScreen(lastScreen, getConfig(), getDefaultConfig(), Component.translatable("particlerain.title"));
+    }
+
+    public static ConfigData getConfig() {
+        if (config == null) load();
+        return config;
     }
 
     public static ConfigData getDefaultConfig() {
@@ -39,12 +44,12 @@ public class ConfigManager {
             config = getDefaultConfig();
             save();
         }
-        if (config.configVersion < getDefaultConfig().configVersion) {
+        if (getConfig().configVersion < getDefaultConfig().configVersion) {
             ParticleRain.LOGGER.info("Overwriting old config file");
             config = getDefaultConfig();
             save();
         }
-        config.updateTransientVariables();
+       getConfig().updateTransientVariables();
     }
 
     public static void save() {
@@ -54,8 +59,8 @@ public class ConfigManager {
             ParticleRain.LOGGER.error("Couldn't create directory 'config/particlerain/'", e);
         }
         try (FileWriter writer = new FileWriter(CONFIG_PATH)) {
-            config.updateTransientVariables();
-            GSON.toJson(config, writer);
+           getConfig().updateTransientVariables();
+            GSON.toJson(getConfig(), writer);
         } catch (IOException e) {
             ParticleRain.LOGGER.error("Couldn't save config", e);
         }

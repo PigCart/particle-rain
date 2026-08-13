@@ -40,7 +40,7 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
     public void pickSprite(SpriteSet spriteSet, CallbackInfo ci) {
 //?}
 
-        if (ConfigManager.config.compat.waterTint) {
+        if (ConfigManager.getConfig().compat.waterTint) {
             try {
                 this.setSprite(VersionUtil.getSprite(VersionUtil.getId("splash_" + random.nextInt(4))));
             } catch (IllegalStateException e) {

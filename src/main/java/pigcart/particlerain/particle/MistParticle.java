@@ -21,19 +21,19 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.awt.*;
 import java.util.Optional;
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public class MistParticle extends WeatherParticle {
 
     private MistParticle(ClientLevel level, double x, double y, double z, SpriteSet provider) {
-        super(level, x, y, z, config.mist.renderStyle.getSprite());
+        super(level, x, y, z, getConfig().mist.renderStyle.getSprite());
 
         this.y = ((int) y) + random.nextFloat();
 
-        this.quadSize = config.mist.size;
+        this.quadSize = getConfig().mist.size;
         this.setSize(quadSize, 0.2F);
-        this.targetOpacity = config.mist.opacity;
-        this.lifetime = config.mist.lifetime;
+        this.targetOpacity = getConfig().mist.opacity;
+        this.lifetime = getConfig().mist.lifetime;
         this.alpha = 0;
 
         Color color = VersionUtil.getFogColor(level, pos);
@@ -49,9 +49,9 @@ public class MistParticle extends WeatherParticle {
     public void tick() {
         super.tick();
         int halfLife = lifetime / 2;
-        this.alpha = (age < halfLife ? (float) age / (halfLife) : (float) (-age + lifetime) / halfLife) * config.mist.opacity;
-        if (config.mist.renderStyle == ConfigData.MistOptions.RenderStyle.DITHERED) quadSize = (distance * 0.1F) * config.mist.size;
-        if (distance > config.perf.surfaceRange) remove();
+        this.alpha = (age < halfLife ? (float) age / (halfLife) : (float) (-age + lifetime) / halfLife) * getConfig().mist.opacity;
+        if (getConfig().mist.renderStyle == ConfigData.MistOptions.RenderStyle.DITHERED) quadSize = (distance * 0.1F) * getConfig().mist.size;
+        if (distance > getConfig().perf.surfaceRange) remove();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MistParticle extends WeatherParticle {
     public ParticleRenderType getRenderType() {
     //?}
         // if >=1.21.5 & IrisApi.isShaderPackInUse() return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-        return config.mist.renderStyle.getRenderType();
+        return getConfig().mist.renderStyle.getRenderType();
     }
 
     @Override

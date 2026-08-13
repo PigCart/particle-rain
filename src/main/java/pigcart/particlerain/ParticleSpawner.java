@@ -22,7 +22,7 @@ import pigcart.particlerain.config.ParticleData;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.StreakParticle;
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public final class ParticleSpawner {
     private static final RandomSource RANDOM = RandomSource.create();
@@ -35,7 +35,7 @@ public final class ParticleSpawner {
     public static int particleCount = 0;
 
     public static void tick(ClientLevel level, Vec3 cameraPos) {
-        if (particleCount >= config.perf.maxParticleAmount) return;
+        if (particleCount >= getConfig().perf.maxParticleAmount) return;
         tickSkyFX(level, cameraPos);
         tickSurfaceFX(level, cameraPos);
         if (afterWeatherTicksLeft > 0) afterWeatherTicksLeft--;
@@ -46,7 +46,7 @@ public final class ParticleSpawner {
     }
 
     public static boolean isIgnored(BlockState state) {
-        return config.compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
+        return getConfig().compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
     }
 
     public static int calculateHeight(ClientLevel level, int x, int z) {
@@ -80,7 +80,7 @@ public final class ParticleSpawner {
     private static int lastTick = 0;
 
     public static int getHeight(ClientLevel level, int x, int z) {
-        if (config.compat.weatherIgnoreBlocks.getEntries().isEmpty()) {
+        if (getConfig().compat.weatherIgnoreBlocks.getEntries().isEmpty()) {
             return level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
         }
 
@@ -178,7 +178,7 @@ public final class ParticleSpawner {
             speed = 0;
         } else {
             ticksUntilSkyFXIdle--;
-            density = (int) (Mth.lerpInt(level.getThunderLevel(1), config.perf.particleDensity, config.perf.particleStormDensity) * level.getRainLevel(1));
+            density = (int) (Mth.lerpInt(level.getThunderLevel(1), getConfig().perf.particleDensity, getConfig().perf.particleStormDensity) * level.getRainLevel(1));
             speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().length();
             // mul density by speed to maintain visual density
             density = (int) (density * (1 + speed));
@@ -198,12 +198,12 @@ public final class ParticleSpawner {
             }
             float theta = Mth.TWO_PI * RANDOM.nextFloat();
             float phi = (float) Math.acos((2 * height) - 1);
-            x = config.perf.particleDistance * Mth.sin(phi) * Mth.cos(theta) + (float) cameraPos.x;
-            y = config.perf.particleDistance * Mth.cos(phi)                  + (float) cameraPos.y;
-            z = config.perf.particleDistance * Mth.sin(phi) * Mth.sin(theta) + (float) cameraPos.z;
+            x = getConfig().perf.particleDistance * Mth.sin(phi) * Mth.cos(theta) + (float) cameraPos.x;
+            y = getConfig().perf.particleDistance * Mth.cos(phi)                  + (float) cameraPos.y;
+            z = getConfig().perf.particleDistance * Mth.sin(phi) * Mth.sin(theta) + (float) cameraPos.z;
             pos.set(x, y, z);
-            if (config.compat.doSpawnHeightLimit) {
-                int cloudHeight = config.compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, pos) : config.compat.spawnHeightLimit;
+            if (getConfig().compat.doSpawnHeightLimit) {
+                int cloudHeight = getConfig().compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, pos) : getConfig().compat.spawnHeightLimit;
                 if (cloudHeight != 0 && y > cloudHeight) {
                     y = cloudHeight;
                     pos.setY(cloudHeight);
@@ -213,7 +213,7 @@ public final class ParticleSpawner {
             heightmapPos.set(x, heightmapY - 1, z);
             if (heightmapY >= pos.getY()) continue;
             Holder<Biome> biome = level.getBiome(pos);
-            Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, config.compat.useHeightmapTemp ? heightmapPos : pos);
+            Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, getConfig().compat.useHeightmapTemp ? heightmapPos : pos);
             for (ParticleData data : ParticleLoader.particles.values()) {
                 if (data.enabled
                     && data.spawnPos.equals(ParticleData.SpawnPos.SKY)
@@ -239,12 +239,12 @@ public final class ParticleSpawner {
         if (ticksUntilSurfaceFXIdle <= 0) {
             density = 1;
         } else {
-            density = config.perf.particleDensity;
+            density = getConfig().perf.particleDensity;
             ticksUntilSurfaceFXIdle--;
         }
         for (int i = 0; i < density; i++) {
-            double x = RANDOM.triangle(cameraPos.x, config.perf.surfaceRange);
-            double z = RANDOM.triangle(cameraPos.z, config.perf.surfaceRange);
+            double x = RANDOM.triangle(cameraPos.x, getConfig().perf.surfaceRange);
+            double z = RANDOM.triangle(cameraPos.z, getConfig().perf.surfaceRange);
             int y = getHeight(level, (int) x, (int) z);
             pos.set(x, y - 1, z);
             BlockState blockState = level.getBlockState(pos);

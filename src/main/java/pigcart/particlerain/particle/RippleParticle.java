@@ -20,7 +20,7 @@ import net.minecraft.util.RandomSource;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 //?}
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public class RippleParticle extends WeatherParticle {
 
@@ -28,8 +28,8 @@ public class RippleParticle extends WeatherParticle {
         super(level, x, y, z, VersionUtil.getSprite(VersionUtil.getId("ripple_0")));
         this.x = Math.round(this.x / (1F / 16F)) * (1F / 16F);
         this.z = Math.round(this.z / (1F / 16F)) * (1F / 16F);
-        this.quadSize = config.ripple.size;
-        this.alpha = config.ripple.opacity;
+        this.quadSize = getConfig().ripple.size;
+        this.alpha = getConfig().ripple.opacity;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RippleParticle extends WeatherParticle {
     @Override
     public void tick() {
         super.tick();
-        this.alpha = Mth.lerp(this.age / 9F, config.ripple.opacity, 0);
+        this.alpha = Mth.lerp(this.age / 9F, getConfig().ripple.opacity, 0);
         if (this.age > 8) this.remove();
         this.setSprite(VersionUtil.getSprite(VersionUtil.getId("ripple_" + (this.age - 1))));
     }

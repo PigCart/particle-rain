@@ -34,7 +34,7 @@ import pigcart.particlerain.config.ParticleData;
 
 import java.util.Set;
 
-import static pigcart.particlerain.config.ConfigManager.config;
+import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public class CustomParticle extends WeatherParticle {
 
@@ -65,7 +65,7 @@ public class CustomParticle extends WeatherParticle {
         this.hasPhysics = false;
 
         this.setSize(quadSize, quadSize);
-        this.lifetime = config.perf.particleDistance * 100;
+        this.lifetime = getConfig().perf.particleDistance * 100;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
         this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
@@ -78,7 +78,7 @@ public class CustomParticle extends WeatherParticle {
         } else {
             this.quadSize = opts.size;
         }
-        if (!usuallyUntintableSprites.contains(this.sprite.contents().name().toString()) || config.compat.waterTint) {
+        if (!usuallyUntintableSprites.contains(this.sprite.contents().name().toString()) || getConfig().compat.waterTint) {
             opts.tintType.applyTint(this, level, this.pos, opts);
         }
     }
@@ -125,13 +125,13 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void onPositionUpdate() {
-        if (!config.compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
+        if (!getConfig().compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
             this.remove();
             return;
         }
 
         BlockState state = level.getBlockState(pos);
-        boolean ignoresBlock = config.compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
+        boolean ignoresBlock = getConfig().compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
         boolean isInFluid = !level.getFluidState(pos).isEmpty();
 
         if (!ignoresBlock || isInFluid) {
@@ -163,7 +163,7 @@ public class CustomParticle extends WeatherParticle {
     public void onCollision(BlockHitResult hitResult) {
 
         BlockState state = level.getBlockState(hitResult.getBlockPos());
-        if(config.compat.weatherIgnoreBlocks.contains(state.getBlockHolder())) {
+        if(getConfig().compat.weatherIgnoreBlocks.contains(state.getBlockHolder())) {
             return;
         }
 
