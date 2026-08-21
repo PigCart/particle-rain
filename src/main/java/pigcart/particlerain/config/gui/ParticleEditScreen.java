@@ -39,12 +39,12 @@ public class ParticleEditScreen extends ConfigScreen {
         super.addContents();
         // add button to access legacy options if editing a non CustomParticle
         ParticleData data = (ParticleData) this.config;
-        if (data.usePresetParticle && ParticleRain.legacyParticleIds.contains(data.id)) {
+        if (data.particleClass == ParticleData.ParticleClass.REGISTERED && ParticleRain.legacyParticleIds.contains(data.id)) {
             ParticleData particleData = (ParticleData) this.config;
             try {
                 final Field field = ConfigData.class.getField(particleData.id);
                 field.setAccessible(true);
-                final Object bespokeParticleConfig = field.get(ConfigManager.config);
+                final Object bespokeParticleConfig = field.get(ConfigManager.getConfig());
                 final Object defaultConfig = field.get(ConfigManager.getDefaultConfig());
                 AbstractWidget button = getButton(Component.translatable("particlerain.appearance"),
                         (bttn) -> Minecraft.getInstance().setScreen(new ConfigScreen(

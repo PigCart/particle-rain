@@ -34,7 +34,6 @@ public class ParticleRain {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static SimpleParticleType MIST;
-    public static SimpleParticleType SHRUB;
     public static SimpleParticleType RIPPLE;
     public static SimpleParticleType STREAK;
 

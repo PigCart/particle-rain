@@ -2,10 +2,10 @@ plugins {
     id("net.fabricmc.fabric-loom")
 }
 
-val minecraft = property("deps.minecraft") as String;
+fun prop(name: String) = sc.properties[name] as String
+val minecraft = prop("deps.minecraft") as String;
 
 tasks.named<ProcessResources>("processResources") {
-    fun prop(name: String) = project.property(name) as String
 
     val props = HashMap<String, String>().apply {
         this["mod_id"] =        prop("mod.id")
@@ -35,8 +35,8 @@ tasks.named<ProcessResources>("processResources") {
     }
 }
 
-version = "${property("mod.version")}+${minecraft}-fabric"
-base.archivesName = property("mod.id") as String
+version = "${prop("mod.version")}+${minecraft}-fabric"
+base.archivesName = prop("mod.id") as String
 
 repositories {
     mavenLocal()
@@ -45,19 +45,19 @@ repositories {
 }
 
 loom {
-    val accesswidener = rootProject.file("src/main/resources/${property("mod.id")}.unobf.accesswidener")
+    val accesswidener = rootProject.file("src/main/resources/${prop("mod.id")}.unobf.accesswidener")
     if (accesswidener.exists()) {
         accessWidenerPath = accesswidener
     }
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${property("deps.minecraft")}")
+    minecraft("com.mojang:minecraft:${prop("deps.minecraft")}")
 
-    implementation("net.fabricmc:fabric-loader:${property("deps.fabric-loader")}")
-    implementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric-api")}")
-    compileOnly("com.terraformersmc:modmenu:${property("deps.modmenu")}")
-    compileOnly("maven.modrinth:iris:${property("deps.iris")}")
+    implementation("net.fabricmc:fabric-loader:${prop("deps.fabric-loader")}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${prop("deps.fabric-api")}")
+    compileOnly("com.terraformersmc:modmenu:${prop("deps.modmenu")}")
+    compileOnly("maven.modrinth:iris:${prop("deps.iris")}")
 }
 
 tasks {
@@ -68,7 +68,7 @@ tasks {
     register<Copy>("buildAndCollect") {
         group = "build"
         from(jar.map { it.archiveFile })
-        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+        into(rootProject.layout.buildDirectory.file("libs/${prop("mod.version")}"))
         dependsOn("build")
     }
 }

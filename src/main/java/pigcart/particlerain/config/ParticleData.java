@@ -40,22 +40,22 @@ public class ParticleData {
         setPresetParticle();
     }
     public void setPresetParticle() {
-        final Optional<ParticleType<?>> optional = BuiltInRegistries.PARTICLE_TYPE.getOptional(VersionUtil.parseId(presetParticleId));
+        final Optional<ParticleType<?>> optional = BuiltInRegistries.PARTICLE_TYPE.getOptional(VersionUtil.parseId(registeredParticleId));
         if (optional.isEmpty()) {
-            ParticleRain.LOGGER.error("Incorrect configuration: {} is not a valid particle", presetParticleId);
+            ParticleRain.LOGGER.error("Incorrect configuration: {} is not a valid particle", registeredParticleId);
         } else {
             presetParticle = (ParticleOptions) optional.get();
         }
     }
 
     //TODO @Dropdown(SupplyParticleTypes.class)
-    @OnlyVisibleIf(ParticleNotCustom.class)
-    public String presetParticleId = "minecraft:flame";
+    @OnlyVisibleIf(ParticleIsRegistered.class)
+    public String registeredParticleId = "minecraft:flame";
     @NoGUI
     public transient ParticleOptions presetParticle = ParticleTypes.CLOUD;
     @OnChange(RefreshScreen.class)
-    public Boolean usePresetParticle = false;
-    @OnlyVisibleIf(ParticleIsNotDefault.class)
+    public ParticleClass particleClass = ParticleClass.CUSTOM;
+    @OnlyVisibleIf(ParticleNotDefault.class)
     public transient String id = "new_particle";
     @Label(key = "spawning")
     public Boolean enabled = true;
@@ -69,27 +69,29 @@ public class ParticleData {
     public Boolean needsSkyAccess = true;
     public SpawnPos spawnPos = SpawnPos.SKY;
     @Label(key = "motion")
-    @OnlyVisibleIf(ParticleIsCustom.class) public Float gravity = 0.1F;
-    @OnlyVisibleIf(ParticleIsCustom.class) public Float windStrength = 0.1F;
-    @OnlyVisibleIf(ParticleIsCustom.class) public Float stormWindStrength = 0.5F;
-    @OnlyVisibleIf(ParticleIsCustom.class) public Float rotationAmount = 0F;
-    @OnlyVisibleIf(ParticleIsCustom.class) public Float bounciness = 0F;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Float gravity = 0.1F;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Float windStrength = 0.1F;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Float stormWindStrength = 0.5F;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Float rotationAmount = 0F;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Float bounciness = 0F;
     @Format(TimeInTicks.class)
-    @OnlyVisibleIf(ParticleIsCustom.class) public Integer lifetime = 3000;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Integer lifetime = 3000;
     @Label(key = "appearance")
     @Slider @Format(Percent.class)
-    @OnlyVisibleIf(ParticleIsCustom.class) public Float opacity = 1.0F;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Float opacity = 1.0F;
     @Format(DistanceInBlocks.class)
-    @OnlyVisibleIf(ParticleIsCustom.class) public Float size = 0.5F;
-    @OnlyVisibleIf(ParticleIsCustom.class) public Boolean constantScreenSize = false;
-    @OnlyVisibleIf(ParticleIsCustom.class) public RenderType renderType = RenderType.TRANSLUCENT;
-    @OnlyVisibleIf(ParticleIsCustom.class) public ArrayList<String> spriteLocations = new ArrayList<>(List.of("particlerain:new_custom_particle"));
-    @OnlyVisibleIf(ParticleIsCustom.class)
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Float size = 0.5F;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Boolean constantScreenSize = false;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public RenderType renderType = RenderType.TRANSLUCENT;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public ArrayList<String> spriteLocations = new ArrayList<>(List.of("particlerain:new_custom_particle"));
+    @OnlyVisibleIf(ParticleNotRegistered.class)
     @OnChange(RefreshScreen.class)
     public TintType tintType = TintType.NONE;
-    @OnlyVisibleIf(ParticleIsCustomAndAlsoUsesCustomTint.class)
+    @OnlyVisibleIf(ParticleUsesCustomTint.class)
     public Color customTint = Color.BLACK;
+    @OnChange(RefreshScreen.class)
     @OnlyVisibleIf(ParticleIsCustom.class) public RotationType rotationType = RotationType.COPY_CAMERA;
+    @OnlyVisibleIf(ParticleIsBlock.class) public String rollingBlockId = "";
 
     public enum Weather {
         DURING_WEATHER {
@@ -181,7 +183,7 @@ public class ParticleData {
 
     public enum TintType {
         WATER {
-            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
+            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData data) {
                 if (VersionUtil.shadersEnabled() && getConfig().compat.shaderpackTint) return;
                 final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, pos));
                 final Color fogColor = VersionUtil.getFogColor(level, pos);
@@ -192,13 +194,13 @@ public class ParticleData {
             }
         },
         FOG {
-            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
+            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData data) {
                 Color color = VersionUtil.getFogColor(level, pos).darker();
                 p.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             }
         },
         MAP {
-            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
+            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData data) {
                 Color color = VersionUtil.getMapColor(level, pos);
                 float variance = level.getRandom().nextFloat() * 0.2F + 0.8F;
                 p.setColor(color.getRed() / 255F * variance,
@@ -207,12 +209,12 @@ public class ParticleData {
             }
         },
         CUSTOM {
-            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {
-                p.setColor(opts.customTint.getRed() / 255F, opts.customTint.getGreen() / 255F, opts.customTint.getBlue() / 255F);
+            public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData data) {
+                p.setColor(data.customTint.getRed() / 255F, data.customTint.getGreen() / 255F, data.customTint.getBlue() / 255F);
             }
         },
         NONE;
-        public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData opts) {}
+        public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData data) {}
     }
 
     public enum RotationType {
@@ -241,5 +243,13 @@ public class ParticleData {
             }
         };
         public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {}
+    }
+
+    public enum ParticleClass {
+        REGISTERED,
+        CUSTOM,
+        BLOCK_DISPLAY,
+        STREAK,
+        FOG
     }
 }

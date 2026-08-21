@@ -14,6 +14,9 @@
     ${ WaterHangProviderMixin }
     "AbstractWidgetMixin",
     "WeatherDataMixin",
+    "access.BlockDisplayAccessor",
+    "access.ClientLevelAccessor",
+    "access.DisplayAccessor",
     "access.NativeImageAccessor",
     "access.ParticleEngineAccessor",
     "access.SingleQuadParticleAccessor",

@@ -14,8 +14,8 @@ import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.ConfigManager;
 //? if >=1.21.9 {
-/*import net.minecraft.client.particle.SingleQuadParticle;
-*///?} else {
+//import net.minecraft.client.particle.SingleQuadParticle;
+//?} else {
 import net.minecraft.client.particle.TextureSheetParticle;
 //?}
 

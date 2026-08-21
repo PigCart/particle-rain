@@ -46,8 +46,8 @@ public class WidgetUtil {
         return new CycleButton.Builder<>(
                 valueFormatter
                 //? if >=1.21.11 {
-                /*,()-> initialValue)
-                 *///?} else {
+                //,()-> initialValue)
+                 //?} else {
         ).withInitialValue(initialValue)
                 //?}
                 .withValues(initialValue, !initialValue)
@@ -71,8 +71,8 @@ public class WidgetUtil {
                     return Component.translatable(MOD_ID + "." + className + "." + value);
                 }
         //? if >=1.21.11 {
-                /*,()-> initialValue).withValues(values);
-                 *///?} else {
+                //,()-> initialValue).withValues(values);
+                 //?} else {
         ).withValues(values).withInitialValue(initialValue);
         // in 1.20.1 withValues must be called before withInitialValue otherwise it doesnt get the index correctly
         //?}

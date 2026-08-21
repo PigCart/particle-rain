@@ -92,8 +92,8 @@
     "tintType": "MAP"
   },
   "splatter": {
-    "presetParticleId": "minecraft:rain",
-    "usePresetParticle": true,
+    "particleClass": "REGISTERED",
+    "registeredParticleId": "minecraft:rain",
     "blockList": {
       "entries": [
         "minecraft:lava"
@@ -103,8 +103,8 @@
     "spawnPos": "BLOCK_TOP"
   },
   "ripple": {
-    "presetParticleId": "particlerain:ripple",
-    "usePresetParticle": true,
+    "particleClass": "REGISTERED",
+    "registeredParticleId": "particlerain:ripple",
     "blockList": {
       "entries": [
         "minecraft:water"
@@ -114,8 +114,8 @@
     "spawnPos": "BLOCK_TOP"
   },
   "smoke": {
-    "presetParticleId": "minecraft:smoke",
-    "usePresetParticle": true,
+    "particleClass": "REGISTERED",
+    "registeredParticleId": "minecraft:smoke",
     "blockList": {
       "entries": [
         "#minecraft:strider_warm_blocks",
@@ -127,8 +127,8 @@
     "spawnPos": "BLOCK_TOP"
   },
   "streak": {
-    "presetParticleId": "particlerain:streak",
-    "usePresetParticle": true,
+    "particleClass": "REGISTERED",
+    "registeredParticleId": "particlerain:streak",
     "density": 0.2,
     "blockList": {
       "entries": [
@@ -141,27 +141,29 @@
     "spawnPos": "BLOCK_SIDES"
   },
   "shrub": {
-    "enabled": false,
-    "presetParticleId": "particlerain:shrub",
-    "usePresetParticle": true,
-    "density": 0.002,
+    "particleClass": "BLOCK_DISPLAY",
+    "rollingBlockId": "minecraft:dead_bush",
+    "density": 0.001,
+    "bounciness": 0.15,
+    "gravity": 0.3,
+    "windStrength": 0.4,
+    "rotationAmount": 1,
+    "size": 1,
     "precipitation": [
       "NONE"
     ],
     "blockList": {
       "entries": [
         "#minecraft:camel_sand_step_sound_blocks",
-        "#minecraft:sand",
-        "#minecraft:terracotta",
-        "#c:sandstone_blocks"
+        "#minecraft:sand"
       ],
       "isWhitelist": true
     },
     "spawnPos": "WORLD_SURFACE"
   },
   "mist_after_rain": {
-    "presetParticleId": "particlerain:mist",
-    "usePresetParticle": true,
+    "registeredParticleId": "particlerain:mist",
+    "particleClass": "REGISTERED",
     "density": 0.1,
     "weather": "AFTER_WEATHER",
     "blockList": {
@@ -174,8 +176,8 @@
     "spawnPos": "WORLD_SURFACE"
   },
   "mist": {
-    "presetParticleId": "particlerain:mist",
-    "usePresetParticle": true,
+    "registeredParticleId": "particlerain:mist",
+    "particleClass": "REGISTERED",
     "density": 0.1,
     "weather": "ALWAYS",
     "biomeList": {

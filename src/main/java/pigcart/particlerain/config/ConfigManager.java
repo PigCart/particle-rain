@@ -4,7 +4,6 @@ import com.google.gson.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import pigcart.particlerain.ParticleRain;
-import pigcart.particlerain.config.gui.ConfigScreen;
 import pigcart.particlerain.config.gui.MainConfigScreen;
 
 import java.io.*;
@@ -14,7 +13,7 @@ import java.nio.file.Path;
 public class ConfigManager {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     static final String CONFIG_PATH = "config/particlerain/config.json";
-    private static ConfigData config;
+    public static ConfigData config;
 
     public static Screen screenPlease(Screen lastScreen) {
         return new MainConfigScreen(lastScreen, getConfig(), getDefaultConfig(), Component.translatable("particlerain.title"));

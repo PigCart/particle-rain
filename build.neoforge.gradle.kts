@@ -2,10 +2,10 @@ plugins {
     id("net.neoforged.moddev")
 }
 
-val minecraft = property("deps.minecraft") as String;
+fun prop(name: String) = sc.properties[name] as String
+val minecraft = prop("deps.minecraft") as String;
 
 tasks.named<ProcessResources>("processResources") {
-    fun prop(name: String) = project.property(name) as String
 
     val props = HashMap<String, String>().apply {
         this["mod_id"] =        prop("mod.id")
@@ -33,8 +33,8 @@ tasks.named<ProcessResources>("processResources") {
     }
 }
 
-version = "${property("mod.version")}+${minecraft}-neoforge"
-base.archivesName = property("mod.id") as String
+version = "${prop("mod.version")}+${minecraft}-neoforge"
+base.archivesName = prop("mod.id") as String
 
 repositories {
     mavenLocal()
@@ -44,19 +44,19 @@ repositories {
 }
 
 dependencies {
-    compileOnly("maven.modrinth:iris:${property("deps.iris")}")
+    compileOnly("maven.modrinth:iris:${prop("deps.iris")}")
 }
 
 neoForge {
-    version = property("deps.neoforge") as String
+    version = prop("deps.neoforge") as String
 
     val accessTransformer = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     if (accessTransformer.exists()) {
         accessTransformers.from(accessTransformer.absolutePath)
     }
 
-    if (hasProperty("deps.parchment")) parchment {
-        val (mc, ver) = (property("deps.parchment") as String).split(':')
+    if (sc.properties.contains("deps.parchment")) parchment {
+        val (mc, ver) = (prop("deps.parchment") as String).split(':')
         mappingsVersion = ver
         minecraftVersion = mc
     }
@@ -73,7 +73,7 @@ neoForge {
     }
 
     mods {
-        register(property("mod.id") as String) {
+        register(prop("mod.id") as String) {
             sourceSet(sourceSets["main"])
         }
     }
@@ -91,7 +91,7 @@ tasks {
     register<Copy>("buildAndCollect") {
         group = "build"
         from(jar.map { it.archiveFile })
-        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+        into(rootProject.layout.buildDirectory.file("libs/${prop("mod.version")}"))
         dependsOn("build")
     }
 }

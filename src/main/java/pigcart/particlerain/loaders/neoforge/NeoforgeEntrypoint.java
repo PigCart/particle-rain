@@ -32,7 +32,6 @@ public class NeoforgeEntrypoint {
 
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, ParticleRain.MOD_ID);
 
-    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SHRUB = registerParticle("shrub");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> MIST = registerParticle("mist");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> RIPPLE = registerParticle("ripple");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> STREAK = registerParticle("streak");
@@ -52,11 +51,9 @@ public class NeoforgeEntrypoint {
 
     public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
         //TODO
-        event.registerSpriteSet(SHRUB.get(), ShrubParticle.Provider::new);
         event.registerSpriteSet(MIST.get(), MistParticle.Provider::new);
         event.registerSpriteSet(RIPPLE.get(), RippleParticle.Provider::new);
         event.registerSpriteSet(STREAK.get(), StreakParticle.Provider::new);
-        ParticleRain.SHRUB = SHRUB.get();
         ParticleRain.MIST = MIST.get();
         ParticleRain.RIPPLE = RIPPLE.get();
         ParticleRain.STREAK = STREAK.get();
@@ -64,16 +61,16 @@ public class NeoforgeEntrypoint {
 
     public static void onRegisterReloadListeners(
             //? >=1.21.4 {
-            net.neoforged.neoforge.client.event.AddClientReloadListenersEvent event
+            //net.neoforged.neoforge.client.event.AddClientReloadListenersEvent event
             //?} else {
-            /^net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent event
-            ^///?}
+            net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent event
+            //?}
     ) {
         //? >=1.21.4 {
-        event.addListener(VersionUtil.getId("reload"),
+        //event.addListener(VersionUtil.getId("reload"),
         //?} else {
-        /^event.registerReloadListener(
-        ^///?}
+        event.registerReloadListener(
+        //?}
             new SimplePreparableReloadListener<>() {
                 @Override
                 protected Object prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {

@@ -31,7 +31,6 @@ public class ForgeEntrypoint {
 
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, ParticleRain.MOD_ID);
 
-    public static final RegistryObject<SimpleParticleType> SHRUB = registerParticle("shrub");
     public static final RegistryObject<SimpleParticleType> MIST = registerParticle("mist");
     public static final RegistryObject<SimpleParticleType> RIPPLE = registerParticle("ripple");
     public static final RegistryObject<SimpleParticleType> STREAK = registerParticle("streak");
@@ -50,11 +49,9 @@ public class ForgeEntrypoint {
 
     public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
         //TODO
-        event.registerSpriteSet(SHRUB.get(), ShrubParticle.Provider::new);
         event.registerSpriteSet(MIST.get(), MistParticle.Provider::new);
         event.registerSpriteSet(RIPPLE.get(), RippleParticle.Provider::new);
         event.registerSpriteSet(STREAK.get(), StreakParticle.Provider::new);
-        ParticleRain.SHRUB = SHRUB.get();
         ParticleRain.MIST = MIST.get();
         ParticleRain.RIPPLE = RIPPLE.get();
         ParticleRain.STREAK = STREAK.get();

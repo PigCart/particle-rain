@@ -2,10 +2,10 @@ plugins {
     id("net.neoforged.moddev.legacyforge")
 }
 
-val minecraft = property("deps.minecraft") as String;
+fun prop(name: String) = sc.properties[name] as String
+val minecraft = prop("deps.minecraft") as String;
 
 tasks.named<ProcessResources>("processResources") {
-    fun prop(name: String) = project.property(name) as String
 
     val props = HashMap<String, String>().apply {
         this["mod_id"] =        prop("mod.id")
@@ -33,8 +33,8 @@ tasks.named<ProcessResources>("processResources") {
     }
 }
 
-version = "${property("mod.version")}+${minecraft}-forge"
-base.archivesName = property("mod.id") as String
+version = "${prop("mod.version")}+${minecraft}-forge"
+base.archivesName = prop("mod.id") as String
 
 repositories {
     mavenLocal()
@@ -44,15 +44,15 @@ repositories {
 }
 
 legacyForge {
-    version = property("deps.forge") as String
+    version = prop("deps.forge") as String
 
     val accessTransformer = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     if (accessTransformer.exists()) {
         accessTransformers.from(accessTransformer)
     }
 
-    if (hasProperty("deps.parchment")) parchment {
-        val (mc, ver) = (property("deps.parchment") as String).split(':')
+    if (sc.properties.contains("deps.parchment")) parchment {
+        val (mc, ver) = (prop("deps.parchment") as String).split(':')
         mappingsVersion = ver
         minecraftVersion = mc
     }
@@ -69,22 +69,22 @@ legacyForge {
     }
 
     mods {
-        register(property("mod.id") as String) {
+        register(prop("mod.id") as String) {
             sourceSet(sourceSets["main"])
         }
     }
 }
 
 mixin {
-    add(sourceSets.main.get(), "${property("mod.id")}.refmap.json")
-    config("${property("mod.id")}.mixins.json")
+    add(sourceSets.main.get(), "${prop("mod.id")}.refmap.json")
+    config("${prop("mod.id")}.mixins.json")
 }
 
 dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0")!!)
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {}
-    compileOnly("maven.modrinth:iris:${property("deps.iris")}")
+    compileOnly("maven.modrinth:iris:${prop("deps.iris")}")
 }
 
 tasks {
@@ -99,12 +99,12 @@ tasks {
     register<Copy>("buildAndCollect") {
         group = "build"
         from(jar.map { it.archiveFile })
-        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+        into(rootProject.layout.buildDirectory.file("libs/${prop("mod.version")}"))
         dependsOn("build")
     }
 
     jar {
-        manifest.attributes["MixinConfigs"] = "${project.property("mod.id")}.mixins.json"
+        manifest.attributes["MixinConfigs"] = "${prop("mod.id")}.mixins.json"
     }
 }
 

@@ -8,14 +8,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
 //? >=26.1 {
-/*import net.minecraft.world.level.saveddata.WeatherData;
- *///?} else {
+//import net.minecraft.world.level.saveddata.WeatherData;
+ //?} else {
 import net.minecraft.client.multiplayer.ClientLevel;
 //?}
 
 //? >=26.1 {
-/*@Mixin(WeatherData.class)
-*///?} else {
+//@Mixin(WeatherData.class)
+//?} else {
 @Mixin(ClientLevel.ClientLevelData.class)
 //?}
 public abstract class WeatherDataMixin {

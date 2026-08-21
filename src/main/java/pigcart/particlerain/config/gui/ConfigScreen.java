@@ -48,8 +48,8 @@ public class ConfigScreen extends Screen {
         addFooter();
 
         //? >=1.21.1 {
-        /*repositionElements();
-        *///?} else {
+        //repositionElements();
+        //?} else {
         layout.arrangeElements();
         //?}
         layout.visitWidgets(this::addRenderableWidget);
@@ -68,8 +68,8 @@ public class ConfigScreen extends Screen {
         //? <=1.20.1 {
         addWidget(list);
         //?} else {
-        /*layout.addToContents(list);
-         *///?}
+        //layout.addToContents(list);
+         //?}
     }
 
     protected void addFooter() {
@@ -140,8 +140,8 @@ public class ConfigScreen extends Screen {
         minecraft.setScreen(freshScreen);
         freshScreen.list.setScrollAmount(
                 //? >=1.21.4 {
-                /*this.list.scrollAmount()
-                *///?} else {
+                //this.list.scrollAmount()
+                //?} else {
                 this.list.getScrollAmount()
                  //?}
         );

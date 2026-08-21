@@ -45,9 +45,9 @@ public class ConfigData {
 
     public WindOptions wind = new WindOptions();
     public static class WindOptions {
-        public float strength = 0.4F;
-        public float strengthVariance = 0.3F;
-        public float gustFrequency = 0.2F;
+        public float strength = 0.004F;
+        public float strengthVariance = 0.02F;
+        public float gustFrequency = 0.15F;
         public float modulationSpeed = 0.04F;
         public boolean yLevelAdjustment = true;
     }
@@ -70,18 +70,6 @@ public class ConfigData {
         public boolean doSpawnHeightLimit = false;
         @Format(ZeroIsAutomatic.class)
         public int spawnHeightLimit = 0;
-    }
-
-    @NoGUI
-    public ShrubOptions shrub = new ShrubOptions();
-    public static class ShrubOptions {
-        public float gravity = 0.2F;
-        public float windStrength = 0.2F;
-        public float stormWindStrength = 0.3F;
-        public float size = 0.5F;
-
-        public float rotationAmount = 0.6F;
-        public float bounciness = 0.2F;
     }
 
     @NoGUI

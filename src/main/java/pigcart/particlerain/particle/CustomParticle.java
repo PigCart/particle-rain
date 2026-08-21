@@ -16,8 +16,8 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.*;
 import org.joml.Math;
 //? if > 1.20.1 {
-/*import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
-*///?}
+//import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
+//?}
 //? if >=1.21.9 {
 /*import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
@@ -39,11 +39,11 @@ import static pigcart.particlerain.config.ConfigManager.getConfig;
 public class CustomParticle extends WeatherParticle {
 
     private static final Set<String> usuallyUntintableSprites = Set.of("particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3");
-    public ParticleData opts;
+    public ParticleData data;
     private float oCollisionAnimProgress = 1;
     private float collisionAnimProgress = 1;
-    private float speed = 0;
-    private final float rotationVariation;
+    public float speed = 0;
+    float rotationVariation;
     boolean doCollisionAnim = false;
     public BlockPos.MutableBlockPos pos;
     protected BlockPos.MutableBlockPos oPos;
@@ -51,16 +51,18 @@ public class CustomParticle extends WeatherParticle {
     float baseTemp;
     float oQuadSize;
     float distance;
+    int maxEdgeBounces = 3;
+    int edgeBounces = 0;
 
-    public CustomParticle(ClientLevel level, double x, double y, double z, ParticleData opts) {
-        super(level, x, y, z, VersionUtil.getSprite(VersionUtil.parseId(opts.spriteLocations.get(level.getRandom().nextInt(opts.spriteLocations.size())))));
+    public CustomParticle(ClientLevel level, double x, double y, double z, ParticleData data) {
+        super(level, x, y, z, VersionUtil.getSprite(VersionUtil.parseId(data.spriteLocations.get(level.getRandom().nextInt(data.spriteLocations.size())))));
 
-        this.gravity = opts.gravity;
-        this.yd = (opts.spawnPos.equals(ParticleData.SpawnPos.SKY)) ? -gravity : opts.bounciness;
+        this.gravity = data.gravity;
+        this.yd = (data.spawnPos.equals(ParticleData.SpawnPos.SKY)) ? -gravity : data.bounciness;
         Vector3f wind = ParticleRain.getWind(x, y, z);
-        this.xd = wind.x;
-        this.zd = wind.z;
-        this.quadSize = opts.size;
+        this.xd = wind.x * 10; // approximate wind accumulation over half a second, looks better than starting stationary
+        this.zd = wind.z * 10;
+        this.quadSize = data.size;
         this.alpha = 0;
         this.hasPhysics = false;
 
@@ -70,16 +72,16 @@ public class CustomParticle extends WeatherParticle {
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
         this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
 
-        this.opts = opts;
-        this.lifetime = opts.lifetime;
-        this.rotationVariation = opts.rotationAmount * ((random.nextFloat() - 0.5F) * 2.0F);
-        if (opts.constantScreenSize) {
+        this.data = data;
+        this.lifetime = data.lifetime;
+        this.rotationVariation = data.rotationAmount * ((random.nextFloat() - 0.5F) * 2.0F);
+        if (data.constantScreenSize) {
             this.quadSize = getDistanceSize();
         } else {
-            this.quadSize = opts.size;
+            this.quadSize = data.size;
         }
         if (!usuallyUntintableSprites.contains(this.sprite.contents().name().toString()) || getConfig().compat.waterTint) {
-            opts.tintType.applyTint(this, level, this.pos, opts);
+            data.tintType.applyTint(this, level, this.pos, data);
         }
     }
 
@@ -96,8 +98,8 @@ public class CustomParticle extends WeatherParticle {
             tickCollisionAnim();
         }
         speed = (float) new Vec3(xd, yd, zd).length();
-        if (opts.constantScreenSize && !doCollisionAnim) quadSize = getDistanceSize();
-        if (opts.rotationAmount != 0) {
+        if (data.constantScreenSize && !doCollisionAnim) quadSize = getDistanceSize();
+        if (data.rotationAmount != 0) {
             oRoll = roll;
             roll += rotationVariation * speed;
         }
@@ -107,21 +109,21 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void tickDistanceFade() {
-        float renderDistance = this.opts.spawnPos.renderDistance();
+        float renderDistance = this.data.spawnPos.renderDistance();
         if (distance > renderDistance + 1) {
             remove();
         } else {
-            alpha = Mth.lerp(Mth.clamp(distance / renderDistance, 0, 1), opts.opacity, 0);
+            alpha = Mth.lerp(Mth.clamp(distance / renderDistance, 0, 1), data.opacity, 0);
         }
     }
 
     public void tickWind() {
-        float multiplier = level.isThundering() ? opts.stormWindStrength : opts.windStrength;
+        float multiplier = level.isThundering() ? data.stormWindStrength : data.windStrength;
         Vector3f wind = ParticleRain.getWind(x, y, z).mul(multiplier);
         //TODO: accumulative wind so that bounciness can work on sides without the bounce getting canceled by the wind force
         // (or briefly reduce the wind strength when a bounce happens?)
-        this.xd = wind.x;
-        this.zd = wind.z;
+        this.xd += wind.x;
+        this.zd += wind.z;
     }
 
     public void onPositionUpdate() {
@@ -143,14 +145,14 @@ public class CustomParticle extends WeatherParticle {
 
     public void tickCollisions() {
         float length = quadSize;
-        if (opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
+        if (data.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
             //? <1.21.9 {
             final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
             Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
             length *= Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
             //?} else {
-            /*length *= 2;
-            *///?}
+            //length *= 2;
+            //?}
         }
         Vec3 quadCenterPos = new Vec3(x, y, z);
         Vec3 quadEdgePos = new Vec3(xd, yd, zd).normalize().multiply(length, length, length).add(x, y, z);
@@ -167,11 +169,12 @@ public class CustomParticle extends WeatherParticle {
             return;
         }
 
-        if (opts.bounciness != 0) {
+        if (!state.getFluidState().isSource() && data.bounciness != 0) {
             final Vector3f normal = hitResult.getDirection().step();
-            final float bounciness = opts.bounciness * speed;
+            if (normal.y == 0 && edgeBounces++ >= maxEdgeBounces) doCollisionAnim = true; // prevents getting stuck
+            final float bounciness = data.bounciness * speed * 6;
             this.xd += normal.x * bounciness;
-            this.yd += normal.y * bounciness;
+            this.yd += 1 * bounciness; // always try to move up, mimics wind rising over a hill or obstacle
             this.zd += normal.z * bounciness;
         } else {
             collision = hitResult;
@@ -182,7 +185,7 @@ public class CustomParticle extends WeatherParticle {
     public void tickCollisionAnim() {
         oCollisionAnimProgress = collisionAnimProgress;
         collisionAnimProgress -= speed;
-        if (!opts.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
+        if (!data.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
             quadSize = Math.max(quadSize - speed, 0);
         }
         if (oCollisionAnimProgress <= 0) { remove(); }
@@ -190,30 +193,30 @@ public class CustomParticle extends WeatherParticle {
 
     public float getDistanceSize() {
         if (Minecraft.getInstance().options.getCameraType().isFirstPerson() && Minecraft.getInstance().player.isScoping()) {
-            return distance * opts.size * 0.25F;
+            return distance * data.size * 0.25F;
         } else {
-            return distance * opts.size;
+            return distance * data.size;
         }
     }
 
     @Override
     //? if >=1.21.9 {
     /*public SingleQuadParticle.Layer getLayer() {
-        return opts.renderType.get();
+        return data.renderType.get();
     }
     *///?} else {
     public ParticleRenderType getRenderType() {
-        return opts.renderType.get();
+        return data.renderType.get();
     }
     //?}
 
     @Override
     //? if >=1.21.9 {
-    /*public void extract(QuadParticleRenderState h, Camera camera, float tickPercent) {
-    *///?} else {
+    //public void extract(QuadParticleRenderState h, Camera camera, float tickPercent) {
+    //?} else {
     public void render(VertexConsumer h, Camera camera, float tickPercent) {
     //?}
-        opts.rotationType.render(h, camera, tickPercent, this);
+        data.rotationType.render(h, camera, tickPercent, this);
     }
 
     public void renderLookingQuad(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent) {
@@ -342,16 +345,16 @@ public class CustomParticle extends WeatherParticle {
     //?}
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {
-        ParticleData opts;
+        ParticleData data;
 
-        public Provider(ParticleData opts) {
-            this.opts = opts;
+        public Provider(ParticleData data) {
+            this.data = data;
         }
 
         public Particle createParticle(SimpleParticleType parameters, ClientLevel level, double x, double y, double z, double velocityX, double velocityY, double velocityZ/*? if >=1.21.9 {*//*, RandomSource random*//*?}*/) {
             // grab latest particle options before spawning particle
-            opts = ParticleLoader.particles.get(opts.id);
-            return new CustomParticle(level, x, y, z, opts);
+            data = ParticleLoader.particles.get(data.id);
+            return new CustomParticle(level, x, y, z, data);
         }
     }
 }

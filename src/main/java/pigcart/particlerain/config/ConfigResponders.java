@@ -32,7 +32,9 @@ public class ConfigResponders {
 
     public static class Percent implements Function<Object, Component> {
         public Component apply(Object value) {
-            return Component.literal(NumberFormat.getPercentInstance().format(value));
+            final NumberFormat percent = NumberFormat.getPercentInstance();
+            percent.setMaximumFractionDigits(1);
+            return Component.literal(percent.format(value));
         }
     }
 
@@ -111,34 +113,53 @@ public class ConfigResponders {
         }
     }
 
-    public static class ParticleIsCustomAndAlsoUsesCustomTint implements Function<Object, Boolean> {
+    public static class ParticleUsesCustomTint implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
-            return ctx.tintType.equals(ParticleData.TintType.CUSTOM) && new ParticleIsCustom().apply(context);
+            return ctx.tintType.equals(ParticleData.TintType.CUSTOM);
         }
     }
 
-    /// returns true when this particle is instantiated via the CustomParticle class,
-    /// or false if a preset from minecraft's registry is used
     public static class ParticleIsCustom implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
-            return !ctx.usePresetParticle;
+            return ctx.particleClass == ParticleData.ParticleClass.CUSTOM;
         }
     }
 
     public static class ParticleNotCustom implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
-            return ctx.usePresetParticle;
+            return ctx.particleClass != ParticleData.ParticleClass.CUSTOM;
+        }
+    }
+
+    public static class ParticleIsRegistered implements Function<Object, Boolean> {
+        public Boolean apply(Object context) {
+            ParticleData ctx = (ParticleData) context;
+            return ctx.particleClass == ParticleData.ParticleClass.REGISTERED;
+        }
+    }
+
+    public static class ParticleNotRegistered implements Function<Object, Boolean> {
+        public Boolean apply(Object context) {
+            ParticleData ctx = (ParticleData) context;
+            return ctx.particleClass != ParticleData.ParticleClass.REGISTERED;
         }
     }
 
     /// returns true if this particle was not loaded by a resource pack
-    public static class ParticleIsNotDefault implements Function<Object, Boolean> {
+    public static class ParticleNotDefault implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
             return !ParticleLoader.packParticles.containsKey(ctx.id);
+        }
+    }
+
+    public static class ParticleIsBlock implements Function<Object, Boolean> {
+        public Boolean apply(Object context) {
+            ParticleData ctx = (ParticleData) context;
+            return ctx.particleClass == ParticleData.ParticleClass.BLOCK_DISPLAY;
         }
     }
 

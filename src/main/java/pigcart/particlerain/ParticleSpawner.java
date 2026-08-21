@@ -20,6 +20,7 @@ import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import pigcart.particlerain.config.ParticleData;
 import pigcart.particlerain.particle.CustomParticle;
+import pigcart.particlerain.particle.BlockDisplayParticle;
 import pigcart.particlerain.particle.StreakParticle;
 
 import static pigcart.particlerain.config.ConfigManager.getConfig;
@@ -55,8 +56,8 @@ public final class ParticleSpawner {
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(x, y, z);
 
         //? if >=1.21.9 {
-        /*int minY = level.getMinY();
-        *///?} else {
+        //int minY = level.getMinY();
+        //?} else {
         int minY = -64;
         //?}
 
@@ -106,10 +107,10 @@ public final class ParticleSpawner {
         }
         spawnAttemptsUntilBlockFXIdle--;
         if ( !state.getCollisionShape(level, sourcePos).isEmpty() && !isIgnored(state) ) return;
-        for (ParticleData opts : ParticleLoader.particles.values()) {
-            if (!opts.enabled || !opts.weather.isCurrent(level)) continue;
+        for (ParticleData data : ParticleLoader.particles.values()) {
+            if (!data.enabled || !data.weather.isCurrent(level)) continue;
             final Holder<Biome> biome = level.getBiome(sourcePos);
-            final Direction direction = switch (opts.spawnPos) {
+            final Direction direction = switch (data.spawnPos) {
                 case BLOCK_SIDES -> Direction.Plane.HORIZONTAL.getRandomDirection(random);
                 case BLOCK_BOTTOM -> Direction.DOWN;
                 case BLOCK_TOP -> Direction.UP;
@@ -122,13 +123,13 @@ public final class ParticleSpawner {
             final FluidState fluidState = blockState.getFluidState();
             final VoxelShape collision = blockState.getCollisionShape(level, pos);
             if ((collision.isEmpty() && fluidState.isEmpty()) || isIgnored(state) ) continue;
-            if ((opts.spawnPos == ParticleData.SpawnPos.BLOCK_BOTTOM || opts.spawnPos == ParticleData.SpawnPos.BLOCK_SIDES || opts.spawnPos == ParticleData.SpawnPos.BLOCK_TOP)
-                    && opts.precipitation.contains(VersionUtil.getPrecipitationAt(level, biome, sourcePos))
-                    && opts.density > random.nextFloat()
-                    && opts.biomeList.contains(biome)
-                    && opts.blockList.contains(level.getBlockState(pos).getBlockHolder())
+            if ((data.spawnPos == ParticleData.SpawnPos.BLOCK_BOTTOM || data.spawnPos == ParticleData.SpawnPos.BLOCK_SIDES || data.spawnPos == ParticleData.SpawnPos.BLOCK_TOP)
+                    && data.precipitation.contains(VersionUtil.getPrecipitationAt(level, biome, sourcePos))
+                    && data.density > random.nextFloat()
+                    && data.biomeList.contains(biome)
+                    && data.blockList.contains(level.getBlockState(pos).getBlockHolder())
             ) {
-                if (opts.needsSkyAccess && sourcePos.getY() < getHeight(level, sourcePos.getX(), sourcePos.getZ())    ) continue;
+                if (data.needsSkyAccess && sourcePos.getY() < getHeight(level, sourcePos.getX(), sourcePos.getZ())    ) continue;
                 // get position on block face
                 float p1 = random.nextFloat();
                 float p2 = random.nextFloat();
@@ -155,19 +156,14 @@ public final class ParticleSpawner {
                 float x = pos.getX() + relativePos.x + 0.5F;
                 float y = pos.getY() + relativePos.y + 0.5F;
                 float z = pos.getZ() + relativePos.z + 0.5F;
-                if (opts.usePresetParticle) {
-                    if (opts.presetParticleId.equals("particlerain:streak")) {
-                        // edge cases upon edge cases upon edge cases upon
-                        Minecraft.getInstance().particleEngine.add(new StreakParticle(level, x, y, z, direction, opts.blockList));
-                    } else {
-                        level.addParticle(opts.presetParticle, x, y, z, 0, 0, 0);
-                    }
+                if (data.particleClass == ParticleData.ParticleClass.REGISTERED && data.registeredParticleId.equals("particlerain:streak")) {
+                    // handle literal edge case. this mod's structure sucks sorry.
+                    Minecraft.getInstance().particleEngine.add(new StreakParticle(level, x, y, z, direction, data.blockList));
                 } else {
-                    Minecraft.getInstance().particleEngine.add(new CustomParticle(level, x, y, z, opts));
+                    spawnParticle(level, x, y, z, data);
                 }
                 spawnAttemptsUntilBlockFXIdle = 10000;
             }
-
         }
     }
     public static void tickSkyFX(ClientLevel level, Vec3 cameraPos) {
@@ -223,11 +219,7 @@ public final class ParticleSpawner {
                     && data.biomeList.contains(biome)
                     && data.blockList.contains(level.getBlockState(heightmapPos).getBlockHolder())
                 ) {
-                    if (data.usePresetParticle) {
-                        level.addParticle(data.presetParticle, x, y, z, 0, 0, 0);
-                    } else {
-                        Minecraft.getInstance().particleEngine.add(new CustomParticle(level, x, y, z, data));
-                    }
+                    spawnParticle(level, x, y, z, data);
                     ticksUntilSkyFXIdle = 100;
                 }
             }
@@ -259,14 +251,18 @@ public final class ParticleSpawner {
                         && data.biomeList.contains(biome)
                         && data.blockList.contains(blockState.getBlockHolder())
                 ) {
-                    if (data.usePresetParticle) {
-                        level.addParticle(data.presetParticle, x, y, z, 0, 0, 0);
-                    } else {
-                        Minecraft.getInstance().particleEngine.add(new CustomParticle(level, x, y, z, data));
-                    }
+                    spawnParticle(level, x, y, z, data);
                     ticksUntilSurfaceFXIdle = 100;
                 }
             }
+        }
+    }
+
+    public static void spawnParticle(ClientLevel level, double x, double y, double z, ParticleData data) {
+        switch (data.particleClass) {
+            case CUSTOM -> Minecraft.getInstance().particleEngine.add(new CustomParticle(level, x, y, z, data));
+            case REGISTERED -> level.addParticle(data.presetParticle, x, y, z, 0, 0, 0);
+            case BLOCK_DISPLAY -> Minecraft.getInstance().particleEngine.add(new BlockDisplayParticle(level, x, y, z, data));
         }
     }
 

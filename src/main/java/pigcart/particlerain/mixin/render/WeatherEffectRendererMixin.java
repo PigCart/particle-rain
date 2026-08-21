@@ -29,7 +29,7 @@ import pigcart.particlerain.ParticleRain;
 import net.minecraft.client.renderer.MultiBufferSource;
 //?}
 //? >=1.21.9 {
-/^import net.minecraft.client.renderer.state./^¹?>=26.1{¹^//^¹level.¹^//^¹?}¹^/WeatherRenderState;
+/^import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/WeatherRenderState;
 ^///?}
 
 import static pigcart.particlerain.config.ConfigManager.getConfig;

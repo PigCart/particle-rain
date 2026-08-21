@@ -6,9 +6,6 @@
 
 this mimics the version scheme used by minecraft between 2011 and 2024 and aims to communicate changes about the mod without making promises regarding compatibility.
 
-
-Versions marked `alpha/beta` indicate that im being too much of a perfectionist and have a todo list that i want to get through before considering the version 'finished'...
-
 ### v4 to-do list:
 - multiver ✔
 - custom particles ✔
@@ -21,19 +18,35 @@ Versions marked `alpha/beta` indicate that im being too much of a perfectionist 
 - sleet
 - hail
 - weather transitions
-- new shrub / block model particles
+- new shrub / block model particles ✔
 - new mist
 - splash replacement - splatter
 - new streaks
 - blended render type shaderpack fallback ✔
 
+# v4.0.0
+###### work in progress
+
+overview of changes since v3.3.6:
+- multiversion support including support for forge loaders
+- customizable weather particles
+- built-in config and particle editor
+- resource packs can load their own weather effects
+- weather ignores barriers and other configurable blocks
+- various visual improvements to all effects including wind variance, distance fading, and new rotation styles
+- puddles removed and expanded into their own mod
+
 # v4 beta 11
-###### wip
+###### work in progress
 - added mc 26.2 support
 - added `#minecraft:substrate_overworld` to mist blocks list
-- fixed after weather period in mc 26.1 and above
 - added a null check before accessing config (potentially fixing a loading issue on forge platforms)
+- added rolling block particles
 - raised config text input limit
+- fixed after weather period in mc 26.1 and above
+- fixed shrubs
+- fixed shrub spawn density not displaying correctly in config gui
+- changed wind to apply cumulatively instead of instantly
 - updated Ukrainian and Russian translations (thanks: megatocha)
 - updated Korean translation (thanks: good7777865)
 

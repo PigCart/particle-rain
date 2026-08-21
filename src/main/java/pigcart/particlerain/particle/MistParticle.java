@@ -61,8 +61,8 @@ public class MistParticle extends WeatherParticle {
 
     @Override
     //? if >=1.21.9 {
-    /*public SingleQuadParticle.Layer getLayer() {
-    *///?} else {
+    //public SingleQuadParticle.Layer getLayer() {
+    //?} else {
     public ParticleRenderType getRenderType() {
     //?}
         // if >=1.21.5 & IrisApi.isShaderPackInUse() return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;

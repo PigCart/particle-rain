@@ -5,11 +5,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractStringWidget;
 import net.minecraft.network.chat.Component;
 //? if >=1.21.11 {
-/*import net.minecraft.client.gui.ActiveTextCollector;
-*///?}
+//import net.minecraft.client.gui.ActiveTextCollector;
+//?}
 //? >=26.1 {
-/*import net.minecraft.client.gui.GuiGraphicsExtractor;
-*///?} else {
+//import net.minecraft.client.gui.GuiGraphicsExtractor;
+//?} else {
 import net.minecraft.client.gui.GuiGraphics;
 //?}
 

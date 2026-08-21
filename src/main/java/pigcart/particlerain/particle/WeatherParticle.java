@@ -57,8 +57,8 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
 
     @Override
     //? if >=1.21.9 {
-    /*public SingleQuadParticle.Layer getLayer() {
-    *///?} else {
+    //public SingleQuadParticle.Layer getLayer() {
+    //?} else {
     public ParticleRenderType getRenderType() {
      //?}
         return ParticleData.RenderType.TRANSLUCENT.get();
