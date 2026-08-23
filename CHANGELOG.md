@@ -37,18 +37,23 @@ overview of changes since v3.3.6:
 - puddles removed and expanded into their own mod
 
 # v4 beta 11
-###### work in progress
+###### Aug 23, 2026
 - added mc 26.2 support
-- added `#minecraft:substrate_overworld` to mist blocks list
 - added a null check before accessing config (potentially fixing a loading issue on forge platforms)
 - added rolling block particles
 - raised config text input limit
-- fixed after weather period in mc 26.1 and above
 - fixed shrubs
+- fixed issues specific to mc 26.1 and above:
+  - fixed after weather period
+  - fixed mist not spawning (added `#minecraft:substrate_overworld` to mist blocks list)
+  - fixed blended particle alpha masking
 - fixed shrub spawn density not displaying correctly in config gui
-- changed wind to apply cumulatively instead of instantly
+- fixed biome border particle culling removing particles between biomes with similar climates 
+- tweaked algorithm for the wind pattern
+- changed wind to apply cumulatively instead of overwriting particle velocity
 - updated Ukrainian and Russian translations (thanks: megatocha)
 - updated Korean translation (thanks: good7777865)
+- re-enabled dust haze by default because its cool as heck
 
 # v4 beta 10
 ###### May 8, 2026
@@ -63,6 +68,8 @@ overview of changes since v3.3.6:
 - fixed sky render distance being used for surface particles
 - fixed wrong collision size causing particles to clip through thin surfaces in mc`>1.21.9`
 - fixed particles inverting/inflating during collision animation
+- fixed incompatibility with some weather changing mods (thanks: HigorFr)
+- fixed particles spawning incorrectly on servers with modified heightmaps (thanks: HigorFr)
 
 # v4 beta 9
 ###### Mar 29, 2026

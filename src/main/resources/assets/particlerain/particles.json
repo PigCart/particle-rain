@@ -1,8 +1,8 @@
 {
   "rain": {
     "gravity": 0.9,
-    "windStrength": 0.5,
-    "stormWindStrength": 1,
+    "windStrength": 0.4,
+    "stormWindStrength": 0.8,
     "lifetime": 3000,
     "opacity": 1,
     "size": 1.5,
@@ -21,8 +21,8 @@
       "SNOW"
     ],
     "gravity": 0.05,
-    "windStrength": 0.1,
-    "stormWindStrength": 0.2,
+    "windStrength": 0.01,
+    "stormWindStrength": 0.1,
     "rotationAmount": 0.4,
     "lifetime": 3000,
     "opacity": 1,
@@ -92,7 +92,7 @@
     "tintType": "MAP"
   },
   "splatter": {
-    "particleClass": "REGISTERED",
+    "particleStyle": "REGISTERED",
     "registeredParticleId": "minecraft:rain",
     "blockList": {
       "entries": [
@@ -103,7 +103,7 @@
     "spawnPos": "BLOCK_TOP"
   },
   "ripple": {
-    "particleClass": "REGISTERED",
+    "particleStyle": "REGISTERED",
     "registeredParticleId": "particlerain:ripple",
     "blockList": {
       "entries": [
@@ -114,7 +114,7 @@
     "spawnPos": "BLOCK_TOP"
   },
   "smoke": {
-    "particleClass": "REGISTERED",
+    "particleStyle": "REGISTERED",
     "registeredParticleId": "minecraft:smoke",
     "blockList": {
       "entries": [
@@ -127,7 +127,7 @@
     "spawnPos": "BLOCK_TOP"
   },
   "streak": {
-    "particleClass": "REGISTERED",
+    "particleStyle": "REGISTERED",
     "registeredParticleId": "particlerain:streak",
     "density": 0.2,
     "blockList": {
@@ -141,8 +141,8 @@
     "spawnPos": "BLOCK_SIDES"
   },
   "shrub": {
-    "particleClass": "BLOCK_DISPLAY",
-    "rollingBlockId": "minecraft:dead_bush",
+    "particleStyle": "BLOCK_MODEL",
+    "blockId": "minecraft:dead_bush",
     "density": 0.001,
     "bounciness": 0.15,
     "gravity": 0.3,
@@ -155,7 +155,8 @@
     "blockList": {
       "entries": [
         "#minecraft:camel_sand_step_sound_blocks",
-        "#minecraft:sand"
+        "#minecraft:sand",
+        "#minecraft:terracotta"
       ],
       "isWhitelist": true
     },
@@ -163,7 +164,7 @@
   },
   "mist_after_rain": {
     "registeredParticleId": "particlerain:mist",
-    "particleClass": "REGISTERED",
+    "particleStyle": "REGISTERED",
     "density": 0.1,
     "weather": "AFTER_WEATHER",
     "blockList": {
@@ -177,7 +178,7 @@
   },
   "mist": {
     "registeredParticleId": "particlerain:mist",
-    "particleClass": "REGISTERED",
+    "particleStyle": "REGISTERED",
     "density": 0.1,
     "weather": "ALWAYS",
     "biomeList": {
@@ -230,14 +231,14 @@
     "stormWindStrength": 0.2
   },
   "dust_haze": {
-    "enabled": false,
+    "enabled": true,
     "lifetime": 100,
-    "density": 0.3,
+    "density": 0.2,
     "gravity": 0.1,
     "windStrength": 0.5,
     "stormWindStrength": 0.8,
     "rotationAmount": 0.1,
-    "opacity": 0.3,
+    "opacity": 0.4,
     "size": 0.5,
     "constantScreenSize": true,
     "spriteLocations": [
@@ -257,7 +258,7 @@
       "isWhitelist": true
     },
     "spawnPos": "WORLD_SURFACE",
-    "bounciness": "0.15",
+    "bounciness": 0.15,
     "tintType": "MAP"
   }
 }

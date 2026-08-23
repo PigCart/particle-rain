@@ -39,7 +39,7 @@ public class ParticleEditScreen extends ConfigScreen {
         super.addContents();
         // add button to access legacy options if editing a non CustomParticle
         ParticleData data = (ParticleData) this.config;
-        if (data.particleClass == ParticleData.ParticleClass.REGISTERED && ParticleRain.legacyParticleIds.contains(data.id)) {
+        if (data.particleStyle == ParticleData.ParticleStyle.REGISTERED && ParticleRain.legacyParticleIds.contains(data.id)) {
             ParticleData particleData = (ParticleData) this.config;
             try {
                 final Field field = ConfigData.class.getField(particleData.id);

@@ -156,11 +156,11 @@ public final class ParticleSpawner {
                 float x = pos.getX() + relativePos.x + 0.5F;
                 float y = pos.getY() + relativePos.y + 0.5F;
                 float z = pos.getZ() + relativePos.z + 0.5F;
-                if (data.particleClass == ParticleData.ParticleClass.REGISTERED && data.registeredParticleId.equals("particlerain:streak")) {
+                if (data.particleStyle == ParticleData.ParticleStyle.REGISTERED && data.registeredParticleId.equals("particlerain:streak")) {
                     // handle literal edge case. this mod's structure sucks sorry.
                     Minecraft.getInstance().particleEngine.add(new StreakParticle(level, x, y, z, direction, data.blockList));
                 } else {
-                    spawnParticle(level, x, y, z, data);
+                    data.particleStyle.spawn(level, x, y, z, data);
                 }
                 spawnAttemptsUntilBlockFXIdle = 10000;
             }
@@ -219,7 +219,7 @@ public final class ParticleSpawner {
                     && data.biomeList.contains(biome)
                     && data.blockList.contains(level.getBlockState(heightmapPos).getBlockHolder())
                 ) {
-                    spawnParticle(level, x, y, z, data);
+                    data.particleStyle.spawn(level, x, y, z, data);
                     ticksUntilSkyFXIdle = 100;
                 }
             }
@@ -251,19 +251,10 @@ public final class ParticleSpawner {
                         && data.biomeList.contains(biome)
                         && data.blockList.contains(blockState.getBlockHolder())
                 ) {
-                    spawnParticle(level, x, y, z, data);
+                    data.particleStyle.spawn(level, x, y, z, data);
                     ticksUntilSurfaceFXIdle = 100;
                 }
             }
         }
     }
-
-    public static void spawnParticle(ClientLevel level, double x, double y, double z, ParticleData data) {
-        switch (data.particleClass) {
-            case CUSTOM -> Minecraft.getInstance().particleEngine.add(new CustomParticle(level, x, y, z, data));
-            case REGISTERED -> level.addParticle(data.presetParticle, x, y, z, 0, 0, 0);
-            case BLOCK_DISPLAY -> Minecraft.getInstance().particleEngine.add(new BlockDisplayParticle(level, x, y, z, data));
-        }
-    }
-
 }

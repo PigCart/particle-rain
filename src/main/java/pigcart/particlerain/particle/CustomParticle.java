@@ -119,15 +119,17 @@ public class CustomParticle extends WeatherParticle {
 
     public void tickWind() {
         float multiplier = level.isThundering() ? data.stormWindStrength : data.windStrength;
+        if (multiplier == 0) return;
         Vector3f wind = ParticleRain.getWind(x, y, z).mul(multiplier);
-        //TODO: accumulative wind so that bounciness can work on sides without the bounce getting canceled by the wind force
-        // (or briefly reduce the wind strength when a bounce happens?)
         this.xd += wind.x;
         this.zd += wind.z;
     }
 
     public void onPositionUpdate() {
-        if (!getConfig().compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
+        if (!getConfig().compat.crossBiomeBorder
+                && level.getBiome(pos).value().getBaseTemperature() != baseTemp
+                && !data.precipitation.contains(VersionUtil.getPrecipitationAt(level, level.getBiome(pos), pos))
+        ) {
             this.remove();
             return;
         }

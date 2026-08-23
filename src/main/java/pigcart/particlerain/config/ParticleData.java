@@ -2,6 +2,7 @@ package pigcart.particlerain.config;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.BiomeColors;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.biome.Biome;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.VersionUtil;
+import pigcart.particlerain.particle.BlockDisplayParticle;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 //? if >=1.21.9 {
@@ -44,17 +46,19 @@ public class ParticleData {
         if (optional.isEmpty()) {
             ParticleRain.LOGGER.error("Incorrect configuration: {} is not a valid particle", registeredParticleId);
         } else {
-            presetParticle = (ParticleOptions) optional.get();
+            registeredParticle = (ParticleOptions) optional.get();
         }
     }
 
     //TODO @Dropdown(SupplyParticleTypes.class)
-    @OnlyVisibleIf(ParticleIsRegistered.class)
-    public String registeredParticleId = "minecraft:flame";
-    @NoGUI
-    public transient ParticleOptions presetParticle = ParticleTypes.CLOUD;
     @OnChange(RefreshScreen.class)
-    public ParticleClass particleClass = ParticleClass.CUSTOM;
+    public ParticleStyle particleStyle = ParticleStyle.CUSTOM;
+    @OnlyVisibleIf(ParticleIsRegistered.class)
+    public String registeredParticleId = "minecraft:cloud";
+    @NoGUI
+    public transient ParticleOptions registeredParticle = ParticleTypes.CLOUD;
+    @OnlyVisibleIf(ParticleIsBlock.class)
+    public String blockId = "minecraft:dead_bush";
     @OnlyVisibleIf(ParticleNotDefault.class)
     public transient String id = "new_particle";
     @Label(key = "spawning")
@@ -91,7 +95,6 @@ public class ParticleData {
     public Color customTint = Color.BLACK;
     @OnChange(RefreshScreen.class)
     @OnlyVisibleIf(ParticleIsCustom.class) public RotationType rotationType = RotationType.COPY_CAMERA;
-    @OnlyVisibleIf(ParticleIsBlock.class) public String rollingBlockId = "";
 
     public enum Weather {
         DURING_WEATHER {
@@ -245,11 +248,22 @@ public class ParticleData {
         public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {}
     }
 
-    public enum ParticleClass {
-        REGISTERED,
-        CUSTOM,
-        BLOCK_DISPLAY,
-        STREAK,
-        FOG
+    public enum ParticleStyle {
+        REGISTERED {
+            @Override
+            public void spawn(ClientLevel level, double x, double y, double z, ParticleData data) {
+                level.addParticle(data.registeredParticle, x, y, z, 0, 0, 0);
+            }
+        },
+        BLOCK_MODEL {
+            @Override
+            public void spawn(ClientLevel level, double x, double y, double z, ParticleData data) {
+                Minecraft.getInstance().particleEngine.add(new BlockDisplayParticle(level, x, y, z, data));
+            }
+        },
+        CUSTOM;
+        public void spawn(ClientLevel level, double x, double y, double z, ParticleData data) {
+            Minecraft.getInstance().particleEngine.add(new CustomParticle(level, x, y, z, data));
+        }
     }
 }

@@ -23,6 +23,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 //?}
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class BlockDisplayParticle extends CustomParticle {
 
@@ -39,12 +40,17 @@ public class BlockDisplayParticle extends CustomParticle {
         display = new Display.BlockDisplay(net.minecraft.world.entity.EntityType.BLOCK_DISPLAY, level);
         display.setPos(x, y, z);
 
-        final ResourceLocation id = VersionUtil.parseId(data.rollingBlockId);
+        final ResourceLocation id = VersionUtil.parseId(data.blockId);
         if (id != null) {
-            ((BlockDisplayAccessor) display).callSetBlockState(
-                    //~ if >=1.21.9 'defaultBlockState' -> 'get().value().defaultBlockState'
-                    BuiltInRegistries.BLOCK.get(id).defaultBlockState()
-            );
+            //TODO move validation for this into the config
+            try {
+                ((BlockDisplayAccessor) display).callSetBlockState(
+                        //~ if >=1.21.9 'defaultBlockState' -> 'get().value().defaultBlockState'
+                        BuiltInRegistries.BLOCK.get(id).defaultBlockState()
+                );
+            } catch (NoSuchElementException e) {
+                this.remove();
+            }
         }
         this.rotationVariation = data.rotationAmount;
 

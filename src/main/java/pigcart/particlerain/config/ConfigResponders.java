@@ -123,28 +123,28 @@ public class ConfigResponders {
     public static class ParticleIsCustom implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
-            return ctx.particleClass == ParticleData.ParticleClass.CUSTOM;
+            return ctx.particleStyle == ParticleData.ParticleStyle.CUSTOM;
         }
     }
 
     public static class ParticleNotCustom implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
-            return ctx.particleClass != ParticleData.ParticleClass.CUSTOM;
+            return ctx.particleStyle != ParticleData.ParticleStyle.CUSTOM;
         }
     }
 
     public static class ParticleIsRegistered implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
-            return ctx.particleClass == ParticleData.ParticleClass.REGISTERED;
+            return ctx.particleStyle == ParticleData.ParticleStyle.REGISTERED;
         }
     }
 
     public static class ParticleNotRegistered implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
-            return ctx.particleClass != ParticleData.ParticleClass.REGISTERED;
+            return ctx.particleStyle != ParticleData.ParticleStyle.REGISTERED;
         }
     }
 
@@ -159,7 +159,7 @@ public class ConfigResponders {
     public static class ParticleIsBlock implements Function<Object, Boolean> {
         public Boolean apply(Object context) {
             ParticleData ctx = (ParticleData) context;
-            return ctx.particleClass == ParticleData.ParticleClass.BLOCK_DISPLAY;
+            return ctx.particleStyle == ParticleData.ParticleStyle.BLOCK_MODEL;
         }
     }
 

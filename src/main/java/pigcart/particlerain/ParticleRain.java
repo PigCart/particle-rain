@@ -17,6 +17,7 @@ import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import pigcart.particlerain.config.ConfigData;
 import pigcart.particlerain.config.ConfigManager;
 //? if >=1.21.9 {
 /*import net.minecraft.client.gui.components.debug.DebugScreenEntries;
@@ -145,16 +146,18 @@ public class ParticleRain {
     public static Vector3f getWind(double x, double y, double z) {
         final ClientLevel level = Minecraft.getInstance().level;
         if (level == null) return new Vector3f();
-        float frequency = getConfig().wind.gustFrequency;
-        float shift = level.getGameTime() * getConfig().wind.modulationSpeed;
-        float variance = getConfig().wind.strengthVariance;
-        float strength = getConfig().wind.strength;
-        float multiplier = getConfig().wind.yLevelAdjustment? yLevelWindMultiplier(y) : 0;
+        final ConfigData.WindOptions wind = getConfig().wind;
+        float shift = level.getGameTime() * wind.modulationSpeed;
+        float multiplier = wind.yLevelAdjustment? yLevelWindMultiplier(y) : 0;
         return new Vector3f(
-                (((Mth.sin((float) (x * frequency + shift)) * variance) + variance + strength) * multiplier) + 0.001F,
+                oneWindPlease((float) x, wind.gustFrequency, shift, wind.strength) * multiplier + 0.001F,
                 0,
-                (((Mth.sin((float) (z * frequency + shift)) * variance) + variance + strength) * multiplier) + 0.001F
+                oneWindPlease((float) z, wind.gustFrequency, shift, wind.strength) * multiplier + 0.001F
         );
+    }
+
+    private static float oneWindPlease(float pos, float frequency, float time, float max) {
+        return Mth.sin(pos*frequency + time) * Mth.sin(pos*frequency*0.5F + time*0.5F) * max + max;
     }
 
     public static float yLevelWindMultiplier(double y) {

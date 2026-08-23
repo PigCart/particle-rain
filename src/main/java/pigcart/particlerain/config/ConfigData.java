@@ -4,8 +4,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 import pigcart.particlerain.config.gui.Annotations.*;
-import java.util.ArrayList;
-import java.util.List;
 //? if >=1.21.9 {
 /*import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
 import net.minecraft.client.particle.SingleQuadParticle;
@@ -16,7 +14,7 @@ import net.minecraft.client.particle.ParticleRenderType;
 import static pigcart.particlerain.config.ConfigResponders.*;
 
 public class ConfigData {
-    @NoGUI public byte configVersion = 5;
+    @NoGUI public byte configVersion = 6;
 
     public void updateTransientVariables() {
         if (compat != null && compat.weatherIgnoreBlocks != null) {
@@ -28,8 +26,8 @@ public class ConfigData {
     public static class PerformanceOptions {
         @OnChange(ClearParticles.class)
         public int maxParticleAmount = 1500;
-        public int particleDensity = 100;
-        public int particleStormDensity = 200;
+        public int particleDensity = 50;
+        public int particleStormDensity = 167;
         @Format(DistanceInBlocks.class)
         public int particleDistance = 16;
         @Format(DistanceInBlocks.class)
@@ -45,10 +43,9 @@ public class ConfigData {
 
     public WindOptions wind = new WindOptions();
     public static class WindOptions {
-        public float strength = 0.004F;
-        public float strengthVariance = 0.02F;
+        public float strength = 0.03F;
         public float gustFrequency = 0.15F;
-        public float modulationSpeed = 0.04F;
+        public float modulationSpeed = 0.1F;
         public boolean yLevelAdjustment = true;
     }
 

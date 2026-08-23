@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,12 +44,12 @@ public class ClientLevelMixin {
     }
 
     //? >=26.2 {
-    /*// bypass rain level check so we can share the sound placement calculations with non-rain sounds
+    /*// bypass precipitation check so we can share the sound placement calculations with non-rain sounds
     @WrapOperation(method = "tickWeatherEffects", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/multiplayer/ClientLevel;getRainLevel(F)F"
+            target = "Lnet/minecraft/client/multiplayer/ClientLevel;getPrecipitationAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;"
     ))
-    public float overrideRainLevel(ClientLevel instance, float v, Operation<Float> original) {
-        return 1;
+    public Biome.Precipitation overridePrecipitation(ClientLevel instance, BlockPos blockPos, Operation<Biome.Precipitation> original) {
+        return Biome.Precipitation.RAIN;
     }
 
     // insert additional sounds without replacing vanilla code block where rain sounds are played
