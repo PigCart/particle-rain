@@ -11,13 +11,14 @@ import static net.minecraft.client.renderer.RenderPipelines.PARTICLE_SNIPPET;
 
 public class BlendedParticleRenderType {
 
-    public static final RenderPipeline FOG_PIPELINE = RenderPipelines.register(
+    public static final RenderPipeline BLENDED_PARTICLE = RenderPipelines.register(
             RenderPipeline.builder(PARTICLE_SNIPPET)
                     .withLocation("pipeline/particlerain_fog")
                     //? >=26.1 {
                     /^.withColorTargetState(new com.mojang.blaze3d.pipeline.ColorTargetState(
                             BlendFunction.TRANSLUCENT))
                     .withDepthStencilState(new com.mojang.blaze3d.pipeline.DepthStencilState(
+                            //~ if 26.1 'GREATER_THAN' -> 'LESS_THAN'
                             com.mojang.blaze3d.platform.CompareOp.GREATER_THAN, false))
                     ^///?} else {
                     .withBlend(BlendFunction.TRANSLUCENT)
@@ -26,7 +27,7 @@ public class BlendedParticleRenderType {
                     .build()
     );
     public static final SingleQuadParticle.Layer INSTANCE =
-            new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, FOG_PIPELINE);
+            new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, BLENDED_PARTICLE);
 }
 
 *///?} else if 1.21.1 {

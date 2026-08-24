@@ -81,7 +81,7 @@ public class ParticleRain {
         );
         if (VersionUtil.irisLoaded()) {
             net.irisshaders.iris.api.v0.IrisApi.getInstance().assignPipeline(
-                    BlendedParticleRenderType.FOG_PIPELINE,
+                    BlendedParticleRenderType.BLENDED_PARTICLE,
                     net.irisshaders.iris.api.v0.IrisProgram.PARTICLES_TRANSLUCENT
             );
         }
