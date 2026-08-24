@@ -27,6 +27,8 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 # v4.0.0
 ###### work in progress
 
+- fixed particle count not decreasing when a particle spawn is canceled by the Particle Group
+
 overview of changes since v3.3.6:
 - multiversion support including support for forge loaders
 - customizable weather particles

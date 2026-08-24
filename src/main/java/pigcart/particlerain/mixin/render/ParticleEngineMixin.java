@@ -1,6 +1,8 @@
 package pigcart.particlerain.mixin.render;
 
 import com.google.common.collect.ImmutableList;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleRenderType;
 import org.spongepowered.asm.mixin.Final;
@@ -12,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.particle.BlockDisplayParticle;
+import pigcart.particlerain.particle.WeatherParticle;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 
 import java.util.List;
@@ -28,6 +31,13 @@ public class ParticleEngineMixin {
         BlockDisplayParticle.clearAll();
         ParticleSpawner.particleCount = 0;
     }
+
+    //? >=26.2 {
+    /*@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/Particle;getParticleLimit()Ljava/util/Optional;"))
+    public void onParticleSpawnCanceled(CallbackInfo ci, @Local Particle particle) {
+        if (particle instanceof WeatherParticle) ParticleSpawner.particleCount--;
+    }
+    *///?}
 
     //? if <1.21.9 {
     @Mutable
