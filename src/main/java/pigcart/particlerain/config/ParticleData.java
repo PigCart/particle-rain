@@ -83,10 +83,12 @@ public class ParticleData {
     @Label(key = "appearance")
     @Slider @Format(Percent.class)
     @OnlyVisibleIf(ParticleNotRegistered.class) public Float opacity = 1.0F;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public FadeType fadeType = FadeType.DISTANCE;
     @Format(DistanceInBlocks.class)
     @OnlyVisibleIf(ParticleNotRegistered.class) public Float size = 0.5F;
     @OnlyVisibleIf(ParticleNotRegistered.class) public Boolean constantScreenSize = false;
     @OnlyVisibleIf(ParticleNotRegistered.class) public RenderType renderType = RenderType.TRANSLUCENT;
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Boolean animateSprites = false;
     @OnlyVisibleIf(ParticleNotRegistered.class) public ArrayList<String> spriteLocations = new ArrayList<>(List.of("particlerain:new_custom_particle"));
     @OnlyVisibleIf(ParticleNotRegistered.class)
     @OnChange(RefreshScreen.class)
@@ -221,31 +223,39 @@ public class ParticleData {
     }
 
     public enum RotationType {
+        //~ if >=1.21.9 VertexConsumer -> QuadParticleRenderState {
         COPY_CAMERA {
             @Override
-            public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {
+            public void render(VertexConsumer h, Camera camera, float tickPercent, CustomParticle p) {
                 p.renderCameraCopyQuad(h, camera, tickPercent);
             }
         },
         RELATIVE_VELOCITY {
             @Override
-            public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {
+            public void render(VertexConsumer h, Camera camera, float tickPercent, CustomParticle p) {
                 p.renderRelativeVelocityQuad(h, camera, tickPercent);
             }
         },
         WORLD_VELOCITY {
             @Override
-            public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {
+            public void render(VertexConsumer h, Camera camera, float tickPercent, CustomParticle p) {
                 p.renderWorldVelocityQuad(h, camera, tickPercent);
             }
         },
         LOOKAT_PLAYER {
             @Override
-            public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {
+            public void render(VertexConsumer h, Camera camera, float tickPercent, CustomParticle p) {
                 p.renderLookingQuad(h, camera, tickPercent);
             }
+        },
+        HORIZONTAL {
+            @Override
+            public void render(VertexConsumer h, Camera camera, float tickPercent, CustomParticle p) {
+                p.renderHorizontalQuad(h, camera, tickPercent);
+            }
         };
-        public void render(/*? if >=1.21.9 {*//*QuadParticleRenderState*//*?} else {*/VertexConsumer/*?}*/ h, Camera camera, float tickPercent, CustomParticle p) {}
+        public void render(VertexConsumer h, Camera camera, float tickPercent, CustomParticle p) {}
+        //~ }
     }
 
     public enum ParticleStyle {
@@ -265,5 +275,11 @@ public class ParticleData {
         public void spawn(ClientLevel level, double x, double y, double z, ParticleData data) {
             Minecraft.getInstance().particleEngine.add(new CustomParticle(level, x, y, z, data));
         }
+    }
+
+    public enum FadeType {
+        IN_AND_OUT,
+        OUT,
+        DISTANCE
     }
 }

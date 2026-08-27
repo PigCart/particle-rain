@@ -3,8 +3,6 @@
     "gravity": 0.9,
     "windStrength": 0.4,
     "stormWindStrength": 0.8,
-    "lifetime": 3000,
-    "opacity": 1,
     "size": 1.5,
     "spriteLocations": [
       "particlerain:rain_0",
@@ -24,8 +22,6 @@
     "windStrength": 0.01,
     "stormWindStrength": 0.1,
     "rotationAmount": 0.4,
-    "lifetime": 3000,
-    "opacity": 1,
     "size": 1.5,
     "spriteLocations": [
       "particlerain:snow_0",
@@ -52,8 +48,6 @@
     "windStrength": 0.7,
     "stormWindStrength": 1,
     "rotationAmount": 0,
-    "lifetime": 3000,
-    "opacity": 1,
     "size": 1.5,
     "spriteLocations": [
       "particlerain:dust"
@@ -81,7 +75,6 @@
     "bounciness": 0.15,
     "rotationAmount": 1.0,
     "lifetime": 60,
-    "opacity": 1.0,
     "size": 0.2,
     "renderType": "OPAQUE",
     "spriteLocations": [
@@ -103,15 +96,34 @@
     "spawnPos": "BLOCK_TOP"
   },
   "ripple": {
-    "particleStyle": "REGISTERED",
-    "registeredParticleId": "particlerain:ripple",
+    "particleStyle": "CUSTOM",
+    "gravity": 0,
+    "windStrength": 0,
+    "stormWindStrength": 0,
     "blockList": {
       "entries": [
         "minecraft:water"
       ],
       "isWhitelist": true
     },
-    "spawnPos": "BLOCK_TOP"
+    "spawnPos": "BLOCK_TOP",
+    "animateSprites": true,
+    "spriteLocations": [
+      "particlerain:ripple_0",
+      "particlerain:ripple_1",
+      "particlerain:ripple_2",
+      "particlerain:ripple_3",
+      "particlerain:ripple_4",
+      "particlerain:ripple_5",
+      "particlerain:ripple_6",
+      "particlerain:ripple_7"
+    ],
+    "rotationType": "HORIZONTAL",
+    "renderType": "TRANSLUCENT",
+    "size": 0.25,
+    "fadeType": "OUT",
+    "lifetime": 7,
+    "tintType": "WATER"
   },
   "smoke": {
     "particleStyle": "REGISTERED",
@@ -163,9 +175,10 @@
     "spawnPos": "WORLD_SURFACE"
   },
   "mist_after_rain": {
-    "registeredParticleId": "particlerain:mist",
-    "particleStyle": "REGISTERED",
     "density": 0.1,
+    "gravity": 0,
+    "windStrength": 0,
+    "stormWindStrength": 0,
     "weather": "AFTER_WEATHER",
     "blockList": {
       "entries": [
@@ -174,12 +187,21 @@
       ],
       "isWhitelist": true
     },
-    "spawnPos": "WORLD_SURFACE"
+    "spawnPos": "WORLD_SURFACE",
+    "spriteLocations": [
+      "particlerain:fog_translucent"
+    ],
+    "rotationType": "HORIZONTAL",
+    "renderType": "BLENDED",
+    "size": 3,
+    "fadeType": "IN_AND_OUT",
+    "lifetime": 250
   },
   "mist": {
-    "registeredParticleId": "particlerain:mist",
-    "particleStyle": "REGISTERED",
     "density": 0.1,
+    "gravity": 0,
+    "windStrength": 0,
+    "stormWindStrength": 0,
     "weather": "ALWAYS",
     "biomeList": {
       "entries": [
@@ -195,7 +217,15 @@
       ],
       "isWhitelist": true
     },
-    "spawnPos": "WORLD_SURFACE"
+    "spawnPos": "WORLD_SURFACE",
+    "spriteLocations": [
+      "particlerain:fog_translucent"
+    ],
+    "rotationType": "HORIZONTAL",
+    "renderType": "BLENDED",
+    "size": 3,
+    "fadeType": "IN_AND_OUT",
+    "lifetime": 250
   },
   "rain_haze": {
     "enabled": false,

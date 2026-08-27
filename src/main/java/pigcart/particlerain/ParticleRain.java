@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,9 @@ public class ParticleRain {
     public static final String MOD_ID = "particlerain";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static SimpleParticleType MIST;
-    public static SimpleParticleType RIPPLE;
     public static SimpleParticleType STREAK;
 
-    public static Set<String> legacyParticleIds = Set.of("shrub", "ripple", "streak", "mist");
+    public static Set<String> legacyParticleIds = Set.of("streak");
 
     public static SoundEvent WEATHER_SNOW;
     public static SoundEvent WEATHER_SNOW_ABOVE;

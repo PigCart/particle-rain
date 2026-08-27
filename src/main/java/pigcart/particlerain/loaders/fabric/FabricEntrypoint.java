@@ -26,14 +26,9 @@ public class FabricEntrypoint implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         //TODO
-        ParticleRain.MIST = registerParticle("mist");
-        ParticleRain.RIPPLE = registerParticle("ripple");
         ParticleRain.STREAK = registerParticle("streak");
-        //~ if >=26.1 'ParticleFactoryRegistry' -> 'ParticleProviderRegistry' {
-        ParticleFactoryRegistry.getInstance().register(ParticleRain.MIST, MistParticle.Provider::new);
-        ParticleFactoryRegistry.getInstance().register(ParticleRain.RIPPLE, RippleParticle.Provider::new);
+        //~ if >=26.1 ParticleFactoryRegistry -> ParticleProviderRegistry
         ParticleFactoryRegistry.getInstance().register(ParticleRain.STREAK, StreakParticle.Provider::new);
-        //~}
 
         ParticleRain.onInitializeClient();
 

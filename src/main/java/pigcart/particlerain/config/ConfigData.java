@@ -89,37 +89,4 @@ public class ConfigData {
         public float opacity = 0.9F;
         public float size = 0.5F;
     }
-
-    @NoGUI
-    public MistOptions mist = new MistOptions();
-    public static class MistOptions {
-        public int lifetime = 250;
-        @Slider @Format(Percent.class)
-        public float opacity = 1.0F;
-        public float size = 3F;
-        public RenderStyle renderStyle = RenderStyle.BLENDED;
-        public enum RenderStyle {
-            BLENDED {
-                public TextureAtlasSprite getSprite() {
-                    return VersionUtil.getSprite(VersionUtil.getId("fog_translucent"));
-                }
-                public /*? if >=1.21.9 {*//*SingleQuadParticle.Layer*//*?} else {*/ParticleRenderType/*?}*/ getRenderType() {
-                    return BlendedParticleRenderType.INSTANCE;
-                }
-            },
-            DITHERED;
-            public TextureAtlasSprite getSprite() {
-                return VersionUtil.getSprite(VersionUtil.getId("fog_dithered"));
-            }
-            //? if >=1.21.9 {
-            /*public SingleQuadParticle.Layer getRenderType() {
-                return SingleQuadParticle.Layer.TRANSLUCENT;
-            }
-            *///?} else {
-            public ParticleRenderType getRenderType() {
-                return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
-            }
-            //?}
-        }
-    }
 }

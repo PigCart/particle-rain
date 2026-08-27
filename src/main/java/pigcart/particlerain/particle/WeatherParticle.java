@@ -77,7 +77,7 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
         if (doCollisionAnim) {
             tickCollisionAnim();
         }
-        tickDistanceFade();
+        tickFading();
     }
 
     public void onPositionUpdate() {
@@ -97,7 +97,7 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
         }
     }
 
-    public void tickDistanceFade() {
+    public void tickFading() {
         final float renderDistance = getConfig().perf.particleDistance;
         if (distance > renderDistance) {
             remove();

@@ -19,8 +19,6 @@ import org.joml.Vector3f;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import pigcart.particlerain.config.ParticleData;
-import pigcart.particlerain.particle.CustomParticle;
-import pigcart.particlerain.particle.BlockDisplayParticle;
 import pigcart.particlerain.particle.StreakParticle;
 
 import static pigcart.particlerain.config.ConfigManager.getConfig;
@@ -237,7 +235,7 @@ public final class ParticleSpawner {
         for (int i = 0; i < density; i++) {
             double x = RANDOM.triangle(cameraPos.x, getConfig().perf.surfaceRange);
             double z = RANDOM.triangle(cameraPos.z, getConfig().perf.surfaceRange);
-            int y = getHeight(level, (int) x, (int) z);
+            double y = getHeight(level, (int) x, (int) z) + RANDOM.nextDouble();
             pos.set(x, y - 1, z);
             BlockState blockState = level.getBlockState(pos);
             Holder<Biome> biome = level.getBiome(pos);

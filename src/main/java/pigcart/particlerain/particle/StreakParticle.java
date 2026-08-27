@@ -91,7 +91,7 @@ public class StreakParticle extends WeatherParticle {
     }
 
     @Override
-    public void tickDistanceFade() {
+    public void tickFading() {
         //if (!doCollisionAnim) super.tickDistanceFade();
     }
 

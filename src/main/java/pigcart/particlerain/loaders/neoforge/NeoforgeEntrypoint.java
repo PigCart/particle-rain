@@ -32,8 +32,6 @@ public class NeoforgeEntrypoint {
 
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, ParticleRain.MOD_ID);
 
-    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> MIST = registerParticle("mist");
-    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> RIPPLE = registerParticle("ripple");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> STREAK = registerParticle("streak");
 
     private static DeferredHolder<ParticleType<?>, SimpleParticleType> registerParticle(String name) {
@@ -51,11 +49,7 @@ public class NeoforgeEntrypoint {
 
     public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
         //TODO
-        event.registerSpriteSet(MIST.get(), MistParticle.Provider::new);
-        event.registerSpriteSet(RIPPLE.get(), RippleParticle.Provider::new);
         event.registerSpriteSet(STREAK.get(), StreakParticle.Provider::new);
-        ParticleRain.MIST = MIST.get();
-        ParticleRain.RIPPLE = RIPPLE.get();
         ParticleRain.STREAK = STREAK.get();
     }
 

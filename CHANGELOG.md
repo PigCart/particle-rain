@@ -29,6 +29,11 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 
 - fixed particle count not decreasing when a particle spawn is canceled by the Particle Group
 - fixed blended particles being visible through objects in 26.1
+- fixed wind applying to particles with a wind strength of zero
+- added random Y spawn offset to particles with surface spawn position
+- added fade types to particle config
+- added horizontal particle rotation type
+- ported mist and ripple effect to configurable horizontal particles
 
 overview of changes since v3.3.6:
 - multiversion support including support for forge loaders
