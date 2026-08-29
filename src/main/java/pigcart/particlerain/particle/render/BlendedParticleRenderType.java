@@ -40,18 +40,18 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.jetbrains.annotations.Nullable;
+import pigcart.particlerain.VersionUtil;
 
 public class BlendedParticleRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType() {
         @Override
         public @Nullable BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
-            //RenderSystem.enableDepthTest();
+            RenderSystem.enableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+            RenderSystem.setShaderTexture(2, VersionUtil.getMcId("dynamic/light_map_1"));
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            //RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            //RenderSystem.setShaderTexture(2, VersionUtil.getMcId("dynamic/light_map_1"));
             return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
     };

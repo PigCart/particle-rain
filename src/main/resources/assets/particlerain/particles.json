@@ -31,7 +31,6 @@
     ]
   },
   "dust": {
-    "density": 0.8,
     "precipitation": [
       "NONE"
     ],
@@ -40,22 +39,25 @@
         "#minecraft:camel_sand_step_sound_blocks",
         "#minecraft:sand",
         "#minecraft:terracotta",
-        "#c:sandstone_blocks"
+        "#c:sandstone_blocks",
+        "minecraft:coarse_dirt"
       ],
       "isWhitelist": true
     },
     "gravity": 0.1,
     "windStrength": 0.7,
     "stormWindStrength": 1,
-    "rotationAmount": 0,
-    "size": 1.5,
+    "rotationAmount": 0.1,
+    "size": 0.25,
     "spriteLocations": [
-      "particlerain:dust"
+      "minecraft:generic_0",
+      "minecraft:generic_1",
+      "minecraft:generic_2"
     ],
     "tintType": "MAP"
   },
   "heavy_dust": {
-    "density": 0.20400001,
+    "density": 0.2,
     "precipitation": [
       "NONE"
     ],
@@ -64,7 +66,8 @@
         "#minecraft:camel_sand_step_sound_blocks",
         "#minecraft:sand",
         "#minecraft:terracotta",
-        "#c:sandstone_blocks"
+        "#c:sandstone_blocks",
+        "minecraft:coarse_dirt"
       ],
       "isWhitelist": true
     },
@@ -168,7 +171,8 @@
       "entries": [
         "#minecraft:camel_sand_step_sound_blocks",
         "#minecraft:sand",
-        "#minecraft:terracotta"
+        "#minecraft:terracotta",
+        "minecraft:coarse_dirt"
       ],
       "isWhitelist": true
     },
@@ -283,7 +287,8 @@
         "#minecraft:camel_sand_step_sound_blocks",
         "#minecraft:sand",
         "#minecraft:terracotta",
-        "#c:sandstone_blocks"
+        "#c:sandstone_blocks",
+        "minecraft:coarse_dirt"
       ],
       "isWhitelist": true
     },
