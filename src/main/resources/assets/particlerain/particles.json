@@ -40,6 +40,7 @@
         "#minecraft:sand",
         "#minecraft:terracotta",
         "#c:sandstone_blocks",
+        "#forge:sandstone",
         "minecraft:coarse_dirt"
       ],
       "isWhitelist": true
@@ -67,6 +68,7 @@
         "#minecraft:sand",
         "#minecraft:terracotta",
         "#c:sandstone_blocks",
+        "#forge:sandstone",
         "minecraft:coarse_dirt"
       ],
       "isWhitelist": true
@@ -149,6 +151,7 @@
       "entries": [
         "#minecraft:impermeable",
         "#c:glass_panes",
+        "#forge:glass_panes",
         "#minecraft:mineable/pickaxe"
       ],
       "isWhitelist": true
@@ -210,7 +213,9 @@
     "biomeList": {
       "entries": [
         "#c:is_wet/overworld",
-        "#c:is_spooky"
+        "#c:is_spooky",
+        "#forge:is_wet/overworld",
+        "#forge:is_spooky"
       ],
       "isWhitelist": true
     },
@@ -288,6 +293,7 @@
         "#minecraft:sand",
         "#minecraft:terracotta",
         "#c:sandstone_blocks",
+        "#forge:sandstone",
         "minecraft:coarse_dirt"
       ],
       "isWhitelist": true
