@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
@@ -15,6 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
+import pigcart.particlerain.RegisteredParticles;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.particle.BlockDisplayParticle;
 import pigcart.particlerain.particle.CustomParticle;
@@ -73,9 +75,9 @@ public class ParticleData {
     public Boolean needsSkyAccess = true;
     public SpawnPos spawnPos = SpawnPos.SKY;
     @Label(key = "motion")
+    public Float windStrength = 0.1F;
+    public Float stormWindStrength = 0.5F;
     @OnlyVisibleIf(ParticleNotRegistered.class) public Float gravity = 0.1F;
-    @OnlyVisibleIf(ParticleNotRegistered.class) public Float windStrength = 0.1F;
-    @OnlyVisibleIf(ParticleNotRegistered.class) public Float stormWindStrength = 0.5F;
     @OnlyVisibleIf(ParticleNotRegistered.class) public Float rotationAmount = 0F;
     @OnlyVisibleIf(ParticleNotRegistered.class) public Float bounciness = 0F;
     @Format(TimeInTicks.class)
@@ -262,7 +264,8 @@ public class ParticleData {
         REGISTERED {
             @Override
             public void spawn(ClientLevel level, double x, double y, double z, ParticleData data) {
-                level.addParticle(data.registeredParticle, x, y, z, 0, 0, 0);
+                Particle particle = Minecraft.getInstance().particleEngine.createParticle(data.registeredParticle, x, y, z, 0, 0, 0);
+                if (particle != null) RegisteredParticles.track(particle, data);
             }
         },
         BLOCK_MODEL {

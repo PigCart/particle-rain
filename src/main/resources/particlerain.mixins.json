@@ -18,6 +18,7 @@
     "access.ClientLevelAccessor",
     "access.DisplayAccessor",
     "access.NativeImageAccessor",
+    "access.ParticleAccessor",
     "access.ParticleEngineAccessor",
     "access.SingleQuadParticleAccessor",
     "render.ClientLevelMixin",
