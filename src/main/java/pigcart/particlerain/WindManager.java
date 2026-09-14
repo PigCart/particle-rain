@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public final class RegisteredParticles {
+public final class WindManager {
 
     private static final int MAX_TICKS = 6000;
 
@@ -28,17 +28,11 @@ public final class RegisteredParticles {
         }
     }
 
-    private RegisteredParticles() {}
+    private WindManager() {}
 
     public static void track(Particle particle, ParticleData data) {
         if (WindLinkCompat.alreadyDrives(particle)) return;
-        ClientLevel level = Minecraft.getInstance().level;
-        if (!steer(particle, data, level)) {
-            float multiplier = windMultiplier(level, data);
-            if (multiplier != 0) {
-                push(particle, multiplier * 10);
-            }
-        }
+        applySpawnWind(particle, data, Minecraft.getInstance().level);
         TRACKED.add(new Tracked(particle, data));
     }
 
@@ -51,9 +45,7 @@ public final class RegisteredParticles {
                 iterator.remove();
                 continue;
             }
-            if (steer(tracked.particle, tracked.data, level)) continue;
-            float multiplier = windMultiplier(level, tracked.data);
-            if (multiplier != 0) push(tracked.particle, multiplier);
+            applyWind(tracked.particle, tracked.data, level);
         }
     }
 
@@ -61,27 +53,46 @@ public final class RegisteredParticles {
         TRACKED.clear();
     }
 
-    private static float windMultiplier(ClientLevel level, ParticleData data) {
+    public static float windMultiplier(ClientLevel level, ParticleData data) {
         return level != null && level.isThundering() ? data.stormWindStrength : data.windStrength;
     }
 
-    private static void push(Particle particle, float multiplier) {
+    public static void applyWind(Particle particle, ParticleData data, ClientLevel level) {
         ParticleAccessor p = (ParticleAccessor) particle;
+        Vector3f target = windLinkTarget(level, data, p.getX(), p.getY(), p.getZ());
+        if (target != null) {
+            float couple = WindLinkCompat.couple(data.id);
+            if (couple > 0) {
+                p.setXd(p.getXd() + (target.x - p.getXd()) * couple);
+                p.setZd(p.getZd() + (target.z - p.getZd()) * couple);
+                return;
+            }
+        }
+        float multiplier = windMultiplier(level, data);
+        if (multiplier == 0) return;
         Vector3f wind = ParticleRain.getWind(p.getX(), p.getY(), p.getZ()).mul(multiplier);
         p.setXd(p.getXd() + wind.x);
         p.setZd(p.getZd() + wind.z);
     }
 
-    private static boolean steer(Particle particle, ParticleData data, ClientLevel level) {
-        if (!WindLinkCompat.isDriving()) return false;
-        if (windMultiplier(level, data) == 0) return false;
+    public static void applySpawnWind(Particle particle, ParticleData data, ClientLevel level) {
         ParticleAccessor p = (ParticleAccessor) particle;
-        Vector3f target = WindLinkCompat.target(level, p.getX(), p.getY(), p.getZ(), data.id);
-        if (target == null) return false;
-        float couple = WindLinkCompat.couple(data.id);
-        if (couple <= 0) return false;
-        p.setXd(p.getXd() + (target.x - p.getXd()) * couple);
-        p.setZd(p.getZd() + (target.z - p.getZd()) * couple);
-        return true;
+        Vector3f target = windLinkTarget(level, data, p.getX(), p.getY(), p.getZ());
+        if (target != null) {
+            p.setXd(p.getXd() + target.x);
+            p.setZd(p.getZd() + target.z);
+            return;
+        }
+        float multiplier = windMultiplier(level, data);
+        if (multiplier == 0) return;
+        Vector3f wind = ParticleRain.getWind(p.getX(), p.getY(), p.getZ()).mul(multiplier * 10);
+        p.setXd(p.getXd() + wind.x);
+        p.setZd(p.getZd() + wind.z);
+    }
+
+    private static Vector3f windLinkTarget(ClientLevel level, ParticleData data, double x, double y, double z) {
+        if (!WindLinkCompat.isDriving()) return null;
+        if (windMultiplier(level, data) == 0) return null;
+        return WindLinkCompat.target(level, x, y, z, data.id);
     }
 }

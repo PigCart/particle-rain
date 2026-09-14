@@ -92,7 +92,7 @@ public class ParticleRain {
         final Camera camera = client.gameRenderer.getMainCamera();
         if (!client.isPaused() && client.level != null && camera.isInitialized()) {
             ParticleSpawner.tick(client.level, /*?>=1.21.11{*//*camera.position()*//*?}else{*/camera.getPosition()/*?}*/);
-            RegisteredParticles.tick(client.level);
+            WindManager.tick(client.level);
         }
     }
 

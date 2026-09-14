@@ -30,6 +30,7 @@ import net.minecraft.client.particle.ParticleRenderType;
 import pigcart.particlerain.ParticleLoader;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.WindManager;
 import pigcart.particlerain.WindLinkCompat;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ParticleData;
@@ -75,18 +76,7 @@ public class CustomParticle extends WeatherParticle {
         this.data = data;
         this.gravity = data.gravity;
         this.yd = (data.spawnPos.equals(ParticleData.SpawnPos.SKY)) ? -gravity : data.bounciness;
-        Vector3f windLink = windLinkTarget(level, x, y, z, data);
-        if (windLink != null) {
-            this.xd = windLink.x;
-            this.zd = windLink.z;
-        } else {
-            float multiplier = getWindMultiplier();
-            if (multiplier != 0) {
-                Vector3f wind = ParticleRain.getWind(x, y, z).mul(multiplier);
-                this.xd = wind.x * 10; // approximate wind accumulation over half a second, looks better than starting stationary
-                this.zd = wind.z * 10;
-            }
-        }
+        WindManager.applySpawnWind(this, data, level);
         this.baseSize = sizeFor(data);
         this.quadSize = baseSize;
         this.alpha = 0;
@@ -156,31 +146,11 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public float getWindMultiplier() {
-        return level.isThundering() ? data.stormWindStrength : data.windStrength;
+        return WindManager.windMultiplier(level, data);
     }
 
     public void tickWind() {
-        Vector3f windLink = windLinkTarget(level, x, y, z, data);
-        if (windLink != null) {
-            float couple = WindLinkCompat.couple(data.id);
-            if (couple > 0) {
-                this.xd += (windLink.x - this.xd) * couple;
-                this.zd += (windLink.z - this.zd) * couple;
-                return;
-            }
-        }
-        float multiplier = getWindMultiplier();
-        if (multiplier == 0) return;
-        Vector3f wind = ParticleRain.getWind(x, y, z).mul(multiplier);
-        this.xd += wind.x;
-        this.zd += wind.z;
-    }
-
-    private static Vector3f windLinkTarget(ClientLevel level, double x, double y, double z, ParticleData data) {
-        if (!WindLinkCompat.isDriving()) return null;
-        Float strength = level.isThundering() ? data.stormWindStrength : data.windStrength;
-        if (strength != null && strength == 0) return null;
-        return WindLinkCompat.target(level, x, y, z, data.id);
+        WindManager.applyWind(this, data, level);
     }
 
     public void onPositionUpdate() {

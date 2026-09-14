@@ -16,7 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
-import pigcart.particlerain.RegisteredParticles;
+import pigcart.particlerain.WindManager;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.particle.BlockDisplayParticle;
 import pigcart.particlerain.particle.CustomParticle;
@@ -265,7 +265,7 @@ public class ParticleData {
             @Override
             public void spawn(ClientLevel level, double x, double y, double z, ParticleData data) {
                 Particle particle = Minecraft.getInstance().particleEngine.createParticle(data.registeredParticle, x, y, z, 0, 0, 0);
-                if (particle != null) RegisteredParticles.track(particle, data);
+                if (particle != null) WindManager.track(particle, data);
             }
         },
         BLOCK_MODEL {
