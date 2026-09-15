@@ -76,7 +76,7 @@ public class CustomParticle extends WeatherParticle {
         this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
         this.lifetime = data.lifetime;
         this.rotationVariation = data.rotationAmount * ((random.nextFloat() - 0.5F) * 2.0F);
-        if (data.constantScreenSize) {
+        if (data.distanceScaling != 0) {
             this.quadSize = getDistanceSize();
         } else {
             this.quadSize = data.size;
@@ -101,7 +101,8 @@ public class CustomParticle extends WeatherParticle {
             tickCollisionAnim();
         }
         speed = (float) new Vec3(xd, yd, zd).length();
-        if (data.constantScreenSize && !doCollisionAnim) quadSize = getDistanceSize();
+        tickFading();
+        if (data.distanceScaling != 0 && !doCollisionAnim) quadSize = getDistanceSize();
         if (data.rotationAmount != 0) {
             oRoll = roll;
             roll += rotationVariation * speed;
@@ -111,7 +112,6 @@ public class CustomParticle extends WeatherParticle {
             String sprite = data.spriteLocations.get(i);
             this.setSprite(VersionUtil.getSprite(VersionUtil.parseId(sprite)));
         }
-        tickFading();
         tickWind();
         tickCollisions();
     }
@@ -131,6 +131,24 @@ public class CustomParticle extends WeatherParticle {
                 alpha = Mth.lerp(Mth.clamp(distance / renderDistance, 0, 1), data.opacity, 0);
             }
         }
+        if (data.rotationType == ParticleData.RotationType.VERTICAL) {
+            float angle = getPitchAngleToCamera();
+            float newAlpha = -(Math.min(angle, QUARTER_PI) / QUARTER_PI) + 1;
+            alpha = Math.min(alpha, newAlpha);
+        } else if (data.rotationType == ParticleData.RotationType.HORIZONTAL) {
+            float angle = getPitchAngleToCamera();
+            float newAlpha = Math.min(angle, 0.4f) / 0.4f;
+            alpha = Math.min(alpha, newAlpha);
+        }
+    }
+    private static final float QUARTER_PI = 0.7853982f;
+    private float getPitchAngleToCamera() {
+        Vec3 camPos = VersionUtil.camPos(Minecraft.getInstance().gameRenderer.getMainCamera());
+        float offsetX = (float) (this.x - camPos.x());
+        float offsetY = (float) (this.y - camPos.y());
+        float offsetZ = (float) (this.z - camPos.z());
+        float localZ = Vector2f.length(offsetX, offsetZ);
+        return Mth.abs(Math.atan2(offsetY, localZ));
     }
 
     public float getWindMultiplier() {
@@ -214,10 +232,15 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public float getDistanceSize() {
+        float size = Math.max(distance * data.size * data.distanceScaling, data.size);
+        /*if (data.size > size) {
+            tickFading();
+            this.alpha = Mth.map(size, 0, data.size, 0, this.alpha);
+        }*/
         if (Minecraft.getInstance().options.getCameraType().isFirstPerson() && Minecraft.getInstance().player.isScoping()) {
-            return distance * data.size * 0.25F;
+            return size * 0.25F;
         } else {
-            return distance * data.size;
+            return size;
         }
     }
 
@@ -239,24 +262,16 @@ public class CustomParticle extends WeatherParticle {
     }
 
     //~ if >=1.21.9 VertexConsumer -> QuadParticleRenderState {
-    public void renderLookingQuad(VertexConsumer h, Camera camera, float tickPercent) {
+    public void renderVerticalQuad(VertexConsumer h, Camera camera, float tickPercent) {
         Vec3 camPos = VersionUtil.camPos(camera);
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float offsetY = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
         float offsetZ = (float) (Mth.lerp(tickPercent, this.zo, this.z) - camPos.z());
 
-        Vector3f localPos = new Vector3f(offsetX, offsetY, offsetZ);
-        // rotate particle around y axis to face player
-        Quaternionf quaternion = Axis.YP.rotation(Math.atan2(offsetX, offsetZ) + Mth.PI);
-        // rotate particle by angle between y axis and camera location
-        float yAngle = Math.asin(offsetY / localPos.length());
-        quaternion.rotateX(yAngle);
-        quaternion.rotateZ(Math.atan2(offsetX, offsetZ));
-        // the z rotation doubles up on the -y axis instead of negating it like the positive axis. idk how to fix
-        // for now we remove them before it gets to look too weird
-        if (yAngle < -1) doCollisionAnim = true;
-
+        Quaternionf quaternion = new Quaternionf();
+        quaternion.rotateY(Math.atan2(offsetX, offsetZ));
         quaternion.rotateZ(Mth.lerp(tickPercent, this.oRoll, this.roll));
+        turnBackfaceFlipways(quaternion, new Vector3f(offsetX, offsetY, offsetZ));
         this.renderRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent);
     }
 

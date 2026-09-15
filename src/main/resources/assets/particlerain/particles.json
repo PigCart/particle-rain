@@ -202,7 +202,36 @@
     "renderType": "BLENDED",
     "size": 3,
     "fadeType": "IN_AND_OUT",
-    "lifetime": 250
+    "lifetime": 250,
+    "tintType": "FOG"
+  },
+  "vertical_mist_after_rain": {
+    "density": 0.1,
+    "weather": "AFTER_WEATHER",
+    "blockList": {
+      "entries": [
+        "#minecraft:substrate_overworld",
+        "#minecraft:dirt"
+      ],
+      "isWhitelist": true
+    },
+    "spawnPos": "WORLD_SURFACE",
+    "gravity": 0.0,
+    "windStrength": 0.0,
+    "stormWindStrength": 0.0,
+    "rotationAmount": 0.0,
+    "bounciness": 0.0,
+    "lifetime": 250,
+    "opacity": 1.0,
+    "fadeType": "IN_AND_OUT",
+    "size": 3.0,
+    "distanceScaling": 0.1,
+    "renderType": "BLENDED",
+    "spriteLocations": [
+      "particlerain:horizontal_fog"
+    ],
+    "tintType": "FOG",
+    "rotationType": "VERTICAL"
   },
   "mist": {
     "density": 0.1,
@@ -214,6 +243,7 @@
       "entries": [
         "#c:is_wet/overworld",
         "#c:is_spooky",
+        "#c:climate_wet",
         "#forge:is_wet/overworld",
         "#forge:is_spooky"
       ],
@@ -234,7 +264,47 @@
     "renderType": "BLENDED",
     "size": 3,
     "fadeType": "IN_AND_OUT",
-    "lifetime": 250
+    "lifetime": 250,
+    "tintType": "FOG"
+  },
+  "vertical_mist": {
+    "enabled": true,
+    "density": 0.1,
+    "weather": "ALWAYS",
+    "biomeList": {
+      "entries": [
+        "#c:is_wet",
+        "#c:is_spooky",
+        "#c:climate_wet",
+        "#forge:is_wet/overworld",
+        "#forge:is_spooky"
+      ],
+      "isWhitelist": true
+    },
+    "blockList": {
+      "entries": [
+        "#minecraft:substrate_overworld",
+        "#minecraft:dirt"
+      ],
+      "isWhitelist": true
+    },
+    "spawnPos": "WORLD_SURFACE",
+    "gravity": 0.0,
+    "windStrength": 0.0,
+    "stormWindStrength": 0.0,
+    "rotationAmount": 0.0,
+    "bounciness": 0.0,
+    "lifetime": 250,
+    "opacity": 1.0,
+    "fadeType": "IN_AND_OUT",
+    "size": 3.0,
+    "distanceScaling": 0.1,
+    "renderType": "BLENDED",
+    "spriteLocations": [
+      "particlerain:horizontal_fog"
+    ],
+    "tintType": "FOG",
+    "rotationType": "VERTICAL"
   },
   "rain_haze": {
     "enabled": false,
@@ -245,7 +315,7 @@
     "rotationAmount": 0.1,
     "opacity": 0.3,
     "size": 0.5,
-    "constantScreenSize": true,
+    "distanceScaling": 1,
     "spriteLocations": [
       "particlerain:fog_dithered"
     ],
@@ -257,7 +327,7 @@
     "rotationAmount": 0.1,
     "opacity": 0.3,
     "size": 0.5,
-    "constantScreenSize": true,
+    "distanceScaling": 1,
     "spriteLocations": [
       "particlerain:fog_dithered"
     ],
@@ -279,7 +349,7 @@
     "rotationAmount": 0.1,
     "opacity": 0.4,
     "size": 0.5,
-    "constantScreenSize": true,
+    "distanceScaling": 1,
     "spriteLocations": [
       "particlerain:fog_dithered"
     ],

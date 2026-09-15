@@ -86,7 +86,8 @@ public class ParticleData {
     @OnlyVisibleIf(ParticleNotRegistered.class) public FadeType fadeType = FadeType.DISTANCE;
     @Format(DistanceInBlocks.class)
     @OnlyVisibleIf(ParticleNotRegistered.class) public Float size = 0.5F;
-    @OnlyVisibleIf(ParticleNotRegistered.class) public Boolean constantScreenSize = false;
+    @Slider @Format(Percent.class)
+    @OnlyVisibleIf(ParticleNotRegistered.class) public Float distanceScaling = 0F;
     @OnlyVisibleIf(ParticleNotRegistered.class) public RenderType renderType = RenderType.TRANSLUCENT;
     @OnlyVisibleIf(ParticleNotRegistered.class) public Boolean animateSprites = false;
     @OnlyVisibleIf(ParticleNotRegistered.class) public ArrayList<String> spriteLocations = new ArrayList<>(List.of("particlerain:new_custom_particle"));
@@ -242,10 +243,10 @@ public class ParticleData {
                 p.renderWorldVelocityQuad(h, camera, tickPercent);
             }
         },
-        LOOKAT_PLAYER {
+        VERTICAL {
             @Override
             public void render(VertexConsumer h, Camera camera, float tickPercent, CustomParticle p) {
-                p.renderLookingQuad(h, camera, tickPercent);
+                p.renderVerticalQuad(h, camera, tickPercent);
             }
         },
         HORIZONTAL {

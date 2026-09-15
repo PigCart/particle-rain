@@ -35,8 +35,10 @@
   "particlerain.smoke": "Rain steam",
   "particlerain.streak": "Rain streaks",
   "particlerain.shrub": "Shrub",
-  "particlerain.mist": "Mist in wet biomes",
-  "particlerain.mist_after_rain": "Mist after rain",
+  "particlerain.mist": "Horizontal mist in wet biomes",
+  "particlerain.mist_after_rain": "Horizontal mist after rain",
+  "particlerain.vertical_mist": "Vertical mist in wet biomes",
+  "particlerain.vertical_mist_after_rain": "Vertical mist after rain",
 
   "particlerain.sound": "Sound Options",
   "particlerain.rainVolume": "Rain volume",
@@ -123,6 +125,7 @@
   "particlerain.tintType": "Tint type",
   "particlerain.customTint": "Custom tint",
   "particlerain.rotationType": "Rotation type",
+  "particlerain.distanceScaling": "Scale by distance",
 
   "particlerain.useResourcepackResolution": "Use resource pack resolution",
   "particlerain.useResourcepackResolution.description": "Uses the resolution of the campfire smoke particle.",
@@ -156,8 +159,8 @@
   "particlerain.RotationType.COPY_CAMERA": "Copy camera",
   "particlerain.RotationType.RELATIVE_VELOCITY": "Relative velocity",
   "particlerain.RotationType.WORLD_VELOCITY": "World velocity",
-  "particlerain.RotationType.LOOKAT_PLAYER": "Look at player",
   "particlerain.RotationType.HORIZONTAL": "Horizontal",
+  "particlerain.RotationType.VERTICAL": "Vertical",
 
   "particlerain.fadeType": "Fade type",
   "particlerain.FadeType.IN_AND_OUT": "Fade in and out",

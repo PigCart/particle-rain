@@ -139,6 +139,7 @@ public final class ParticleSpawner {
                     }
                     if (max == Double.NEGATIVE_INFINITY) continue;
                     max += 0.01; // avoid z-fighting
+                    //if (data.rotationType != ParticleData.RotationType.HORIZONTAL) max += data.size;
                     relativePos = new Vector3f(p2 - 0.5F, (float) max - 0.5F, p1 - 0.5F);
                 } else {
                     double min = collision.min(direction.getAxis(), p1, p2);
@@ -235,7 +236,7 @@ public final class ParticleSpawner {
         for (int i = 0; i < density; i++) {
             double x = RANDOM.triangle(cameraPos.x, getConfig().perf.surfaceRange);
             double z = RANDOM.triangle(cameraPos.z, getConfig().perf.surfaceRange);
-            double y = getHeight(level, (int) x, (int) z) + RANDOM.nextDouble();
+            double y = getHeight(level, (int) x, (int) z) + RANDOM.nextDouble() + 0.1;
             pos.set(x, y - 1, z);
             BlockState blockState = level.getBlockState(pos);
             Holder<Biome> biome = level.getBiome(pos);
