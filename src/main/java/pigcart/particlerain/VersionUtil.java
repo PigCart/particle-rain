@@ -67,6 +67,15 @@ public class VersionUtil {
                 net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("iris");
                 //?}
     }
+    public static boolean windLinkLoaded() {
+        return  //? forge {
+                //net.minecraftforge.fml.ModList.get().isLoaded("windlink");
+                 //?} else if neoforge {
+                //net.neoforged.fml.ModList.get().isLoaded("windlink");
+                 //?} else {
+                net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("windlink");
+                //?}
+    }
 
     @SuppressWarnings("removal")
     public static ResourceLocation getId(String path) {

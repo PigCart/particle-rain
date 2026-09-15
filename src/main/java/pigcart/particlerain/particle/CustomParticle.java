@@ -28,11 +28,15 @@ import net.minecraft.client.particle.ParticleRenderType;
 //?}
 
 import pigcart.particlerain.ParticleLoader;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.WindManager;
+import pigcart.particlerain.WindLinkCompat;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ParticleData;
 
 import java.util.Set;
+import java.util.List;
 
 import static pigcart.particlerain.config.ConfigManager.getConfig;
 
@@ -52,21 +56,29 @@ public class CustomParticle extends WeatherParticle {
     float oQuadSize;
     float distance;
     int maxEdgeBounces = 3;
+    float baseSize;
     int edgeBounces = 0;
 
+    private static float sizeFor(ParticleData data) {
+        float lent = WindLinkCompat.spriteSizeFor(data.id);
+        return (lent > 0 ? lent : data.size) * WindLinkCompat.sizeScale(data.id);
+    }
+
+    private static TextureAtlasSprite pickSprite(ClientLevel level, ParticleData data) {
+        List<String> sprites = WindLinkCompat.spritesFor(data.id);
+        if (sprites == null) sprites = data.spriteLocations;
+        return VersionUtil.getSprite(VersionUtil.parseId(sprites.get(level.getRandom().nextInt(sprites.size()))));
+    }
+
     public CustomParticle(ClientLevel level, double x, double y, double z, ParticleData data) {
-        super(level, x, y, z, VersionUtil.getSprite(VersionUtil.parseId(data.spriteLocations.get(level.getRandom().nextInt(data.spriteLocations.size())))));
+        super(level, x, y, z, pickSprite(level, data));
 
         this.data = data;
         this.gravity = data.gravity;
         this.yd = (data.spawnPos.equals(ParticleData.SpawnPos.SKY)) ? -gravity : data.bounciness;
-        float multiplier = getWindMultiplier();
-        if (multiplier != 0) {
-            Vector3f wind = ParticleRain.getWind(x, y, z).mul(multiplier);
-            this.xd = wind.x * 10; // approximate wind accumulation over half a second, looks better than starting stationary
-            this.zd = wind.z * 10;
-        }
-        this.quadSize = data.size;
+        WindManager.applySpawnWind(this, data, level);
+        this.baseSize = sizeFor(data);
+        this.quadSize = baseSize;
         this.alpha = 0;
         this.hasPhysics = false;
         this.setSize(quadSize, quadSize);
@@ -79,7 +91,7 @@ public class CustomParticle extends WeatherParticle {
         if (data.constantScreenSize) {
             this.quadSize = getDistanceSize();
         } else {
-            this.quadSize = data.size;
+            this.quadSize = baseSize;
         }
         if (!usuallyUntintableSprites.contains(this.sprite.contents().name().toString()) || getConfig().compat.waterTint) {
             data.tintType.applyTint(this, level, this.pos, data);
@@ -134,15 +146,11 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public float getWindMultiplier() {
-        return level.isThundering() ? data.stormWindStrength : data.windStrength;
+        return WindManager.windMultiplier(level, data);
     }
 
     public void tickWind() {
-        float multiplier = getWindMultiplier();
-        if (multiplier == 0) return;
-        Vector3f wind = ParticleRain.getWind(x, y, z).mul(multiplier);
-        this.xd += wind.x;
-        this.zd += wind.z;
+        WindManager.applyWind(this, data, level);
     }
 
     public void onPositionUpdate() {
@@ -215,9 +223,9 @@ public class CustomParticle extends WeatherParticle {
 
     public float getDistanceSize() {
         if (Minecraft.getInstance().options.getCameraType().isFirstPerson() && Minecraft.getInstance().player.isScoping()) {
-            return distance * data.size * 0.25F;
+            return distance * baseSize * 0.25F;
         } else {
-            return distance * data.size;
+            return distance * baseSize;
         }
     }
 
