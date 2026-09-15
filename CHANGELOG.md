@@ -38,6 +38,10 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - ported mist and ripple effect to configurable horizontal particles
 - replaced dust texture with vanilla generic dust texture
 - dust and shrubs can now spawn on coarse dirt
+- added WindLink compatibility, weather particles move with its wind when it is installed
+- particles from vanilla or other mods now take wind, with the wind strength options shown for them
+- snow can be drawn with WindLink's snowflake sprites, when its config asks for it
+- WindLink can ask for more snow and rain, and for bigger flakes and drops
 
 overview of changes since v3.3.6:
 - multiversion support including support for forge loaders

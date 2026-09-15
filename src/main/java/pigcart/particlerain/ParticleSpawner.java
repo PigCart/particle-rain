@@ -98,6 +98,10 @@ public final class ParticleSpawner {
         return customY;
     }
 
+    private static float density(ParticleData data) {
+        return data.density * WindLinkCompat.density(data.id);
+    }
+
     public static void tickBlockFX(BlockPos.MutableBlockPos sourcePos, BlockState state, RandomSource random) {
         ClientLevel level = Minecraft.getInstance().level;
         if (spawnAttemptsUntilBlockFXIdle <= 0 && level.getRandom().nextFloat() < 0.9F) {
@@ -123,7 +127,7 @@ public final class ParticleSpawner {
             if ((collision.isEmpty() && fluidState.isEmpty()) || isIgnored(state) ) continue;
             if ((data.spawnPos == ParticleData.SpawnPos.BLOCK_BOTTOM || data.spawnPos == ParticleData.SpawnPos.BLOCK_SIDES || data.spawnPos == ParticleData.SpawnPos.BLOCK_TOP)
                     && data.precipitation.contains(VersionUtil.getPrecipitationAt(level, biome, sourcePos))
-                    && data.density > random.nextFloat()
+                    && density(data) > random.nextFloat()
                     && data.biomeList.contains(biome)
                     && data.blockList.contains(level.getBlockState(pos).getBlockHolder())
             ) {
@@ -214,7 +218,7 @@ public final class ParticleSpawner {
                     && data.spawnPos.equals(ParticleData.SpawnPos.SKY)
                     && data.weather.isCurrent(level)
                     && data.precipitation.contains(precipitation)
-                    && data.density > RANDOM.nextFloat()
+                    && density(data) > RANDOM.nextFloat()
                     && data.biomeList.contains(biome)
                     && data.blockList.contains(level.getBlockState(heightmapPos).getBlockHolder())
                 ) {
@@ -246,7 +250,7 @@ public final class ParticleSpawner {
                         && data.spawnPos.equals(ParticleData.SpawnPos.WORLD_SURFACE)
                         && data.weather.isCurrent(level)
                         && data.precipitation.contains(precipitation)
-                        && data.density > RANDOM.nextFloat()
+                        && density(data) > RANDOM.nextFloat()
                         && data.biomeList.contains(biome)
                         && data.blockList.contains(blockState.getBlockHolder())
                 ) {

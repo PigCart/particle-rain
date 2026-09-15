@@ -59,6 +59,7 @@ public class ParticleRain {
                 "is Raining: " + level.isRaining(),
                 "Biome Precipitation: " + precipitation,
                 "Wind multiplier: " + yLevelWindMultiplier(playerBlockPos.getY()),
+                "Wind source: " + (WindLinkCompat.isDriving() ? "windlink" : "particlerain"),
                 "cloud height: " + VersionUtil.getCloudHeight(level, playerBlockPos),
                 "surface height: " + ParticleSpawner.getHeight(level, playerBlockPos.getX(), playerBlockPos.getZ()),
                 "default surface height: " + level.getHeight(Heightmap.Types.MOTION_BLOCKING, playerBlockPos.getX(), playerBlockPos.getZ())
@@ -91,6 +92,7 @@ public class ParticleRain {
         final Camera camera = client.gameRenderer.getMainCamera();
         if (!client.isPaused() && client.level != null && camera.isInitialized()) {
             ParticleSpawner.tick(client.level, /*?>=1.21.11{*//*camera.position()*//*?}else{*/camera.getPosition()/*?}*/);
+            WindManager.tick(client.level);
         }
     }
 

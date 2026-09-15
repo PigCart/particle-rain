@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleSpawner;
+import pigcart.particlerain.WindManager;
 import pigcart.particlerain.particle.BlockDisplayParticle;
 import pigcart.particlerain.particle.WeatherParticle;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
@@ -29,6 +30,7 @@ public class ParticleEngineMixin {
     @Inject(method = "clearParticles", at = @At("HEAD"))
     public void clearParticles(CallbackInfo ci) {
         BlockDisplayParticle.clearAll();
+        WindManager.clear();
         ParticleSpawner.particleCount = 0;
     }
 
