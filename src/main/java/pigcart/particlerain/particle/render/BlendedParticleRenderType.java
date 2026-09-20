@@ -1,6 +1,26 @@
 package pigcart.particlerain.particle.render;
 
-//? if >=1.21.9 {
+//? if >=26.3 {
+/*import com.mojang.renderpearl.api.pipeline.*;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+
+import static net.minecraft.client.renderer.RenderPipelines.PARTICLE_SNIPPET;
+
+public class BlendedParticleRenderType {
+
+    public static final RenderPipeline BLENDED_PARTICLE = RenderPipelines.register(
+            RenderPipeline.builder(PARTICLE_SNIPPET)
+                    .withLocation("pipeline/particlerain_fog")
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                    .withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN, false))
+                    .build()
+    );
+    public static final SingleQuadParticle.Layer INSTANCE =
+            new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, BLENDED_PARTICLE);
+}
+*///?} else if >=1.21.9 {
 /*import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.particle.SingleQuadParticle;

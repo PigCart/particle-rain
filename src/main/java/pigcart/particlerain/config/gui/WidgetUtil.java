@@ -281,6 +281,7 @@ public class WidgetUtil {
                                 if (result) VersionUtil.openUri((URI) currentValue);
                                 Minecraft.getInstance().setScreen(screen);
                                 },
+                            //~ if >=26.3 'currentValue.toString()' -> 'URI.create(currentValue.toString())'
                             currentValue.toString(),
                             true
             )))};

@@ -235,7 +235,9 @@ public class VersionUtil {
     }
 
     public static void openUri(URI uri) {
-        //? >=1.21.11 {
+        //? >= 26.3 {
+        //com.mojang.blaze3d.Blaze3D.openUri(uri);
+        //?} >=1.21.11 {
         //net.minecraft.util.Util.getPlatform().openUri(uri);
         //?} else {
         net.minecraft.Util.getPlatform().openUri(uri);

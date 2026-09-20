@@ -1,6 +1,6 @@
 mod.id = "particlerain"
 mod.name = "Particle Rain"
-mod.version = "4.0.0-beta.11"
+mod.version = "4.0.0-beta.100"
 mod.description = "Replaces weather with prettier particle effects"
 mod.author = "pigcart"
 mod.sources = "https://github.com/PigCart/particle-rain"
@@ -9,7 +9,7 @@ mod.homepage = "https://modrinth.com/mod/particle-rain"
 mod.license = "MIT"
 mod.icon = "assets/particlerain/icon.png"
 
-deps.fabric-loader = "0.18.4"
+deps.fabric-loader = "0.19.5"
 
 ["1.20.1-fabric"]
 deps.minecraft = "1.20.1"
@@ -66,7 +66,14 @@ deps.iris = "1.9.7+1.21.10-fabric"
 
 ["26.2-fabric"]
 deps.minecraft="26.2"
-version_range=">=26.2"
+version_range=">=26.2 <26.3"
 deps.fabric-api="0.154.1+26.2"
 deps.modmenu="20.0.0-beta.4"
 deps.iris = "1.11.1+26.2-fabric"
+
+["26.3-fabric"]
+deps.minecraft="26.3"
+version_range=">=26.3"
+deps.fabric-api="0.161.0+26.3"
+deps.modmenu="21.0.0-beta.1"
+deps.iris = "1.11.6+26.3-fabric"
