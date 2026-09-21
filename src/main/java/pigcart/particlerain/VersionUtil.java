@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -231,6 +232,18 @@ public class VersionUtil {
         //return new SpriteContents(getId(id), frameSize, sprite);
         //?} else {
         return(new SpriteContents(VersionUtil.getId(id), frameSize, sprite, getEmptySpriteMetadata()));
+        //?}
+    }
+
+    public static float getFOV() {
+        Options options = Minecraft.getInstance().options;
+        float fov = options.fov().get();
+        //? >=1.21.9 {
+        /*boolean firstPerson = options.getCameraType().isFirstPerson();
+        float effectScale = options.fovEffectScale().get().floatValue();
+        return fov * Minecraft.getInstance().player.getFieldOfViewModifier(firstPerson, effectScale);
+        *///?} else {
+        return fov * Minecraft.getInstance().player.getFieldOfViewModifier();
         //?}
     }
 

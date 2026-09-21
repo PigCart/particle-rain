@@ -163,7 +163,7 @@
     "blockId": "minecraft:dead_bush",
     "density": 0.001,
     "bounciness": 0.15,
-    "gravity": 0.3,
+    "gravity": 0.5,
     "windStrength": 0.4,
     "rotationAmount": 1,
     "size": 1,
@@ -200,7 +200,8 @@
     ],
     "rotationType": "HORIZONTAL",
     "renderType": "BLENDED",
-    "size": 3,
+    "size": 2,
+    "distanceScaling": 0.1,
     "fadeType": "IN_AND_OUT",
     "lifetime": 250,
     "tintType": "FOG"
@@ -224,7 +225,7 @@
     "lifetime": 250,
     "opacity": 1.0,
     "fadeType": "IN_AND_OUT",
-    "size": 3.0,
+    "size": 2,
     "distanceScaling": 0.1,
     "renderType": "BLENDED",
     "spriteLocations": [
@@ -262,7 +263,8 @@
     ],
     "rotationType": "HORIZONTAL",
     "renderType": "BLENDED",
-    "size": 3,
+    "size": 2,
+    "distanceScaling": 0.1,
     "fadeType": "IN_AND_OUT",
     "lifetime": 250,
     "tintType": "FOG"
@@ -297,7 +299,7 @@
     "lifetime": 250,
     "opacity": 1.0,
     "fadeType": "IN_AND_OUT",
-    "size": 3.0,
+    "size": 2,
     "distanceScaling": 0.1,
     "renderType": "BLENDED",
     "spriteLocations": [

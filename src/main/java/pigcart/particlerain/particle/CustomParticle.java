@@ -3,6 +3,7 @@ package pigcart.particlerain.particle;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -123,7 +124,7 @@ public class CustomParticle extends WeatherParticle {
             String sprite = data.spriteLocations.get(i);
             this.setSprite(VersionUtil.getSprite(VersionUtil.parseId(sprite)));
         }
-        tickWind();
+        WindManager.applyWind(this, data, level);
         tickCollisions();
     }
 
@@ -160,14 +161,6 @@ public class CustomParticle extends WeatherParticle {
         float offsetZ = (float) (this.z - camPos.z());
         float localZ = Vector2f.length(offsetX, offsetZ);
         return Mth.abs(Math.atan2(offsetY, localZ));
-    }
-
-    public float getWindMultiplier() {
-        return WindManager.windMultiplier(level, data);
-    }
-
-    public void tickWind() {
-        WindManager.applyWind(this, data, level);
     }
 
     public void onPositionUpdate() {
@@ -218,10 +211,13 @@ public class CustomParticle extends WeatherParticle {
 
         if (!state.getFluidState().isSource() && data.bounciness != 0) {
             final Vector3f normal = hitResult.getDirection().step();
-            if (normal.y == 0 && edgeBounces++ >= maxEdgeBounces) doCollisionAnim = true; // prevents getting stuck
             final float bounciness = data.bounciness * speed * 6;
+            if (normal.y == 0) {
+                if (edgeBounces++ >= maxEdgeBounces) doCollisionAnim = true; // prevents getting stuck
+                this.yd += 0.5 * bounciness; // always try to move up, mimics wind rising over a hill or obstacle
+            }
             this.xd += normal.x * bounciness;
-            this.yd += 1 * bounciness; // always try to move up, mimics wind rising over a hill or obstacle
+            this.yd += normal.y * bounciness;
             this.zd += normal.z * bounciness;
         } else {
             collision = hitResult;
@@ -239,16 +235,13 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public float getDistanceSize() {
-        float size = Math.max(distance * data.size * data.distanceScaling, data.size);
-        /*if (data.size > size) {
-            tickFading();
-            this.alpha = Mth.map(size, 0, data.size, 0, this.alpha);
-        }*/
-        if (Minecraft.getInstance().options.getCameraType().isFirstPerson() && Minecraft.getInstance().player.isScoping()) {
-            return distance * baseSize * 0.25F;
-        } else {
-            return distance * baseSize;
-        }
+        float scaledSize = baseSize * distance * data.distanceScaling;
+        float size = baseSize + scaledSize;
+        if (data.distanceScaling != 1) return size;
+        // distanceScaling 1 means the particle is always the same size on the screen. scaling by fov ensures that remains true.
+        float max = 70; // i prefer it to not trigger for sprint/speed. capping at 70 is... good enough. mostlys
+        float fov = Math.min(VersionUtil.getFOV(), max) / max;
+        return size * fov;
     }
 
     @Override

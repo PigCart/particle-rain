@@ -6,23 +6,14 @@
 
 this mimics the version scheme used by minecraft between 2011 and 2024 and aims to communicate changes about the mod without making promises regarding compatibility.
 
-### v4 to-do list:
-- multiver ✔
-- custom particles ✔
-- built-in config editor ✔
-- resourcepack particles ✔
-- improved rain ✔
-- improved dust
+### to-do:
 - heavy rain
 - heavy snow
 - sleet
 - hail
 - weather transitions
-- new shrub / block model particles ✔
-- new mist
 - splash replacement - splatter
 - new streaks
-- blended render type shaderpack fallback ✔
 
 # v4.0.0
 ###### work in progress
@@ -32,16 +23,18 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - fixed blended particle corrupt rendering regression from beta 1
 - fixed wind applying to particles with a wind strength of zero
 - fixed particles not appearing on forge due to missing convention tags
+- fixed haze effects breaking when viewed through spyglass or at low FOV
 - added random Y spawn offset to particles with surface spawn position
 - added fade types to particle config
 - added horizontal particle rotation type
 - ported mist and ripple effect to configurable horizontal particles
 - replaced dust texture with vanilla generic dust texture
 - dust and shrubs can now spawn on coarse dirt
-- added WindLink compatibility, weather particles move with its wind when it is installed
-- particles from vanilla or other mods now take wind, with the wind strength options shown for them
-- snow can be drawn with WindLink's snowflake sprites, when its config asks for it
-- WindLink can ask for more snow and rain, and for bigger flakes and drops
+- Wind Improvements (ty: plunderpixels)
+  - added WindLink compatibility, weather particles move with its wind when it is installed
+  - particles from vanilla or other mods now take wind, with the wind strength options shown for them
+  - snow can be drawn with WindLink's snowflake sprites, when its config asks for it
+  - WindLink can ask for more snow and rain, and for bigger flakes and drops
 
 overview of changes since v3.3.6:
 - multiversion support including support for forge loaders
