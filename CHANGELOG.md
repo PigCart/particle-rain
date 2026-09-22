@@ -24,6 +24,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - fixed wind applying to particles with a wind strength of zero
 - fixed particles not appearing on forge due to missing convention tags
 - fixed haze effects breaking when viewed through spyglass or at low FOV
+- fixed surface effects spawning inside blocks at negative coordinates
 - added random Y spawn offset to particles with surface spawn position
 - added fade types to particle config
 - added horizontal particle rotation type

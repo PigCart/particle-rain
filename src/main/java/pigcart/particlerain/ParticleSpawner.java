@@ -78,6 +78,9 @@ public final class ParticleSpawner {
     private static final Long2IntMap heightCache = new Long2IntOpenHashMap();
     private static int lastTick = 0;
 
+    public static int getHeight(ClientLevel level, double x, double z) {
+        return getHeight(level, Mth.floor(x), Mth.floor(z)); // must floor for accurate negative block positions
+    }
     public static int getHeight(ClientLevel level, int x, int z) {
         if (getConfig().compat.weatherIgnoreBlocks.getEntries().isEmpty()) {
             return level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
@@ -213,12 +216,14 @@ public final class ParticleSpawner {
             if (heightmapY >= pos.getY()) continue;
             Holder<Biome> biome = level.getBiome(pos);
             Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, getConfig().compat.useHeightmapTemp ? heightmapPos : pos);
+            float spawnChance = RANDOM.nextFloat();
+
             for (ParticleData data : ParticleLoader.particles.values()) {
                 if (data.enabled
                     && data.spawnPos.equals(ParticleData.SpawnPos.SKY)
                     && data.weather.isCurrent(level)
                     && data.precipitation.contains(precipitation)
-                    && density(data) > RANDOM.nextFloat()
+                    && density(data) > spawnChance
                     && data.biomeList.contains(biome)
                     && data.blockList.contains(level.getBlockState(heightmapPos).getBlockHolder())
                 ) {
@@ -240,21 +245,24 @@ public final class ParticleSpawner {
         for (int i = 0; i < density; i++) {
             double x = RANDOM.triangle(cameraPos.x, getConfig().perf.surfaceRange);
             double z = RANDOM.triangle(cameraPos.z, getConfig().perf.surfaceRange);
-            double y = getHeight(level, (int) x, (int) z) + RANDOM.nextDouble() + 0.1;
-            pos.set(x, y - 1, z);
-            BlockState blockState = level.getBlockState(pos);
-            Holder<Biome> biome = level.getBiome(pos);
-            Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, pos);
+            double y = getHeight(level, x, z);
+
+            heightmapPos.set(x, y - 1, z);
+            BlockState blockState = level.getBlockState(heightmapPos);
+            Holder<Biome> biome = level.getBiome(heightmapPos);
+            Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, heightmapPos);
+            float spawnChance = RANDOM.nextFloat();
+
             for (ParticleData data : ParticleLoader.particles.values()) {
                 if (data.enabled
+                        && density(data) > spawnChance
                         && data.spawnPos.equals(ParticleData.SpawnPos.WORLD_SURFACE)
                         && data.weather.isCurrent(level)
                         && data.precipitation.contains(precipitation)
-                        && density(data) > RANDOM.nextFloat()
                         && data.biomeList.contains(biome)
                         && data.blockList.contains(blockState.getBlockHolder())
                 ) {
-                    data.particleStyle.spawn(level, x, y, z, data);
+                    data.particleStyle.spawn(level, x, y + RANDOM.nextDouble() + 0.1, z, data);
                     ticksUntilSurfaceFXIdle = 100;
                 }
             }
