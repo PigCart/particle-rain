@@ -58,11 +58,14 @@ public abstract class SpriteLoaderMixin {
 
             // split both weather textures into four sprites
             for (int i = 0; i < 4; i++) {
-                stitcher.registerSprite(TextureUtil.splitImage(rainImage, i, "rain_"));
+                stitcher.registerSprite(TextureUtil.splitSpriteSheet(rainImage, i, "rain_"));
             }
             for (int i = 0; i < 4; i++) {
-                stitcher.registerSprite(TextureUtil.splitImage(snowImage, i, "snow_"));
+                stitcher.registerSprite(TextureUtil.splitSpriteSheet(snowImage, i, "snow_"));
             }
+            // generate heavy rain and snow textures
+            stitcher.registerSprite(TextureUtil.mergeSpriteSheet(rainImage, "heavy_rain"));
+            stitcher.registerSprite(TextureUtil.mergeSpriteSheet(snowImage, "heavy_snow"));
             // generate ripple sprites
             int rippleResolution = TextureUtil.getRippleResolution(this.spriteContentsList);
             for (int i = 0; i < 8; i++) {

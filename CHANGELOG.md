@@ -7,8 +7,6 @@
 this mimics the version scheme used by minecraft between 2011 and 2024 and aims to communicate changes about the mod without making promises regarding compatibility.
 
 ### to-do:
-- heavy rain
-- heavy snow
 - sleet
 - hail
 - weather transitions
@@ -23,12 +21,16 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - fixed blended particle corrupt rendering regression from beta 1
 - fixed wind applying to particles with a wind strength of zero
 - fixed particles not appearing on forge due to missing convention tags
-- fixed haze effects breaking when viewed through spyglass or at low FOV
-- fixed surface effects spawning inside blocks at negative coordinates
+- fixed haze effects breaking when viewed through spyglass or at low FOV (fix does not apply to zoom mods)
+- fixed surface effects spawning inside blocks at negative coordinates due to a rounding error
+- fixed storm weather particles spawning only when not stormy
 - added random Y spawn offset to particles with surface spawn position
 - added fade types to particle config
 - added horizontal particle rotation type
+- added heavy snow and rain during thunderstorms
+- density during storms is now the same as normal weather by default, since the extra density is achieved through the heavy particle textures
 - ported mist and ripple effect to configurable horizontal particles
+- tweaked spawn randomness such that particles with similar densities will spawn at the same time, allowing for composite effects (see horizontal & vertical fog)
 - replaced dust texture with vanilla generic dust texture
 - dust and shrubs can now spawn on coarse dirt
 - Wind Improvements (ty: plunderpixels)

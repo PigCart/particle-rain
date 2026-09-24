@@ -35,8 +35,8 @@
   "particlerain.smoke": "Дощова пара",
   "particlerain.streak": "Дощові струмені",
   "particlerain.shrub": "Чагарник",
-  "particlerain.mist": "Імла у вологих біомах",
-  "particlerain.mist_after_rain": "Імла після дощу",
+  "particlerain.fog": "Імла у вологих біомах",
+  "particlerain.fog_after_rain": "Імла після дощу",
 
   "particlerain.sound": "Налаштування звуків",
   "particlerain.rainVolume": "Гучність дощу",

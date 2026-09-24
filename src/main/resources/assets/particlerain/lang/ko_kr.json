@@ -35,8 +35,8 @@
   "particlerain.smoke": "빗속 수증기",
   "particlerain.streak": "물줄기",
   "particlerain.shrub": "덤불",
-  "particlerain.mist": "습한 바이옴의 안개",
-  "particlerain.mist_after_rain": "비 온 뒤 안개",
+  "particlerain.fog": "습한 바이옴의 안개",
+  "particlerain.fog_after_rain": "비 온 뒤 안개",
 
   "particlerain.sound": "소리 설정",
   "particlerain.rainVolume": "비 음량",

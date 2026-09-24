@@ -35,8 +35,8 @@
   "particlerain.smoke": "Дождевой пар",
   "particlerain.streak": "Дождевые струи",
   "particlerain.shrub": "Кустарник",
-  "particlerain.mist": "Туман во влажных биомах",
-  "particlerain.mist_after_rain": "Туман после дождя",
+  "particlerain.fog": "Туман во влажных биомах",
+  "particlerain.fog_after_rain": "Туман после дождя",
 
   "particlerain.sound": "Настройки звуков",
   "particlerain.rainVolume": "Громкость дождя",

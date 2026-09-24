@@ -168,7 +168,7 @@ public class CustomParticle extends WeatherParticle {
                 && level.getBiome(pos).value().getBaseTemperature() != baseTemp
                 && !data.precipitation.contains(VersionUtil.getPrecipitationAt(level, level.getBiome(pos), pos))
         ) {
-            this.remove();
+            doCollisionAnim = true;
             return;
         }
 

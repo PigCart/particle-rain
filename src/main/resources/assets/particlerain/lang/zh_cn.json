@@ -35,8 +35,8 @@
   "particlerain.smoke": "雨蒸汽",
   "particlerain.streak": "雨痕",
   "particlerain.shrub": "风滚草",
-  "particlerain.mist": "湿地雾气",
-  "particlerain.mist_after_rain": "雨后雾气",
+  "particlerain.fog": "湿地雾气",
+  "particlerain.fog_after_rain": "雨后雾气",
 
   "particlerain.sound": "声音选项",
   "particlerain.rainVolume": "雨声",

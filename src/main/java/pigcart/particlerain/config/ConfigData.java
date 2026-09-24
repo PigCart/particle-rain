@@ -1,14 +1,10 @@
 package pigcart.particlerain.config;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import pigcart.particlerain.VersionUtil;
-import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 import pigcart.particlerain.config.gui.Annotations.*;
 //? if >=1.21.9 {
 /*import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
 import net.minecraft.client.particle.SingleQuadParticle;
 *///?} else {
-import net.minecraft.client.particle.ParticleRenderType;
 //?}
 
 import static pigcart.particlerain.config.ConfigResponders.*;
@@ -27,7 +23,7 @@ public class ConfigData {
         @OnChange(ClearParticles.class)
         public int maxParticleAmount = 1500;
         public int particleDensity = 50;
-        public int particleStormDensity = 167;
+        public int particleStormDensity = 50;
         @Format(DistanceInBlocks.class)
         public int particleDistance = 16;
         @Format(DistanceInBlocks.class)

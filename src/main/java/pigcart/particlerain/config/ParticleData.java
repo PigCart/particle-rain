@@ -114,7 +114,7 @@ public class ParticleData {
         },
         ONLY_DURING_STORMY_WEATHER {
             public Boolean isCurrent(ClientLevel level) {
-                return level.getThunderLevel(1) == 0;
+                return level.getThunderLevel(1) > 0;
             }
         },
         AFTER_WEATHER {

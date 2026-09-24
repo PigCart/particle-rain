@@ -10,6 +10,7 @@ import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.util.Mth;
 import org.joml.Math;
 import org.lwjgl.system.MemoryUtil;
 import pigcart.particlerain.config.ConfigManager;
@@ -22,7 +23,6 @@ import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CompletionException;
 
 public class TextureUtil {
 
@@ -106,15 +106,44 @@ public class TextureUtil {
         return nativeImage;
     }
 
-    public static SpriteContents splitImage(NativeImage image, int segment, String id) {
-        int size = image.getWidth();
+    ///  Splits one sprite from a vertical sprite sheet
+    public static SpriteContents splitSpriteSheet(NativeImage spriteSheet, int segment, String id) {
+        int size = spriteSheet.getWidth();
         NativeImage sprite = new NativeImage(size, size, false);
         try {
-            image.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
+            spriteSheet.copyRect(sprite, 0, size * segment, 0, 0, size, size, true, true);
         } catch (Exception e) {
             ParticleRain.LOGGER.error("Error splitting {} texture", id + segment, e);
         }
         return VersionUtil.newNonAnimatedSpriteContents(id + segment, new FrameSize(size, size), sprite);
+    }
+
+    ///  Merges a vertical sprite sheet into a single sprite by alpha
+    public static SpriteContents mergeSpriteSheet(NativeImage spriteSheet, String id) {
+        int size = spriteSheet.getWidth();
+        NativeImage sprite = new NativeImage(size, size, false);
+        int spriteCount = spriteSheet.getHeight() / spriteSheet.getWidth();
+        for (int i = 0; i < spriteCount; i++) {
+            ((NativeImageAccessor)(Object)spriteSheet).callCheckAllocated();
+            ((NativeImageAccessor)(Object)sprite).callCheckAllocated();
+            int sheetPixelCount = spriteSheet.getHeight() * spriteSheet.getWidth();
+            int spritePixelCount = size * size;
+            int startI = spritePixelCount * i;
+            int endI = startI + spritePixelCount;
+            IntBuffer spriteIntBuffer = MemoryUtil.memIntBuffer(((NativeImageAccessor)(Object)sprite).getPixels(), spritePixelCount);
+            IntBuffer sheetIntBuffer = MemoryUtil.memIntBuffer(((NativeImageAccessor)(Object)spriteSheet).getPixels(), sheetPixelCount);
+
+            for (int srcI = startI, destI = 0; srcI < endI; ++srcI, ++destI) {
+                int sheetCol = sheetIntBuffer.get(srcI);
+                int spriteCol = spriteIntBuffer.get(destI);
+                int sheetAlpha = new Color(sheetCol, true).getAlpha();
+                int spriteAlpha = new Color(spriteCol, true).getAlpha();
+                int chosenPx = sheetAlpha > spriteAlpha ? sheetCol : spriteCol;
+                spriteIntBuffer.put(destI, chosenPx);
+            }
+
+        }
+        return VersionUtil.newNonAnimatedSpriteContents(id, new FrameSize(size, size), sprite);
     }
 
     public static int getRippleResolution(List<SpriteContents> contents) {
