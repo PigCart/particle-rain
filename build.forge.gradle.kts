@@ -23,9 +23,6 @@ tasks.named<ProcessResources>("processResources") {
         // insert version-specific mixins
         this["RegistrySyncManagerMixin" ] = ""
         this["TextureSheetParticleMixin"] = "\"tint.TextureSheetParticleMixin\","
-        this["DripParticleMixin"        ] = "\"tint.DripParticleMixin\","
-        this["WaterFallProviderMixin"   ] = ""
-        this["WaterHangProviderMixin"   ] = ""
     }
 
     filesMatching(listOf("META-INF/mods.toml", "${prop("mod.id")}.mixins.json")) {

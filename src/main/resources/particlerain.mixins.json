@@ -9,9 +9,7 @@
   "client": [
     ${ RegistrySyncManagerMixin }
     ${ TextureSheetParticleMixin }
-    ${ DripParticleMixin }
-    ${ WaterFallProviderMixin }
-    ${ WaterHangProviderMixin }
+    "tint.DripParticleMixin",
     "AbstractWidgetMixin",
     "WeatherDataMixin",
     "access.BlockDisplayAccessor",

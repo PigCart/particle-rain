@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TextureSheetParticle.class)
+///  Provides inject for [WaterDropParticleMixin]
 public abstract class TextureSheetParticleMixin extends SingleQuadParticle {
 
     @Shadow protected abstract void setSprite(TextureAtlasSprite textureAtlasSprite);
