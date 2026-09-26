@@ -70,7 +70,7 @@ public class ConfigResponders {
 
     public static class ReloadResources implements Runnable {
         public void run() {
-            Minecraft.getInstance().reloadResourcePacks();
+            ConfigScreen.shouldReloadResources = true;
         }
     }
 

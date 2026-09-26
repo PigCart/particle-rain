@@ -29,10 +29,7 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
     protected BlockPos.MutableBlockPos pos;
     protected BlockPos.MutableBlockPos oPos;
     boolean doCollisionAnim = false;
-    float baseTemp;
-    float targetOpacity;
     float oQuadSize;
-    float distance;
 
     protected WeatherParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite) {
         super(level, x, y, z /*? if >=1.21.9 {*//*,sprite*//*?}*/);
@@ -44,7 +41,6 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
         this.lifetime = getConfig().perf.particleDistance * 100;
         this.pos = new BlockPos.MutableBlockPos(x, y, z);
         this.oPos = new BlockPos.MutableBlockPos(x, y, z);
-        this.baseTemp = level.getBiome(this.pos).value().getBaseTemperature();
 
         ParticleSpawner.particleCount++;
     }
@@ -68,41 +64,9 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
     public void tick() {
         super.tick();
         oQuadSize = quadSize;
-        distance = (float) VersionUtil.camPos(Minecraft.getInstance().gameRenderer.getMainCamera()).distanceTo(new Vec3(x, y, z));
         pos.set(x, y, z);
-        if (!pos.equals(oPos)) {
-            onPositionUpdate();
-            oPos.set(pos);
-        }
         if (doCollisionAnim) {
             tickCollisionAnim();
-        }
-        tickFading();
-    }
-
-    public void onPositionUpdate() {
-        if (!getConfig().compat.crossBiomeBorder && Mth.abs(level.getBiome(pos).value().getBaseTemperature() - baseTemp) > 0.4) {
-            doCollisionAnim = true;
-        }
-        BlockState state = level.getBlockState(pos);
-        boolean isIgnoredByConfig = getConfig().compat.weatherIgnoreBlocks != null
-                && !getConfig().compat.weatherIgnoreBlocks.getEntries().isEmpty()
-                && getConfig().compat.weatherIgnoreBlocks.contains(state.getBlockHolder());
-
-        if(isIgnoredByConfig && level.getFluidState(pos).isEmpty()) {
-            return;
-        }
-        if (level.getBlockState(pos).isCollisionShapeFullBlock(level, pos) || !level.getFluidState(pos).isEmpty()) {
-            this.remove();
-        }
-    }
-
-    public void tickFading() {
-        final float renderDistance = getConfig().perf.particleDistance;
-        if (distance > renderDistance) {
-            remove();
-        } else {
-            alpha = Mth.lerp(distance / renderDistance, targetOpacity, 0);
         }
     }
 
@@ -111,11 +75,7 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
         return Mth.lerp(scaleFactor, oQuadSize, quadSize);
     }
 
-    public void tickCollisionAnim() {
-        float deltaMovement = (float) new Vec3(xd, yd, zd).length();
-        quadSize = quadSize - deltaMovement;
-        if (quadSize <= 0) remove();
-    }
+    public abstract void tickCollisionAnim();
 
     public Quaternionf turnBackfaceFlipways(Quaternionf quaternion, Vector3f cameraOffset) {
         Vector3f normal = new Vector3f(0, 0, 1);

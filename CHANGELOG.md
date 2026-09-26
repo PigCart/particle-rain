@@ -25,6 +25,10 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - fixed surface effects spawning inside blocks at negative coordinates due to a rounding error
 - fixed storm weather particles spawning only when not stormy
 - fixed dripstone particles not tinting with water/rain color
+- fixed ripple texture resolution options not being visible
+- fixed rain appearing in unloaded chunks
+- fixed streaks floating over the edges of non-full blocks
+- fixed texture related config options reloading resource before the config screen closes
 - added random Y spawn offset to particles with surface spawn position
 - added fade types to particle config
 - added horizontal particle rotation type

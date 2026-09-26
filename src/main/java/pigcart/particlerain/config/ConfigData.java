@@ -10,7 +10,7 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import static pigcart.particlerain.config.ConfigResponders.*;
 
 public class ConfigData {
-    @NoGUI public byte configVersion = 6;
+    @NoGUI public byte configVersion = 7;
 
     public void updateTransientVariables() {
         if (compat != null && compat.weatherIgnoreBlocks != null) {
@@ -63,19 +63,10 @@ public class ConfigData {
         public boolean doSpawnHeightLimit = false;
         @Format(ZeroIsAutomatic.class)
         public int spawnHeightLimit = 0;
-    }
-
-    @NoGUI
-    public RippleOptions ripple = new RippleOptions();
-    public static class RippleOptions {
-        @Slider @Format(Percent.class)
-        public float opacity = 0.8F;
-        public float size = 0.25F;
-
         @OnChange(ReloadResources.class)
-        public int resolution = 16;
+        public int rippleRes = 16;
         @OnChange(ReloadResources.class)
-        public boolean useResourcepackResolution = true;
+        public boolean rippleUsePackRes = true;
     }
 
     @NoGUI

@@ -1,5 +1,6 @@
 package pigcart.particlerain.config.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
@@ -25,6 +26,7 @@ public class ConfigScreen extends Screen {
     WidgetList list;
     protected final Screen lastScreen;
     public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
+    public static boolean shouldReloadResources = false;
 
     public ConfigScreen(Screen lastScreen, Object config, Object configDefault, Class<?> configGenericType, Component title) {
         super(title);
@@ -124,6 +126,10 @@ public class ConfigScreen extends Screen {
     public void removed() {
         ConfigManager.save();
         ParticleLoader.saveCustomParticles();
+        if (shouldReloadResources) {
+            shouldReloadResources = false;
+            Minecraft.getInstance().reloadResourcePacks();
+        }
     }
 
     @Override

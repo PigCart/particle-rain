@@ -3,6 +3,7 @@ package pigcart.particlerain.config;
 import com.google.gson.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import pigcart.particlerain.ParticleLoader;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.config.gui.MainConfigScreen;
 
@@ -45,6 +46,7 @@ public class ConfigManager {
         }
         if (getConfig().configVersion < getDefaultConfig().configVersion) {
             ParticleRain.LOGGER.info("Overwriting old config file");
+            ParticleLoader.resetParticleConfig = true;
             config = getDefaultConfig();
             save();
         }

@@ -129,9 +129,9 @@
   "particlerain.rotationType": "Rotation type",
   "particlerain.distanceScaling": "Scale by distance",
 
-  "particlerain.useResourcepackResolution": "Use resource pack resolution",
-  "particlerain.useResourcepackResolution.description": "Uses the resolution of the campfire smoke particle.",
-  "particlerain.resolution": "Resolution",
+  "particlerain.rippleUsePackRes": "Use resource pack resolution for ripples",
+  "particlerain.rippleUsePackRes.description": "Uses the resolution of the campfire smoke particle.",
+  "particlerain.rippleRes": "Ripple texture resolution",
   "particlerain.StreakOptions": "Streak Particle Options",
 
   "particlerain.Weather.DURING_WEATHER": "During weather",

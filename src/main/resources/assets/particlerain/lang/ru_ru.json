@@ -122,9 +122,9 @@
   "particlerain.rotationType": "Тип вращения",
   "particlerain.renderStyle": "Стиль отрисовки",
 
-  "particlerain.useResourcepackResolution": "Использовать разрешение набора ресурсов",
-  "particlerain.useResourcepackResolution.description": "Использует разрешение частицы дыма костра.",
-  "particlerain.resolution": "Разрешение",
+  "particlerain.rippleUsePackRes": "Использовать разрешение набора ресурсов",
+  "particlerain.rippleUsePackRes.description": "Использует разрешение частицы дыма костра.",
+  "particlerain.rippleRes": "Разрешение",
   "particlerain.ShrubOptions": "Настройки частиц кустарников",
   "particlerain.StreakOptions": "Настройки частиц струй",
   "particlerain.RippleOptions": "Настройки частиц ряби",

@@ -204,6 +204,7 @@ public final class ParticleSpawner {
             y = getConfig().perf.particleDistance * Mth.cos(phi)                  + (float) cameraPos.y;
             z = getConfig().perf.particleDistance * Mth.sin(phi) * Mth.sin(theta) + (float) cameraPos.z;
             pos.set(x, y, z);
+            if (!level.isLoaded(pos)) continue;
             if (getConfig().compat.doSpawnHeightLimit) {
                 int cloudHeight = getConfig().compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, pos) : getConfig().compat.spawnHeightLimit;
                 if (cloudHeight != 0 && y > cloudHeight) {
@@ -248,6 +249,7 @@ public final class ParticleSpawner {
             double y = getHeight(level, x, z);
 
             heightmapPos.set(x, y - 1, z);
+            if (!level.isLoaded(heightmapPos)) continue;
             BlockState blockState = level.getBlockState(heightmapPos);
             Holder<Biome> biome = level.getBiome(heightmapPos);
             Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, heightmapPos);

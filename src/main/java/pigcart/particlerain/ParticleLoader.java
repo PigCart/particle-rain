@@ -23,6 +23,8 @@ public class ParticleLoader {
     public static Map<String, ParticleData> particles;
     public static Map<String, ParticleData> packParticles;
 
+    public static boolean resetParticleConfig = false;
+
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(Color.class, new ColorTypeAdapter())
             .registerTypeAdapter(ParticleData.class, (InstanceCreator<?>) type -> {
@@ -82,6 +84,10 @@ public class ParticleLoader {
     }
 
     public static void loadCustomParticles() {
+        if (resetParticleConfig) {
+            saveCustomParticles();
+            return;
+        }
         File file = new File(CUSTOM_PARTICLES_PATH);
         if (!file.exists()) {
             ParticleRain.LOGGER.info("Skipping loading custom particles because no file exists at: " + CUSTOM_PARTICLES_PATH);

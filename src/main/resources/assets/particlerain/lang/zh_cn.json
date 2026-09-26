@@ -120,9 +120,9 @@
   "particlerain.rotationType": "旋转模式",
   "particlerain.renderStyle": "渲染样式",
 
-  "particlerain.useResourcepackResolution": "使用资源包分辨率",
-  "particlerain.useResourcepackResolution.description": "使用营火烟雾粒子的分辨率。",
-  "particlerain.resolution": "分辨率",
+  "particlerain.rippleUsePackRes": "使用资源包分辨率",
+  "particlerain.rippleUsePackRes.description": "使用营火烟雾粒子的分辨率。",
+  "particlerain.rippleRes": "分辨率",
   "particlerain.ShrubOptions": "风滚草粒子选项",
   "particlerain.StreakOptions": "雨痕粒子选项",
   "particlerain.RippleOptions": "涟漪粒子选项",

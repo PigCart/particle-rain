@@ -125,7 +125,9 @@
       ],
       "isWhitelist": false
     },
-    "spawnPos": "BLOCK_TOP"
+    "spawnPos": "BLOCK_TOP",
+    "windStrength": 0.5,
+    "stormWindStrength": 0.5
   },
   "ripple": {
     "particleStyle": "CUSTOM",

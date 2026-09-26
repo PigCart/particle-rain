@@ -48,12 +48,8 @@ public class CustomParticle extends WeatherParticle {
     private float collisionAnimProgress = 1;
     public float speed = 0;
     float rotationVariation;
-    boolean doCollisionAnim = false;
-    public BlockPos.MutableBlockPos pos;
-    protected BlockPos.MutableBlockPos oPos;
     BlockHitResult collision = null;
     float baseTemp;
-    float oQuadSize;
     float distance;
     int maxEdgeBounces = 3;
     float baseSize;
@@ -104,7 +100,6 @@ public class CustomParticle extends WeatherParticle {
         super.tick();
         oQuadSize = quadSize;
         distance = (float) VersionUtil.camPos(Minecraft.getInstance().gameRenderer.getMainCamera()).distanceTo(new Vec3(x, y, z));
-        pos.set(x, y, z);
         if (!pos.equals(oPos)) {
             onPositionUpdate();
             oPos.set(pos);

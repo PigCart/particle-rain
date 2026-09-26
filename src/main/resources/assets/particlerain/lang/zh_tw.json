@@ -53,8 +53,8 @@
   "particlerain.opacity.description": "粒子的透明度，從完全透明 (0) 到完全不透明 (100)",
   "particlerain.bounciness": "彈跳力",
   "particlerain.spawnOnGround": "在地面上生成",
-  "particlerain.useResourcepackResolution": "使用資源包解析度",
-  "particlerain.resolution": "解析度",
+  "particlerain.rippleUsePackRes": "使用資源包解析度",
+  "particlerain.rippleRes": "解析度",
   "particlerain.spawnHeight": "生成高度",
   "particlerain.spawnTime": "生成時間",
 

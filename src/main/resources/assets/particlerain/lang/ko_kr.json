@@ -122,9 +122,9 @@
   "particlerain.rotationType": "회전 유형",
   "particlerain.renderStyle": "렌더 스타일",
 
-  "particlerain.useResourcepackResolution": "리소스팩 해상도 사용",
-  "particlerain.useResourcepackResolution.description": "모닥불 연기 파티클의 해상도를 사용합니다.",
-  "particlerain.resolution": "해상도",
+  "particlerain.rippleUsePackRes": "리소스팩 해상도 사용",
+  "particlerain.rippleUsePackRes.description": "모닥불 연기 파티클의 해상도를 사용합니다.",
+  "particlerain.rippleRes": "해상도",
   "particlerain.ShrubOptions": "덤불 파티클 설정",
   "particlerain.StreakOptions": "물줄기 파티클 설정",
   "particlerain.RippleOptions": "물결 파티클 설정",

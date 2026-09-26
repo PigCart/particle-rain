@@ -122,9 +122,9 @@
   "particlerain.rotationType": "Тип обертання",
   "particlerain.renderStyle": "Стиль рендерингу",
 
-  "particlerain.useResourcepackResolution": "Використовувати роздільну здатність набору ресурсів",
-  "particlerain.useResourcepackResolution.description": "Використовує роздільну здатність частинки диму багаття.",
-  "particlerain.resolution": "Роздільна здатність",
+  "particlerain.rippleUsePackRes": "Використовувати роздільну здатність набору ресурсів",
+  "particlerain.rippleUsePackRes.description": "Використовує роздільну здатність частинки диму багаття.",
+  "particlerain.rippleRes": "Роздільна здатність",
   "particlerain.ShrubOptions": "Налаштування частинок чагарників",
   "particlerain.StreakOptions": "Налаштування частинок струменів",
   "particlerain.RippleOptions": "Налаштування частинок хвиль",

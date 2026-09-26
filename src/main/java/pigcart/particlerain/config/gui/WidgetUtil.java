@@ -235,8 +235,9 @@ public class WidgetUtil {
 
     private static <T> void setConfigField(Object config, Field field, T value) {
         try {
+            Object oldValue = field.get(config);
             field.set(config, value);
-            if (field.isAnnotationPresent(OnChange.class)) {
+            if (oldValue != value && field.isAnnotationPresent(OnChange.class)) {
                 final OnChange onChange = field.getAnnotation(OnChange.class);
                 ((Runnable) onChange.value().getConstructors()[0].newInstance()).run();
             }

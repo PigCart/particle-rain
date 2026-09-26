@@ -65,18 +65,17 @@ public class StreakParticle extends WeatherParticle {
                 this.gravity = 0;
             }
         }
-    }
 
-    @Override
-    public void onPositionUpdate() {
         Vec3 start = new Vec3(x, y, z);
         Vec3 end = start.relative(direction.getOpposite(), 0.06F);
         BlockHitResult hit = level.clip(VersionUtil.getClipContext(start, end));
         BlockState stateBehind = level.getBlockState(hit.getBlockPos());
         FluidState fluidState = level.getFluidState(pos);
         if (hit.getType().equals(HitResult.Type.MISS)) {
-            Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.DRIPPING_WATER, x, y - 0.05, z, 0, 0, 0);
-            doCollisionAnim = true;
+            if (!doCollisionAnim) {
+                Minecraft.getInstance().particleEngine.createParticle(ParticleTypes.DRIPPING_WATER, x, y - 0.05, z, 0, 0, 0);
+                doCollisionAnim = true;
+            }
         } else if (!blockList.contains(stateBehind.getBlockHolder()) || !fluidState.isEmpty()) {
             doCollisionAnim = true;
         }
@@ -88,11 +87,6 @@ public class StreakParticle extends WeatherParticle {
         yd = 0;
         this.alpha = alpha - 0.1F;
         if (alpha <= 0) remove();
-    }
-
-    @Override
-    public void tickFading() {
-        //if (!doCollisionAnim) super.tickDistanceFade();
     }
 
     @Override
