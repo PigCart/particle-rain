@@ -18,7 +18,7 @@ public class BlendedParticleRenderType {
                     .build()
     );
     public static final SingleQuadParticle.Layer INSTANCE =
-            new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, BLENDED_PARTICLE);
+            new SingleQuadParticle.Layer(true, TextureAtlas.LOCATION_PARTICLES, BLENDED_PARTICLE, null);
 }
 *///?} else if >=1.21.9 {
 /*import com.mojang.blaze3d.pipeline.BlendFunction;
