@@ -180,7 +180,7 @@ public final class ParticleSpawner {
             speed = 0;
         } else {
             ticksUntilSkyFXIdle--;
-            density = (int) (Mth.lerpInt(level.getThunderLevel(1), getConfig().perf.particleDensity, getConfig().perf.particleStormDensity) * level.getRainLevel(1));
+            density = Mth.lerpInt(level.getThunderLevel(1), getConfig().perf.particleDensity, getConfig().perf.particleStormDensity);
             speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().length();
             // mul density by speed to maintain visual density
             density = (int) (density * (1 + speed));

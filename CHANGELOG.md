@@ -16,6 +16,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 # v4.0.0
 ###### work in progress
 
+- Added Minecraft 26.3 support
 - fixed particle count not decreasing when a particle spawn is canceled by the Particle Group
 - fixed blended particles being visible through objects in 26.1
 - fixed blended particle corrupt rendering regression from beta 1
@@ -29,6 +30,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - fixed rain appearing in unloaded chunks
 - fixed streaks floating over the edges of non-full blocks
 - fixed texture related config options reloading resource before the config screen closes
+- fixed `always` weather option
 - added random Y spawn offset to particles with surface spawn position
 - added fade types to particle config
 - added horizontal particle rotation type
