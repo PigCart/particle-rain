@@ -7,11 +7,13 @@ pluginManagement {
         maven("https://maven.kikugie.dev/snapshots")
         maven("https://maven.kikugie.dev/releases")
         maven("https://maven.parchmentmc.org")
+        maven("https://maven.minecraftforge.net/")
     }
 }
 
 plugins {
     id("dev.kikugie.stonecutter") version "0.10-alpha.6"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 stonecutter {
@@ -20,12 +22,14 @@ stonecutter {
             .forEach {
                 if (it == "fabric" && sc.eval(version, ">=26.1")) {
                     version("$version-$it", version).buildscript = "build.fabric-unobf.gradle.kts"
+                } else if (it == "forge" && sc.eval(version, ">=26.1")) {
+                    version("$version-$it", version).buildscript = "build.forge-modern.gradle.kts"
                 } else {
                     version("$version-$it", version).buildscript = "build.$it.gradle.kts"
                 }
             }
 
-        mc("26.3",   "fabric")
+        mc("26.3",   "fabric", "neoforge", "forge")
         mc("26.2",   "fabric")
         mc("26.1",   "fabric")
         mc("1.21.11","fabric")

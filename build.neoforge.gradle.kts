@@ -28,6 +28,14 @@ tasks.named<ProcessResources>("processResources") {
     filesMatching(listOf("META-INF/neoforge.mods.toml", "${prop("mod.id")}.mixins.json")) {
         expand(props)
     }
+
+    if (sc.current.parsed >= "26.3") {
+        exclude("META-INF/accesstransformer.cfg")
+        from(rootProject.file("gradle/accesstransformer-26.3.cfg")) {
+            into("META-INF")
+            rename { "accesstransformer.cfg" }
+        }
+    }
 }
 
 version = "${prop("mod.version")}+${minecraft}-neoforge"
@@ -47,7 +55,8 @@ dependencies {
 neoForge {
     version = prop("deps.neoforge") as String
 
-    val accessTransformer = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
+    val accessTransformer = rootProject.file(if (sc.current.parsed >= "26.3")
+        "gradle/accesstransformer-26.3.cfg" else "src/main/resources/META-INF/accesstransformer.cfg")
     if (accessTransformer.exists()) {
         accessTransformers.from(accessTransformer.absolutePath)
     }
@@ -94,6 +103,7 @@ tasks {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    val javaVersion = if (sc.current.parsed >= "26.1") JavaVersion.VERSION_25 else JavaVersion.VERSION_21
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
 }

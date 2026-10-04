@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
+loaderVersion = "${loader_version_range}"
 issueTrackerURL = "${mod_issues}"
 license = "${mod_license}"
 logoFile = "${mod_icon}"
@@ -14,7 +14,7 @@ authors = "${mod_author}"
 [[dependencies.${mod_id}]]
 modId = "forge"
 mandatory = true
-versionRange = "[43,50)"
+versionRange = "${loader_version_range}"
 ordering = "NONE"
 side = "CLIENT"
 

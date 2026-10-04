@@ -61,7 +61,11 @@ public class VersionUtil {
     }
     public static boolean irisLoaded() {
         return  //? forge {
+                 //? >=26.1 {
+                //net.minecraftforge.fml.ModList.isLoaded("oculus");
+                 //?} else {
                 //net.minecraftforge.fml.ModList.get().isLoaded("oculus");
+                 //?}
                  //?} else if neoforge {
                 //net.neoforged.fml.ModList.get().isLoaded("iris");
                  //?} else {
@@ -70,7 +74,11 @@ public class VersionUtil {
     }
     public static boolean windLinkLoaded() {
         return  //? forge {
+                 //? >=26.1 {
+                //net.minecraftforge.fml.ModList.isLoaded("windlink");
+                 //?} else {
                 //net.minecraftforge.fml.ModList.get().isLoaded("windlink");
+                 //?}
                  //?} else if neoforge {
                 //net.neoforged.fml.ModList.get().isLoaded("windlink");
                  //?} else {

@@ -78,7 +78,13 @@ public class NeoforgeEntrypoint {
     }
 
     public NeoforgeEntrypoint(IEventBus eventBus) {
-        if (FMLEnvironment.dist.isDedicatedServer()) return;
+        if (FMLEnvironment.
+                //? >=1.21.9 {
+                //getDist()
+                //?} else {
+                dist
+                //?}
+                .isDedicatedServer()) return;
 
         NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onTick);
         NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onRegisterCommands);

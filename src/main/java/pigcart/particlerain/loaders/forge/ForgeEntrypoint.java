@@ -12,9 +12,13 @@ import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+//? <26.1 {
 import net.minecraftforge.common.MinecraftForge;
+//?}
 import net.minecraftforge.event.TickEvent;
+//? <26.1 {
 import net.minecraftforge.eventbus.api.IEventBus;
+//?}
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -66,9 +70,25 @@ public class ForgeEntrypoint {
     }
 
     @SuppressWarnings("removal")
+    //? >=26.1 {
+    //public ForgeEntrypoint(FMLJavaModLoadingContext context) {
+    //?} else {
     public ForgeEntrypoint() {
+    //?}
         if (FMLEnvironment.dist.isDedicatedServer()) return;
 
+        //? >=26.1 {
+        //var modBusGroup = context.getModBusGroup();
+        //TickEvent.ClientTickEvent.Post.BUS.addListener(ForgeEntrypoint::onTick);
+        //RegisterClientCommandsEvent.BUS.addListener(ForgeEntrypoint::onRegisterCommands);
+        //PARTICLE_TYPES.register(modBusGroup);
+        //RegisterParticleProvidersEvent.BUS.addListener(ForgeEntrypoint::onRegisterParticleProviders);
+        //RegisterClientReloadListenersEvent.BUS.addListener(ForgeEntrypoint::onRegisterClientReloadListeners);
+        //context.registerExtensionPoint(
+        //        ConfigScreenHandler.ConfigScreenFactory.class,
+        //        () -> new ConfigScreenHandler.ConfigScreenFactory(ConfigManager::screenPlease)
+        //);
+        //?} else {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onTick);
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onRegisterCommands);
@@ -82,6 +102,7 @@ public class ForgeEntrypoint {
                         (client, parent) -> ConfigManager.screenPlease(parent)
                 )
         );
+        //?}
         ParticleRain.onInitializeClient();
     }
 }

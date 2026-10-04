@@ -19,6 +19,7 @@ tasks.named<ProcessResources>("processResources") {
         this["mod_license"] =   prop("mod.license")
         this["mod_icon"] =      prop("mod.icon")
         this["version_range"] = prop("version_range")
+        this["loader_version_range"] = prop("loader_version_range")
 
         // insert version-specific mixins
         this["RegistrySyncManagerMixin" ] = ""
