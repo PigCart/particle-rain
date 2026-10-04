@@ -35,6 +35,10 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - added fade types to particle config
 - added horizontal particle rotation type
 - added heavy snow and rain during thunderstorms
+- added windy haze to windswept biomes
+- tweaked rain and snow texturing
+  - was previously split into 4 sprites, now is split into 16
+  - particle size reduced to fit the new texel density
 - density during storms is now the same as normal weather by default, since the extra density is achieved through the heavy particle textures
 - ported mist and ripple effect to configurable horizontal particles
 - mist after rain no longer spawns in plains biomes (its too overwhelming i dont like it there)

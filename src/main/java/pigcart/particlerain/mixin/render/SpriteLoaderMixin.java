@@ -57,15 +57,21 @@ public abstract class SpriteLoaderMixin {
             }
 
             // split both weather textures into four sprites
-            for (int i = 0; i < 4; i++) {
-                stitcher.registerSprite(TextureUtil.splitSpriteSheet(rainImage, i, "rain_"));
+            for (int i = 0; i < 16; i++) {
+                stitcher.registerSprite(TextureUtil.getSpriteFromSheet(rainImage, "rain_", i, 2));
             }
-            for (int i = 0; i < 4; i++) {
-                stitcher.registerSprite(TextureUtil.splitSpriteSheet(snowImage, i, "snow_"));
+            for (int i = 0; i < 16; i++) {
+                stitcher.registerSprite(TextureUtil.getSpriteFromSheet(snowImage, "snow_", i, 2));
             }
             // generate heavy rain and snow textures
-            stitcher.registerSprite(TextureUtil.mergeSpriteSheet(rainImage, "heavy_rain"));
-            stitcher.registerSprite(TextureUtil.mergeSpriteSheet(snowImage, "heavy_snow"));
+            stitcher.registerSprite(TextureUtil.mergeSpritesFromSheet(rainImage, "heavy_rain_0", 0, 4, 2));
+            stitcher.registerSprite(TextureUtil.mergeSpritesFromSheet(rainImage, "heavy_rain_1", 4, 4, 2));
+            stitcher.registerSprite(TextureUtil.mergeSpritesFromSheet(rainImage, "heavy_rain_2", 8, 4, 2));
+            stitcher.registerSprite(TextureUtil.mergeSpritesFromSheet(rainImage, "heavy_rain_3", 12, 4, 2));
+            stitcher.registerSprite(TextureUtil.mergeSpritesFromSheet(snowImage, "heavy_snow_0", 0, 4, 2));
+            stitcher.registerSprite(TextureUtil.mergeSpritesFromSheet(snowImage, "heavy_snow_1", 4, 4, 2));
+            stitcher.registerSprite(TextureUtil.mergeSpritesFromSheet(snowImage, "heavy_snow_2", 8, 4, 2));
+            stitcher.registerSprite(TextureUtil.mergeSpritesFromSheet(snowImage, "heavy_snow_3", 12, 4, 2));
             // generate ripple sprites
             int rippleResolution = TextureUtil.getRippleResolution(this.spriteContentsList);
             for (int i = 0; i < 8; i++) {

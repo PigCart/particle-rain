@@ -3,12 +3,24 @@
     "gravity": 0.9,
     "windStrength": 0.4,
     "stormWindStrength": 0.8,
-    "size": 1.5,
+    "size": 0.75,
     "spriteLocations": [
       "particlerain:rain_0",
       "particlerain:rain_1",
       "particlerain:rain_2",
-      "particlerain:rain_3"
+      "particlerain:rain_3",
+      "particlerain:rain_4",
+      "particlerain:rain_5",
+      "particlerain:rain_6",
+      "particlerain:rain_7",
+      "particlerain:rain_8",
+      "particlerain:rain_9",
+      "particlerain:rain_10",
+      "particlerain:rain_11",
+      "particlerain:rain_12",
+      "particlerain:rain_13",
+      "particlerain:rain_14",
+      "particlerain:rain_15"
     ],
     "tintType": "WATER",
     "rotationType": "RELATIVE_VELOCITY"
@@ -18,15 +30,18 @@
     "weather": "ONLY_DURING_STORMY_WEATHER",
     "windStrength": 0.4,
     "stormWindStrength": 0.8,
-    "size": 1.5,
+    "size": 0.75,
     "spriteLocations": [
-      "particlerain:heavy_rain"
+      "particlerain:heavy_rain_0",
+      "particlerain:heavy_rain_1",
+      "particlerain:heavy_rain_2",
+      "particlerain:heavy_rain_3"
     ],
     "tintType": "WATER",
     "rotationType": "RELATIVE_VELOCITY"
   },
   "snow": {
-    "density": 0.4,
+    "density": 0.3,
     "precipitation": [
       "SNOW"
     ],
@@ -34,12 +49,24 @@
     "windStrength": 0.01,
     "stormWindStrength": 0.1,
     "rotationAmount": 0.4,
-    "size": 1.5,
+    "size": 0.75,
     "spriteLocations": [
       "particlerain:snow_0",
       "particlerain:snow_1",
       "particlerain:snow_2",
-      "particlerain:snow_3"
+      "particlerain:snow_3",
+      "particlerain:snow_4",
+      "particlerain:snow_5",
+      "particlerain:snow_6",
+      "particlerain:snow_7",
+      "particlerain:snow_8",
+      "particlerain:snow_9",
+      "particlerain:snow_10",
+      "particlerain:snow_11",
+      "particlerain:snow_12",
+      "particlerain:snow_13",
+      "particlerain:snow_14",
+      "particlerain:snow_15"
     ]
   },
   "heavy_snow": {
@@ -52,9 +79,12 @@
     "windStrength": 0.01,
     "stormWindStrength": 0.1,
     "rotationAmount": 0.4,
-    "size": 1.5,
+    "size": 0.75,
     "spriteLocations": [
-      "particlerain:heavy_snow"
+      "particlerain:heavy_snow_0",
+      "particlerain:heavy_snow_1",
+      "particlerain:heavy_snow_2",
+      "particlerain:heavy_snow_3"
     ]
   },
   "dust": {
@@ -126,8 +156,8 @@
       "isWhitelist": false
     },
     "spawnPos": "BLOCK_TOP",
-    "windStrength": 0.5,
-    "stormWindStrength": 0.5
+    "windStrength": 0.1,
+    "stormWindStrength": 0.2
   },
   "ripple": {
     "particleStyle": "CUSTOM",
@@ -219,7 +249,8 @@
     "biomeList": {
       "entries": [
         "minecraft:plains",
-        "minecraft:meadow"
+        "minecraft:meadow",
+        "#c:is_windswept"
       ],
       "isWhitelist": false
     },
@@ -248,7 +279,8 @@
     "biomeList": {
       "entries": [
         "minecraft:plains",
-        "minecraft:meadow"
+        "minecraft:meadow",
+        "#c:is_windswept"
       ],
       "isWhitelist": false
     },
@@ -351,38 +383,32 @@
     "tintType": "FOG",
     "rotationType": "VERTICAL"
   },
-  "rain_haze": {
-    "enabled": false,
-    "density": 0.5,
-    "gravity": 0.1,
-    "windStrength": 0.1,
-    "stormWindStrength": 0.5,
+  "windswept_haze": {
     "rotationAmount": 0.1,
     "opacity": 0.3,
-    "size": 0.5,
-    "distanceScaling": 1,
-    "spriteLocations": [
-      "particlerain:fog_dithered"
-    ],
-    "rotationType": "COPY_CAMERA"
-  },
-  "snow_haze": {
-    "enabled": false,
-    "density": 0.5,
-    "rotationAmount": 0.1,
-    "opacity": 0.3,
-    "size": 0.5,
     "distanceScaling": 1,
     "spriteLocations": [
       "particlerain:fog_dithered"
     ],
     "rotationType": "COPY_CAMERA",
+    "density": 1.0,
+    "weather": "ALWAYS",
     "precipitation": [
+      "RAIN",
+      "NONE",
       "SNOW"
     ],
-    "gravity": 0.05,
-    "windStrength": 0.1,
-    "stormWindStrength": 0.2
+    "biomeList": {
+      "entries": [
+        "#c:is_windswept"
+      ],
+      "isWhitelist": true
+    },
+    "windStrength": 0.25,
+    "stormWindStrength": 0.5,
+    "gravity": 0.0,
+    "size": 0.4,
+    "tintType": "FOG"
   },
   "dust_haze": {
     "enabled": true,
@@ -393,7 +419,7 @@
     "stormWindStrength": 0.8,
     "rotationAmount": 0.1,
     "opacity": 0.4,
-    "size": 0.5,
+    "size": 0.4,
     "distanceScaling": 1,
     "spriteLocations": [
       "particlerain:fog_dithered"

@@ -22,8 +22,8 @@ public class ConfigData {
     public static class PerformanceOptions {
         @OnChange(ClearParticles.class)
         public int maxParticleAmount = 1500;
-        public int particleDensity = 50;
-        public int particleStormDensity = 50;
+        public int particleDensity = 75;
+        public int particleStormDensity = 100;
         @Format(DistanceInBlocks.class)
         public int particleDistance = 16;
         @Format(DistanceInBlocks.class)
