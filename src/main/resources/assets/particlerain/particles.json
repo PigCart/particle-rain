@@ -383,33 +383,6 @@
     "tintType": "FOG",
     "rotationType": "VERTICAL"
   },
-  "windswept_haze": {
-    "rotationAmount": 0.1,
-    "opacity": 0.3,
-    "distanceScaling": 1,
-    "spriteLocations": [
-      "particlerain:fog_dithered"
-    ],
-    "rotationType": "COPY_CAMERA",
-    "density": 1.0,
-    "weather": "ALWAYS",
-    "precipitation": [
-      "RAIN",
-      "NONE",
-      "SNOW"
-    ],
-    "biomeList": {
-      "entries": [
-        "#c:is_windswept"
-      ],
-      "isWhitelist": true
-    },
-    "windStrength": 0.25,
-    "stormWindStrength": 0.5,
-    "gravity": 0.0,
-    "size": 0.4,
-    "tintType": "FOG"
-  },
   "dust_haze": {
     "enabled": true,
     "lifetime": 100,
