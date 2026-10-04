@@ -132,17 +132,25 @@ public class WidgetUtil {
     }
 
     public static AbstractWidget getSlider(String name, float initialValue, Consumer<Float> onValueChange, float min, float max, float step, Function<Object, Component> valueFormatter) {
-        return new AbstractSliderButton(0, 0, BIG_BUTTON_WIDTH, BUTTON_HEIGHT,
-                Component.translatable(name).append(": ").append(valueFormatter.apply(initialValue)),
-                Mth.lerp(initialValue, min, max)
-        ) {
-            protected void updateMessage() {
-                this.setMessage(Component.translatable(name).append(": ").append(valueFormatter.apply(this.value)));
+        class Slider extends AbstractSliderButton {
+            Slider() {
+                super(0, 0, BIG_BUTTON_WIDTH, BUTTON_HEIGHT,
+                        Component.translatable(name).append(": ").append(valueFormatter.apply(initialValue)),
+                        Mth.lerp(initialValue, min, max));
             }
+
+            @Override
+            protected void updateMessage() {
+                setMessage(Component.translatable(name).append(": ").append(valueFormatter.apply(value)));
+            }
+
+            @Override
             protected void applyValue() {
                 onValueChange.accept((float) Math.round(Mth.lerp(value, min, max) / step) * step);
             }
-        };
+        }
+
+        return new Slider();
     }
 
     public static AbstractWidget[] getHexColor(String name, Object initialValue, Consumer<Object> onValueChange, Function<Object, Component> valueFormatter) {
@@ -285,7 +293,7 @@ public class WidgetUtil {
                             //~ if >=26.3 'currentValue.toString()' -> 'URI.create(currentValue.toString())'
                             currentValue.toString(),
                             true
-            )))};
+            ))) };
         } else if (type.equals(Color.class)) {
             return getHexColor(name, currentValue, onValueChange, valueFormatter);
         } else if (type.getFields().length > 0) {
