@@ -41,7 +41,7 @@ public class MainConfigScreen extends ConfigScreen {
             );
             toggleButton.setWidth(BUTTON_WIDTH);
 
-            AbstractWidget editButton = getButton(Component.translatable("selectWorld.edit").append("..."), (bttn)-> {
+            AbstractWidget editButton = getButton(Component.translatable("selectWorld.edit"), (bttn)-> {
                 // if this is a user-added particle remove it from the map in case the user wants to change its id
                 if (!ParticleLoader.packParticles.containsKey(id)) {
                     ParticleLoader.particles.remove(id);

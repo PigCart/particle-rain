@@ -200,7 +200,7 @@ public class WidgetUtil {
                 if (field.isAnnotationPresent(NoSubMenu.class)) {
                     addListOptions(screen, (List<?>)currentValue, listType);
                 } else {
-                    screen.addRow(WidgetUtil.getButton(Component.translatable(name).append("..."), (bttn) ->
+                    screen.addRow(WidgetUtil.getButton(Component.translatable(name), (bttn) ->
                             Minecraft.getInstance().setScreen(new ConfigScreen(
                                     screen.getFreshScreen(),
                                     currentValue,
@@ -290,7 +290,7 @@ public class WidgetUtil {
             return getHexColor(name, currentValue, onValueChange, valueFormatter);
         } else if (type.getFields().length > 0) {
             return new AbstractWidget[]{
-                    WidgetUtil.getButton(Component.translatable(name).append("..."), (bttn)->
+                    WidgetUtil.getButton(Component.translatable(name), (bttn)->
                             Minecraft.getInstance().setScreen(new ConfigScreen(
                                     screen,
                                     currentValue,
