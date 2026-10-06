@@ -13,7 +13,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ParticleLoader {
@@ -27,17 +26,7 @@ public class ParticleLoader {
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(Color.class, new ColorTypeAdapter())
-            .registerTypeAdapter(ParticleData.class, (InstanceCreator<?>) type -> {
-                ParticleData newNullParticle = new ParticleData();
-                for (Field field : ParticleData.class.getDeclaredFields()) {
-                    try {
-                        field.set(newNullParticle, null);
-                    } catch (IllegalAccessException e) {
-                        ParticleRain.LOGGER.error("Couldn't access field '{}' while instantiating null particle", field.getName(), e);
-                    }
-                }
-                return newNullParticle;
-            })
+            .registerTypeAdapter(ParticleData.class, new ParticleDataTypeAdapter())
             .create();
 
     public static class ColorTypeAdapter implements JsonSerializer<Color>, JsonDeserializer<Color> {
@@ -59,6 +48,28 @@ public class ParticleLoader {
         @Override
         public Color deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             return getColor(json.getAsString());
+        }
+    }
+
+    public static class ParticleDataTypeAdapter implements JsonDeserializer<ParticleData> {
+        @Override
+        public ParticleData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject object = json.getAsJsonObject();
+            if (object.size() == 0) return null; // workaround for config not handling removal of default particles
+            ParticleData data = new ParticleData();
+            for (Field field : ParticleData.class.getFields()) {
+                JsonElement element = object.get(field.getName());
+                try {
+                    if (element == null) { // values not provided by this json are omitted for ease of merging after deserialization.
+                        field.set(data, null);
+                    } else {
+                        field.set(data, context.deserialize(element, field.getGenericType())); // getGenericType works w/ arraylist
+                    }
+                } catch (IllegalAccessException e) {
+                    ParticleRain.LOGGER.error("Couldn't access field '{}' while deserializing particle", field.getName(), e);
+                }
+            }
+            return data;
         }
     }
 
@@ -102,11 +113,15 @@ public class ParticleLoader {
 
     public static void deserializeParticles(Reader reader, Map<String, ParticleData> destination) {
         GSON.fromJson(reader, WEATHER_PARTICLE_TYPE).forEach((id, data) -> {
-            data.id = id;
-            if (destination.containsKey(id)) {
-                destination.merge(id, data, ParticleLoader::mergeParticles);
-            } else {
-                destination.put(id, mergeParticles(new ParticleData(), data));
+            if (data != null) {
+                data.id = id;
+                if (destination.containsKey(id)) {
+                    // this particle already exists and is being modified by the user config or a resource pack
+                    destination.merge(id, data, ParticleLoader::mergeParticles);
+                } else {
+                    // this particle is new so merge it with the default ParticleData values
+                    destination.put(id, mergeParticles(new ParticleData(), data));
+                }
             }
         });
     }
@@ -147,7 +162,6 @@ public class ParticleLoader {
                 field.setAccessible(true);
                 final Object valueToSave = field.get(data);
                 final Object defaultValue = field.get(defaultData);
-                if (defaultValue == null) System.out.println(field.getName());
                 field.set(dataToSave, valueToSave.toString().equals(defaultValue.toString()) ? null : valueToSave);
             } catch (IllegalAccessException e) {
                 ParticleRain.LOGGER.error("Couldn't access field '{}' while isolating save data", field.getName());

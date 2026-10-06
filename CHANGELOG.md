@@ -14,9 +14,13 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - new streaks
 
 # v4.0.0
-###### work in progress
+###### Oct 6, 2026
+
+dropping the beta tag since all particles (except streaks) are using the customization system now, which was the original point of this update (and multiver) before i did all that other stuff.
 
 - Added Minecraft 26.3 support
+
+
 - fixed particle count not decreasing when a particle spawn is canceled by the Particle Group
 - fixed blended particles being visible through objects in 26.1
 - fixed blended particle corrupt rendering regression from beta 1
@@ -31,6 +35,8 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - fixed streaks floating over the edges of non-full blocks
 - fixed texture related config options reloading resource before the config screen closes
 - fixed `always` weather option
+- fixed config screen flickering on 26.1+
+- fixed particle config attempting to load the empty particle entries
 - added random Y spawn offset to particles with surface spawn position
 - added fade types to particle config
 - added horizontal particle rotation type
@@ -38,7 +44,6 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - tweaked rain and snow texturing
   - was previously split into 4 sprites, now is split into 16
   - particle size reduced to fit the new texel density
-- density during storms is now the same as normal weather by default, since the extra density is achieved through the heavy particle textures
 - ported mist and ripple effect to configurable horizontal particles
 - mist after rain no longer spawns in plains biomes (its too overwhelming i dont like it there)
 - tweaked spawn randomness such that particles with similar densities will spawn at the same time, allowing for composite effects (see horizontal & vertical fog)
