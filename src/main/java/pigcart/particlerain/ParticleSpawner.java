@@ -62,7 +62,7 @@ public final class ParticleSpawner {
         while (y > minY) {
             BlockState state = level.getBlockState(mutablePos);
 
-            boolean noCollision = state.getCollisionShape(level, pos).isEmpty();
+            boolean noCollision = state.getCollisionShape(level, mutablePos).isEmpty();
             boolean nonFluid = state.getFluidState().isEmpty();
 
             if (nonFluid && (noCollision || isIgnored(state))) {
