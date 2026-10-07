@@ -7,13 +7,13 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(Particle.class)
 public interface ParticleAccessor {
 
-    @Accessor
+    @Accessor("x")
     double getX();
 
-    @Accessor
+    @Accessor("y")
     double getY();
 
-    @Accessor
+    @Accessor("z")
     double getZ();
 
     @Accessor

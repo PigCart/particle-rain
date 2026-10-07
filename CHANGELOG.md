@@ -14,6 +14,10 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - new streaks
 - rain refraction when shader pack enabled?
 
+# v4.0.1
+###### Oct 6, 2026
+- Fix crash on load due to obscure accessor mapping error on pre-26.1 fabric
+
 # v4.0.0
 ###### Oct 6, 2026
 
