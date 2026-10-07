@@ -1,0 +1,1 @@
+# AI generated PRs will be rejected

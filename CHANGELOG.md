@@ -13,10 +13,15 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - splash replacement - splatter
 - new streaks
 - rain refraction when shader pack enabled?
+- fix hardcoded max and min level height
+
+# v4.0.2
+###### work in progress
+- fixed heightmap calculation fetching collision from wrong block position
 
 # v4.0.1
 ###### Oct 6, 2026
-- Fix crash on load due to obscure accessor mapping error on pre-26.1 fabric
+- Fixed crash on load due to obscure accessor mapping error on pre-26.1 fabric
 
 # v4.0.0
 ###### Oct 6, 2026
