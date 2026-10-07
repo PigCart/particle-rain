@@ -12,6 +12,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - weather transitions
 - splash replacement - splatter
 - new streaks
+- rain refraction when shader pack enabled?
 
 # v4.0.0
 ###### Oct 6, 2026
@@ -37,10 +38,12 @@ dropping the beta tag since all particles (except streaks) are using the customi
 - fixed `always` weather option
 - fixed config screen flickering on 26.1+
 - fixed particle config attempting to load the empty particle entries
+- fixed particle collisions not accounting for velocity
 - added random Y spawn offset to particles with surface spawn position
 - added fade types to particle config
 - added horizontal particle rotation type
 - added heavy snow and rain during thunderstorms
+- reduced distance fading falloff so particles are more visible at a distance
 - tweaked rain and snow texturing
   - was previously split into 4 sprites, now is split into 16
   - particle size reduced to fit the new texel density

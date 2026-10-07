@@ -3,7 +3,6 @@ package pigcart.particlerain.particle;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -42,7 +41,13 @@ import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public class CustomParticle extends WeatherParticle {
 
-    private static final Set<String> usuallyUntintableSprites = Set.of("particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3");
+    private static final Set<String> dontTintTheseWhenWaterTintDisabled = Set.of(
+            "particlerain:rain_0", "particlerain:rain_1", "particlerain:rain_2", "particlerain:rain_3",
+            "particlerain:rain_4", "particlerain:rain_5", "particlerain:rain_6", "particlerain:rain_7",
+            "particlerain:rain_8", "particlerain:rain_9", "particlerain:rain_10", "particlerain:rain_11",
+            "particlerain:rain_12", "particlerain:rain_13", "particlerain:rain_14", "particlerain:rain_15",
+            "particlerain:heavy_rain_0", "particlerain:heavy_rain_1","particlerain:heavy_rain_2", "particlerain:heavy_rain_3"
+    );
     public ParticleData data;
     private float oCollisionAnimProgress = 1;
     private float collisionAnimProgress = 1;
@@ -89,7 +94,8 @@ public class CustomParticle extends WeatherParticle {
         } else {
             this.quadSize = baseSize;
         }
-        if (!usuallyUntintableSprites.contains(this.sprite.contents().name().toString()) || getConfig().compat.waterTint) {
+        // when waterTint disabled rain texture uses original color and tint wont work correctly
+        if (getConfig().compat.waterTint || !dontTintTheseWhenWaterTintDisabled.contains(this.sprite.contents().name().toString())) {
             data.tintType.applyTint(this, level, this.pos, data);
         }
         if (data.rotationType == ParticleData.RotationType.HORIZONTAL) this.roll = Mth.HALF_PI * level.getRandom().nextInt(4);
@@ -100,6 +106,9 @@ public class CustomParticle extends WeatherParticle {
         super.tick();
         oQuadSize = quadSize;
         distance = (float) VersionUtil.camPos(Minecraft.getInstance().gameRenderer.getMainCamera()).distanceTo(new Vec3(x, y, z));
+        if (distance > data.spawnPos.renderDistance() + 0.5) {
+            remove();
+        }
         if (!pos.equals(oPos)) {
             onPositionUpdate();
             oPos.set(pos);
@@ -131,12 +140,10 @@ public class CustomParticle extends WeatherParticle {
             int halfLife = lifetime / 2;
             this.alpha = (float) (-age + lifetime) / halfLife * data.opacity;
         } else {
-            float renderDistance = this.data.spawnPos.renderDistance();
-            if (distance > renderDistance + 1) {
-                remove();
-            } else {
-                alpha = Mth.lerp(Mth.clamp(distance / renderDistance, 0, 1), data.opacity, 0);
-            }
+            float renderDistance = data.spawnPos.renderDistance();
+            int falloff = 3;
+            float falloffDist = renderDistance / falloff;
+            alpha = Mth.lerp(Mth.clamp(((distance + falloffDist) / falloffDist) - falloff, 0, 1), data.opacity, 0);
         }
         if (data.rotationType == ParticleData.RotationType.VERTICAL) {
             float angle = getPitchAngleToCamera();
@@ -179,18 +186,10 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void tickCollisions() {
-        float length = quadSize;
-        if (data.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
-            //? <1.21.9 {
-            final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
-            Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
-            length *= Mth.clamp(deltaMotion.lengthSquared(), 0.2F, 1.0F);
-            //?} else {
-            //length *= 2;
-            //?}
-        }
+        Vec3 deltaMotion = new Vec3(xd, yd, zd);
+        float length = (float) (quadSize + deltaMotion.length());
         Vec3 quadCenterPos = new Vec3(x, y, z);
-        Vec3 quadEdgePos = new Vec3(xd, yd, zd).normalize().multiply(length, length, length).add(x, y, z);
+        Vec3 quadEdgePos = deltaMotion.normalize().multiply(length, length, length).add(x, y, z);
         final BlockHitResult hitResult = level.clip(VersionUtil.getClipContext(quadCenterPos, quadEdgePos));
         if (!hitResult.getType().equals(HitResult.Type.MISS) && !doCollisionAnim) {
             onCollision(hitResult);
