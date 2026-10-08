@@ -18,6 +18,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 # v4.0.2
 ###### work in progress
 - fixed heightmap calculation fetching collision from wrong block position
+- fixed crash when improved transparency is enabled in minecraft 26.3
 
 # v4.0.1
 ###### Oct 6, 2026
