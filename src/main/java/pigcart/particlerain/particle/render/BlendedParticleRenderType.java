@@ -58,20 +58,19 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
-import org.jetbrains.annotations.Nullable;
-import pigcart.particlerain.VersionUtil;
 
 public class BlendedParticleRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType() {
         @Override
-        public @Nullable BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
+        public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
+            Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
             RenderSystem.enableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
-            RenderSystem.setShaderTexture(2, VersionUtil.getMcId("dynamic/light_map_1"));
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
@@ -84,6 +83,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -92,7 +92,11 @@ public class BlendedParticleRenderType {
     public static final ParticleRenderType INSTANCE = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder bufferBuilder, TextureManager textureManager) {
+            Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer(); // fixes black texture on item pickup
+            RenderSystem.enableDepthTest(); // fixes xray flickering on item pickup
             RenderSystem.depthMask(false); // controls whether particles are blended together or masked out
+
+            // identical to vanilla translucent particle
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
@@ -101,6 +105,9 @@ public class BlendedParticleRenderType {
         @Override
         public void end(Tesselator tessellator) {
             tessellator.end();
+            // reset state
+            RenderSystem.disableBlend();
+            RenderSystem.depthMask(true);
         }
     };
 }

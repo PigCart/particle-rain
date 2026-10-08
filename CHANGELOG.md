@@ -19,6 +19,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 ###### work in progress
 - fixed heightmap calculation fetching collision from wrong block position
 - fixed crash when improved transparency is enabled in minecraft 26.3
+- fixed fog and other blended particles flickering when items are picked up in 1.20
 
 # v4.0.1
 ###### Oct 6, 2026
