@@ -219,6 +219,22 @@ public class VersionUtil {
         //?}
     }
 
+    public static int getMaxY(Level level) {
+        //? if >=1.21.9 {
+        //return level.getMaxY();
+        //?} else {
+        return 255;
+        //?}
+    }
+
+    public static int getMinY(Level level) {
+        //? if >=1.21.9 {
+        //return level.getMinY();
+        //?} else {
+        return -64;
+        //?}
+    }
+
     public static TextureAtlasSprite getSprite(ResourceLocation id) {
         //? if >= 1.21.9 {
         //return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(id);

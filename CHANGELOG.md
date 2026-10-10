@@ -21,6 +21,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - fixed fog/blended particles flickering when items are picked up in 1.20... again
 - fixed heightmap calculation fetching collision from wrong block position
 - fixed velocity particles becoming invisible without wind (ty CH4ACKO3)
+- fixed hardcoded heightmap level height causing rain under high structures on some servers
 
 # v4.0.1
 ###### Oct 6, 2026

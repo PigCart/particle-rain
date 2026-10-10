@@ -50,16 +50,10 @@ public final class ParticleSpawner {
 
     public static int calculateHeight(ClientLevel level, int x, int z) {
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
-        if(y == 0 || y == -1) y=255; //Some servers (like wynncraft & hypixel) send a map of 0 or -1 for MOTION_BLOCKING;
+        if(y == 0 || y == -1) y = VersionUtil.getMaxY(level); //Some servers (like wynncraft & hypixel) send a map of 0 or -1 for MOTION_BLOCKING;
         BlockPos.MutableBlockPos heightPos = new BlockPos.MutableBlockPos(x, y, z);
 
-        //? if >=1.21.9 {
-        //int minY = level.getMinY();
-        //?} else {
-        int minY = -64;
-        //?}
-
-        while (y > minY) {
+        while (y > VersionUtil.getMinY(level)) {
             BlockState state = level.getBlockState(heightPos);
 
             boolean noCollision = state.getCollisionShape(level, heightPos).isEmpty();
