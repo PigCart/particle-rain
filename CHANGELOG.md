@@ -16,10 +16,11 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - fix hardcoded max and min level height
 
 # v4.0.2
-###### work in progress
+###### Oct 9, 2026
+- fixed crash rendering fog/blended particles when improved transparency is enabled in minecraft 26.3
+- fixed fog/blended particles flickering when items are picked up in 1.20... again
 - fixed heightmap calculation fetching collision from wrong block position
-- fixed crash when improved transparency is enabled in minecraft 26.3
-- fixed fog and other blended particles flickering when items are picked up in 1.20
+- fixed velocity particles becoming invisible without wind (ty CH4ACKO3)
 
 # v4.0.1
 ###### Oct 6, 2026

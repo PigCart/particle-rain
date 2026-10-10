@@ -269,19 +269,25 @@ public class CustomParticle extends WeatherParticle {
         this.renderRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent);
     }
 
-    //FIXME: particle invisible when horizontal velocity is 0
     public void renderRelativeVelocityQuad(VertexConsumer h, Camera camera, float tickPercent) {
+        final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
+        Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
+        renderVelocityQuad(h, camera, tickPercent, deltaMotion);
+    }
+
+    public void renderWorldVelocityQuad(VertexConsumer h, Camera camera, float tickPercent) {
+        Vector3f deltaMotion = new Vector3f((float) xd, (float) yd, (float) zd);
+        renderVelocityQuad(h, camera, tickPercent, deltaMotion);
+    }
+
+    public void renderVelocityQuad(VertexConsumer h, Camera camera, float tickPercent, Vector3f deltaMotion) {
         Vec3 camPos = VersionUtil.camPos(camera);
         float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
         float offsetY = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
         float offsetZ = (float) (Mth.lerp(tickPercent, this.zo, this.z) - camPos.z());
-
-        // get velocity
-        final Vec3 camD = Minecraft.getInstance().getCameraEntity().getDeltaMovement();
-        Vector3f deltaMotion = new Vector3f((float) (this.xd - camD.x), (float) (this.yd - camD.y), (float) (this.zd - camD.z));
         // calculate velocity angle
-        final float angle = Math.acos(new Vector3f(deltaMotion).normalize().y);
-        Vector3f axis = new Vector3f(-deltaMotion.z(), 0, deltaMotion.x()).normalize();
+        final float angle = velocityAngle(deltaMotion);
+        Vector3f axis = velocityAxis(deltaMotion);
         Quaternionf quaternion = new Quaternionf(new AxisAngle4f(-angle, axis));
         // rotate to face camera
         Vector3f transformedOffset = new Vector3f(offsetX, offsetY, offsetZ);
@@ -296,31 +302,19 @@ public class CustomParticle extends WeatherParticle {
         // bung it in the oven
         renderSquishyRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent, stretchFactor);
     }
-    //FIXME: particle invisible when horizontal velocity is 0
-    public void renderWorldVelocityQuad(VertexConsumer h, Camera camera, float tickPercent) {
-        Vec3 camPos = VersionUtil.camPos(camera);
-        float offsetX = (float) (Mth.lerp(tickPercent, this.xo, this.x) - camPos.x());
-        float offsetY = (float) (Mth.lerp(tickPercent, this.yo, this.y) - camPos.y());
-        float offsetZ = (float) (Mth.lerp(tickPercent, this.zo, this.z) - camPos.z());
 
-        // get velocity
-        Vector3f deltaMotion = new Vector3f((float) xd, (float) yd, (float) zd);
-        // calculate velocity angle
-        final float angle = Math.acos(new Vector3f(deltaMotion).normalize().y);
-        Vector3f axis = new Vector3f(-deltaMotion.z(), 0, deltaMotion.x()).normalize();
-        Quaternionf quaternion = new Quaternionf(new AxisAngle4f(-angle, axis));
-        // rotate to face camera
-        Vector3f transformedOffset = new Vector3f(offsetX, offsetY, offsetZ);
-        transformedOffset.rotateAxis(angle, axis.x, axis.y, axis.z);
-        quaternion.mul(Axis.YP.rotation(Math.atan2(transformedOffset.x, transformedOffset.z) + Mth.PI));
-        // decide particle length from speed or collision progress
-        float stretchFactor = Mth.clamp(deltaMotion.lengthSquared(), 0.25F, 1.0F);
-        if (doCollisionAnim) {
-            float collisionProg = Mth.lerp(tickPercent, oCollisionAnimProgress, collisionAnimProgress);
-            if (collisionProg < stretchFactor) stretchFactor = collisionProg;
-        }
-        // bung it in the oven
-        renderSquishyRotatedQuad(h, quaternion, offsetX, offsetY, offsetZ, tickPercent, stretchFactor);
+    private static float velocityAngle(Vector3f velocity) {
+        Vector3f direction = new Vector3f(velocity);
+        float length = direction.lengthSquared();
+        if (Float.isFinite(length) && length > 1.0e-20F) direction.normalize();
+        else direction.set(0, -1, 0);
+        return Math.acos(java.lang.Math.max(-1, java.lang.Math.min(1, direction.y)));
+    }
+
+    private static Vector3f velocityAxis(Vector3f velocity) {
+        Vector3f axis = new Vector3f(-velocity.z(), 0, velocity.x());
+        float length = axis.lengthSquared();
+        return Float.isFinite(length) && length > 1.0e-20F ? axis.normalize() : axis.set(1, 0, 0);
     }
 
     public void renderCameraCopyQuad(VertexConsumer h, Camera camera, float tickPercent) {

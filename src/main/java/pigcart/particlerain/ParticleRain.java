@@ -67,8 +67,6 @@ public class ParticleRain {
     }
 
     public static void onInitializeClient() {
-        //ConfigManager.load(); cant trust forge with this, just let it load when needed. whatever.
-
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
         WEATHER_SANDSTORM = createSoundEvent("weather.sandstorm");
@@ -151,9 +149,9 @@ public class ParticleRain {
         float shift = level.getGameTime() * wind.modulationSpeed;
         float multiplier = wind.yLevelAdjustment? yLevelWindMultiplier(y) : 0;
         return new Vector3f(
-                oneWindPlease((float) x, wind.gustFrequency, shift, wind.strength) * multiplier + 0.001F,
+                oneWindPlease((float) x, wind.gustFrequency, shift, wind.strength) * multiplier,
                 0,
-                oneWindPlease((float) z, wind.gustFrequency, shift, wind.strength) * multiplier + 0.001F
+                oneWindPlease((float) z, wind.gustFrequency, shift, wind.strength) * multiplier
         );
     }
 
