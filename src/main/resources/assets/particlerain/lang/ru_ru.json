@@ -12,8 +12,8 @@
 
   "particlerain.perf": "Настройки производительности",
   "particlerain.perf.description": "Уменьшение этих значений снизит количество частиц на экране, повысив производительность игры ценой менее насыщенных эффектов.",
-  "particlerain.maxParticleAmount": "Максимальное количество частиц",
-  "particlerain.maxParticleAmount.description": "Новые погодные частицы не будут создаваться, если в мире уже присутствует такое количество.",
+  "particlerain.particleAmount": "Максимальное количество частиц",
+  "particlerain.particleAmount.description": "Новые погодные частицы не будут создаваться, если в мире уже присутствует такое количество.",
   "particlerain.particleDensity": "Плотность частиц",
   "particlerain.particleDensity.description": "Определяет, сколько новых частиц будет появляться за игровой такт.",
   "particlerain.particleStormDensity": "Плотность частиц во время грозы",

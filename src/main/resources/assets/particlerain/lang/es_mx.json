@@ -10,8 +10,8 @@
 
   "particlerain.perf": "Opciones de Rendimiento",
   "particlerain.perf.description": "Reducir estos valores disminuirá la cantidad de partículas en pantalla, haciendo que el juego funcione más rápido a costa de efectos menos densos.",
-  "particlerain.maxParticleAmount": "Cantidad máxima de partículas",
-  "particlerain.maxParticleAmount.description": "No se generarán nuevas partículas de clima si ya hay esta cantidad en el mundo.",
+  "particlerain.particleAmount": "Cantidad máxima de partículas",
+  "particlerain.particleAmount.description": "No se generarán nuevas partículas de clima si ya hay esta cantidad en el mundo.",
   "particlerain.particleDensity": "Densidad de partículas",
   "particlerain.particleDensity.description": "La cantidad de veces que las partículas de clima intentarán generarse por tick durante la lluvia normal.",
   "particlerain.particleStormDensity": "Densidad de partículas durante tormentas",

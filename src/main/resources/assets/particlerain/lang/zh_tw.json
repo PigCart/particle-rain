@@ -3,8 +3,8 @@
   "particlerain.category.general": "通用",
 
   "particlerain.perf": "效能選項",
-  "particlerain.maxParticleAmount": "最大粒子數量",
-  "particlerain.maxParticleAmount.description": "如果世界中已經存在很多粒子，將不會生成新的天氣粒子",
+  "particlerain.particleAmount": "最大粒子數量",
+  "particlerain.particleAmount.description": "如果世界中已經存在很多粒子，將不會生成新的天氣粒子",
   "particlerain.particleDensity": "粒子密度",
   "particlerain.particleDensity.description": "一般雨天時，每個遊戲刻天氣粒子嘗試生成的次數",
   "particlerain.particleStormDensity": "雷暴期間的粒子密度",

@@ -34,7 +34,7 @@ public final class ParticleSpawner {
     public static int particleCount = 0;
 
     public static void tick(ClientLevel level, Vec3 cameraPos) {
-        if (particleCount >= getConfig().perf.maxParticleAmount) return;
+        if (particleCount >= getConfig().perf.particleAmount) return;
         tickSkyFX(level, cameraPos);
         tickSurfaceFX(level, cameraPos);
         if (afterWeatherTicksLeft > 0) afterWeatherTicksLeft--;
@@ -167,17 +167,17 @@ public final class ParticleSpawner {
         }
     }
     public static void tickSkyFX(ClientLevel level, Vec3 cameraPos) {
-        int density;
+        int density = getConfig().perf.particleAmount / 25;
         float speed;
         if (ticksUntilSkyFXIdle <= 0) {
             density = 4;
             speed = 0;
         } else {
             ticksUntilSkyFXIdle--;
-            density = Mth.lerpInt(level.getThunderLevel(1), getConfig().perf.particleDensity, getConfig().perf.particleStormDensity);
+            density = Mth.lerpInt(level.getThunderLevel(1), density, (int) (density * getConfig().perf.particleStormDensity));
             speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().length();
             // mul density by speed to maintain visual density
-            density = (int) (density * (1 + speed));
+            density *= (int) (1 + speed);
         }
         for (int i = 0; i < density; i++) {
             float height;
@@ -234,7 +234,7 @@ public final class ParticleSpawner {
         if (ticksUntilSurfaceFXIdle <= 0) {
             density = 1;
         } else {
-            density = getConfig().perf.particleDensity / 10;
+            density = getConfig().perf.particleAmount / 200;
             ticksUntilSurfaceFXIdle--;
         }
         for (int i = 0; i < density; i++) {

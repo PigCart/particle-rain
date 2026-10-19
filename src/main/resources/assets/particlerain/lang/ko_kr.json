@@ -12,8 +12,8 @@
 
   "particlerain.perf": "성능 설정",
   "particlerain.perf.description": "이 값을 낮추면 화면에 표시되는 파티클 수가 줄어들어 게임이 더 빠르게 실행되지만, 효과가 더 듬성듬성해 보입니다",
-  "particlerain.maxParticleAmount": "최대 파티클 제한",
-  "particlerain.maxParticleAmount.description": "월드에 파티클이 이보다 많으면 더 이상 날씨 파티클을 생성하지 않습니다.",
+  "particlerain.particleAmount": "최대 파티클 제한",
+  "particlerain.particleAmount.description": "월드에 파티클이 이보다 많으면 더 이상 날씨 파티클을 생성하지 않습니다.",
   "particlerain.particleDensity": "파티클 밀도",
   "particlerain.particleDensity.description": "틱당 새로 생성되는 파티클 수를 조절합니다.",
   "particlerain.particleStormDensity": "폭풍 중 파티클 밀도",

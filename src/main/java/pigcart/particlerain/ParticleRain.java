@@ -13,7 +13,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,7 @@ public class ParticleRain {
         final Holder<Biome> biome = level.getBiome(playerBlockPos);
         Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, playerBlockPos);
         return List.of(
-                String.format("Tracked particles: %d/%d", ParticleSpawner.particleCount, getConfig().perf.maxParticleAmount),
+                String.format("Tracked particles: %d/%d", ParticleSpawner.particleCount, getConfig().perf.particleAmount),
                 "after Weather Ticks Left: " + ParticleSpawner.afterWeatherTicksLeft,
                 "spawn Attempts Until Block FX Idle: " + ParticleSpawner.spawnAttemptsUntilBlockFXIdle,
                 "ticks Until Sky FX Idle: " + ParticleSpawner.ticksUntilSkyFXIdle,

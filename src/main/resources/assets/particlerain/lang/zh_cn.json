@@ -12,8 +12,8 @@
 
   "particlerain.perf": "性能选项",
   "particlerain.perf.description": "降低这些选项将减少屏幕上渲染的粒子数量，从而提升性能，但会牺牲部分天气效果。",
-  "particlerain.maxParticleAmount": "粒子上限",
-  "particlerain.maxParticleAmount.description": "若世界上已存在设置的最大粒子数量，则不会生成新粒子。",
+  "particlerain.particleAmount": "粒子上限",
+  "particlerain.particleAmount.description": "若世界上已存在设置的最大粒子数量，则不会生成新粒子。",
   "particlerain.particleDensity": "粒子密度",
   "particlerain.particleDensity.description": "控制每游戏刻尝试生成新粒子的数量。",
   "particlerain.particleStormDensity": "雷暴时的粒子密度",

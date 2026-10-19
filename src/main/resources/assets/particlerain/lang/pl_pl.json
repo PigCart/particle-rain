@@ -4,8 +4,8 @@
 
   "particlerain.perf": "Ustawienia wydajności",
   "particlerain.description": "Zmniejszenie tych ustawień zmniejszy ilość cząsteczek na ekranie, sprawi to, że gra będzie działać płynniej kosztem rozproszonego wyglądu efektów.",
-  "particlerain.maxParticleAmount": "Maksymalna ilość cząsteczek",
-  "particlerain.maxParticleAmount.description": "Nowe cząsteczki pogodowe nie będą generowane, jeśli ich ilość będzie równa tej wartości.",
+  "particlerain.particleAmount": "Maksymalna ilość cząsteczek",
+  "particlerain.particleAmount.description": "Nowe cząsteczki pogodowe nie będą generowane, jeśli ich ilość będzie równa tej wartości.",
   "particlerain.particleDensity": "Gęstość cząsteczek",
   "particlerain.particleDensity.description": "Ilość, ile razy cząsteczki pogodowe będą próbowane być generowane na tik, podczas zwykłego deszczu.",
   "particlerain.particleStormDensity": "Gęstość cząsteczek podczas burz",

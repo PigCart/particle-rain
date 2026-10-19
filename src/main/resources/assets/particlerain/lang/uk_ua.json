@@ -12,8 +12,8 @@
 
   "particlerain.perf": "Налаштування продуктивності",
   "particlerain.perf.description": "Зменшення цих значень зменшить кількість частинок на екрані, підвищивши продуктивність гри ціною менш насичених ефектів.",
-  "particlerain.maxParticleAmount": "Максимальна кількість частинок",
-  "particlerain.maxParticleAmount.description": "Нові погодні частинки не створюватимуться, якщо в світі їх вже настільки багато.",
+  "particlerain.particleAmount": "Максимальна кількість частинок",
+  "particlerain.particleAmount.description": "Нові погодні частинки не створюватимуться, якщо в світі їх вже настільки багато.",
   "particlerain.particleDensity": "Щільність частинок",
   "particlerain.particleDensity.description": "Визначає, скільки нових частинок з'являтиметься за ігровий такт.",
   "particlerain.particleStormDensity": "Щільність частинок під час грози",

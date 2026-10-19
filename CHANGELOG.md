@@ -20,6 +20,8 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
   - fixes a race condition where surface particle spawns outcompeted sky particle spawns, resulting in decreased rain density
   - relative density values increased for all surface particles (shrubs, fog, and dust haze) to account for decreased spawn frquency (visual density is unchanged)
 - percentage sliders no longer display fractional values as it is no longer required
+- removed density option, now controlled by particle amount
+- storm particle density option is now storm particle spawn multiplier
 
 # v4.0.2
 ###### Oct 9, 2026
