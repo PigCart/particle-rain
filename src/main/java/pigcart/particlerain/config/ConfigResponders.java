@@ -32,9 +32,7 @@ public class ConfigResponders {
 
     public static class Percent implements Function<Object, Component> {
         public Component apply(Object value) {
-            final NumberFormat percent = NumberFormat.getPercentInstance();
-            percent.setMaximumFractionDigits(1);
-            return Component.literal(percent.format(value));
+            return Component.literal(NumberFormat.getPercentInstance().format(value));
         }
     }
 

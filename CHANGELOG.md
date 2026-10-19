@@ -13,7 +13,13 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - splash replacement - splatter
 - new streaks
 - rain refraction when shader pack enabled?
-- fix hardcoded max and min level height
+
+# v4.0.3
+###### work in progress
+- optimized surface particle spawning (10x less spawn attempts)
+  - fixes a race condition where surface particle spawns outcompeted sky particle spawns, resulting in decreased rain density
+  - relative density values increased for all surface particles (shrubs, fog, and dust haze) to account for decreased spawn frquency (visual density is unchanged)
+- percentage sliders no longer display fractional values as it is no longer required
 
 # v4.0.2
 ###### Oct 9, 2026

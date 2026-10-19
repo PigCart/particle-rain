@@ -220,7 +220,7 @@
   "shrub": {
     "particleStyle": "BLOCK_MODEL",
     "blockId": "minecraft:dead_bush",
-    "density": 0.001,
+    "density": 0.01,
     "bounciness": 0.15,
     "gravity": 0.5,
     "windStrength": 0.4,
@@ -241,7 +241,7 @@
     "spawnPos": "WORLD_SURFACE"
   },
   "fog_after_rain": {
-    "density": 0.1,
+    "density": 0.5,
     "gravity": 0,
     "windStrength": 0,
     "stormWindStrength": 0,
@@ -274,7 +274,7 @@
     "tintType": "FOG"
   },
   "vertical_fog_after_rain": {
-    "density": 0.1,
+    "density": 0.5,
     "weather": "AFTER_WEATHER",
     "biomeList": {
       "entries": [
@@ -310,7 +310,7 @@
     "rotationType": "VERTICAL"
   },
   "fog": {
-    "density": 0.1,
+    "density": 0.5,
     "gravity": 0,
     "windStrength": 0,
     "stormWindStrength": 0,
@@ -346,7 +346,7 @@
   },
   "vertical_fog": {
     "enabled": true,
-    "density": 0.1,
+    "density": 0.5,
     "weather": "ALWAYS",
     "biomeList": {
       "entries": [
@@ -386,7 +386,6 @@
   "dust_haze": {
     "enabled": true,
     "lifetime": 100,
-    "density": 0.2,
     "gravity": 0.1,
     "windStrength": 0.5,
     "stormWindStrength": 0.8,

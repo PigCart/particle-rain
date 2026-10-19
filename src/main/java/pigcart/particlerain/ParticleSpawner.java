@@ -234,7 +234,7 @@ public final class ParticleSpawner {
         if (ticksUntilSurfaceFXIdle <= 0) {
             density = 1;
         } else {
-            density = getConfig().perf.particleDensity;
+            density = getConfig().perf.particleDensity / 10;
             ticksUntilSurfaceFXIdle--;
         }
         for (int i = 0; i < density; i++) {
