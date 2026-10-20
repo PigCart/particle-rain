@@ -166,19 +166,21 @@ public final class ParticleSpawner {
             }
         }
     }
-    public static void tickSkyFX(ClientLevel level, Vec3 cameraPos) {
+    public static int getSkyParticleDensity(ClientLevel level, float speed) {
         int density = getConfig().perf.particleAmount / 25;
-        float speed;
         if (ticksUntilSkyFXIdle <= 0) {
             density = 4;
-            speed = 0;
         } else {
             ticksUntilSkyFXIdle--;
             density = Mth.lerpInt(level.getThunderLevel(1), density, (int) (density * getConfig().perf.particleStormDensity));
-            speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().length();
             // mul density by speed to maintain visual density
-            density *= (int) (1 + speed);
+            density *= 1 + (int) speed * 2;
         }
+        return density;
+    }
+    public static void tickSkyFX(ClientLevel level, Vec3 cameraPos) {
+        float speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().length();
+        int density = getSkyParticleDensity(level, speed);
         for (int i = 0; i < density; i++) {
             float height;
             float x;

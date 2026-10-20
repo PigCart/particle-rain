@@ -14,14 +14,14 @@ import java.nio.file.Path;
 public class ConfigManager {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     static final String CONFIG_PATH = "config/particlerain/config.json";
-    public static ConfigData config;
+    public static ConfigData config = new ConfigData();
 
     public static Screen screenPlease(Screen lastScreen) {
         return new MainConfigScreen(lastScreen, getConfig(), getDefaultConfig(), Component.translatable("particlerain.title"));
     }
 
     public static ConfigData getConfig() {
-        if (config == null) load();
+        //if (config == null) load();
         return config;
     }
 
@@ -30,6 +30,7 @@ public class ConfigManager {
     }
 
     public static void load() {
+        ParticleRain.LOGGER.info("Loading config");
         File file = new File(CONFIG_PATH);
         if (file.exists()) {
             try (FileReader reader = new FileReader(file)) {
@@ -46,7 +47,7 @@ public class ConfigManager {
         }
         if (getConfig().configVersion < getDefaultConfig().configVersion) {
             ParticleRain.LOGGER.info("Overwriting old config file");
-            ParticleLoader.resetParticleConfig = true;
+            //ParticleLoader.resetParticleConfig = true;
             config = getDefaultConfig();
             save();
         }

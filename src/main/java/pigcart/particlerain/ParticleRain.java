@@ -7,6 +7,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -24,10 +26,12 @@ import pigcart.particlerain.config.ConfigManager;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
 *///?}
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static pigcart.particlerain.ParticleSpawner.getHeight;
+import static pigcart.particlerain.ParticleSpawner.getSkyParticleDensity;
 import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 public class ParticleRain {
@@ -49,6 +53,8 @@ public class ParticleRain {
         BlockPos playerBlockPos = BlockPos.containing(Minecraft.getInstance().player.position());
         final Holder<Biome> biome = level.getBiome(playerBlockPos);
         Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, playerBlockPos);
+        float speed = (float) Minecraft.getInstance().getCameraEntity().getDeltaMovement().length();
+        int density = getSkyParticleDensity(level, speed);
         return List.of(
                 String.format("Tracked particles: %d/%d", ParticleSpawner.particleCount, getConfig().perf.particleAmount),
                 "after Weather Ticks Left: " + ParticleSpawner.afterWeatherTicksLeft,
@@ -61,11 +67,24 @@ public class ParticleRain {
                 "Wind source: " + (WindLinkCompat.isDriving() ? "windlink" : "particlerain"),
                 "cloud height: " + VersionUtil.getCloudHeight(level, playerBlockPos),
                 "surface height: " + ParticleSpawner.getHeight(level, playerBlockPos.getX(), playerBlockPos.getZ()),
-                "default surface height: " + level.getHeight(Heightmap.Types.MOTION_BLOCKING, playerBlockPos.getX(), playerBlockPos.getZ())
+                "default surface height: " + level.getHeight(Heightmap.Types.MOTION_BLOCKING, playerBlockPos.getX(), playerBlockPos.getZ()),
+                "speed: " + speed,
+                "sky particle density: " + density
         );
+    }
+    private static List<String> getBiomeTags() {
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) return List.of();
+        BlockPos playerBlockPos = BlockPos.containing(Minecraft.getInstance().player.position());
+        final Holder<Biome> biome = level.getBiome(playerBlockPos);
+        List<String> biomeTags = new ArrayList<>();
+        biomeTags.add(biome.unwrap().map(key -> VersionUtil.getKeyId(key).toString(), b -> "[unregistered "+b+"]") + " has the following tags:");
+        biome.tags().forEach(tag -> biomeTags.add("#"+tag.location()));
+        return biomeTags;
     }
 
     public static void onInitializeClient() {
+        ConfigManager.load();
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
         WEATHER_SANDSTORM = createSoundEvent("weather.sandstorm");
@@ -74,7 +93,11 @@ public class ParticleRain {
         //? if >=1.21.9 {
         /*DebugScreenEntries.register(VersionUtil.getId("debug"),
                 (display, level, levelChunk, levelChunk2) ->
-                        display.addToGroup(VersionUtil.getId("debuglines"), getDebugLines())
+                        display.addToGroup(VersionUtil.getId("debug_group"), getDebugLines())
+        );
+        DebugScreenEntries.register(VersionUtil.getId("biome_tags"),
+                (display, level, levelChunk, levelChunk2) ->
+                        display.addToGroup(VersionUtil.getId("biome_tags_group"), getBiomeTags())
         );
         if (VersionUtil.irisLoaded()) {
             net.irisshaders.iris.api.v0.IrisApi.getInstance().assignPipeline(
@@ -108,6 +131,12 @@ public class ParticleRain {
                 .then(LiteralArgumentBuilder.literal("debug")
                         .executes(ctx -> {
                             getDebugLines().forEach(VersionUtil::addChatMsg);
+                            return 0;
+                        })
+                )
+                .then(LiteralArgumentBuilder.literal("biometags")
+                        .executes(ctx -> {
+                            getBiomeTags().forEach(VersionUtil::addChatMsg);
                             return 0;
                         })
                 );

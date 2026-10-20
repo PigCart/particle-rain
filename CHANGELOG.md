@@ -22,6 +22,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - percentage sliders no longer display fractional values as it is no longer required
 - removed density option, now controlled by particle amount
 - storm particle density option is now storm particle spawn multiplier
+- added `/particlerain biometags` command and debug screen entry for biome tags
 
 # v4.0.2
 ###### Oct 9, 2026

@@ -10,7 +10,7 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import static pigcart.particlerain.config.ConfigResponders.*;
 
 public class ConfigData {
-    @NoGUI public byte configVersion = 7;
+    @NoGUI public byte configVersion = 8;
 
     public void updateTransientVariables() {
         if (compat != null && compat.weatherIgnoreBlocks != null) {
