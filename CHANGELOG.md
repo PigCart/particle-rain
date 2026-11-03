@@ -27,6 +27,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
   - replaced 'storm particle density' performance option with 'storm particle spawn multiplier'
   - replaced 'render default weather' compatibility option with separate toggles for rain and snow
 - reversed wind direction because it going in the opposite direction to the clouds was silly
+- fixed corrupt rain and snow sprites from improper memory allocation during texture loading (ty LilleboHaugen)
 
 # v4.0.2
 ###### Oct 9, 2026

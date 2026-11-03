@@ -113,7 +113,7 @@ public class TextureUtil {
         int max = rows * columns;
         if (i >= max) throw new IndexOutOfBoundsException("Cannot get " + id + i + " as sheet only contains " + max + " sprites");
         // create sprite
-        NativeImage sprite = new NativeImage(size, size, false);
+        NativeImage sprite = new NativeImage(size, size, true);
         int row = i % rows;
         int col = i / rows;
         try {
@@ -133,7 +133,7 @@ public class TextureUtil {
         int sheetSize = rows * columns;
         if (endIndex > sheetSize) throw new IndexOutOfBoundsException("Cannot merge "+id+". Index "+endIndex+" out of bounds for sprite sheet of size "+sheetSize);
         // create merged sprite
-        NativeImage sprite = new NativeImage(size, size, false);
+        NativeImage sprite = new NativeImage(size, size, true);
         for (int i = startIndex; i < endIndex; i++) {
             int row = i % rows;
             int col = i / rows;
