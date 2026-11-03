@@ -30,8 +30,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 //import net.minecraft.world.attribute.EnvironmentAttributes;
 //?}
 //? >=1.21.9 {
-//import net.minecraft.data.AtlasIds;
-//?} else {
+/*import net.minecraft.data.AtlasIds;
+import pigcart.particlerain.config.ParticleData;
+*///?} else {
 import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 //?}
 
@@ -238,7 +239,7 @@ public class VersionUtil {
     public static TextureAtlasSprite getSprite(ResourceLocation id) {
         //? if >= 1.21.9 {
         //return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(id);
-         //?} else {
+        //?} else {
         return ((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(id);
         //?}
     }

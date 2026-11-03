@@ -32,6 +32,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 /^import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/WeatherRenderState;
 ^///?}
 
+import java.util.List;
+
 import static pigcart.particlerain.config.ConfigManager.getConfig;
 
 @Mixin(WeatherEffectRenderer.class)
@@ -85,14 +87,26 @@ public abstract class WeatherEffectRendererMixin {
     public void render(ClientLevel level, float partialTicks, Vec3 cameraPos, WeatherRenderState renderState, CallbackInfo ci) {
     ^///?} >=1.21.9 {
     /^@Inject(method = "extractRenderState", at = @At("HEAD"), cancellable = true)
-    public void render(Level level, int ticks, float partialTick, Vec3 cameraPosition, WeatherRenderState reusedState, CallbackInfo ci) {
+    public void render(Level level, int ticks, float partialTick, Vec3 cameraPos, WeatherRenderState reusedState, CallbackInfo ci) {
     ^///?} else {
     @Inject(method = "render(Lnet/minecraft/world/level/Level;Lnet/minecraft/client/renderer/MultiBufferSource;IFLnet/minecraft/world/phys/Vec3;)V", at = @At("HEAD"), cancellable = true)
     public void render(Level level, MultiBufferSource bufferSource, int ticks, float partialTick, Vec3 cameraPosition, CallbackInfo ci) {
     //?}
-        if (!getConfig().compat.renderDefaultWeather) {
+        if (!getConfig().compat.renderDefaultRain && !getConfig().compat.renderDefaultSnow) {
             ci.cancel();
         }
+    }
+
+    @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
+    public <E> boolean cancelAddRainColumn(List<WeatherEffectRenderer.ColumnInstance> instance, E columnInstance, Operation<Boolean> original) {
+        if (!getConfig().compat.renderDefaultRain) return false;
+        return original.call(instance, columnInstance);
+    }
+
+    @WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 1))
+    public <E> boolean cancelAddSnowColumn(List<WeatherEffectRenderer.ColumnInstance> instance, E columnInstance, Operation<Boolean> original) {
+        if (!getConfig().compat.renderDefaultSnow) return false;
+        return original.call(instance, columnInstance);
     }
 }
 *///?}
@@ -106,15 +120,10 @@ import net.minecraft.client.OptionInstance;
 import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -122,7 +131,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
-import pigcart.particlerain.config.ConfigManager;
 
 import static pigcart.particlerain.config.ConfigManager.getConfig;
 
@@ -130,10 +138,9 @@ import static pigcart.particlerain.config.ConfigManager.getConfig;
 public class WeatherEffectRendererMixin {
 
     // bypass precipitation check so we can share the sound placement calculations with non-rain sounds
-    @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/LevelReader;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"))
-    public Holder<Biome> getBiomeValue(LevelReader instance, BlockPos pos, Operation<Holder<Biome>> original) {
-        // mixin somehow can't resolve target getPrecipitationAt so lets just replace the gotten biome with a rainy one instead
-        return Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS);
+    @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;"))
+    public Biome.Precipitation bypassGetBiomePrecipitation(Biome instance, BlockPos pos, Operation<Biome.Precipitation> original) {
+        return Biome.Precipitation.RAIN;
     }
 
     @WrapOperation(
@@ -163,19 +170,24 @@ public class WeatherEffectRendererMixin {
 
     // particle status MINIMAL disables splash particles
     @WrapOperation(method = "tickRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;"))
-    public Object optionsParticlesGet(OptionInstance instance, Operation<ParticleStatus> original) {
-        if (!ConfigManager.getConfig().compat.doDefaultSplashing) {
+    public Object preventSplashParticles(OptionInstance instance, Operation<ParticleStatus> original) {
+        if (!getConfig().compat.doDefaultSplashing) {
             return ParticleStatus.MINIMAL;
         }
         return original.call(instance);
     }
 
     // prevent rendering weather column instances
-    @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
-    public void render(LightTexture lightTexture, float partialTick, double camX, double camY, double camZ, CallbackInfo ci) {
-        if (!ConfigManager.getConfig().compat.renderDefaultWeather) {
-            ci.cancel();
+    // returning null instead of NONE might prevent modded dry weather columns but could break mods that mixin here expecting a value
+    @WrapOperation(method = "renderSnowAndRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;"))
+    public Biome.Precipitation nullifyRenderPrecipitation(Biome instance, BlockPos pos, Operation<Biome.Precipitation> original) {
+        Biome.Precipitation originalResult = original.call(instance, pos);
+        if (originalResult == Biome.Precipitation.RAIN && !getConfig().compat.renderDefaultRain) {
+            return null;
+        } else if (originalResult == Biome.Precipitation.SNOW && !getConfig().compat.renderDefaultSnow) {
+            return null;
         }
+        return originalResult;
     }
 }
 //?}

@@ -2,8 +2,8 @@ plugins {
     id("net.neoforged.moddev")
 }
 
-fun prop(name: String) = sc.properties[name] as String
-val minecraft = prop("deps.minecraft") as String;
+fun prop(name: String) = sc.properties[name]
+val minecraft = prop("deps.minecraft");
 
 tasks.named<ProcessResources>("processResources") {
 
@@ -31,7 +31,7 @@ tasks.named<ProcessResources>("processResources") {
 }
 
 version = "${prop("mod.version")}+${minecraft}-neoforge"
-base.archivesName = prop("mod.id") as String
+base.archivesName = prop("mod.id")
 
 repositories {
     mavenLocal()
@@ -45,7 +45,7 @@ dependencies {
 }
 
 neoForge {
-    version = prop("deps.neoforge") as String
+    version = prop("deps.neoforge")
 
     val accessTransformer = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     if (accessTransformer.exists()) {
@@ -53,7 +53,7 @@ neoForge {
     }
 
     if (sc.properties.contains("deps.parchment")) parchment {
-        val (mc, ver) = (prop("deps.parchment") as String).split(':')
+        val (mc, ver) = prop("deps.parchment").split(':')
         mappingsVersion = ver
         minecraftVersion = mc
     }
@@ -70,7 +70,7 @@ neoForge {
     }
 
     mods {
-        register(prop("mod.id") as String) {
+        register(prop("mod.id")) {
             sourceSet(sourceSets["main"])
         }
     }

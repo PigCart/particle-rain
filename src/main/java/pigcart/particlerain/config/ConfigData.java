@@ -1,12 +1,6 @@
 package pigcart.particlerain.config;
 
 import pigcart.particlerain.config.gui.Annotations.*;
-//? if >=1.21.9 {
-/*import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
-import net.minecraft.client.particle.SingleQuadParticle;
-*///?} else {
-//?}
-
 import static pigcart.particlerain.config.ConfigResponders.*;
 
 public class ConfigData {
@@ -22,7 +16,7 @@ public class ConfigData {
     public static class PerformanceOptions {
         @OnChange(ClearParticles.class)
         public int particleAmount = 1500;
-        public float particleStormDensity = 1.5f;
+        public float particleStormDensity = 1.5F;
         @Format(DistanceInBlocks.class)
         public int particleDistance = 16;
         @Format(DistanceInBlocks.class)
@@ -46,7 +40,8 @@ public class ConfigData {
 
     public CompatibilityOptions compat = new CompatibilityOptions();
     public static class CompatibilityOptions {
-        public boolean renderDefaultWeather = false;
+        public boolean renderDefaultRain = false;
+        public boolean renderDefaultSnow = false;
         public boolean doDefaultSplashing = false;
         @OnChange(ReloadResources.class)
         public boolean waterTint = true;

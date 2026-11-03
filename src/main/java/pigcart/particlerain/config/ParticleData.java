@@ -165,7 +165,7 @@ public class ParticleData {
         },
         TRANSLUCENT {
             @Override
-                    //? if >=1.21.9 {
+            //? if >=1.21.9 {
             /*public SingleQuadParticle.Layer get() {
                 return SingleQuadParticle.Layer.TRANSLUCENT;
             }
@@ -179,11 +179,6 @@ public class ParticleData {
 
         //~ if >=1.21.9 'ParticleRenderType' -> 'SingleQuadParticle.Layer'
         public ParticleRenderType get() {
-            //? >=1.21.9 {
-            /*if (VersionUtil.shadersEnabled()) {
-                return SingleQuadParticle.Layer.TRANSLUCENT;
-            }
-            *///?}
             return BlendedParticleRenderType.INSTANCE;
         }
 

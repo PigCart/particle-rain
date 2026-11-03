@@ -2,7 +2,7 @@ plugins {
     id("fabric-loom")
 }
 
-fun prop(name: String) = sc.properties[name] as String
+fun prop(name: String) = sc.properties[name]
 val minecraft = prop("deps.minecraft");
 
 tasks.named<ProcessResources>("processResources") {

@@ -2,8 +2,8 @@ plugins {
     id("net.fabricmc.fabric-loom")
 }
 
-fun prop(name: String) = sc.properties[name] as String
-val minecraft = prop("deps.minecraft") as String;
+fun prop(name: String) = sc.properties[name]
+val minecraft = prop("deps.minecraft");
 
 tasks.named<ProcessResources>("processResources") {
 
@@ -33,7 +33,7 @@ tasks.named<ProcessResources>("processResources") {
 }
 
 version = "${prop("mod.version")}+${minecraft}-fabric"
-base.archivesName = prop("mod.id") as String
+base.archivesName = prop("mod.id")
 
 repositories {
     mavenLocal()
@@ -55,6 +55,7 @@ dependencies {
     implementation("net.fabricmc.fabric-api:fabric-api:${prop("deps.fabric-api")}")
     compileOnly("com.terraformersmc:modmenu:${prop("deps.modmenu")}")
     compileOnly("maven.modrinth:iris:${prop("deps.iris")}")
+    //implementation("maven.modrinth:sodium:mc26.3-0.9.3-beta.1-fabric")
 }
 
 tasks {

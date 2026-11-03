@@ -7,8 +7,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -84,7 +82,6 @@ public class ParticleRain {
     }
 
     public static void onInitializeClient() {
-        ConfigManager.load();
         WEATHER_SNOW = createSoundEvent("weather.snow");
         WEATHER_SNOW_ABOVE = createSoundEvent("weather.snow.above");
         WEATHER_SANDSTORM = createSoundEvent("weather.sandstorm");
@@ -184,7 +181,7 @@ public class ParticleRain {
     }
 
     private static float oneWindPlease(float pos, float frequency, float time, float max) {
-        return Mth.sin(pos*frequency + time) * Mth.sin(pos*frequency*0.5F + time*0.5F) * max + max;
+        return -(Mth.sin(pos*frequency + time) * Mth.sin(pos*frequency*0.5F + time*0.5F) * max + max);
     }
 
     public static float yLevelWindMultiplier(double y) {

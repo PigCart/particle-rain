@@ -16,13 +16,17 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 
 # v4.0.3
 ###### work in progress
+
+- added `/particlerain biometags` command and debug screen entry for biome tags (helpful for custom particle config)
 - optimized surface particle spawning (10x less spawn attempts)
   - fixes a race condition where surface particle spawns outcompeted sky particle spawns, resulting in decreased rain density
   - relative density values increased for all surface particles (shrubs, fog, and dust haze) to account for decreased spawn frquency (visual density is unchanged)
-- percentage sliders no longer display fractional values as it is no longer required
-- removed density option, now controlled by particle amount
-- storm particle density option is now storm particle spawn multiplier
-- added `/particlerain biometags` command and debug screen entry for biome tags
+- config changes
+  - percentage sliders no longer display fractional values as it is no longer required due to the above
+  - replaced 'density' and 'max particle amount' performance options with 'particle amount'
+  - replaced 'storm particle density' performance option with 'storm particle spawn multiplier'
+  - replaced 'render default weather' compatibility option with separate toggles for rain and snow
+- reversed wind direction because it going in the opposite direction to the clouds was silly
 
 # v4.0.2
 ###### Oct 9, 2026

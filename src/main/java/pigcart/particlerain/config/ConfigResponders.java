@@ -160,11 +160,4 @@ public class ConfigResponders {
             return ctx.particleStyle == ParticleData.ParticleStyle.BLOCK_MODEL;
         }
     }
-
-    public static class UsingCustomTint implements Function<Object, Boolean> {
-        public Boolean apply(Object context) {
-            ParticleData ctx = (ParticleData) context;
-            return ctx.tintType == ParticleData.TintType.CUSTOM;
-        }
-    }
 }

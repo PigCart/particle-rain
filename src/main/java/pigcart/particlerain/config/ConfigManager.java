@@ -3,7 +3,6 @@ package pigcart.particlerain.config;
 import com.google.gson.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import pigcart.particlerain.ParticleLoader;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.config.gui.MainConfigScreen;
 
@@ -12,16 +11,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ConfigManager {
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    static final String CONFIG_PATH = "config/particlerain/config.json";
-    public static ConfigData config = new ConfigData();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final String CONFIG_PATH = "config/particlerain/config.json";
+    private static ConfigData config;
 
     public static Screen screenPlease(Screen lastScreen) {
         return new MainConfigScreen(lastScreen, getConfig(), getDefaultConfig(), Component.translatable("particlerain.title"));
     }
 
     public static ConfigData getConfig() {
-        //if (config == null) load();
+        if (config == null) load(); // in some cases on forge mixins seem to apply before the mod is initialized
         return config;
     }
 
