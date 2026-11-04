@@ -37,7 +37,7 @@ deps.iris = "1.7.6+1.20.1"
 ["1.21.1-neoforge"]
 deps.minecraft="1.21.1"
 version_range="[1.21.1]"
-deps.neoforge="21.1.169"
+deps.neoforge="21.1.265"
 deps.parchment="1.21.1:2024.11.17"
 deps.iris = "1.7.6+1.20.1"
 

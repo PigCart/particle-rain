@@ -109,7 +109,7 @@ public class ParticleData {
         },
         ONLY_DURING_NORMAL_WEATHER {
             public Boolean isCurrent(ClientLevel level) {
-                return level.getRainLevel(1) > 0 && level.getThunderLevel(1) == 0;
+                return level.getRainLevel(1) > 0 && !(level.getThunderLevel(1) > 0);
             }
         },
         ONLY_DURING_STORMY_WEATHER {
@@ -189,7 +189,7 @@ public class ParticleData {
             public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData data) {
                 if (VersionUtil.shadersEnabled() && getConfig().compat.shaderpackTint) return;
                 final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, pos));
-                final Color fogColor = VersionUtil.getFogColor(level, pos);
+                final Color fogColor = VersionUtil.getBiomeFogColor(level, pos);
                 float rCol = Mth.lerp(getConfig().compat.tintMix, waterColor.getRed(), fogColor.getRed());
                 float gCol = Mth.lerp(getConfig().compat.tintMix, waterColor.getGreen(), fogColor.getGreen());
                 float bCol = Mth.lerp(getConfig().compat.tintMix, waterColor.getBlue(), fogColor.getBlue());
@@ -198,8 +198,9 @@ public class ParticleData {
         },
         FOG {
             public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData data) {
-                Color color = VersionUtil.getFogColor(level, pos).darker();
-                p.setColor(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+                Color color = VersionUtil.getBiomeFogColor(level, pos);
+                float mul = 0.7f + ((-level.getRainLevel(1) + 1) * 0.2f);
+                p.setColor((color.getRed() * mul) / 255F, (color.getGreen() * mul) / 255F, (color.getBlue() * mul) / 255F);
             }
         },
         MAP {

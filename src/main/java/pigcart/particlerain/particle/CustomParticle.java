@@ -16,8 +16,8 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.*;
 import org.joml.Math;
 //? if > 1.20.1 {
-//import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
-//?}
+/*import pigcart.particlerain.mixin.access.SingleQuadParticleAccessor;
+*///?}
 //? if >=1.21.9 {
 /*import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
@@ -34,6 +34,7 @@ import pigcart.particlerain.WindLinkCompat;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ParticleData;
 
+import java.awt.*;
 import java.util.Set;
 import java.util.List;
 
@@ -127,6 +128,11 @@ public class CustomParticle extends WeatherParticle {
             int i = (this.age - 1) % (data.spriteLocations.size() - 1);
             String sprite = data.spriteLocations.get(i);
             this.setSprite(VersionUtil.getSprite(VersionUtil.parseId(sprite)));
+        }
+        // reapply tint to fog particles if the fog color is changing with the weather
+        float rainLevel = level.getRainLevel(1);
+        if (data.tintType == ParticleData.TintType.FOG && rainLevel > 0 && rainLevel < 1) {
+            data.tintType.applyTint(this, level, pos, data);
         }
         WindManager.applyWind(this, data, level);
         tickCollisions();

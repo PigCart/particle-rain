@@ -27,8 +27,8 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 //? >=1.21.11 {
-//import net.minecraft.world.attribute.EnvironmentAttributes;
-//?}
+/*import net.minecraft.world.attribute.EnvironmentAttributes;
+*///?}
 //? >=1.21.9 {
 /*import net.minecraft.data.AtlasIds;
 import pigcart.particlerain.config.ParticleData;
@@ -50,8 +50,8 @@ public class VersionUtil {
     }
     public static void hotbarMessage(Component component) {
         //? >=26.2 {
-        //Minecraft.getInstance().gui.hud.setOverlayMessage(component, false);
-         //?} else {
+        /*Minecraft.getInstance().gui.hud.setOverlayMessage(component, false);
+         *///?} else {
         Minecraft.getInstance().gui.setOverlayMessage(component, false);
         //?}
     }
@@ -62,19 +62,19 @@ public class VersionUtil {
     }
     public static boolean irisLoaded() {
         return  //? forge {
-                //net.minecraftforge.fml.ModList.get().isLoaded("oculus");
-                 //?} else if neoforge {
-                //net.neoforged.fml.ModList.get().isLoaded("iris");
-                 //?} else {
+                /*net.minecraftforge.fml.ModList.get().isLoaded("oculus");
+                 *///?} else if neoforge {
+                /*net.neoforged.fml.ModList.get().isLoaded("iris");
+                 *///?} else {
                 net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("iris");
                 //?}
     }
     public static boolean windLinkLoaded() {
         return  //? forge {
-                //net.minecraftforge.fml.ModList.get().isLoaded("windlink");
-                 //?} else if neoforge {
-                //net.neoforged.fml.ModList.get().isLoaded("windlink");
-                 //?} else {
+                /*net.minecraftforge.fml.ModList.get().isLoaded("windlink");
+                 *///?} else if neoforge {
+                /*net.neoforged.fml.ModList.get().isLoaded("windlink");
+                 *///?} else {
                 net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("windlink");
                 //?}
     }
@@ -84,16 +84,24 @@ public class VersionUtil {
         //? if <=1.20.1 {
         return new ResourceLocation(ParticleRain.MOD_ID, path);
         //?} else {
-        //return ResourceLocation.fromNamespaceAndPath(ParticleRain.MOD_ID, path);
-        //?}
+        /*return ResourceLocation.fromNamespaceAndPath(ParticleRain.MOD_ID, path);
+        *///?}
     }
     @SuppressWarnings("removal")
     public static ResourceLocation getMcId(String path) {
         //? if <=1.20.1 {
         return new ResourceLocation(ResourceLocation.DEFAULT_NAMESPACE, path);
         //?} else {
-        //return ResourceLocation.withDefaultNamespace(path);
-        //?}
+        /*return ResourceLocation.withDefaultNamespace(path);
+        *///?}
+    }
+    @SuppressWarnings("removal")
+    public static ResourceLocation getId(String namespace, String path) {
+        //? if <=1.20.1 {
+        return new ResourceLocation(namespace, path);
+         //?} else {
+        /*return ResourceLocation.fromNamespaceAndPath(namespace, path);
+        *///?}
     }
 
     public static ResourceLocation parseId(String string) {
@@ -101,8 +109,8 @@ public class VersionUtil {
             //? if <=1.20.1 {
             return ResourceLocation.tryParse(string);
              //?} else {
-            //return ResourceLocation.parse(string);
-            //?}
+            /*return ResourceLocation.parse(string);
+            *///?}
         } catch (ResourceLocationException e) {
             return null;
         }
@@ -111,8 +119,8 @@ public class VersionUtil {
         //? if <=1.20.1 {
         return new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, Minecraft.getInstance().player);
         //?} else {
-        //return new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty());
-        //?}
+        /*return new ClipContext(clipStart, clipEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, CollisionContext.empty());
+        *///?}
     }
     //? if <=1.20.1 {
     public static AnimationMetadataSection getEmptySpriteMetadata() {
@@ -145,8 +153,8 @@ public class VersionUtil {
         TextureUtil.desaturate(splashImage);
         Optional<AnimationMetadataSection> animationMetadata = resourceMetadata.getSection(
                 //? if >=1.21.4 {
-                //AnimationMetadataSection.TYPE
-                 //?} else {
+                /^AnimationMetadataSection.TYPE
+                 ^///?} else {
                 AnimationMetadataSection.SERIALIZER
                 //?}
         );
@@ -170,16 +178,16 @@ public class VersionUtil {
 
     public static Biome.Precipitation getPrecipitationAt(Level level, Holder<Biome> biome, BlockPos blockPos) {
         //? if >=1.21.4 {
-        //return biome.value().getPrecipitationAt(blockPos, level.getSeaLevel());
-         //?} else {
+        /*return biome.value().getPrecipitationAt(blockPos, level.getSeaLevel());
+         *///?} else {
         return biome.value().getPrecipitationAt(blockPos);
         //?}
     }
 
     public static Color getMapColor(ClientLevel level, BlockPos blockPos) {
         //? if >=1.21.4 {
-        //return new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).getBlock().defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL));
-        //?} else {
+        /*return new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).getBlock().defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL));
+        *///?} else {
         final Color color = new Color(level.getBlockState(level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, blockPos).below()).getBlock().defaultMapColor().calculateRGBColor(MapColor.Brightness.NORMAL));
         // red and blue are swapped
         return new Color(color.getBlue(), color.getGreen(), color.getRed());
@@ -188,66 +196,66 @@ public class VersionUtil {
 
     public static void schedule(Runnable task) {
         //? if >=1.21.4 {
-        //Minecraft.getInstance().schedule(task);
-         //?} else {
+        /*Minecraft.getInstance().schedule(task);
+         *///?} else {
         Minecraft.getInstance().tell(task);
         //?}
     }
 
     public static <T> Stream<TagKey<T>> getTagIds(Registry<T> registry) {
         //? if >=1.21.4 {
-        //return registry.listTagIds();
-        //?} else {
+        /*return registry.listTagIds();
+        *///?} else {
         return registry.getTagNames();
         //?}
     }
 
     public static <T> Registry<T> getRegistry(ResourceKey<Registry<T>> key) {
         //? if >=1.21.4 {
-        //return Minecraft.getInstance().level.registryAccess().lookupOrThrow(key);
-        //?} else {
+        /*return Minecraft.getInstance().level.registryAccess().lookupOrThrow(key);
+        *///?} else {
         return Minecraft.getInstance().level.registryAccess().registryOrThrow(key);
         //?}
     }
 
     public static int getCloudHeight(ClientLevel level, BlockPos pos) {
         //? if >=1.21.11 {
-        //return level.environmentAttributes().getValue(EnvironmentAttributes.CLOUD_HEIGHT, pos).intValue();
-        //?} else if >=1.21.6 {
-        //return level.dimensionType().cloudHeight().isPresent() ? level.dimensionType().cloudHeight().get() : 0;
-        //?} else {
+        /*return level.environmentAttributes().getValue(EnvironmentAttributes.CLOUD_HEIGHT, pos).intValue();
+        *///?} else if >=1.21.6 {
+        /*return level.dimensionType().cloudHeight().isPresent() ? level.dimensionType().cloudHeight().get() : 0;
+        *///?} else {
         return (int) level.effects().getCloudHeight();
         //?}
     }
 
     public static int getMaxY(Level level) {
         //? if >=1.21.9 {
-        //return level.getMaxY();
-        //?} else {
+        /*return level.getMaxY();
+        *///?} else {
         return 255;
         //?}
     }
 
     public static int getMinY(Level level) {
         //? if >=1.21.9 {
-        //return level.getMinY();
-        //?} else {
+        /*return level.getMinY();
+        *///?} else {
         return -64;
         //?}
     }
 
     public static TextureAtlasSprite getSprite(ResourceLocation id) {
         //? if >= 1.21.9 {
-        //return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(id);
-        //?} else {
+        /*return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.PARTICLES).getSprite(id);
+        *///?} else {
         return ((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(id);
         //?}
     }
 
     public static SpriteContents newNonAnimatedSpriteContents(String id, FrameSize frameSize, NativeImage sprite) {
         //? if >=1.21.9 {
-        //return new SpriteContents(getId(id), frameSize, sprite);
-        //?} else {
+        /*return new SpriteContents(getId(id), frameSize, sprite);
+        *///?} else {
         return(new SpriteContents(VersionUtil.getId(id), frameSize, sprite, getEmptySpriteMetadata()));
         //?}
     }
@@ -266,33 +274,33 @@ public class VersionUtil {
 
     public static void openUri(URI uri) {
         //? >= 26.3 {
-        //com.mojang.blaze3d.Blaze3D.openUri(uri);
-        //?} >=1.21.11 {
-        //net.minecraft.util.Util.getPlatform().openUri(uri);
-        //?} else {
+        /*com.mojang.blaze3d.Blaze3D.openUri(uri);
+        *///?} >=1.21.11 {
+        /*net.minecraft.util.Util.getPlatform().openUri(uri);
+        *///?} else {
         net.minecraft.Util.getPlatform().openUri(uri);
         //?}
     }
 
     public static Vec3 camPos(Camera cam) {
         //? >=1.21.11 {
-        //return cam.position();
-        //?} else {
+        /*return cam.position();
+        *///?} else {
         return cam.getPosition();
         //?}
     }
 
     public static ResourceLocation getKeyId(ResourceKey key) {
         //? >=1.21.11 {
-        //return key.identifier();
-        //?} else {
+        /*return key.identifier();
+        *///?} else {
         return key.location();
          //?}
     }
 
-    public static Color getFogColor(Level level, BlockPos pos) {
+    public static Color getBiomeFogColor(Level level, BlockPos pos) {
         //? >=1.21.11 {
-        /*return new Color(12112639);
+        /*return new Color(0xB9D3FB);
         // environment values change dramatically at night. looks weird on particles. idk how to target only the day value.
         //return new Color(level.environmentAttributes().getValue(EnvironmentAttributes.FOG_COLOR, pos));
         *///?} else {
@@ -302,11 +310,18 @@ public class VersionUtil {
 
     static void addChatMsg(String message) {
         //? >=26.2 {
-        //Minecraft.getInstance().gui.hud.getChat().addClientSystemMessage(Component.literal(message));
-         //?} >=26.1 {
-        //Minecraft.getInstance().gui.getChat().addClientSystemMessage(Component.literal(message));
-         //?} else {
+        /*Minecraft.getInstance().gui.hud.getChat().addClientSystemMessage(Component.literal(message));
+         *///?} >=26.1 {
+        /*Minecraft.getInstance().gui.getChat().addClientSystemMessage(Component.literal(message));
+         *///?} else {
         Minecraft.getInstance().gui.getChat().addMessage(Component.literal(message));
         //?}
+    }
+
+    public static boolean isRaining(Level level) {
+        return level.getRainLevel(1) > 0;
+    }
+    public static boolean isThundering(Level level) {
+        return level.getThunderLevel(1) > 0;
     }
 }

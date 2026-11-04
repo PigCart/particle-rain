@@ -15,7 +15,9 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - rain refraction when shader pack enabled?
 
 # v4.0.3
-###### work in progress
+###### Nov 4, 2026
+
+Compatibility update part 1: This version fixes issues affecting Iris, Ad Astra, and the arbitrary number of other mods that worsened texture corruption
 
 - added `/particlerain biometags` command and debug screen entry for biome tags (helpful for custom particle config)
 - optimized surface particle spawning (10x less spawn attempts)
@@ -27,6 +29,11 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
   - replaced 'storm particle density' performance option with 'storm particle spawn multiplier'
   - replaced 'render default weather' compatibility option with separate toggles for rain and snow
 - reversed wind direction because it going in the opposite direction to the clouds was silly
+- fog tint is now brighter when not raining and smoothly changes with the rain level
+- fixed transparency issue rendering fog and blended particles in minecraft 1.21.9 and up with iris shader packs due to using the wrong render pipeline
+- fixed wind sound and sandstorms appearing on the moon (and all other non overworld biomes)
+  - behaviour on forge may differ slightly as it does not have its own overworld tag and minecraft's is used instead
+- removed forge tags from fabric and neoforge builds
 - fixed corrupt rain and snow sprites from improper memory allocation during texture loading (ty LilleboHaugen)
 
 # v4.0.2

@@ -7,9 +7,11 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -35,6 +37,7 @@ import static pigcart.particlerain.config.ConfigManager.getConfig;
 public class ParticleRain {
     public static final String MOD_ID = "particlerain";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    private static final TagKey<Biome> IS_OVERWORLD = TagKey.create(Registries.BIOME, VersionUtil.getId("c","in_overworld"));
 
     public static SimpleParticleType STREAK;
 
@@ -67,7 +70,9 @@ public class ParticleRain {
                 "surface height: " + ParticleSpawner.getHeight(level, playerBlockPos.getX(), playerBlockPos.getZ()),
                 "default surface height: " + level.getHeight(Heightmap.Types.MOTION_BLOCKING, playerBlockPos.getX(), playerBlockPos.getZ()),
                 "speed: " + speed,
-                "sky particle density: " + density
+                "sky particle density: " + density,
+                "Rain level: " + level.getRainLevel(1),
+                "Thunder level: " + level.getThunderLevel(1)
         );
     }
     private static List<String> getBiomeTags() {
@@ -156,7 +161,12 @@ public class ParticleRain {
         if (precipitation == Biome.Precipitation.SNOW && getConfig().sound.snowVolume > 0) {
             SoundEvent sound = above ? ParticleRain.WEATHER_SNOW_ABOVE : ParticleRain.WEATHER_SNOW;
             level.playLocalSound(rainPos, sound, SoundSource.WEATHER, getConfig().sound.snowVolume, above ? 0.5F : 1.0F, false);
-        } else if (precipitation == Biome.Precipitation.NONE && biome.value().getBaseTemperature() > 0.25 && getConfig().sound.windVolume > 0) {
+        } else if (
+                biome.is(IS_OVERWORLD) // avoid the moon
+                        && precipitation == Biome.Precipitation.NONE
+                        && biome.value().getBaseTemperature() > 0.25 // avoid modded frozen deserts!
+                        && getConfig().sound.windVolume > 0
+        ) {
             SoundEvent sound = above ? ParticleRain.WEATHER_SANDSTORM_ABOVE : ParticleRain.WEATHER_SANDSTORM;
             level.playLocalSound(rainPos, sound, SoundSource.WEATHER, getConfig().sound.windVolume, above ? 0.5F : 1.0F, false);
         }
