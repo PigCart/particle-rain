@@ -14,6 +14,12 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - new streaks
 - rain refraction when shader pack enabled?
 
+# v4.0.4
+###### in progress
+Compatibility update part 2
+- fixed particles getting stuck on sable sub-levels
+- fixed collision animation playing twice as fast due to duplicate method call
+
 # v4.0.3
 ###### Nov 4, 2026
 

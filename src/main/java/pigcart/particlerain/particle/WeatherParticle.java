@@ -71,6 +71,15 @@ public abstract class WeatherParticle extends /*? if >=1.21.9 {*/ /*SingleQuadPa
     }
 
     @Override
+    public void move(double x, double y, double z) {
+        // Sable wraps this method to apply velocity from the intersecting sub-level
+        // easy fix is to just ignore it
+        this.x = this.x + this.xd;
+        this.y = this.y + this.yd;
+        this.z = this.z + this.zd;
+    }
+
+    @Override
     public float getQuadSize(float scaleFactor) {
         return Mth.lerp(scaleFactor, oQuadSize, quadSize);
     }

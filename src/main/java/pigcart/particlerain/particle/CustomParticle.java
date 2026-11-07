@@ -114,9 +114,6 @@ public class CustomParticle extends WeatherParticle {
             onPositionUpdate();
             oPos.set(pos);
         }
-        if (doCollisionAnim) {
-            tickCollisionAnim();
-        }
         speed = (float) new Vec3(xd, yd, zd).length();
         tickFading();
         if (data.distanceScaling != 0 && !doCollisionAnim) quadSize = getDistanceSize();
