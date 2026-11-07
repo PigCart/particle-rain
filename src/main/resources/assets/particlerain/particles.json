@@ -176,7 +176,8 @@
     "stormWindStrength": 0,
     "blockList": {
       "entries": [
-        "minecraft:water"
+        "minecraft:water",
+        "puddleflood:puddle"
       ],
       "isWhitelist": true
     },

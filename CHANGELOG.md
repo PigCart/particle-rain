@@ -19,6 +19,8 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 Compatibility update part 2
 - fixed particles getting stuck on sable sub-levels
 - fixed collision animation playing twice as fast due to duplicate method call
+- particles with the block spawn type can now spawn on block faces that are facing a collisionless block if said block is also in the blocks list
+  - added support for spawning ripples on the puddles from Puddles & Floods
 
 # v4.0.3
 ###### Nov 4, 2026

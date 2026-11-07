@@ -126,7 +126,7 @@ public final class ParticleSpawner {
                     && data.precipitation.contains(VersionUtil.getPrecipitationAt(level, biome, sourcePos))
                     && density(data) > random.nextFloat()
                     && data.biomeList.contains(biome)
-                    && data.blockList.contains(level.getBlockState(pos).getBlockHolder())
+                    && (data.blockList.contains(level.getBlockState(pos).getBlockHolder()) || data.blockList.contains(level.getBlockState(pos.relative(direction)).getBlockHolder()))
             ) {
                 if (data.needsSkyAccess && sourcePos.getY() < getHeight(level, sourcePos.getX(), sourcePos.getZ())    ) continue;
                 // get position on block face
