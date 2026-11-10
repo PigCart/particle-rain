@@ -17,10 +17,19 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 # v4.0.4
 ###### in progress
 Compatibility update part 2
-- fixed particles getting stuck on sable sub-levels
-- fixed collision animation playing twice as fast due to duplicate method call
-- particles with the block spawn type can now spawn on block faces that are facing a collisionless block if said block is also in the blocks list
+
+changes
+- particles with the block spawn type can now spawn on block faces that are facing a collisionless block if said block is in the blocks list
   - added support for spawning ripples on the puddles from Puddles & Floods
+- rain and heavy rain now fade in and out with the intensity level of their respective weather types
+
+fixes
+- fixed sable sub-levels taking control of weather particle velocity, causing particles to get stuck on sub-levels
+- fixed collision animation
+  - playing twice as fast due to duplicate method call
+  - causing jittering by not interpolating due to old size being updated at the wrong time
+- fixed heavy rain sometimes appearing during the transition to or from clear weather due to weird vanilla mechanics
+- fixed density dropping drastically during movement due to density movement multiplier only updating in intervals
 
 # v4.0.3
 ###### Nov 4, 2026

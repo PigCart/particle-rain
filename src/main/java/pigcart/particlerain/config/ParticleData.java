@@ -106,15 +106,25 @@ public class ParticleData {
             public Boolean isCurrent(ClientLevel level) {
                 return level.getRainLevel(1) > 0;
             }
+            public float getWeatherLevel(ClientLevel level) {
+                return level.getRainLevel(1);
+            }
         },
         ONLY_DURING_NORMAL_WEATHER {
             public Boolean isCurrent(ClientLevel level) {
                 return level.getRainLevel(1) > 0 && !(level.getThunderLevel(1) > 0);
             }
+            public float getWeatherLevel(ClientLevel level) {
+                return level.getRainLevel(1);
+            }
         },
         ONLY_DURING_STORMY_WEATHER {
             public Boolean isCurrent(ClientLevel level) {
-                return level.getThunderLevel(1) > 0;
+                // sometimes thunder level is >0 during clear weather transition
+                return level.getThunderLevel(1) > 0 && level.getRainLevel(1) > 0.9;
+            }
+            public float getWeatherLevel(ClientLevel level) {
+                return level.getThunderLevel(1);
             }
         },
         AFTER_WEATHER {
@@ -130,6 +140,9 @@ public class ParticleData {
         ALWAYS;
         public Boolean isCurrent(ClientLevel level) {
             return true;
+        }
+        public float getWeatherLevel(ClientLevel level) {
+            return 1;
         }
     }
 

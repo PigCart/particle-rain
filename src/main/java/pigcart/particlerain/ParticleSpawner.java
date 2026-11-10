@@ -174,7 +174,7 @@ public final class ParticleSpawner {
             ticksUntilSkyFXIdle--;
             density = Mth.lerpInt(level.getThunderLevel(1), density, (int) (density * getConfig().perf.particleStormDensity));
             // mul density by speed to maintain visual density
-            density *= 1 + (int) speed * 2;
+            density = (int) (density * (1 + speed * 2));
         }
         return density;
     }

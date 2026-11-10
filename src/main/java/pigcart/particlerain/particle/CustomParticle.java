@@ -104,8 +104,8 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void tick() {
-        super.tick();
         oQuadSize = quadSize;
+        super.tick();
         distance = (float) VersionUtil.camPos(Minecraft.getInstance().gameRenderer.getMainCamera()).distanceTo(new Vec3(x, y, z));
         if (distance > data.spawnPos.renderDistance() + 0.5) {
             remove();
@@ -157,6 +157,7 @@ public class CustomParticle extends WeatherParticle {
             float newAlpha = Math.min(angle, 0.4f) / 0.4f;
             alpha = Math.min(alpha, newAlpha);
         }
+        alpha *= data.weather.getWeatherLevel(level);
     }
     private static final float QUARTER_PI = 0.7853982f;
     private float getPitchAngleToCamera() {
@@ -223,12 +224,13 @@ public class CustomParticle extends WeatherParticle {
     }
 
     public void tickCollisionAnim() {
+        float distanceTravelled = speed;
         oCollisionAnimProgress = collisionAnimProgress;
-        collisionAnimProgress -= speed;
+        collisionAnimProgress -= distanceTravelled;
         if (!data.rotationType.equals(ParticleData.RotationType.RELATIVE_VELOCITY)) {
-            quadSize = Math.max(quadSize - speed, 0);
+            quadSize = Math.max(quadSize - distanceTravelled, 0);
         }
-        if (oCollisionAnimProgress <= 0) { remove(); }
+        if (collisionAnimProgress <= 0) { remove(); }
     }
 
     public float getDistanceSize() {
