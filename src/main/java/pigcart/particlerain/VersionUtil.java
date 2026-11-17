@@ -56,27 +56,14 @@ public class VersionUtil {
         //?}
     }
 
-    public static boolean shadersEnabled() {
-        return irisLoaded() && net.irisshaders.iris.api.v0.IrisApi.getInstance().isShaderPackInUse();
-
-    }
-    public static boolean irisLoaded() {
+    public static boolean isModLoaded(String modid) {
         return  //? forge {
-                /*net.minecraftforge.fml.ModList.get().isLoaded("oculus");
+                /*net.minecraftforge.fml.ModList.get().isLoaded(modid);
                  *///?} else if neoforge {
-                /*net.neoforged.fml.ModList.get().isLoaded("iris");
+                /*net.neoforged.fml.ModList.get().isLoaded(modid);
                  *///?} else {
-                net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("iris");
-                //?}
-    }
-    public static boolean windLinkLoaded() {
-        return  //? forge {
-                /*net.minecraftforge.fml.ModList.get().isLoaded("windlink");
-                 *///?} else if neoforge {
-                /*net.neoforged.fml.ModList.get().isLoaded("windlink");
-                 *///?} else {
-                net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("windlink");
-                //?}
+                net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(modid);
+        //?}
     }
 
     @SuppressWarnings("removal")
@@ -316,12 +303,5 @@ public class VersionUtil {
          *///?} else {
         Minecraft.getInstance().gui.getChat().addMessage(Component.literal(message));
         //?}
-    }
-
-    public static boolean isRaining(Level level) {
-        return level.getRainLevel(1) > 0;
-    }
-    public static boolean isThundering(Level level) {
-        return level.getThunderLevel(1) > 0;
     }
 }

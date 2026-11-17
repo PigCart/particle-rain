@@ -9,6 +9,7 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -30,11 +31,11 @@ import net.minecraft.client.particle.ParticleRenderType;
 import pigcart.particlerain.ParticleLoader;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import pigcart.particlerain.WindManager;
-import pigcart.particlerain.WindLinkCompat;
+import pigcart.particlerain.compat.RainShieldCompat;
+import pigcart.particlerain.compat.WindLinkCompat;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.config.ParticleData;
 
-import java.awt.*;
 import java.util.Set;
 import java.util.List;
 
@@ -169,10 +170,17 @@ public class CustomParticle extends WeatherParticle {
         return Mth.abs(Math.atan2(offsetY, localZ));
     }
 
-    public void onPositionUpdate() {
-        if (!getConfig().compat.crossBiomeBorder
+    public static boolean weatherNotAllowed(Level level, BlockPos blockPos) {
+        return RainShieldCompat.cancelRain(level, blockPos);
+    }
+    public boolean climateChanged() {
+        return !getConfig().compat.crossBiomeBorder
                 && level.getBiome(pos).value().getBaseTemperature() != baseTemp
-                && !data.precipitation.contains(VersionUtil.getPrecipitationAt(level, level.getBiome(pos), pos))
+                && !data.precipitation.contains(VersionUtil.getPrecipitationAt(level, level.getBiome(pos), pos));
+    }
+
+    public void onPositionUpdate() {
+        if (climateChanged() || weatherNotAllowed(level, pos)
         ) {
             doCollisionAnim = true;
             return;

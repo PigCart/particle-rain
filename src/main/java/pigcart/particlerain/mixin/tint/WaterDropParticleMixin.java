@@ -3,11 +3,8 @@ package pigcart.particlerain.mixin.tint;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.WaterDropParticle;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
@@ -15,6 +12,9 @@ import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.ConfigManager;
 //? if >=1.21.9 {
 /*import net.minecraft.client.particle.SingleQuadParticle;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 *///?} else {
 import net.minecraft.client.particle.TextureSheetParticle;
 //?}
@@ -49,7 +49,7 @@ public abstract class WaterDropParticleMixin extends TextureSheetParticleMixin {
                 ParticleRain.LOGGER.error(e.getMessage());
                 this.remove();
             }
-            TextureUtil.applyWaterTint(this, this.level, BlockPos.containing(x, y, z));
+            TextureUtil.copyRainTint(this, this.level, BlockPos.containing(x, y, z));
         }
     }
 }

@@ -41,7 +41,7 @@
     "rotationType": "RELATIVE_VELOCITY"
   },
   "snow": {
-    "density": 0.3,
+    "density": 0.5,
     "precipitation": [
       "SNOW"
     ],

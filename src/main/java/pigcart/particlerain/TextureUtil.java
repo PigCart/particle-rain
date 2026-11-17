@@ -79,7 +79,7 @@ public class TextureUtil {
         return i & -16711936 | (i & 16711680) >> 16 | (i & 255) << 16;
     }
 
-    public static void applyWaterTint(SingleQuadParticle particle, ClientLevel level, BlockPos blockPos) {
+    public static void copyRainTint(SingleQuadParticle particle, ClientLevel level, BlockPos blockPos) {
         final ParticleData rain = ParticleLoader.particles.get("rain");
         rain.tintType.applyTint(particle, level, blockPos, rain);
     }

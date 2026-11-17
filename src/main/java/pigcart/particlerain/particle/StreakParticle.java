@@ -1,6 +1,5 @@
 package pigcart.particlerain.particle;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -9,25 +8,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.*;
-import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.VersionUtil;
 import pigcart.particlerain.TextureUtil;
 import pigcart.particlerain.config.Whitelist;
-import pigcart.particlerain.mixin.access.ParticleEngineAccessor;
 //? if >=1.21.9 {
 /*import net.minecraft.client.renderer.state./^?>=26.1{^//^level.^//^?}^/QuadParticleRenderState;
-*///?} else {
-import com.mojang.blaze3d.vertex.VertexConsumer;
-//?}
-
-import java.util.Optional;
+import net.minecraft.util.RandomSource;
+*///?}
 
 import static pigcart.particlerain.config.ConfigManager.getConfig;
 
@@ -39,7 +32,7 @@ public class StreakParticle extends WeatherParticle {
     public StreakParticle(ClientLevel level, double x, double y, double z, Direction direction, Whitelist.BlockList blockList) {
         super(level, x, y, z, VersionUtil.getSprite(VersionUtil.getId("streak")));
         if (getConfig().compat.waterTint) {
-            TextureUtil.applyWaterTint(this, level, this.pos);
+            TextureUtil.copyRainTint(this, level, this.pos);
         } else {
             this.setColor(0.2f, 0.3f, 1.0f);
         }
@@ -90,7 +83,7 @@ public class StreakParticle extends WeatherParticle {
     }
 
     @Override
-    public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(VertexConsumer/*?}*/ h, Camera camera, float f) {
+    public void /*? if >=1.21.9 {*//*extract(QuadParticleRenderState*//*?} else {*/render(com.mojang.blaze3d.vertex.VertexConsumer/*?}*/ h, Camera camera, float f) {
         Vec3 camPos = VersionUtil.camPos(camera);
         float x = (float) (Mth.lerp(f, this.xo, this.x) - camPos.x());
         float y = (float) (Mth.lerp(f, this.yo, this.y) - camPos.y());

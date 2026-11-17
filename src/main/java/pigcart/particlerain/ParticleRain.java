@@ -19,6 +19,8 @@ import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import pigcart.particlerain.compat.IrisCompat;
+import pigcart.particlerain.compat.WindLinkCompat;
 import pigcart.particlerain.config.ConfigData;
 import pigcart.particlerain.config.ConfigManager;
 //? if >=1.21.9 {
@@ -101,12 +103,7 @@ public class ParticleRain {
                 (display, level, levelChunk, levelChunk2) ->
                         display.addToGroup(VersionUtil.getId("biome_tags_group"), getBiomeTags())
         );
-        if (VersionUtil.irisLoaded()) {
-            net.irisshaders.iris.api.v0.IrisApi.getInstance().assignPipeline(
-                    BlendedParticleRenderType.BLENDED_PARTICLE,
-                    net.irisshaders.iris.api.v0.IrisProgram.PARTICLES_TRANSLUCENT
-            );
-        }
+        IrisCompat.registerRenderPipelines();
         *///?}
     }
 

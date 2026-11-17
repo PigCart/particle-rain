@@ -18,6 +18,8 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import pigcart.particlerain.compat.RainShieldCompat;
+import pigcart.particlerain.compat.WindLinkCompat;
 import pigcart.particlerain.config.ParticleData;
 import pigcart.particlerain.particle.StreakParticle;
 
@@ -95,12 +97,18 @@ public final class ParticleSpawner {
         return customY;
     }
 
+    private static boolean noWeatherHere(ClientLevel level, BlockPos blockPos) {
+        return !level.isLoaded(blockPos)
+                || RainShieldCompat.cancelRain(level, blockPos);
+    }
+
     private static float density(ParticleData data) {
         return data.density * WindLinkCompat.density(data.id);
     }
 
     public static void tickBlockFX(BlockPos.MutableBlockPos sourcePos, BlockState state, RandomSource random) {
         ClientLevel level = Minecraft.getInstance().level;
+        if (noWeatherHere(level, sourcePos)) return;
         if (spawnAttemptsUntilBlockFXIdle <= 0 && level.getRandom().nextFloat() < 0.9F) {
             return;
         }
@@ -200,7 +208,7 @@ public final class ParticleSpawner {
             y = getConfig().perf.particleDistance * Mth.cos(phi)                  + (float) cameraPos.y;
             z = getConfig().perf.particleDistance * Mth.sin(phi) * Mth.sin(theta) + (float) cameraPos.z;
             pos.set(x, y, z);
-            if (!level.isLoaded(pos)) continue;
+            if (noWeatherHere(level, pos)) continue;
             if (getConfig().compat.doSpawnHeightLimit) {
                 int cloudHeight = getConfig().compat.spawnHeightLimit == 0 ? VersionUtil.getCloudHeight(level, pos) : getConfig().compat.spawnHeightLimit;
                 if (cloudHeight != 0 && y > cloudHeight) {
@@ -211,18 +219,19 @@ public final class ParticleSpawner {
             int heightmapY = getHeight(level, pos.getX(), pos.getZ());
             heightmapPos.set(x, heightmapY - 1, z);
             if (heightmapY >= pos.getY()) continue;
+            BlockState blockState = level.getBlockState(heightmapPos);
             Holder<Biome> biome = level.getBiome(pos);
             Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, getConfig().compat.useHeightmapTemp ? heightmapPos : pos);
             float spawnChance = RANDOM.nextFloat();
 
             for (ParticleData data : ParticleLoader.particles.values()) {
                 if (data.enabled
+                    && density(data) > spawnChance
                     && data.spawnPos.equals(ParticleData.SpawnPos.SKY)
                     && data.weather.isCurrent(level)
                     && data.precipitation.contains(precipitation)
-                    && density(data) > spawnChance
                     && data.biomeList.contains(biome)
-                    && data.blockList.contains(level.getBlockState(heightmapPos).getBlockHolder())
+                    && data.blockList.contains(blockState.getBlockHolder())
                 ) {
                     data.particleStyle.spawn(level, x, y, z, data);
                     ticksUntilSkyFXIdle = 100;
@@ -245,7 +254,7 @@ public final class ParticleSpawner {
             double y = getHeight(level, x, z);
 
             heightmapPos.set(x, y - 1, z);
-            if (!level.isLoaded(heightmapPos)) continue;
+            if (noWeatherHere(level, heightmapPos)) continue;
             BlockState blockState = level.getBlockState(heightmapPos);
             Holder<Biome> biome = level.getBiome(heightmapPos);
             Biome.Precipitation precipitation = VersionUtil.getPrecipitationAt(level, biome, heightmapPos);

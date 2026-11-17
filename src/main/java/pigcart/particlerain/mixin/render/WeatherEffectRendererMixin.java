@@ -120,6 +120,7 @@ import net.minecraft.client.OptionInstance;
 import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -177,8 +178,15 @@ public class WeatherEffectRendererMixin {
         return original.call(instance);
     }
 
-    // prevent rendering weather column instances
-    // returning null instead of NONE might prevent modded dry weather columns but could break mods that mixin here expecting a value
+    // prevent rendering all weather column instances
+    // canceling whole method when neither weather type need rendering offers better mod compatibility
+    @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
+    public void cancelRender(LightTexture lightTexture, float partialTick, double camX, double camY, double camZ, CallbackInfo ci) {
+        if (!getConfig().compat.renderDefaultRain && !getConfig().compat.renderDefaultSnow) {
+            ci.cancel();
+        }
+    }
+    // prevent rendering weather column instances when one type is enabled
     @WrapOperation(method = "renderSnowAndRain", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;"))
     public Biome.Precipitation nullifyRenderPrecipitation(Biome instance, BlockPos pos, Operation<Biome.Precipitation> original) {
         Biome.Precipitation originalResult = original.call(instance, pos);

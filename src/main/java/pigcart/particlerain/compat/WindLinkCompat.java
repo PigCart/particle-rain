@@ -1,8 +1,10 @@
-package pigcart.particlerain;
+package pigcart.particlerain.compat;
 
 import net.minecraft.client.particle.Particle;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
+import pigcart.particlerain.ParticleRain;
+import pigcart.particlerain.VersionUtil;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -33,7 +35,7 @@ public final class WindLinkCompat {
         MethodHandle wantsToDrive = null, alreadyDrives = null, spritesFor = null, spriteSizeFor = null;
         MethodHandle densityFor = null, sizeScaleFor = null;
         boolean found = false;
-        if (VersionUtil.windLinkLoaded()) {
+        if (VersionUtil.isModLoaded("windlink")) {
             try {
                 MethodHandles.Lookup lookup = MethodHandles.lookup();
                 Class<?> windData = Class.forName(WIND_DATA);

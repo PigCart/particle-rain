@@ -25,7 +25,7 @@ import net.minecraft.util.RandomSource;
 public abstract class DripParticleMixin {
     @Inject(method = "createParticle(Lnet/minecraft/core/particles/SimpleParticleType;Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/util/RandomSource;)Lnet/minecraft/client/particle/Particle;", at = @At("TAIL"))
     public void createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random, CallbackInfoReturnable<Particle> cir) {
-        if (ConfigManager.getConfig().compat.waterTint) TextureUtil.applyWaterTint((SingleQuadParticle) cir.getReturnValue(), level, BlockPos.containing(x, y, z));
+        if (ConfigManager.getConfig().compat.waterTint) TextureUtil.copyRainTint((SingleQuadParticle) cir.getReturnValue(), level, BlockPos.containing(x, y, z));
     }
 }
 *///?} else {
@@ -41,7 +41,7 @@ public abstract class DripParticleMixin {
             "createDripstoneWaterFallParticle"
     }, at = @At("TAIL"))
     private static void tintWaterParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i, CallbackInfoReturnable<TextureSheetParticle> cir) {
-        if (ConfigManager.getConfig().compat.waterTint) TextureUtil.applyWaterTint(cir.getReturnValue(), clientLevel, BlockPos.containing(d, e, f));
+        if (ConfigManager.getConfig().compat.waterTint) TextureUtil.copyRainTint(cir.getReturnValue(), clientLevel, BlockPos.containing(d, e, f));
     }
 }
 //?}

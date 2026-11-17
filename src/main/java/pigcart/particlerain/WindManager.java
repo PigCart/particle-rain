@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import org.joml.Vector3f;
+import pigcart.particlerain.compat.WindLinkCompat;
 import pigcart.particlerain.config.ParticleData;
 import pigcart.particlerain.mixin.access.ParticleAccessor;
 

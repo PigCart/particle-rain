@@ -18,6 +18,7 @@ import pigcart.particlerain.ParticleRain;
 import pigcart.particlerain.ParticleSpawner;
 import pigcart.particlerain.WindManager;
 import pigcart.particlerain.VersionUtil;
+import pigcart.particlerain.compat.IrisCompat;
 import pigcart.particlerain.particle.BlockDisplayParticle;
 import pigcart.particlerain.particle.CustomParticle;
 import pigcart.particlerain.particle.render.BlendedParticleRenderType;
@@ -200,7 +201,10 @@ public class ParticleData {
     public enum TintType {
         WATER {
             public void applyTint(SingleQuadParticle p, ClientLevel level, BlockPos pos, ParticleData data) {
-                if (VersionUtil.shadersEnabled() && getConfig().compat.shaderpackTint) return;
+                if (IrisCompat.shadersEnabled() && getConfig().compat.dontTintWithShaders) {
+                    p.setColor(1, 1, 1);
+                    return;
+                }
                 final Color waterColor = new Color(BiomeColors.getAverageWaterColor(level, pos));
                 final Color fogColor = VersionUtil.getBiomeFogColor(level, pos);
                 float rCol = Mth.lerp(getConfig().compat.tintMix, waterColor.getRed(), fogColor.getRed());
