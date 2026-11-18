@@ -76,7 +76,7 @@ tasks {
 }
 
 java {
-    val javaCompat = if (stonecutter.eval(stonecutter.current.version, ">=1.21")) {
+    val javaCompat = if (sc.current.parsed >=1.21) {
         JavaVersion.VERSION_21
     } else {
         JavaVersion.VERSION_17

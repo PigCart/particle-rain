@@ -78,6 +78,7 @@ public class NeoforgeEntrypoint {
     }
 
     public NeoforgeEntrypoint(IEventBus eventBus) {
+        //~ if >=1.21.9 'dist' -> 'getDist()'
         if (FMLEnvironment.dist.isDedicatedServer()) return;
 
         NeoForge.EVENT_BUS.addListener(NeoforgeEntrypoint::onTick);

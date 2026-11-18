@@ -94,6 +94,11 @@ tasks {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    val javaCompat = if (sc.current.parsed >=26.1) {
+        JavaVersion.VERSION_25
+    } else {
+        JavaVersion.VERSION_21
+    }
+    sourceCompatibility = javaCompat
+    targetCompatibility = javaCompat
 }

@@ -15,9 +15,10 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - rain refraction when shader pack enabled?
 
 # v4.0.4
-###### in progress
+###### Nov 18, 2026
 Compatibility update part 2. Improves support for: Sable (create aeronautics), Puddles & Floods, Iris, Rain Shield, Ecliptic Seasons, and potentially others
 
+- updated neoforge support for 1.21.9+
 - particles with the block spawn type can now spawn on block faces that are facing a collisionless block if said block is in the blocks list
   - ripples now spawn on the puddles from Puddles & Floods
 - rain and heavy rain now fade in and out with the intensity level of their respective weather types
@@ -30,7 +31,7 @@ Compatibility update part 2. Improves support for: Sable (create aeronautics), P
 - fixed density dropping drastically during movement due to density movement multiplier only updating in intervals
 - fixed 'Don't tint water particles when using shaderpack' compat option not applying to vanilla particles
 - fixed long config text inputs becoming cut off when opening the gui due to the max length being set too late
-- fixed default rain rendering while disabled in versions below mc21.1 when certain mods are installed
+- fixed default rain rendering while disabled in versions below mc21.1 when ecliptic seasons is installed
 
 # v4.0.3
 ###### Nov 4, 2026
