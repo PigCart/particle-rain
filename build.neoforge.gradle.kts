@@ -45,7 +45,10 @@ dependencies {
 }
 
 neoForge {
-    version = prop("deps.neoforge")
+    enable {
+        version = prop("deps.neoforge")
+        isDisableRecompilation = false // maybe fixes access transformer issue?
+    }
 
     val accessTransformer = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     if (accessTransformer.exists()) {

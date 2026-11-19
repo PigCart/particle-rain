@@ -41,7 +41,14 @@ repositories {
 }
 
 legacyForge {
-    version = prop("deps.forge")
+
+    enable {
+        forgeVersion = prop("deps.forge")
+        isDisableRecompilation = false
+        // parameters in anonymous classes all get the same name when this is enabled
+        //github.com/neoforged/ModDevGradle/issues/345
+    }
+
 
     val accessTransformer = rootProject.file("src/main/resources/META-INF/accesstransformer.cfg")
     if (accessTransformer.exists()) {
