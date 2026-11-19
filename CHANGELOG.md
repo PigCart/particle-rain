@@ -15,7 +15,7 @@ this mimics the version scheme used by minecraft between 2011 and 2024 and aims 
 - rain refraction when shader pack enabled?
 
 # v4.0.4
-###### Nov 18, 2026
+###### Nov 19, 2026
 Compatibility update part 2. Improves support for: Sable (create aeronautics), Puddles & Floods, Iris, Rain Shield, Ecliptic Seasons, and potentially others
 
 - updated neoforge support for 1.21.9+

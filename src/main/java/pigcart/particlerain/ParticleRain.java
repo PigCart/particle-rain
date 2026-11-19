@@ -95,7 +95,9 @@ public class ParticleRain {
         WEATHER_SANDSTORM_ABOVE = createSoundEvent("weather.sandstorm.above");
 
         //? if >=1.21.9 {
-        /*DebugScreenEntries.register(VersionUtil.getId("debug"),
+        /*//? if fabric {
+        // forge fails to compile on github even though it works locally. access transformer error? idk
+        DebugScreenEntries.register(VersionUtil.getId("debug"),
                 (display, level, levelChunk, levelChunk2) ->
                         display.addToGroup(VersionUtil.getId("debug_group"), getDebugLines())
         );
@@ -103,6 +105,7 @@ public class ParticleRain {
                 (display, level, levelChunk, levelChunk2) ->
                         display.addToGroup(VersionUtil.getId("biome_tags_group"), getBiomeTags())
         );
+        //?}
         IrisCompat.registerRenderPipelines();
         *///?}
     }
